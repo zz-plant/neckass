@@ -1,50 +1,55 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Direct Upload Demo | Cloudflare Pages</title>
-    <link href="style.css" rel="stylesheet" />
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neckass Headlines - Absurd Edition</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Absurd, funny headlines generated randomly. Enjoy a laugh and share the hilarity on social media.">
+</head>
+<body>
+    <header>
+        <h1>Neckass Headlines Generator</h1>
+        <p>Refresh your day with randomly generated absurd headlines.</p>
+    </header>
 
-  <body>
-    <div class="container">
-      <div class="header">
-        <h3>Example project</h3>
-        <h1>Welcome to Cloudflare Pages</h1>
-        <p>
-          Upload your prebuilt assets directly to Pages and deploy <br />
-          your project to the Cloudflare edge within seconds.
-        </p>
-        <p>Create new deployments using:</p>
-        <section class="options">
-          <img src="assets/terminal.svg" />
-          <a
-            href="https://dash.cloudflare.com/?to=/:account/pages/new/wrangler-guide"
-            target="_blank"
-            > Wrangler CLI</a
-          >
-          <img src="assets/cloud-upload.svg" />
-          <a
-            href="https://dash.cloudflare.com/?to=/:account/pages/new/upload"
-            target="_blank"
-            > Dashboard</a
-          >
+    <main>
+        <section class="headline-section">
+            <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
+            <div id="loader" class="loader" aria-hidden="true">Loading...</div>
         </section>
-      </div>
 
-      <section class="learn-more">
-        <a
-          href="https://developers.cloudflare.com/pages/platform/direct-uploads"
-        >
-          <button>Learn more</button>
-        </a>
-      </section>
-      <div class="logo">
-        <a href="https://pages.cloudflare.com/" target="_blank">
-          <img src="assets/cloudflare-pages.svg"
-        /></a>
-      </div>
-    </div>
-  </body>
+        <section class="controls">
+            <div class="buttons">
+                <button id="prev-btn" aria-label="View Previous Headline">Previous</button>
+                <button id="next-btn" aria-label="View Next Headline">Next</button>
+            </div>
+            <div class="counter">
+                <p>Headlines Viewed: <span id="counter">0</span></p>
+            </div>
+            <div class="theme-toggle">
+                <button id="theme-toggle" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+            </div>
+        </section>
+
+        <section class="social-share">
+            <h3>Share this Headline</h3>
+            <a href="#" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
+                <img src="icons/twitter.svg" alt="Twitter">
+            </a>
+            <a href="#" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
+                <img src="icons/facebook.svg" alt="Facebook">
+            </a>
+            <a href="#" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
+                <img src="icons/reddit.svg" alt="Reddit">
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Neckass. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
