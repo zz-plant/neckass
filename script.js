@@ -152,23 +152,45 @@ function updateSocialShareLinks(headline) {
     // Facebook
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedHeadline}`;
     facebookShareLink.href = facebookUrl;
-    facebookShareLink.classList.add('facebook');
 
     // Reddit
     const redditUrl = `https://www.reddit.com/submit?url=${pageUrl}&title=${encodedHeadline}`;
     redditShareLink.href = redditUrl;
-    redditShareLink.classList.add('reddit');
 }
 
 // Function to get a random readable color
 function getRandomColor() {
     const colors = [
         '#FF5733', '#33FF57', '#3357FF', '#F333FF',
-        '#FF33A8', '#33FFF5', '#FF8F33', '#8FFF33',
-        '#338FFF', '#FF33F6', '#F6FF33', '#33FFBD'
+        '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
+        '#FF33F6', '#FF4500', '#33FFBD', '#FFB533',
+        '#FFA833', '#5A5AFF', '#FF33C4', '#FF4444',
+        '#44FF88'
     ];
-    // Choose a color that contrasts with both light and dark backgrounds
-    return colors[Math.floor(Math.random() * colors.length)];
+
+    const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+    const brightnessThreshold = 130;
+    const rgb = hexToRgb(selectedColor);
+    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+
+    if (document.body.classList.contains('dark-mode') && brightness > brightnessThreshold) {
+        return darkenColor(selectedColor, 0.7);
+    }
+    return selectedColor;
+}
+
+function hexToRgb(hex) {
+    const bigint = parseInt(hex.replace('#', ''), 16);
+    return { 
+        r: (bigint >> 16) & 255, 
+        g: (bigint >> 8) & 255, 
+        b: bigint & 255 
+    };
+}
+
+function darkenColor(hex, factor) {
+    const rgb = hexToRgb(hex);
+    return `rgb(${Math.floor(rgb.r * factor)}, ${Math.floor(rgb.g * factor)}, ${Math.floor(rgb.b * factor)})`;
 }
 
 // Initial headline display
