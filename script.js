@@ -1,3 +1,4 @@
+
 const headlines = [
     "Neckass Starts Petition to Ban Calculators, Claims They 'Steal Human Creativity'—Still Can’t Do Basic Math",
     "Local Neckass Declares Himself a Sovereign Citizen, Instantly Gets Kicked Out of Walmart for Loitering",
@@ -200,3 +201,31 @@ if (viewedHeadlines.length > 0) {
 } else {
     document.getElementById('next-btn').click();
 }
+
+
+// Dark mode toggle functionality
+const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
+toggleDarkModeButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+});
+
+// Apply dark mode preference on load
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+
+// Copy headline to clipboard functionality
+const copyButton = document.getElementById('copy-btn');
+const headlineElement = document.getElementById('headline');
+
+copyButton.addEventListener('click', () => {
+    const headlineText = headlineElement.innerText;
+    navigator.clipboard.writeText(headlineText)
+        .then(() => {
+            alert('Headline copied to clipboard!');
+        })
+        .catch(err => {
+            console.error('Could not copy text: ', err);
+        });
+});

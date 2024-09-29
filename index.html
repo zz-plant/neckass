@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,13 @@
     <title>Neckass Headlines - Absurd Edition</title>
     <link rel="stylesheet" href="styles.css">
     <meta name="description" content="Absurd, funny headlines generated randomly. Enjoy a laugh and share the hilarity on social media.">
+    
+    <!-- Open Graph Meta Tags for better social media sharing -->
+    <meta property="og:title" content="Neckass Headlines - Absurd Edition">
+    <meta property="og:description" content="Absurd, funny headlines generated randomly.">
+    <meta property="og:image" content="path-to-your-image.jpg"> <!-- Add your preferred image here -->
+    <meta property="og:url" content="https://neckass.com">
+
 </head>
 <body>
     <header>
@@ -24,31 +32,38 @@
                 <button id="prev-btn" aria-label="View Previous Headline">Previous</button>
                 <button id="next-btn" aria-label="View Next Headline">Next</button>
             </div>
-            <div class="counter">
-                <p>Headlines Viewed: <span id="counter">0</span></p>
-            </div>
-            <div class="theme-toggle">
-                <button id="theme-toggle" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
-            </div>
         </section>
 
+        <!-- Dark Mode Toggle -->
+        <section class="dark-mode-toggle">
+            <button id="toggle-dark-mode" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+        </section>
+
+        <!-- Social Media Share Section -->
         <section class="social-share">
             <h3>Share this Headline</h3>
-            <a href="#" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
-                <img src="icons/twitter.svg" alt="Twitter icon"> Twitter
+            
+            <!-- Twitter Share -->
+            <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20absurd%20headline!&url=https://neckass.com" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
+                <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" onerror="this.onerror=null; this.src='icons/twitter.png'"> Twitter
             </a>
-            <a href="#" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
-                <img src="icons/facebook.svg" alt="Facebook icon"> Facebook
+            
+            <!-- Facebook Share -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://neckass.com" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
+                <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" onerror="this.onerror=null; this.src='icons/facebook.png'"> Facebook
             </a>
-            <a href="#" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
-                <img src="icons/reddit.svg" alt="Reddit icon"> Reddit
+            
+            <!-- Reddit Share -->
+            <a href="https://reddit.com/submit?url=https://neckass.com&title=Absurd%20Headlines" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
+                <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" onerror="this.onerror=null; this.src='icons/reddit.png'"> Reddit
             </a>
         </section>
-    </main>
 
-    <footer>
-        <p>&copy; 2024 Neckass. All rights reserved.</p>
-    </footer>
+        <!-- Copy to Clipboard -->
+        <section class="copy-headline">
+            <button id="copy-btn" aria-label="Copy Headline to Clipboard">Copy Headline</button>
+        </section>
+    </main>
 
     <script src="script.js"></script>
 </body>
