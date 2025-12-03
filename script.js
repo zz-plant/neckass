@@ -1,3 +1,10 @@
+const STORAGE_KEYS = {
+    viewedCount: 'headlinesViewed',
+    viewedList: 'viewedHeadlines',
+    darkMode: 'darkMode'
+};
+
+const ANIMATION_DELAY_MS = 500;
 
 const headlines = [
     "Neckass Starts Petition to Ban Calculators, Claims They 'Steal Human Creativity'—Still Can’t Do Basic Math",
@@ -52,115 +59,136 @@ const headlines = [
     "BREAKING: Neckass Declares He Can Fly—Claims It’s ‘Too Dangerous’ to Prove in Public"
 ];
 
-let currentIndex = -1;
-let headlinesViewed = 0;
-let viewedHeadlines = [];
+document.addEventListener('DOMContentLoaded', () => {
+    const elements = mapElements();
+    const state = restoreState();
 
-// Retrieve saved data from localStorage
-if (localStorage.getItem('headlinesViewed')) {
-    headlinesViewed = parseInt(localStorage.getItem('headlinesViewed'));
-    viewedHeadlines = JSON.parse(localStorage.getItem('viewedHeadlines'));
-    document.getElementById('counter').textContent = headlinesViewed;
+    applyDarkMode(state.darkModeEnabled);
+    updateHeadlineCounter(elements.counter, state.viewedCount);
+
+    elements.nextButton.addEventListener('click', () => handleNextHeadline(state, elements));
+    elements.previousButton.addEventListener('click', () => handlePreviousHeadline(state, elements));
+    elements.darkModeToggle.addEventListener('click', () => toggleDarkMode(state));
+    elements.copyButton.addEventListener('click', () => copyHeadline(elements.headline));
+
+    displayInitialHeadline(state, elements);
+});
+
+function mapElements() {
+    return {
+        headline: document.getElementById('headline'),
+        loader: document.getElementById('loader'),
+        nextButton: document.getElementById('next-btn'),
+        previousButton: document.getElementById('prev-btn'),
+        counter: document.getElementById('counter'),
+        twitterShareLink: document.getElementById('twitter-share'),
+        facebookShareLink: document.getElementById('facebook-share'),
+        redditShareLink: document.getElementById('reddit-share'),
+        darkModeToggle: document.getElementById('toggle-dark-mode'),
+        copyButton: document.getElementById('copy-btn'),
+        container: document.querySelector('.container')
+    };
 }
 
-const headlineElement = document.getElementById('headline');
-const counterElement = document.getElementById('counter');
-const loaderElement = document.getElementById('loader');
-const twitterShareLink = document.getElementById('twitter-share');
-const facebookShareLink = document.getElementById('facebook-share');
-const redditShareLink = document.getElementById('reddit-share');
+function restoreState() {
+    const viewedCount = Number(localStorage.getItem(STORAGE_KEYS.viewedCount)) || 0;
+    const viewedList = JSON.parse(localStorage.getItem(STORAGE_KEYS.viewedList) || '[]');
+    const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
 
-// Function to display a headline
-function displayHeadline(index) {
-    headlineElement.classList.remove('show');
-    loaderElement.style.display = 'block';
+    const sanitizedList = viewedList.filter(index => index >= 0 && index < headlines.length);
+
+    return {
+        viewedCount,
+        viewedHeadlines: sanitizedList,
+        currentIndex: sanitizedList[sanitizedList.length - 1] ?? -1,
+        darkModeEnabled
+    };
+}
+
+function handleNextHeadline(state, elements) {
+    const nextIndex = getRandomIndex(state.currentIndex);
+    state.currentIndex = nextIndex;
+    renderHeadline(nextIndex, state, elements);
+}
+
+function handlePreviousHeadline(state, elements) {
+    if (state.viewedHeadlines.length <= 1) {
+        return;
+    }
+
+    state.viewedHeadlines.pop();
+    state.currentIndex = state.viewedHeadlines[state.viewedHeadlines.length - 1];
+    state.viewedCount = Math.max(0, state.viewedCount - 1);
+    persistState(state);
+    updateHeadlineCounter(elements.counter, state.viewedCount);
+    renderHeadline(state.currentIndex, state, elements);
+}
+
+function renderHeadline(index, state, elements) {
+    showLoader(elements.loader, true);
+    elements.headline.classList.remove('show');
 
     setTimeout(() => {
-        headlineElement.textContent = headlines[index];
-        headlineElement.classList.add('show');
-        loaderElement.style.display = 'none';
+        elements.headline.textContent = headlines[index];
+        elements.headline.style.color = getReadableColor();
+        elements.headline.classList.add('show');
+        showLoader(elements.loader, false);
 
-        // Change headline color to a random, readable color
-        headlineElement.style.color = getRandomColor();
-
-        // Update counter and viewed headlines list
-        if (!viewedHeadlines.includes(index)) {
-            headlinesViewed++;
-            viewedHeadlines.push(index);
-            counterElement.textContent = headlinesViewed;
-
-            // Save to localStorage
-            localStorage.setItem('headlinesViewed', headlinesViewed);
-            localStorage.setItem('viewedHeadlines', JSON.stringify(viewedHeadlines));
-        }
-
-        // Update social share links
-        updateSocialShareLinks(headlines[index]);
-    }, 500);
+        updateViewedState(index, state, elements.counter);
+        updateSocialShareLinks(headlines[index], elements);
+    }, ANIMATION_DELAY_MS);
 }
 
-// Function to get a random index
-function getRandomIndex() {
+function updateViewedState(index, state, counterElement) {
+    if (!state.viewedHeadlines.includes(index)) {
+        state.viewedHeadlines.push(index);
+        state.viewedCount += 1;
+        persistState(state);
+    } else {
+        state.currentIndex = index;
+    }
+
+    updateHeadlineCounter(counterElement, state.viewedCount);
+}
+
+function persistState(state) {
+    localStorage.setItem(STORAGE_KEYS.viewedCount, state.viewedCount);
+    localStorage.setItem(STORAGE_KEYS.viewedList, JSON.stringify(state.viewedHeadlines));
+    localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
+}
+
+function getRandomIndex(currentIndex) {
+    if (headlines.length <= 1) {
+        return 0;
+    }
+
     let randomIndex = Math.floor(Math.random() * headlines.length);
-    // Ensure we don't repeat the same headline consecutively
     while (randomIndex === currentIndex) {
         randomIndex = Math.floor(Math.random() * headlines.length);
     }
+
     return randomIndex;
 }
 
-// Event listeners for buttons
-document.getElementById('next-btn').addEventListener('click', () => {
-    currentIndex = getRandomIndex();
-    displayHeadline(currentIndex);
-});
-
-document.getElementById('prev-btn').addEventListener('click', () => {
-    if (viewedHeadlines.length > 1) {
-        // Remove the last viewed headline
-        viewedHeadlines.pop();
-        // Get the previous headline
-        currentIndex = viewedHeadlines[viewedHeadlines.length - 1];
-        headlinesViewed--;
-        counterElement.textContent = headlinesViewed;
-
-        // Save to localStorage
-        localStorage.setItem('headlinesViewed', headlinesViewed);
-        localStorage.setItem('viewedHeadlines', JSON.stringify(viewedHeadlines));
-
-        displayHeadline(currentIndex);
-    }
-});
-
-// Dark mode toggle
-document.getElementById('theme-toggle').addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    document.querySelector('.container').classList.toggle('dark-mode');
-    document.querySelectorAll('button').forEach(button => {
-        button.classList.toggle('dark-mode');
-    });
-});
-
-// Function to update social share links
-function updateSocialShareLinks(headline) {
+function updateSocialShareLinks(headline, elements) {
     const encodedHeadline = encodeURIComponent(headline);
     const pageUrl = encodeURIComponent(window.location.href);
 
-    // Twitter
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${pageUrl}&hashtags=Neckass`;
-    twitterShareLink.href = twitterUrl;
-
-    // Facebook
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedHeadline}`;
-    facebookShareLink.href = facebookUrl;
-
-    // Reddit
-    const redditUrl = `https://www.reddit.com/submit?url=${pageUrl}&title=${encodedHeadline}`;
-    redditShareLink.href = redditUrl;
+    elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${pageUrl}&hashtags=Neckass`;
+    elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedHeadline}`;
+    elements.redditShareLink.href = `https://www.reddit.com/submit?url=${pageUrl}&title=${encodedHeadline}`;
 }
 
-// Function to get a random readable color
-function getRandomColor() {
+function showLoader(loaderElement, shouldShow) {
+    loaderElement.style.display = shouldShow ? 'block' : 'none';
+    loaderElement.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+}
+
+function updateHeadlineCounter(counterElement, value) {
+    counterElement.textContent = value;
+}
+
+function getReadableColor() {
     const colors = [
         '#FF5733', '#33FF57', '#3357FF', '#F333FF',
         '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
@@ -177,15 +205,16 @@ function getRandomColor() {
     if (document.body.classList.contains('dark-mode') && brightness > brightnessThreshold) {
         return darkenColor(selectedColor, 0.7);
     }
+
     return selectedColor;
 }
 
 function hexToRgb(hex) {
-    const bigint = parseInt(hex.replace('#', ''), 16);
-    return { 
-        r: (bigint >> 16) & 255, 
-        g: (bigint >> 8) & 255, 
-        b: bigint & 255 
+    const numeric = parseInt(hex.replace('#', ''), 16);
+    return {
+        r: (numeric >> 16) & 255,
+        g: (numeric >> 8) & 255,
+        b: numeric & 255
     };
 }
 
@@ -194,38 +223,36 @@ function darkenColor(hex, factor) {
     return `rgb(${Math.floor(rgb.r * factor)}, ${Math.floor(rgb.g * factor)}, ${Math.floor(rgb.b * factor)})`;
 }
 
-// Initial headline display
-if (viewedHeadlines.length > 0) {
-    currentIndex = viewedHeadlines[viewedHeadlines.length - 1];
-    displayHeadline(currentIndex);
-} else {
-    document.getElementById('next-btn').click();
+function toggleDarkMode(state) {
+    state.darkModeEnabled = !state.darkModeEnabled;
+    applyDarkMode(state.darkModeEnabled);
+    persistState(state);
 }
 
-
-// Dark mode toggle functionality
-const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
-toggleDarkModeButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-});
-
-// Apply dark mode preference on load
-if (localStorage.getItem('darkMode') === 'true') {
-    document.body.classList.add('dark-mode');
+function applyDarkMode(isEnabled) {
+    document.body.classList.toggle('dark-mode', isEnabled);
+    const container = document.querySelector('.container');
+    if (container) {
+        container.classList.toggle('dark-mode', isEnabled);
+    }
+    document.querySelectorAll('button').forEach(button => {
+        button.classList.toggle('dark-mode', isEnabled);
+    });
 }
 
-// Copy headline to clipboard functionality
-const copyButton = document.getElementById('copy-btn');
-const headlineElement = document.getElementById('headline');
-
-copyButton.addEventListener('click', () => {
+function copyHeadline(headlineElement) {
     const headlineText = headlineElement.innerText;
     navigator.clipboard.writeText(headlineText)
-        .then(() => {
-            alert('Headline copied to clipboard!');
-        })
-        .catch(err => {
-            console.error('Could not copy text: ', err);
-        });
-});
+        .then(() => alert('Headline copied to clipboard!'))
+        .catch(error => console.error('Could not copy text: ', error));
+}
+
+function displayInitialHeadline(state, elements) {
+    if (state.viewedHeadlines.length > 0) {
+        state.currentIndex = state.viewedHeadlines[state.viewedHeadlines.length - 1];
+        renderHeadline(state.currentIndex, state, elements);
+        return;
+    }
+
+    handleNextHeadline(state, elements);
+}
