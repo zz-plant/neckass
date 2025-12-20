@@ -63,12 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const elements = mapElements();
     const state = restoreState();
 
-    applyDarkMode(state.darkModeEnabled);
+    applyDarkMode(state.darkModeEnabled, elements);
     updateHeadlineCounter(elements.counter, state.viewedCount);
 
     elements.nextButton.addEventListener('click', () => handleNextHeadline(state, elements));
     elements.previousButton.addEventListener('click', () => handlePreviousHeadline(state, elements));
-    elements.darkModeToggle.addEventListener('click', () => toggleDarkMode(state));
+    elements.darkModeToggle.addEventListener('click', () => toggleDarkMode(state, elements));
     elements.copyButton.addEventListener('click', () => copyHeadline(elements.headline));
 
     displayInitialHeadline(state, elements);
@@ -86,7 +86,8 @@ function mapElements() {
         redditShareLink: document.getElementById('reddit-share'),
         darkModeToggle: document.getElementById('toggle-dark-mode'),
         copyButton: document.getElementById('copy-btn'),
-        container: document.querySelector('.container')
+        container: document.querySelector('.container'),
+        headlineSection: document.querySelector('.headline-section')
     };
 }
 
@@ -223,18 +224,16 @@ function darkenColor(hex, factor) {
     return `rgb(${Math.floor(rgb.r * factor)}, ${Math.floor(rgb.g * factor)}, ${Math.floor(rgb.b * factor)})`;
 }
 
-function toggleDarkMode(state) {
+function toggleDarkMode(state, elements) {
     state.darkModeEnabled = !state.darkModeEnabled;
-    applyDarkMode(state.darkModeEnabled);
+    applyDarkMode(state.darkModeEnabled, elements);
     persistState(state);
 }
 
-function applyDarkMode(isEnabled) {
+function applyDarkMode(isEnabled, elements) {
     document.body.classList.toggle('dark-mode', isEnabled);
-    const container = document.querySelector('.container');
-    if (container) {
-        container.classList.toggle('dark-mode', isEnabled);
-    }
+    elements?.container?.classList.toggle('dark-mode', isEnabled);
+    elements?.headlineSection?.classList.toggle('dark-mode', isEnabled);
     document.querySelectorAll('button').forEach(button => {
         button.classList.toggle('dark-mode', isEnabled);
     });
