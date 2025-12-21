@@ -1,6 +1,8 @@
 const STORAGE_KEYS = {
     viewedCount: 'headlinesViewed',
     viewedList: 'viewedHeadlines',
+    navigationStack: 'viewedStack',
+    uniqueHeadlines: 'uniqueHeadlines',
     darkMode: 'darkMode'
 };
 
@@ -64,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = restoreState();
 
     applyDarkMode(state.darkModeEnabled, elements);
-    updateHeadlineCounter(elements.counter, state.viewedCount);
+    updateHeadlineCounter(elements.counter, state.uniqueHeadlines.size);
 
     elements.nextButton.addEventListener('click', () => handleNextHeadline(state, elements));
     elements.previousButton.addEventListener('click', () => handlePreviousHeadline(state, elements));
     elements.darkModeToggle.addEventListener('click', () => toggleDarkMode(state, elements));
-    elements.copyButton.addEventListener('click', () => copyHeadline(elements.headline));
+    elements.copyButton.addEventListener('click', () => copyHeadline(elements));
 
     displayInitialHeadline(state, elements);
 });
@@ -86,22 +88,37 @@ function mapElements() {
         redditShareLink: document.getElementById('reddit-share'),
         darkModeToggle: document.getElementById('toggle-dark-mode'),
         copyButton: document.getElementById('copy-btn'),
+        copyStatus: document.getElementById('copy-status'),
         container: document.querySelector('.container'),
-        headlineSection: document.querySelector('.headline-section')
+        headlineSection: document.querySelector('.headline-section'),
+        controls: document.querySelector('.controls'),
+        socialShare: document.querySelector('.social-share'),
+        copySection: document.querySelector('.copy-headline'),
+        themeToggleSection: document.querySelector('.theme-toggle')
     };
 }
 
 function restoreState() {
-    const viewedCount = Number(localStorage.getItem(STORAGE_KEYS.viewedCount)) || 0;
-    const viewedList = JSON.parse(localStorage.getItem(STORAGE_KEYS.viewedList) || '[]');
+    const storedStack = JSON.parse(localStorage.getItem(STORAGE_KEYS.navigationStack) || 'null');
+    const viewedListLegacy = JSON.parse(localStorage.getItem(STORAGE_KEYS.viewedList) || '[]');
+    const uniqueHeadlinesLegacy = JSON.parse(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines) || 'null');
     const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
 
-    const sanitizedList = viewedList.filter(index => index >= 0 && index < headlines.length);
+    const rawStack = Array.isArray(storedStack)
+        ? storedStack
+        : (Array.isArray(viewedListLegacy) ? viewedListLegacy : []);
+
+    const sanitizedStack = rawStack.filter(index => index >= 0 && index < headlines.length);
+    const uniqueHeadlines = new Set(
+        Array.isArray(uniqueHeadlinesLegacy) && uniqueHeadlinesLegacy.length > 0
+            ? uniqueHeadlinesLegacy.filter(index => index >= 0 && index < headlines.length)
+            : sanitizedStack
+    );
 
     return {
-        viewedCount,
-        viewedHeadlines: sanitizedList,
-        currentIndex: sanitizedList[sanitizedList.length - 1] ?? -1,
+        navigationStack: sanitizedStack,
+        uniqueHeadlines,
+        currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
         darkModeEnabled
     };
 }
@@ -113,19 +130,24 @@ function handleNextHeadline(state, elements) {
 }
 
 function handlePreviousHeadline(state, elements) {
-    if (state.viewedHeadlines.length <= 1) {
+    if (state.navigationStack.length <= 1) {
         return;
     }
 
-    state.viewedHeadlines.pop();
-    state.currentIndex = state.viewedHeadlines[state.viewedHeadlines.length - 1];
-    state.viewedCount = Math.max(0, state.viewedCount - 1);
+    const removedIndex = state.navigationStack.pop();
+    const stillExists = state.navigationStack.includes(removedIndex);
+
+    if (!stillExists) {
+        state.uniqueHeadlines.delete(removedIndex);
+    }
+
+    state.currentIndex = state.navigationStack[state.navigationStack.length - 1];
     persistState(state);
-    updateHeadlineCounter(elements.counter, state.viewedCount);
-    renderHeadline(state.currentIndex, state, elements);
+    updateHeadlineCounter(elements.counter, state.uniqueHeadlines.size);
+    renderHeadline(state.currentIndex, state, elements, { pushToStack: false });
 }
 
-function renderHeadline(index, state, elements) {
+function renderHeadline(index, state, elements, options = { pushToStack: true }) {
     showLoader(elements.loader, true);
     elements.headline.classList.remove('show');
 
@@ -135,26 +157,28 @@ function renderHeadline(index, state, elements) {
         elements.headline.classList.add('show');
         showLoader(elements.loader, false);
 
-        updateViewedState(index, state, elements.counter);
+        updateViewedState(index, state, elements, options);
         updateSocialShareLinks(headlines[index], elements);
     }, ANIMATION_DELAY_MS);
 }
 
-function updateViewedState(index, state, counterElement) {
-    if (!state.viewedHeadlines.includes(index)) {
-        state.viewedHeadlines.push(index);
-        state.viewedCount += 1;
-        persistState(state);
-    } else {
-        state.currentIndex = index;
+function updateViewedState(index, state, elements, options = { pushToStack: true }) {
+    if (options.pushToStack) {
+        state.navigationStack.push(index);
     }
 
-    updateHeadlineCounter(counterElement, state.viewedCount);
+    state.uniqueHeadlines.add(index);
+    state.currentIndex = index;
+
+    persistState(state);
+    updateHeadlineCounter(elements.counter, state.uniqueHeadlines.size);
 }
 
 function persistState(state) {
-    localStorage.setItem(STORAGE_KEYS.viewedCount, state.viewedCount);
-    localStorage.setItem(STORAGE_KEYS.viewedList, JSON.stringify(state.viewedHeadlines));
+    localStorage.setItem(STORAGE_KEYS.viewedCount, state.uniqueHeadlines.size);
+    localStorage.setItem(STORAGE_KEYS.viewedList, JSON.stringify(state.navigationStack));
+    localStorage.setItem(STORAGE_KEYS.navigationStack, JSON.stringify(state.navigationStack));
+    localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
     localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
 }
 
@@ -231,25 +255,88 @@ function toggleDarkMode(state, elements) {
 }
 
 function applyDarkMode(isEnabled, elements) {
-    document.body.classList.toggle('dark-mode', isEnabled);
-    elements?.container?.classList.toggle('dark-mode', isEnabled);
-    elements?.headlineSection?.classList.toggle('dark-mode', isEnabled);
+    const selectorTargets = [
+        document.body,
+        elements?.container,
+        elements?.headlineSection,
+        elements?.controls,
+        elements?.socialShare,
+        elements?.copySection,
+        elements?.themeToggleSection,
+        elements?.loader
+    ].filter(Boolean);
+
+    selectorTargets.forEach(node => node.classList.toggle('dark-mode', isEnabled));
+
     document.querySelectorAll('button').forEach(button => {
         button.classList.toggle('dark-mode', isEnabled);
     });
 }
 
-function copyHeadline(headlineElement) {
-    const headlineText = headlineElement.innerText;
-    navigator.clipboard.writeText(headlineText)
-        .then(() => alert('Headline copied to clipboard!'))
-        .catch(error => console.error('Could not copy text: ', error));
+function copyHeadline(elements) {
+    const headlineText = elements.headline.innerText;
+    const clipboardAvailable = navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
+
+    const reportStatus = (message, isError = false) => {
+        if (elements.copyStatus) {
+            elements.copyStatus.textContent = message;
+            elements.copyStatus.classList.toggle('error', isError);
+        }
+    };
+
+    const handleSuccess = () => reportStatus('Headline copied to clipboard!');
+    const handleFailure = (errorMessage) => reportStatus(errorMessage, true);
+
+    const copyWithClipboardAPI = () =>
+        navigator.clipboard.writeText(headlineText)
+            .then(handleSuccess)
+            .catch(() => handleFailure('Unable to access clipboard.'));
+
+    const copyWithFallback = () => {
+        const textarea = document.createElement('textarea');
+        textarea.value = headlineText;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+
+        const selection = document.getSelection();
+        const selectedRange = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+        textarea.select();
+        const successful = document.execCommand('copy');
+
+        if (selectedRange) {
+            selection.removeAllRanges();
+            selection.addRange(selectedRange);
+        }
+
+        document.body.removeChild(textarea);
+
+        if (successful) {
+            handleSuccess();
+        } else {
+            handleFailure('Copy failed. Please try again.');
+        }
+    };
+
+    if (!clipboardAvailable) {
+        try {
+            copyWithFallback();
+        } catch (error) {
+            handleFailure('Clipboard unavailable in this browser.');
+            elements.copyButton.disabled = true;
+        }
+        return;
+    }
+
+    copyWithClipboardAPI();
 }
 
 function displayInitialHeadline(state, elements) {
-    if (state.viewedHeadlines.length > 0) {
-        state.currentIndex = state.viewedHeadlines[state.viewedHeadlines.length - 1];
-        renderHeadline(state.currentIndex, state, elements);
+    if (state.navigationStack.length > 0) {
+        state.currentIndex = state.navigationStack[state.navigationStack.length - 1];
+        renderHeadline(state.currentIndex, state, elements, { pushToStack: false });
         return;
     }
 

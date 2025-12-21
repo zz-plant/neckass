@@ -104,6 +104,16 @@ main {
     margin-bottom: 15px;
 }
 
+.copy-status {
+    margin-top: 8px;
+    min-height: 1.2em;
+    color: #1b7f1b;
+}
+
+.copy-status.error {
+    color: #b00020;
+}
+
 .social-icon {
     margin: 0 15px;
     text-decoration: none;
@@ -148,10 +158,25 @@ body.dark-mode {
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
 }
 
+.controls.dark-mode,
+.social-share.dark-mode,
+.copy-headline.dark-mode,
+.theme-toggle.dark-mode {
+    color: #fff;
+}
+
+.social-share.dark-mode .social-icon {
+    color: #8ab4f8;
+}
+
 .buttons button.dark-mode,
 .theme-toggle button.dark-mode,
 .copy-headline button.dark-mode {
     background-color: #555;
+    color: #fff;
+}
+
+.loader.dark-mode {
     color: #fff;
 }
 
