@@ -7,6 +7,14 @@ const STORAGE_KEYS = {
 };
 
 const ANIMATION_DELAY_MS = 500;
+const BRIGHTNESS_THRESHOLD = 130;
+const COLOR_PALETTE = [
+    '#FF5733', '#33FF57', '#3357FF', '#F333FF',
+    '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
+    '#FF33F6', '#FF4500', '#33FFBD', '#FFB533',
+    '#FFA833', '#5A5AFF', '#FF33C4', '#FF4444',
+    '#44FF88'
+];
 
 const headlines = [
     "Neckass Starts Petition to Ban Calculators, Claims They 'Steal Human Creativity'—Still Can’t Do Basic Math",
@@ -62,19 +70,239 @@ const headlines = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-    const elements = mapElements();
-    const state = restoreState();
+    const app = new HeadlineApp({
+        headlines,
+        elements: mapElements(),
+        storage: createStorageAdapter()
+    });
 
-    applyDarkMode(state.darkModeEnabled, elements);
-    updateHeadlineCounter(elements.counter, state.uniqueHeadlines.size);
-
-    elements.nextButton.addEventListener('click', () => handleNextHeadline(state, elements));
-    elements.previousButton.addEventListener('click', () => handlePreviousHeadline(state, elements));
-    elements.darkModeToggle.addEventListener('click', () => toggleDarkMode(state, elements));
-    elements.copyButton.addEventListener('click', () => copyHeadline(elements));
-
-    displayInitialHeadline(state, elements);
+    app.init();
 });
+
+class HeadlineApp {
+    constructor({ headlines: allHeadlines, elements, storage }) {
+        this.headlines = allHeadlines;
+        this.elements = elements;
+        this.storage = storage;
+        this.state = storage.restore(allHeadlines.length);
+    }
+
+    init() {
+        this.applyDarkMode(this.state.darkModeEnabled);
+        this.updateHeadlineCounter();
+        this.updateNavigationAvailability();
+        this.bindEvents();
+        this.renderInitialHeadline();
+    }
+
+    bindEvents() {
+        this.elements.nextButton.addEventListener('click', () => this.handleNext());
+        this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
+        this.elements.darkModeToggle.addEventListener('click', () => this.toggleDarkMode());
+        this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
+    }
+
+    handleNext() {
+        if (this.headlines.length === 0) {
+            this.renderEmptyState();
+            return;
+        }
+
+        const nextIndex = this.getRandomIndex();
+        this.renderHeadline(nextIndex);
+    }
+
+    handlePrevious() {
+        if (this.state.navigationStack.length <= 1) {
+            return;
+        }
+
+        const removedIndex = this.state.navigationStack.pop();
+        if (!this.state.navigationStack.includes(removedIndex)) {
+            this.state.uniqueHeadlines.delete(removedIndex);
+        }
+
+        const previousIndex = this.state.navigationStack[this.state.navigationStack.length - 1];
+        this.state.currentIndex = previousIndex;
+        this.persistState();
+        this.updateHeadlineCounter();
+        this.updateNavigationAvailability();
+        this.renderHeadline(previousIndex, { pushToStack: false });
+    }
+
+    renderHeadline(index, options = { pushToStack: true }) {
+        this.toggleLoader(true);
+        this.elements.headline.classList.remove('show');
+
+        setTimeout(() => {
+            this.elements.headline.textContent = this.headlines[index];
+            this.elements.headline.style.color = selectReadableColor(this.state.darkModeEnabled);
+            this.elements.headline.classList.add('show');
+            this.toggleLoader(false);
+
+            this.updateViewedState(index, options);
+            this.updateSocialShareLinks(this.headlines[index]);
+        }, ANIMATION_DELAY_MS);
+    }
+
+    renderInitialHeadline() {
+        if (this.state.navigationStack.length > 0 && isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)) {
+            this.renderHeadline(this.state.currentIndex, { pushToStack: false });
+            return;
+        }
+
+        this.handleNext();
+    }
+
+    renderEmptyState() {
+        this.elements.headline.textContent = 'No headlines available.';
+        this.elements.headline.style.color = '';
+        this.updateSocialShareLinks('');
+        this.toggleLoader(false);
+        this.elements.nextButton.disabled = true;
+        this.updateNavigationAvailability();
+    }
+
+    updateViewedState(index, options = { pushToStack: true }) {
+        if (options.pushToStack) {
+            this.state.navigationStack.push(index);
+        }
+
+        this.state.uniqueHeadlines.add(index);
+        this.state.currentIndex = index;
+
+        this.persistState();
+        this.updateHeadlineCounter();
+        this.updateNavigationAvailability();
+    }
+
+    updateSocialShareLinks(headline) {
+        const encodedHeadline = encodeURIComponent(headline);
+        const pageUrl = encodeURIComponent(window.location.href);
+
+        this.elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${pageUrl}&hashtags=Neckass`;
+        this.elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedHeadline}`;
+        this.elements.redditShareLink.href = `https://www.reddit.com/submit?url=${pageUrl}&title=${encodedHeadline}`;
+    }
+
+    updateHeadlineCounter() {
+        this.elements.counter.textContent = this.state.uniqueHeadlines.size;
+    }
+
+    updateNavigationAvailability() {
+        this.elements.previousButton.disabled = this.state.navigationStack.length <= 1;
+    }
+
+    toggleDarkMode() {
+        this.state.darkModeEnabled = !this.state.darkModeEnabled;
+        this.applyDarkMode(this.state.darkModeEnabled);
+        this.persistState();
+    }
+
+    applyDarkMode(isEnabled) {
+        const targetNodes = [
+            document.body,
+            this.elements.container,
+            this.elements.headlineSection,
+            this.elements.controls,
+            this.elements.socialShare,
+            this.elements.copySection,
+            this.elements.themeToggleSection,
+            this.elements.loader
+        ].filter(Boolean);
+
+        targetNodes.forEach(node => node.classList.toggle('dark-mode', isEnabled));
+        document.querySelectorAll('button').forEach(button => {
+            button.classList.toggle('dark-mode', isEnabled);
+        });
+    }
+
+    copyHeadline() {
+        const headlineText = this.elements.headline.innerText;
+        const clipboardAvailable = navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
+
+        const reportStatus = (message, isError = false) => {
+            if (!this.elements.copyStatus) return;
+            this.elements.copyStatus.textContent = message;
+            this.elements.copyStatus.classList.toggle('error', isError);
+        };
+
+        const handleSuccess = () => reportStatus('Headline copied to clipboard!');
+        const handleFailure = (errorMessage) => reportStatus(errorMessage, true);
+
+        const copyWithClipboardAPI = () =>
+            navigator.clipboard.writeText(headlineText)
+                .then(handleSuccess)
+                .catch(() => handleFailure('Unable to access clipboard.'));
+
+        const copyWithFallback = () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = headlineText;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+
+            const selection = document.getSelection();
+            const selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+            textarea.select();
+            const successful = document.execCommand('copy');
+
+            if (selectedRange) {
+                selection.removeAllRanges();
+                selection.addRange(selectedRange);
+            }
+
+            document.body.removeChild(textarea);
+
+            if (successful) {
+                handleSuccess();
+            } else {
+                handleFailure('Copy failed. Please try again.');
+            }
+        };
+
+        if (!clipboardAvailable) {
+            try {
+                copyWithFallback();
+            } catch (error) {
+                handleFailure('Clipboard unavailable in this browser.');
+                this.elements.copyButton.disabled = true;
+            }
+            return;
+        }
+
+        copyWithClipboardAPI();
+    }
+
+    toggleLoader(shouldShow) {
+        this.elements.loader.style.display = shouldShow ? 'block' : 'none';
+        this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    }
+
+    getRandomIndex() {
+        if (this.headlines.length <= 1) {
+            return 0;
+        }
+
+        let randomIndex = Math.floor(Math.random() * this.headlines.length);
+        while (randomIndex === this.state.currentIndex) {
+            randomIndex = Math.floor(Math.random() * this.headlines.length);
+        }
+
+        return randomIndex;
+    }
+
+    persistState() {
+        this.storage.persist({
+            navigationStack: this.state.navigationStack,
+            uniqueHeadlines: this.state.uniqueHeadlines,
+            currentIndex: this.state.currentIndex,
+            darkModeEnabled: this.state.darkModeEnabled
+        });
+    }
+}
 
 function mapElements() {
     return {
@@ -98,136 +326,62 @@ function mapElements() {
     };
 }
 
-function restoreState() {
-    const storedStack = JSON.parse(localStorage.getItem(STORAGE_KEYS.navigationStack) || 'null');
-    const viewedListLegacy = JSON.parse(localStorage.getItem(STORAGE_KEYS.viewedList) || '[]');
-    const uniqueHeadlinesLegacy = JSON.parse(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines) || 'null');
-    const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
-
-    const rawStack = Array.isArray(storedStack)
-        ? storedStack
-        : (Array.isArray(viewedListLegacy) ? viewedListLegacy : []);
-
-    const sanitizedStack = rawStack.filter(index => index >= 0 && index < headlines.length);
-    const uniqueHeadlines = new Set(
-        Array.isArray(uniqueHeadlinesLegacy) && uniqueHeadlinesLegacy.length > 0
-            ? uniqueHeadlinesLegacy.filter(index => index >= 0 && index < headlines.length)
-            : sanitizedStack
-    );
-
+function createStorageAdapter() {
     return {
-        navigationStack: sanitizedStack,
-        uniqueHeadlines,
-        currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
-        darkModeEnabled
+        restore(totalHeadlines) {
+            const storedStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStack), null);
+            const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
+            const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
+            const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
+
+            const rawStack = Array.isArray(storedStack)
+                ? storedStack
+                : (Array.isArray(viewedListLegacy) ? viewedListLegacy : []);
+
+            const sanitizedStack = rawStack.filter(index => isValidHeadlineIndex(index, totalHeadlines));
+            const uniqueHeadlines = new Set(
+                Array.isArray(uniqueHeadlinesLegacy) && uniqueHeadlinesLegacy.length > 0
+                    ? uniqueHeadlinesLegacy.filter(index => isValidHeadlineIndex(index, totalHeadlines))
+                    : sanitizedStack
+            );
+
+            return {
+                navigationStack: sanitizedStack,
+                uniqueHeadlines,
+                currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
+                darkModeEnabled
+            };
+        },
+
+        persist(state) {
+            localStorage.setItem(STORAGE_KEYS.viewedCount, state.uniqueHeadlines.size);
+            localStorage.setItem(STORAGE_KEYS.viewedList, JSON.stringify(state.navigationStack));
+            localStorage.setItem(STORAGE_KEYS.navigationStack, JSON.stringify(state.navigationStack));
+            localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
+            localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
+        }
     };
 }
 
-function handleNextHeadline(state, elements) {
-    const nextIndex = getRandomIndex(state.currentIndex);
-    state.currentIndex = nextIndex;
-    renderHeadline(nextIndex, state, elements);
+function isValidHeadlineIndex(index, totalHeadlines) {
+    return Number.isInteger(index) && index >= 0 && index < totalHeadlines;
 }
 
-function handlePreviousHeadline(state, elements) {
-    if (state.navigationStack.length <= 1) {
-        return;
+function parseJson(value, fallback) {
+    try {
+        if (value === null) return fallback;
+        return JSON.parse(value);
+    } catch (error) {
+        return fallback;
     }
-
-    const removedIndex = state.navigationStack.pop();
-    const stillExists = state.navigationStack.includes(removedIndex);
-
-    if (!stillExists) {
-        state.uniqueHeadlines.delete(removedIndex);
-    }
-
-    state.currentIndex = state.navigationStack[state.navigationStack.length - 1];
-    persistState(state);
-    updateHeadlineCounter(elements.counter, state.uniqueHeadlines.size);
-    renderHeadline(state.currentIndex, state, elements, { pushToStack: false });
 }
 
-function renderHeadline(index, state, elements, options = { pushToStack: true }) {
-    showLoader(elements.loader, true);
-    elements.headline.classList.remove('show');
-
-    setTimeout(() => {
-        elements.headline.textContent = headlines[index];
-        elements.headline.style.color = getReadableColor();
-        elements.headline.classList.add('show');
-        showLoader(elements.loader, false);
-
-        updateViewedState(index, state, elements, options);
-        updateSocialShareLinks(headlines[index], elements);
-    }, ANIMATION_DELAY_MS);
-}
-
-function updateViewedState(index, state, elements, options = { pushToStack: true }) {
-    if (options.pushToStack) {
-        state.navigationStack.push(index);
-    }
-
-    state.uniqueHeadlines.add(index);
-    state.currentIndex = index;
-
-    persistState(state);
-    updateHeadlineCounter(elements.counter, state.uniqueHeadlines.size);
-}
-
-function persistState(state) {
-    localStorage.setItem(STORAGE_KEYS.viewedCount, state.uniqueHeadlines.size);
-    localStorage.setItem(STORAGE_KEYS.viewedList, JSON.stringify(state.navigationStack));
-    localStorage.setItem(STORAGE_KEYS.navigationStack, JSON.stringify(state.navigationStack));
-    localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
-    localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
-}
-
-function getRandomIndex(currentIndex) {
-    if (headlines.length <= 1) {
-        return 0;
-    }
-
-    let randomIndex = Math.floor(Math.random() * headlines.length);
-    while (randomIndex === currentIndex) {
-        randomIndex = Math.floor(Math.random() * headlines.length);
-    }
-
-    return randomIndex;
-}
-
-function updateSocialShareLinks(headline, elements) {
-    const encodedHeadline = encodeURIComponent(headline);
-    const pageUrl = encodeURIComponent(window.location.href);
-
-    elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${pageUrl}&hashtags=Neckass`;
-    elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedHeadline}`;
-    elements.redditShareLink.href = `https://www.reddit.com/submit?url=${pageUrl}&title=${encodedHeadline}`;
-}
-
-function showLoader(loaderElement, shouldShow) {
-    loaderElement.style.display = shouldShow ? 'block' : 'none';
-    loaderElement.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
-}
-
-function updateHeadlineCounter(counterElement, value) {
-    counterElement.textContent = value;
-}
-
-function getReadableColor() {
-    const colors = [
-        '#FF5733', '#33FF57', '#3357FF', '#F333FF',
-        '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
-        '#FF33F6', '#FF4500', '#33FFBD', '#FFB533',
-        '#FFA833', '#5A5AFF', '#FF33C4', '#FF4444',
-        '#44FF88'
-    ];
-
-    const selectedColor = colors[Math.floor(Math.random() * colors.length)];
-    const brightnessThreshold = 130;
+function selectReadableColor(isDarkMode) {
+    const selectedColor = COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
     const rgb = hexToRgb(selectedColor);
     const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
 
-    if (document.body.classList.contains('dark-mode') && brightness > brightnessThreshold) {
+    if (isDarkMode && brightness > BRIGHTNESS_THRESHOLD) {
         return darkenColor(selectedColor, 0.7);
     }
 
@@ -246,99 +400,4 @@ function hexToRgb(hex) {
 function darkenColor(hex, factor) {
     const rgb = hexToRgb(hex);
     return `rgb(${Math.floor(rgb.r * factor)}, ${Math.floor(rgb.g * factor)}, ${Math.floor(rgb.b * factor)})`;
-}
-
-function toggleDarkMode(state, elements) {
-    state.darkModeEnabled = !state.darkModeEnabled;
-    applyDarkMode(state.darkModeEnabled, elements);
-    persistState(state);
-}
-
-function applyDarkMode(isEnabled, elements) {
-    const selectorTargets = [
-        document.body,
-        elements?.container,
-        elements?.headlineSection,
-        elements?.controls,
-        elements?.socialShare,
-        elements?.copySection,
-        elements?.themeToggleSection,
-        elements?.loader
-    ].filter(Boolean);
-
-    selectorTargets.forEach(node => node.classList.toggle('dark-mode', isEnabled));
-
-    document.querySelectorAll('button').forEach(button => {
-        button.classList.toggle('dark-mode', isEnabled);
-    });
-}
-
-function copyHeadline(elements) {
-    const headlineText = elements.headline.innerText;
-    const clipboardAvailable = navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
-
-    const reportStatus = (message, isError = false) => {
-        if (elements.copyStatus) {
-            elements.copyStatus.textContent = message;
-            elements.copyStatus.classList.toggle('error', isError);
-        }
-    };
-
-    const handleSuccess = () => reportStatus('Headline copied to clipboard!');
-    const handleFailure = (errorMessage) => reportStatus(errorMessage, true);
-
-    const copyWithClipboardAPI = () =>
-        navigator.clipboard.writeText(headlineText)
-            .then(handleSuccess)
-            .catch(() => handleFailure('Unable to access clipboard.'));
-
-    const copyWithFallback = () => {
-        const textarea = document.createElement('textarea');
-        textarea.value = headlineText;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'absolute';
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-
-        const selection = document.getSelection();
-        const selectedRange = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-
-        textarea.select();
-        const successful = document.execCommand('copy');
-
-        if (selectedRange) {
-            selection.removeAllRanges();
-            selection.addRange(selectedRange);
-        }
-
-        document.body.removeChild(textarea);
-
-        if (successful) {
-            handleSuccess();
-        } else {
-            handleFailure('Copy failed. Please try again.');
-        }
-    };
-
-    if (!clipboardAvailable) {
-        try {
-            copyWithFallback();
-        } catch (error) {
-            handleFailure('Clipboard unavailable in this browser.');
-            elements.copyButton.disabled = true;
-        }
-        return;
-    }
-
-    copyWithClipboardAPI();
-}
-
-function displayInitialHeadline(state, elements) {
-    if (state.navigationStack.length > 0) {
-        state.currentIndex = state.navigationStack[state.navigationStack.length - 1];
-        renderHeadline(state.currentIndex, state, elements, { pushToStack: false });
-        return;
-    }
-
-    handleNextHeadline(state, elements);
 }
