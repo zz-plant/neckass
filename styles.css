@@ -90,6 +90,16 @@ main {
     background-color: #555;
 }
 
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+button.dark-mode:disabled {
+    background-color: #444;
+    color: #d3d3d3;
+}
+
 .counter {
     font-size: 1.1em;
     margin-top: 5px;
