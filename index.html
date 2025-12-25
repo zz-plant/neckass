@@ -4,64 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neckass Headlines - Absurd Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <meta name="description" content="Absurd, funny headlines generated randomly. Enjoy a laugh and share the hilarity on social media.">
 
     <!-- Open Graph Meta Tags for better social media sharing -->
     <meta property="og:title" content="Neckass Headlines - Absurd Edition">
     <meta property="og:description" content="Absurd, funny headlines generated randomly.">
-    <meta property="og:image" content="path-to-your-image.jpg"> <!-- Add your preferred image here -->
+    <meta property="og:image" content="path-to-your-image.jpg">
     <meta property="og:url" content="https://neckass.com">
-
 </head>
 <body>
-    <header>
-        <h1>Neckass Headlines Generator</h1>
-        <p>Refresh your day with randomly generated absurd headlines.</p>
-    </header>
-
-    <main class="container">
-        <section class="headline-section">
-            <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
-            <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
-        </section>
-
-        <section class="controls">
-            <div class="buttons">
-                <button id="prev-btn" aria-label="View Previous Headline">Previous</button>
-                <button id="next-btn" aria-label="View Next Headline">Next</button>
+    <div class="page-shell">
+        <header class="hero">
+            <div class="container hero__content">
+                <p class="eyebrow">Ridiculous news desk</p>
+                <h1>Neckass Headlines Generator</h1>
+                <p class="lede">Dive into a feed of chaotic brilliance. Shuffle through over-the-top headlines and save your favorites for the perfect roast.</p>
+                <div class="hero__pills">
+                    <span class="pill">Instant shuffle</span>
+                    <span class="pill">Dark mode ready</span>
+                    <span class="pill">Shareable absurdity</span>
+                </div>
             </div>
-            <p class="counter" aria-live="polite">Headlines viewed: <span id="counter">0</span></p>
-        </section>
+        </header>
 
-        <section class="theme-toggle">
-            <button id="toggle-dark-mode" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
-        </section>
+        <main class="container layout-grid">
+            <section class="headline-section glass-card">
+                <div class="section-header">
+                    <p class="label">Featured absurdity</p>
+                    <span class="accent-dot" aria-hidden="true"></span>
+                </div>
+                <div class="headline-wrapper">
+                    <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
+                    <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
+                </div>
+                <div class="callout">Refresh the madness or revisit the last zinger.</div>
+                <div class="button-row">
+                    <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
+                    <button id="next-btn" aria-label="View Next Headline" class="accent">Next headline</button>
+                </div>
+            </section>
 
-        <section class="social-share">
-            <h3>Share this Headline</h3>
+            <section class="controls glass-card">
+                <div class="stat-block">
+                    <p class="label">Headlines viewed</p>
+                    <p class="stat"><span id="counter">0</span></p>
+                </div>
 
-            <!-- Twitter Share -->
-            <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20absurd%20headline!&url=https://neckass.com" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
-                <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" onerror="this.onerror=null; this.src='icons/twitter.png'"> Twitter
-            </a>
+                <div class="theme-toggle">
+                    <div>
+                        <p class="label">Appearance</p>
+                        <p class="muted">Switch between light and dark moods.</p>
+                    </div>
+                    <button id="toggle-dark-mode" aria-label="Toggle Dark Mode" class="ghost">Toggle Dark Mode</button>
+                </div>
 
-            <!-- Facebook Share -->
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://neckass.com" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
-                <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" onerror="this.onerror=null; this.src='icons/facebook.png'"> Facebook
-            </a>
+                <div class="copy-headline">
+                    <div>
+                        <p class="label">Clipboard</p>
+                        <p class="muted">Grab the headline for your next post.</p>
+                    </div>
+                    <div class="copy-actions">
+                        <button id="copy-btn" aria-label="Copy Headline to Clipboard" class="accent">Copy Headline</button>
+                        <p id="copy-status" class="copy-status" aria-live="polite" role="status"></p>
+                    </div>
+                </div>
 
-            <!-- Reddit Share -->
-            <a href="https://reddit.com/submit?url=https://neckass.com&title=Absurd%20Headlines" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
-                <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" onerror="this.onerror=null; this.src='icons/reddit.png'"> Reddit
-            </a>
-        </section>
-
-        <section class="copy-headline">
-            <button id="copy-btn" aria-label="Copy Headline to Clipboard">Copy Headline</button>
-            <p id="copy-status" class="copy-status" aria-live="polite" role="status"></p>
-        </section>
-    </main>
+                <div class="social-share">
+                    <div class="section-header">
+                        <p class="label">Broadcast the chaos</p>
+                        <p class="muted">Share the current headline to your favorite corner of the internet.</p>
+                    </div>
+                    <div class="social-grid">
+                        <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20absurd%20headline!&url=https://neckass.com" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
+                            <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" onerror="this.onerror=null; this.src='icons/twitter.png'">
+                            Twitter
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://neckass.com" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
+                            <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" onerror="this.onerror=null; this.src='icons/facebook.png'">
+                            Facebook
+                        </a>
+                        <a href="https://reddit.com/submit?url=https://neckass.com&title=Absurd%20Headlines" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
+                            <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" onerror="this.onerror=null; this.src='icons/reddit.png'">
+                            Reddit
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
