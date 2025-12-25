@@ -258,6 +258,7 @@ button.dark-mode:disabled {
 .social-grid {
     display: grid;
     gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .social-icon {
@@ -343,8 +344,42 @@ body.dark-mode {
         padding: 18px 12px 36px;
     }
 
+    .page-shell {
+        max-width: 640px;
+    }
+
+    .hero__content {
+        gap: 10px;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.9rem, 7vw, 2.6rem);
+    }
+
+    .hero .lede {
+        font-size: 0.98rem;
+    }
+
+    .glass-card {
+        padding: 18px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .headline-section h2 {
+        font-size: clamp(1.4rem, 5.5vw, 2rem);
+    }
+
     .button-row {
         flex-direction: column;
+    }
+
+    .button-row button {
+        width: 100%;
     }
 
     .theme-toggle,
@@ -353,11 +388,24 @@ body.dark-mode {
         align-items: flex-start;
     }
 
+    .theme-toggle button {
+        width: 100%;
+    }
+
     .copy-actions {
         width: 100%;
+        gap: 8px;
     }
 
     .copy-actions .accent {
         width: 100%;
+    }
+
+    .stat {
+        font-size: 1.9rem;
+    }
+
+    .social-grid {
+        grid-template-columns: 1fr;
     }
 }
