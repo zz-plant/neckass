@@ -210,9 +210,13 @@ class HeadlineApp {
     }
 
     applyDarkMode(isEnabled) {
+        const containers = Array.isArray(this.elements.containers)
+            ? this.elements.containers
+            : [];
+
         const targetNodes = [
             document.body,
-            this.elements.container,
+            ...containers,
             this.elements.headlineSection,
             this.elements.controls,
             this.elements.socialShare,
@@ -327,7 +331,7 @@ function mapElements() {
         darkModeToggle: document.getElementById('toggle-dark-mode'),
         copyButton: document.getElementById('copy-btn'),
         copyStatus: document.getElementById('copy-status'),
-        container: document.querySelector('.container'),
+        containers: Array.from(document.querySelectorAll('.container')),
         headlineSection: document.querySelector('.headline-section'),
         controls: document.querySelector('.controls'),
         socialShare: document.querySelector('.social-share'),
