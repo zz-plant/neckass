@@ -66,7 +66,17 @@ const headlines = [
     "BREAKING: Neckass Claims He Invented Water by Drinking It—Demands Credit",
     "Neckass Refuses to Believe in Electricity, Insists 'Power Comes From His Inner Brilliance'",
     "Local Neckass Declares His Thoughts Should Be Taught in Schools—Writes Curriculum, It’s Just His Twitter Feed",
-    "BREAKING: Neckass Declares He Can Fly—Claims It’s ‘Too Dangerous’ to Prove in Public"
+    "BREAKING: Neckass Declares He Can Fly—Claims It’s ‘Too Dangerous’ to Prove in Public",
+    "Neckass Opens Wellness Retreat Where The Only Treatment Is Listening to His Motivational Rants",
+    "Local Neckass Tries Meal Prepping Once, Immediately Announces Cookbook Deal",
+    "Neckass Applies for Shark Tank With Idea to Sell Air—Demands 90% Equity",
+    "BREAKING: Neckass Invents New Productivity Hack: Doing Nothing and Calling It Visionary Rest",
+    "Neckass Launches City-Wide Rebrand Without Telling the City, Hands Out New Flags Anyway",
+    "Local Neckass Claims He’s Living Off the Grid—From His Condo’s Balcony",
+    "Neckass Unveils Fitness Plan: Pace Around Complaining About Gyms",
+    "BREAKING: Neckass Starts Neighborhood Watch to Make Sure Everyone Notices Him",
+    "Neckass Hosts TEDx Talk in His Living Room; Audience of Three Gives Standing Ovation",
+    "Local Neckass Says He’s ‘Going Minimalist’—Keeps Only Things That Have His Name On Them"
 ];
 
 document.addEventListener('DOMContentLoaded', () => {

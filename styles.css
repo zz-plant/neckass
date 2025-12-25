@@ -6,25 +6,25 @@
 }
 
 :root {
-    --bg: #0f172a;
-    --surface: rgba(255, 255, 255, 0.08);
-    --border: rgba(255, 255, 255, 0.12);
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --accent: #7c3aed;
-    --accent-2: #22d3ee;
-    --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
-    --radius: 18px;
-    --glow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 25px 45px rgba(0, 0, 0, 0.35);
-    --card-blur: blur(20px);
-    --font: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --bg: #f6f1eb;
+    --surface: #ffffff;
+    --border: #e2dcd3;
+    --text: #1f2a37;
+    --muted: #5f6b7a;
+    --accent: #e4572e;
+    --accent-2: #f0a202;
+    --shadow: 0 12px 35px rgba(31, 42, 55, 0.08);
+    --radius: 14px;
+    --glow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    --card-blur: none;
+    --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 body {
     font-family: var(--font);
-    background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.14), transparent 35%),
-        radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.12), transparent 30%),
-        linear-gradient(135deg, #0b1020, #0f172a 50%, #0b1225);
+    background: radial-gradient(circle at 20% 10%, rgba(240, 162, 2, 0.08), transparent 35%),
+        radial-gradient(circle at 80% 0%, rgba(228, 87, 46, 0.08), transparent 30%),
+        linear-gradient(180deg, #fdfbf9, var(--bg));
     color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
@@ -54,7 +54,7 @@ body {
 .hero h1 {
     font-size: clamp(2.2rem, 3vw, 3.2rem);
     letter-spacing: -0.02em;
-    color: #fff;
+    color: #0f172a;
 }
 
 .hero .lede {
@@ -67,8 +67,8 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 600;
-    color: var(--accent-2);
-    font-size: 0.85rem;
+    color: var(--accent);
+    font-size: 0.82rem;
 }
 
 .hero__pills {
@@ -80,11 +80,11 @@ body {
 .pill {
     padding: 8px 12px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.05);
+    background: #fff;
     border: 1px solid var(--border);
-    color: var(--text);
+    color: var(--muted);
     font-size: 0.9rem;
-    backdrop-filter: blur(8px);
+    box-shadow: var(--glow);
 }
 
 .layout-grid {
@@ -99,23 +99,8 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 22px;
-    box-shadow: var(--glow);
-    backdrop-filter: var(--card-blur);
+    box-shadow: var(--shadow);
     overflow: hidden;
-}
-
-.glass-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(145deg, rgba(124, 58, 237, 0.08), rgba(34, 211, 238, 0.05));
-    pointer-events: none;
-    z-index: 0;
-}
-
-.glass-card > * {
-    position: relative;
-    z-index: 1;
 }
 
 .section-header {
@@ -143,8 +128,8 @@ body {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
-    box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.14);
+    background: var(--accent);
+    box-shadow: 0 0 0 6px rgba(228, 87, 46, 0.12);
 }
 
 .headline-wrapper {
@@ -157,7 +142,7 @@ body {
     font-size: clamp(1.6rem, 2.2vw, 2.3rem);
     transition: color 0.5s ease, opacity 0.5s ease;
     opacity: 0;
-    color: #fff;
+    color: #0f172a;
 }
 
 .headline-section h2.show {
@@ -184,10 +169,11 @@ body {
     cursor: pointer;
     border-radius: 12px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.06);
+    background: #fff;
     color: var(--text);
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.3s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
     font-weight: 600;
+    box-shadow: var(--glow);
 }
 
 .button-row button:hover,
@@ -195,21 +181,22 @@ body {
 .copy-headline button:hover,
 .buttons button:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: #d8cfc4;
+    box-shadow: 0 8px 20px rgba(31, 42, 55, 0.12);
 }
 
 .button-row .accent,
 .copy-headline .accent,
 .buttons .accent {
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #0b1020;
+    color: #fffaf5;
     border: none;
 }
 
 .button-row .ghost,
 .theme-toggle .ghost,
 .buttons .ghost {
-    background: transparent;
+    background: #f7f2eb;
     color: var(--text);
 }
 
@@ -279,11 +266,11 @@ button.dark-mode:disabled {
     gap: 8px;
     padding: 10px 12px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    color: #cbd5e1;
+    background: #fff;
+    color: var(--text);
     text-decoration: none;
     border: 1px solid var(--border);
-    transition: transform 0.2s ease, border-color 0.3s ease, background 0.3s ease;
+    transition: transform 0.2s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .social-icon img {
@@ -293,8 +280,9 @@ button.dark-mode:disabled {
 
 .social-icon:hover {
     transform: translateY(-1px);
-    border-color: rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: #d8cfc4;
+    background: #fff9f2;
+    box-shadow: 0 8px 20px rgba(31, 42, 55, 0.1);
 }
 
 .loader {
@@ -305,14 +293,12 @@ button.dark-mode:disabled {
 
 /* Dark Mode (body toggles class via JS) */
 body.dark-mode {
-    --bg: #0b0f1c;
-    --surface: rgba(255, 255, 255, 0.05);
-    --border: rgba(255, 255, 255, 0.09);
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.15), transparent 35%),
-        radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.15), transparent 30%),
-        linear-gradient(145deg, #060815, #0b0f1c 50%, #050814);
+    --bg: #0f172a;
+    --surface: #0b1220;
+    --border: #1f2937;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    background: linear-gradient(180deg, #0b1020, #0f172a 60%, #0b1225);
 }
 
 .container.dark-mode,
@@ -332,8 +318,9 @@ body.dark-mode {
 .theme-toggle button.dark-mode,
 .copy-headline button.dark-mode,
 .button-row button.dark-mode {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #0b1220;
     color: #e2e8f0;
+    border-color: #1f2937;
 }
 
 .loader.dark-mode {
