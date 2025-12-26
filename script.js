@@ -154,7 +154,7 @@ const headlines = [
     "BREAKING: Neckass Claims He Can Power a City With His Confidence—City Politely Declines",
     "Neckass Starts a Podcast Reviewing His Dreams—Gives Them All Five Stars",
     "Local Neckass Declares Himself a One-Man Think Tank—Sells Subscriptions to His Shower Thoughts",
-    "BREAKING: Neckass Attempts to Patent the Concept of Daylight—Files Under ‘Personal Branding’"
+    "BREAKING: Neckass Attempts to Patent the Concept of Daylight—Files Under ‘Personal Branding’",
     "Local Neckass Says He Invented Multi-Tasking by Chewing Gum While Standing Still",
     "BREAKING: Neckass Starts Sustainability Initiative—Recycles Only Compliments",
     "Neckass Claims He Can Speak to Wi-Fi Routers, Demands They Respect His Bandwidth",
