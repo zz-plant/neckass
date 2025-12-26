@@ -32,149 +32,163 @@
         </header>
 
         <main class="container layout-grid">
-            <section class="headline-section glass-card">
-                <div class="section-header">
-                    <p class="label">Featured headline</p>
-                    <span class="accent-dot" aria-hidden="true"></span>
-                </div>
-                <div class="headline-wrapper">
-                    <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
-                    <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
-                </div>
-                <div class="callout">Hit print for a fresh scoop or flip back to the headlines everyone swears they saw.</div>
-                <div class="mock-front" id="mock-front" aria-label="Mock front page preview">
-                    <div class="mock-front__masthead">
-                        <span class="masthead-title">Neckass Daily</span>
-                        <span class="masthead-date" id="mock-date"></span>
-                    </div>
-                    <div class="mock-front__headline">
-                        <p class="mock-label">Banner edition</p>
-                        <p id="mock-headline">Loading...</p>
-                    </div>
-                    <div class="mock-front__footer">
-                        <span class="footnote">Unverified edition</span>
-                        <span class="footnote footnote--accent">Printed wherever rumors drift</span>
-                    </div>
-                </div>
-                <div class="button-row">
-                    <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
-                    <button id="next-btn" aria-label="View Next Headline" class="accent">Next headline</button>
-                </div>
-            </section>
-
-            <section class="controls glass-card">
-                <div class="stat-block">
-                    <p class="label">Headlines viewed</p>
-                    <p class="stat"><span id="counter">0</span></p>
-                </div>
-
-                <div class="theme-toggle">
-                    <div>
-                        <p class="label">Appearance</p>
-                        <p class="muted">Switch between light and dark moods.</p>
-                    </div>
-                    <button id="toggle-dark-mode" aria-label="Toggle Dark Mode" class="ghost">Toggle Dark Mode</button>
-                </div>
-
-                <div class="copy-headline">
-                    <div>
-                        <p class="label">Clipboard</p>
-                        <p class="muted">Grab the headline for your next post.</p>
-                    </div>
-                    <div class="copy-actions">
-                        <button id="copy-btn" aria-label="Copy Headline to Clipboard" class="accent">Copy Headline</button>
-                        <p id="copy-status" class="copy-status" aria-live="polite" role="status"></p>
-                    </div>
-                </div>
-
-                <div class="social-share">
+            <div class="feature-stack">
+                <section class="headline-section glass-card">
                     <div class="section-header">
-                        <p class="label">Share the latest scoop</p>
-                        <p class="muted">Pass along the newest headline to anyone who needs a fresh update.</p>
+                        <p class="label">Featured headline</p>
+                        <span class="accent-dot" aria-hidden="true"></span>
                     </div>
-                    <div class="social-grid">
-                        <a href="#" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
-                            <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" onerror="this.onerror=null; this.src='icons/twitter.png'">
-                            Twitter
-                        </a>
-                        <a href="#" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
-                            <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" onerror="this.onerror=null; this.src='icons/facebook.png'">
-                            Facebook
-                        </a>
-                        <a href="#" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
-                            <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" onerror="this.onerror=null; this.src='icons/reddit.png'">
-                            Reddit
-                        </a>
+                    <div class="headline-wrapper">
+                        <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
+                        <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                     </div>
-                </div>
+                    <div class="callout">Hit print for a fresh scoop or flip back to the headlines everyone swears they saw.</div>
+                    <div class="mock-front" id="mock-front" aria-label="Mock front page preview">
+                        <div class="mock-front__masthead">
+                            <span class="masthead-title">Neckass Daily</span>
+                            <span class="masthead-date" id="mock-date"></span>
+                        </div>
+                        <div class="mock-front__headline">
+                            <p class="mock-label">Banner edition</p>
+                            <p id="mock-headline">Loading...</p>
+                        </div>
+                        <div class="mock-front__footer">
+                            <span class="footnote">Unverified edition</span>
+                            <span class="footnote footnote--accent">Printed wherever rumors drift</span>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
+                        <button id="next-btn" aria-label="View Next Headline" class="accent">Next headline</button>
+                    </div>
+                </section>
 
-                <div class="export-actions">
+                <section class="progression glass-card" aria-label="Progression and idle rewards">
                     <div class="section-header">
-                        <p class="label">Mock front page</p>
-                        <p class="muted">Download or copy a framed take of today’s banner.</p>
+                        <p class="label">Pressroom progression</p>
+                        <p class="muted">Earn credits, build hype combos, and let the auto-printer keep the presses warm.</p>
                     </div>
-                    <div class="export-buttons">
-                        <button id="download-mock" class="accent" aria-label="Download mock front page">Download mock front page</button>
-                        <button id="copy-mock" class="ghost" aria-label="Copy mock front page image">Copy image</button>
-                    </div>
-                    <p id="export-status" class="export-status" aria-live="polite" role="status"></p>
-                </div>
-            </section>
 
-            <section class="progression glass-card" aria-label="Progression and idle rewards">
-                <div class="section-header">
-                    <p class="label">Pressroom progression</p>
-                    <p class="muted">Earn credits, build hype combos, and let the auto-printer keep the presses warm.</p>
-                </div>
-
-                <div class="reward-grid">
-                    <div class="reward-pill" id="credits-pill">
-                        <div class="pill-label">Credits</div>
-                        <div class="pill-value">
-                            <span id="credit-balance">0</span>
-                            <span class="pill-chip">idle ready</span>
+                    <div class="reward-grid">
+                        <div class="reward-pill" id="credits-pill">
+                            <div class="pill-label">Credits</div>
+                            <div class="pill-value">
+                                <span id="credit-balance">0</span>
+                                <span class="pill-chip">idle ready</span>
+                            </div>
+                        </div>
+                        <div class="reward-pill" id="combo-pill">
+                            <div class="pill-label">Combo hype</div>
+                            <div class="pill-value">
+                                <span id="combo-count">x1</span>
+                                <span class="pill-chip" id="hype-bonus">+0%</span>
+                            </div>
+                        </div>
+                        <div class="reward-pill" id="printer-pill">
+                            <div class="pill-label">Auto printer</div>
+                            <div class="pill-value">
+                                <span id="printer-rate">0/s</span>
+                                <span class="pill-chip" id="printer-level">Lv. 1</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="reward-pill" id="combo-pill">
-                        <div class="pill-label">Combo hype</div>
-                        <div class="pill-value">
-                            <span id="combo-count">x1</span>
-                            <span class="pill-chip" id="hype-bonus">+0%</span>
-                        </div>
-                    </div>
-                    <div class="reward-pill" id="printer-pill">
-                        <div class="pill-label">Auto printer</div>
-                        <div class="pill-value">
-                            <span id="printer-rate">0/s</span>
-                            <span class="pill-chip" id="printer-level">Lv. 1</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="hype-meter" aria-label="Hype meter">
-                    <div class="hype-meter__header">
+                    <div class="hype-meter" aria-label="Hype meter">
+                        <div class="hype-meter__header">
+                            <div>
+                                <p class="label">Hype meter</p>
+                                <p class="muted">Stack quick pulls to boost rewards with a rolling combo.</p>
+                            </div>
+                            <span id="hype-percent" class="pill-chip">0%</span>
+                        </div>
+                        <div class="hype-meter__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="hype-meter__fill" id="hype-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="auto-printer">
                         <div>
-                            <p class="label">Hype meter</p>
-                            <p class="muted">Stack quick pulls to boost rewards with a rolling combo.</p>
+                            <p class="label">Upgrade auto-printer</p>
+                            <p class="muted">Passive press that keeps the credits flowing between sessions.</p>
                         </div>
-                        <span id="hype-percent" class="pill-chip">0%</span>
+                        <div class="auto-printer__actions">
+                            <button id="upgrade-printer" class="accent" aria-label="Upgrade auto printer">Upgrade for <span id="upgrade-cost">0</span></button>
+                            <p class="muted" id="passive-note">Passive gains online</p>
+                        </div>
                     </div>
-                    <div class="hype-meter__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                        <div class="hype-meter__fill" id="hype-fill"></div>
-                    </div>
-                </div>
+                </section>
+            </div>
 
-                <div class="auto-printer">
-                    <div>
-                        <p class="label">Upgrade auto-printer</p>
-                        <p class="muted">Passive press that keeps the credits flowing between sessions.</p>
-                    </div>
-                    <div class="auto-printer__actions">
-                        <button id="upgrade-printer" class="accent" aria-label="Upgrade auto printer">Upgrade for <span id="upgrade-cost">0</span></button>
-                        <p class="muted" id="passive-note">Passive gains online</p>
-                    </div>
+            <aside class="command-rail" aria-label="Headline controls and sharing">
+                <div class="rail-stack">
+                    <section class="controls glass-card">
+                        <div class="controls__intro">
+                            <div>
+                                <p class="eyebrow">Command desk</p>
+                                <p class="muted">Keep the pressroom organized with quick toggles and actions.</p>
+                            </div>
+                            <span class="pill-chip pill-chip--inline">Live session</span>
+                        </div>
+
+                        <div class="stat-block">
+                            <p class="label">Headlines viewed</p>
+                            <p class="stat"><span id="counter">0</span></p>
+                        </div>
+
+                        <div class="theme-toggle">
+                            <div>
+                                <p class="label">Appearance</p>
+                                <p class="muted">Switch between light and dark moods.</p>
+                            </div>
+                            <button id="toggle-dark-mode" aria-label="Toggle Dark Mode" class="ghost">Toggle Dark Mode</button>
+                        </div>
+
+                        <div class="copy-headline">
+                            <div>
+                                <p class="label">Clipboard</p>
+                                <p class="muted">Grab the headline for your next post.</p>
+                            </div>
+                            <div class="copy-actions">
+                                <button id="copy-btn" aria-label="Copy Headline to Clipboard" class="accent">Copy Headline</button>
+                                <p id="copy-status" class="copy-status" aria-live="polite" role="status"></p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="social-share glass-card">
+                        <div class="section-header">
+                            <p class="label">Share the latest scoop</p>
+                            <p class="muted">Pass along the newest headline to anyone who needs a fresh update.</p>
+                        </div>
+                        <div class="social-grid">
+                            <a href="#" id="twitter-share" class="social-icon" target="_blank" aria-label="Share on Twitter">
+                                <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" onerror="this.onerror=null; this.src='icons/twitter.png'">
+                                Twitter
+                            </a>
+                            <a href="#" id="facebook-share" class="social-icon" target="_blank" aria-label="Share on Facebook">
+                                <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" onerror="this.onerror=null; this.src='icons/facebook.png'">
+                                Facebook
+                            </a>
+                            <a href="#" id="reddit-share" class="social-icon" target="_blank" aria-label="Share on Reddit">
+                                <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" onerror="this.onerror=null; this.src='icons/reddit.png'">
+                                Reddit
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="export-actions glass-card">
+                        <div class="section-header">
+                            <p class="label">Mock front page</p>
+                            <p class="muted">Download or copy a framed take of today’s banner.</p>
+                        </div>
+                        <div class="export-buttons">
+                            <button id="download-mock" class="accent" aria-label="Download mock front page">Download mock front page</button>
+                            <button id="copy-mock" class="ghost" aria-label="Copy mock front page image">Copy image</button>
+                        </div>
+                        <p id="export-status" class="export-status" aria-live="polite" role="status"></p>
+                    </section>
                 </div>
-            </section>
+            </aside>
         </main>
     </div>
 

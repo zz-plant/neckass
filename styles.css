@@ -130,8 +130,25 @@ body {
 
 .layout-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.feature-stack {
+    display: grid;
     gap: 18px;
+}
+
+.command-rail {
+    position: relative;
+}
+
+.rail-stack {
+    position: sticky;
+    top: 18px;
+    display: grid;
+    gap: 16px;
 }
 
 .glass-card {
@@ -203,6 +220,22 @@ body {
     font-style: italic;
     border-left: 3px solid var(--border);
     padding-left: 12px;
+}
+
+.controls__intro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+}
+
+.pill-chip--inline {
+    background: rgba(194, 65, 45, 0.1);
+    color: var(--accent);
+    border-color: rgba(194, 65, 45, 0.35);
 }
 
 .mock-front {
@@ -383,14 +416,10 @@ button.dark-mode:disabled {
 }
 
 .social-share {
-    border-top: 1px solid var(--border);
-    padding-top: 14px;
+    padding: 4px;
 }
 
 .export-actions {
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
-    margin-top: 10px;
     display: grid;
     gap: 12px;
 }
@@ -684,6 +713,11 @@ body.dark-mode {
 @media (max-width: 899px) {
     .layout-grid {
         grid-template-columns: 1fr;
+    }
+
+    .rail-stack {
+        position: relative;
+        top: 0;
     }
 
     .hero {
