@@ -42,6 +42,20 @@
                     <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                 </div>
                 <div class="callout">Hit print for a fresh scoop or flip back to yesterday’s screamers.</div>
+                <div class="mock-front" id="mock-front" aria-label="Mock front page preview">
+                    <div class="mock-front__masthead">
+                        <span class="masthead-title">Neckass Daily</span>
+                        <span class="masthead-date" id="mock-date"></span>
+                    </div>
+                    <div class="mock-front__headline">
+                        <p class="mock-label">Banner edition</p>
+                        <p id="mock-headline">Loading...</p>
+                    </div>
+                    <div class="mock-front__footer">
+                        <span class="footnote">Absurd edition</span>
+                        <span class="footnote footnote--accent">Printed wherever ridiculousness roams</span>
+                    </div>
+                </div>
                 <div class="button-row">
                     <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
                     <button id="next-btn" aria-label="View Next Headline" class="accent">Next headline</button>
@@ -93,10 +107,23 @@
                         </a>
                     </div>
                 </div>
+
+                <div class="export-actions">
+                    <div class="section-header">
+                        <p class="label">Mock front page</p>
+                        <p class="muted">Download or copy a framed take of today’s banner.</p>
+                    </div>
+                    <div class="export-buttons">
+                        <button id="download-mock" class="accent" aria-label="Download mock front page">Download mock front page</button>
+                        <button id="copy-mock" class="ghost" aria-label="Copy mock front page image">Copy image</button>
+                    </div>
+                    <p id="export-status" class="export-status" aria-live="polite" role="status"></p>
+                </div>
             </section>
         </main>
     </div>
 
+    <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
