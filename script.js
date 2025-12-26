@@ -168,6 +168,7 @@ class HeadlineApp {
         this.elements = elements;
         this.storage = storage;
         this.state = storage.restore(allHeadlines.length);
+        this.handleDirectionalNavigation = this.handleDirectionalNavigation.bind(this);
     }
 
     init() {
@@ -188,6 +189,7 @@ class HeadlineApp {
         this.elements.downloadMockButton?.addEventListener('click', () => this.exportMockFront('download'));
         this.elements.copyMockButton?.addEventListener('click', () => this.exportMockFront('copy'));
         window.addEventListener('popstate', (event) => this.handlePopState(event));
+        document.addEventListener('keydown', this.handleDirectionalNavigation);
     }
 
     handleNext() {
@@ -286,6 +288,22 @@ class HeadlineApp {
 
     updateNavigationAvailability() {
         this.elements.previousButton.disabled = this.state.navigationStack.length <= 1;
+    }
+
+    handleDirectionalNavigation(event) {
+        const ignoredTags = ['INPUT', 'TEXTAREA', 'BUTTON', 'A', 'SELECT', 'OPTION'];
+        if (ignoredTags.includes(event.target.tagName)) return;
+
+        const forwardKeys = ['ArrowRight', 'ArrowDown'];
+        const backwardKeys = ['ArrowLeft', 'ArrowUp'];
+
+        if (forwardKeys.includes(event.key)) {
+            this.handleNext();
+        } else if (backwardKeys.includes(event.key)) {
+            this.handlePrevious();
+        } else if (event.key === 'Enter' || event.key === ' ') {
+            this.handleNext();
+        }
     }
 
     applyUrlHeadlineSelection() {
