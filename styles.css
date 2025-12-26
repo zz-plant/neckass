@@ -217,9 +217,52 @@ body {
 .callout {
     margin: 14px 0 10px;
     color: var(--muted);
-    font-style: italic;
     border-left: 3px solid var(--border);
     padding-left: 12px;
+}
+
+.quick-guide {
+    background: rgba(31, 27, 22, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px 12px;
+    margin-bottom: 14px;
+}
+
+.quick-guide__title {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.quick-guide__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+}
+
+.quick-guide__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    align-items: start;
+}
+
+.quick-guide__badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f3c583, #d9714a);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    box-shadow: 0 6px 16px rgba(194, 65, 45, 0.25);
 }
 
 .controls__intro {
@@ -491,6 +534,13 @@ button.dark-mode:disabled {
     font-size: 1.1rem;
 }
 
+.reward-note {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #fff8ef;
+    opacity: 0.92;
+}
+
 .pill-chip {
     display: inline-flex;
     align-items: center;
@@ -512,6 +562,13 @@ button.dark-mode:disabled {
     0% { box-shadow: 0 0 0 0 rgba(240, 162, 2, 0.4); }
     70% { box-shadow: 0 0 0 14px rgba(240, 162, 2, 0); }
     100% { box-shadow: 0 0 0 0 rgba(240, 162, 2, 0); }
+}
+
+.progression__hint {
+    background: rgba(31, 27, 22, 0.04);
+    border: 1px dashed var(--border);
+    padding: 10px 12px;
+    border-radius: 10px;
 }
 
 .hype-meter {
