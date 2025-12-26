@@ -4,28 +4,11 @@ const STORAGE_KEYS = {
     navigationStack: 'navigationStack',
     navigationStackLegacy: 'viewedStack',
     uniqueHeadlines: 'uniqueHeadlines',
-    darkMode: 'darkMode',
-    credits: 'credits',
-    combo: 'combo',
-    hype: 'hype',
-    autoPrinterLevel: 'autoPrinterLevel',
-    lastActiveAt: 'lastActiveAt',
-    lastInteractionAt: 'lastInteractionAt'
+    darkMode: 'darkMode'
 };
 
 const ANIMATION_DELAY_MS = 500;
 const BRIGHTNESS_THRESHOLD = 130;
-const BASE_CREDIT_REWARD = 12;
-const COMBO_WINDOW_MS = 6000;
-const COMBO_STEP_BONUS = 0.06;
-const HYPE_STEP = 8;
-const HYPE_MAX = 100;
-const HYPE_BONUS_MULTIPLIER = 0.4;
-const HYPE_DECAY_RATE = 2;
-const HYPE_DECAY_INTERVAL_MS = 2000;
-const AUTO_PRINTER_BASE_RATE = 1.5;
-const AUTO_UPGRADE_BASE_COST = 120;
-const AUTO_TICK_MS = 1000;
 const COLOR_PALETTE = [
     '#FF5733', '#33FF57', '#3357FF', '#F333FF',
     '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
@@ -185,7 +168,6 @@ class HeadlineApp {
         this.elements = elements;
         this.storage = storage;
         this.state = storage.restore(allHeadlines.length);
-        this.intervals = [];
     }
 
     init() {
@@ -193,10 +175,6 @@ class HeadlineApp {
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
-        this.applyPassiveGains();
-        this.updateProgressionUI();
-        this.startAutoPrinter();
-        this.startHypeDecay();
         this.bindEvents();
         this.applyUrlHeadlineSelection();
         this.renderInitialHeadline();
@@ -209,7 +187,6 @@ class HeadlineApp {
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
         this.elements.downloadMockButton?.addEventListener('click', () => this.exportMockFront('download'));
         this.elements.copyMockButton?.addEventListener('click', () => this.exportMockFront('copy'));
-        this.elements.upgradePrinterButton?.addEventListener('click', () => this.upgradeAutoPrinter());
         window.addEventListener('popstate', (event) => this.handlePopState(event));
     }
 
@@ -255,11 +232,7 @@ class HeadlineApp {
             this.updateDocumentMetadata(this.headlines[index], index);
             this.updateSocialShareLinks(this.headlines[index], index);
             this.updateMockHeadline(this.headlines[index]);
-            if (options.pushToStack) {
-                this.grantHeadlineRewards();
-            } else {
-                this.updateProgressionUI();
-            }
+            this.persistState();
             this.updateHistoryState(index, { replace: options.replaceState });
         }, ANIMATION_DELAY_MS);
     }
@@ -450,138 +423,6 @@ class HeadlineApp {
         link.setAttribute('href', url);
     }
 
-    grantHeadlineRewards() {
-        const now = Date.now();
-        const withinComboWindow = now - this.state.lastInteractionAt <= COMBO_WINDOW_MS;
-        this.state.comboCount = withinComboWindow ? this.state.comboCount + 1 : 1;
-        this.state.lastInteractionAt = now;
-
-        const comboBonus = 1 + (this.state.comboCount - 1) * COMBO_STEP_BONUS;
-        const hypeIncrement = Math.min(HYPE_MAX, this.state.hype + HYPE_STEP + (this.state.comboCount - 1));
-        this.state.hype = hypeIncrement;
-
-        const hypeBonus = 1 + (this.state.hype / 100) * HYPE_BONUS_MULTIPLIER;
-        const payout = Math.round(BASE_CREDIT_REWARD * comboBonus * hypeBonus);
-        this.state.credits += payout;
-
-        this.flashPill();
-        this.updateProgressionUI();
-        this.persistState();
-    }
-
-    updateProgressionUI() {
-        if (this.elements.creditBalance) {
-            this.elements.creditBalance.textContent = Math.floor(this.state.credits).toLocaleString();
-        }
-
-        if (this.elements.comboCount) {
-            this.elements.comboCount.textContent = `x${this.state.comboCount}`;
-        }
-
-        if (this.elements.hypeBonus) {
-            const hypeBonusPercent = Math.round((this.state.hype / 100) * HYPE_BONUS_MULTIPLIER * 100);
-            this.elements.hypeBonus.textContent = `+${hypeBonusPercent}%`;
-        }
-
-        if (this.elements.hypeFill) {
-            this.elements.hypeFill.style.width = `${Math.min(this.state.hype, HYPE_MAX)}%`;
-        }
-
-        if (this.elements.hypePercent) {
-            this.elements.hypePercent.textContent = `${Math.round(Math.min(this.state.hype, HYPE_MAX))}%`;
-            this.elements.hypeMeter?.setAttribute('aria-valuenow', `${Math.round(Math.min(this.state.hype, HYPE_MAX))}`);
-        }
-
-        const autoRate = this.getAutoPrinterRate();
-        if (this.elements.printerRate) {
-            this.elements.printerRate.textContent = `${autoRate.toFixed(1)}/s`;
-        }
-
-        if (this.elements.printerLevel) {
-            this.elements.printerLevel.textContent = `Lv. ${this.state.autoPrinterLevel}`;
-        }
-
-        if (this.elements.upgradeCost) {
-            this.elements.upgradeCost.textContent = this.getUpgradeCost().toLocaleString();
-        }
-    }
-
-    flashPill() {
-        if (!this.elements.creditsPill) return;
-        this.elements.creditsPill.classList.remove('pulse');
-        void this.elements.creditsPill.offsetWidth;
-        this.elements.creditsPill.classList.add('pulse');
-    }
-
-    applyPassiveGains() {
-        const now = Date.now();
-        const elapsedSeconds = this.state.lastActiveAt ? Math.max(0, Math.floor((now - this.state.lastActiveAt) / 1000)) : 0;
-        const passiveGain = elapsedSeconds * this.getAutoPrinterRate();
-
-        if (passiveGain > 0) {
-            this.state.credits += passiveGain;
-            if (this.elements.passiveNote) {
-                this.elements.passiveNote.textContent = `Banked ${Math.floor(passiveGain)} credits while you were away.`;
-            }
-        }
-
-        this.state.lastActiveAt = now;
-        this.persistState();
-    }
-
-    startAutoPrinter() {
-        const interval = setInterval(() => this.tickAutoPrinter(), AUTO_TICK_MS);
-        this.intervals.push(interval);
-    }
-
-    tickAutoPrinter() {
-        const gain = this.getAutoPrinterRate();
-        this.state.credits += gain;
-        this.updateProgressionUI();
-        this.persistState();
-    }
-
-    startHypeDecay() {
-        const interval = setInterval(() => this.decayHype(), HYPE_DECAY_INTERVAL_MS);
-        this.intervals.push(interval);
-    }
-
-    decayHype() {
-        if (this.state.hype <= 0) return;
-        this.state.hype = Math.max(0, this.state.hype - HYPE_DECAY_RATE);
-        if (Date.now() - this.state.lastInteractionAt > COMBO_WINDOW_MS) {
-            this.state.comboCount = 1;
-        }
-        this.updateProgressionUI();
-        this.persistState();
-    }
-
-    upgradeAutoPrinter() {
-        const cost = this.getUpgradeCost();
-        if (this.state.credits < cost) {
-            if (this.elements.passiveNote) {
-                this.elements.passiveNote.textContent = 'Not enough credits to upgrade yet.';
-            }
-            return;
-        }
-
-        this.state.credits -= cost;
-        this.state.autoPrinterLevel += 1;
-        this.updateProgressionUI();
-        this.persistState();
-        if (this.elements.passiveNote) {
-            this.elements.passiveNote.textContent = 'Press upgraded! Auto-gains boosted.';
-        }
-    }
-
-    getAutoPrinterRate() {
-        return AUTO_PRINTER_BASE_RATE * this.state.autoPrinterLevel;
-    }
-
-    getUpgradeCost() {
-        return Math.ceil(AUTO_UPGRADE_BASE_COST * Math.pow(1.35, this.state.autoPrinterLevel - 1));
-    }
-
     toggleDarkMode() {
         this.state.darkModeEnabled = !this.state.darkModeEnabled;
         this.applyDarkMode(this.state.darkModeEnabled);
@@ -602,9 +443,7 @@ class HeadlineApp {
             this.elements.copySection,
             this.elements.themeToggleSection,
             this.elements.loader,
-            this.elements.mockFrame,
-            this.elements.progression,
-            this.elements.autoPrinter
+            this.elements.mockFrame
         ].filter(Boolean);
 
         targetNodes.forEach(node => node.classList.toggle('dark-mode', isEnabled));
@@ -765,13 +604,7 @@ class HeadlineApp {
             navigationStack: this.state.navigationStack,
             uniqueHeadlines: this.state.uniqueHeadlines,
             currentIndex: this.state.currentIndex,
-            darkModeEnabled: this.state.darkModeEnabled,
-            credits: this.state.credits,
-            comboCount: this.state.comboCount,
-            hype: this.state.hype,
-            autoPrinterLevel: this.state.autoPrinterLevel,
-            lastActiveAt: Date.now(),
-            lastInteractionAt: this.state.lastInteractionAt
+            darkModeEnabled: this.state.darkModeEnabled
         });
     }
 }
@@ -795,20 +628,6 @@ function mapElements() {
         mockFrame: document.getElementById('mock-front'),
         mockHeadline: document.getElementById('mock-headline'),
         mockDate: document.getElementById('mock-date'),
-        creditBalance: document.getElementById('credit-balance'),
-        comboCount: document.getElementById('combo-count'),
-        hypeBonus: document.getElementById('hype-bonus'),
-        printerRate: document.getElementById('printer-rate'),
-        printerLevel: document.getElementById('printer-level'),
-        upgradeCost: document.getElementById('upgrade-cost'),
-        creditsPill: document.getElementById('credits-pill'),
-        hypeFill: document.getElementById('hype-fill'),
-        hypePercent: document.getElementById('hype-percent'),
-        hypeMeter: document.querySelector('.hype-meter__bar'),
-        passiveNote: document.getElementById('passive-note'),
-        upgradePrinterButton: document.getElementById('upgrade-printer'),
-        progression: document.querySelector('.progression'),
-        autoPrinter: document.querySelector('.auto-printer'),
         containers: Array.from(document.querySelectorAll('.container')),
         headlineSection: document.querySelector('.headline-section'),
         controls: document.querySelector('.controls'),
@@ -826,12 +645,6 @@ function createStorageAdapter() {
             const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
             const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
             const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
-            const storedCredits = Number(localStorage.getItem(STORAGE_KEYS.credits));
-            const storedCombo = Number(localStorage.getItem(STORAGE_KEYS.combo));
-            const storedHype = Number(localStorage.getItem(STORAGE_KEYS.hype));
-            const storedPrinterLevel = Number(localStorage.getItem(STORAGE_KEYS.autoPrinterLevel));
-            const lastActiveAt = Number(localStorage.getItem(STORAGE_KEYS.lastActiveAt)) || Date.now();
-            const lastInteractionAt = Number(localStorage.getItem(STORAGE_KEYS.lastInteractionAt)) || Date.now();
 
             const rawStack = Array.isArray(storedStack)
                 ? storedStack
@@ -850,13 +663,7 @@ function createStorageAdapter() {
                 navigationStack: sanitizedStack,
                 uniqueHeadlines,
                 currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
-                darkModeEnabled,
-                credits: Number.isFinite(storedCredits) ? storedCredits : 0,
-                comboCount: Number.isFinite(storedCombo) && storedCombo > 0 ? storedCombo : 1,
-                hype: Number.isFinite(storedHype) && storedHype > 0 ? Math.min(storedHype, HYPE_MAX) : 0,
-                autoPrinterLevel: Number.isFinite(storedPrinterLevel) && storedPrinterLevel > 0 ? storedPrinterLevel : 1,
-                lastActiveAt,
-                lastInteractionAt
+                darkModeEnabled
             };
         },
 
@@ -867,12 +674,6 @@ function createStorageAdapter() {
             localStorage.setItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
             localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
-            localStorage.setItem(STORAGE_KEYS.credits, String(state.credits));
-            localStorage.setItem(STORAGE_KEYS.combo, String(state.comboCount));
-            localStorage.setItem(STORAGE_KEYS.hype, String(state.hype));
-            localStorage.setItem(STORAGE_KEYS.autoPrinterLevel, String(state.autoPrinterLevel));
-            localStorage.setItem(STORAGE_KEYS.lastActiveAt, String(state.lastActiveAt));
-            localStorage.setItem(STORAGE_KEYS.lastInteractionAt, String(state.lastInteractionAt));
         }
     };
 }
