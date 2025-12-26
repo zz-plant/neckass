@@ -38,42 +38,16 @@
                         <p class="label">Featured headline</p>
                         <span class="accent-dot" aria-hidden="true"></span>
                     </div>
-                    <div class="headline-wrapper">
-                        <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
-                        <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
+                <div class="headline-wrapper">
+                    <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
+                    <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
+                </div>
+                <div class="callout">Shuffle a headline, revisit the last one, or share it with the controls on the side.</div>
+                <div class="mock-front" id="mock-front" aria-label="Mock front page preview">
+                    <div class="mock-front__masthead">
+                        <span class="masthead-title">Neckass Daily</span>
+                        <span class="masthead-date" id="mock-date"></span>
                     </div>
-                    <div class="callout">Use the buttons below to shuffle in a fresh headline or revisit the one you just saw.</div>
-                    <div class="quick-guide" aria-label="How to use this generator">
-                        <p class="quick-guide__title">Quick guide</p>
-                        <div class="quick-guide__grid">
-                            <div class="quick-guide__item">
-                                <span class="quick-guide__badge">1</span>
-                                <div>
-                                    <p class="label">Shuffle</p>
-                                    <p class="muted">Tap <strong>Next headline</strong> to pull a random headline. The loader will blink while it swaps.</p>
-                                </div>
-                            </div>
-                            <div class="quick-guide__item">
-                                <span class="quick-guide__badge">2</span>
-                                <div>
-                                    <p class="label">Revisit</p>
-                                    <p class="muted">Use <strong>Previous</strong> to step back through the headlines you already opened.</p>
-                                </div>
-                            </div>
-                            <div class="quick-guide__item">
-                                <span class="quick-guide__badge">3</span>
-                                <div>
-                                    <p class="label">Share or export</p>
-                                    <p class="muted">Copy the headline, share it, or download the mock front page using the rail on the right.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mock-front" id="mock-front" aria-label="Mock front page preview">
-                        <div class="mock-front__masthead">
-                            <span class="masthead-title">Neckass Daily</span>
-                            <span class="masthead-date" id="mock-date"></span>
-                        </div>
                         <div class="mock-front__headline">
                             <p class="mock-label">Banner edition</p>
                             <p id="mock-headline">Loading...</p>
@@ -86,66 +60,6 @@
                     <div class="button-row">
                         <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
                         <button id="next-btn" aria-label="View Next Headline" class="accent">Next headline</button>
-                    </div>
-                </section>
-
-                <section class="progression glass-card" aria-label="Progression and idle rewards">
-                    <div class="section-header">
-                        <p class="label">Session status</p>
-                        <p class="muted">Everything here updates itself so you can see what the generator is tracking.</p>
-                    </div>
-
-                    <div class="reward-grid">
-                        <div class="reward-pill" id="credits-pill">
-                            <div class="pill-label">Credits</div>
-                            <div class="pill-value">
-                                <span id="credit-balance">0</span>
-                                <span class="pill-chip">Idle ready</span>
-                            </div>
-                            <p class="reward-note">Earned when you shuffle or let the auto-printer run.</p>
-                        </div>
-                        <div class="reward-pill" id="combo-pill">
-                            <div class="pill-label">Combo streak</div>
-                            <div class="pill-value">
-                                <span id="combo-count">x1</span>
-                                <span class="pill-chip" id="hype-bonus">+0%</span>
-                            </div>
-                            <p class="reward-note">Keeps rising if you pull headlines back-to-back before the timer cools down.</p>
-                        </div>
-                        <div class="reward-pill" id="printer-pill">
-                            <div class="pill-label">Auto printer</div>
-                            <div class="pill-value">
-                                <span id="printer-rate">0/s</span>
-                                <span class="pill-chip" id="printer-level">Lv. 1</span>
-                            </div>
-                            <p class="reward-note">Adds credits for you in the background. Upgrade it when you want faster gains.</p>
-                        </div>
-                    </div>
-
-                    <p class="progression__hint muted">The meter and counters respond automatically—no extra clicks needed.</p>
-
-                    <div class="hype-meter" aria-label="Hype meter">
-                        <div class="hype-meter__header">
-                            <div>
-                                <p class="label">Hype meter</p>
-                                <p class="muted">Stack quick pulls to boost rewards with a rolling combo.</p>
-                            </div>
-                            <span id="hype-percent" class="pill-chip">0%</span>
-                        </div>
-                        <div class="hype-meter__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                            <div class="hype-meter__fill" id="hype-fill"></div>
-                        </div>
-                    </div>
-
-                    <div class="auto-printer">
-                        <div>
-                            <p class="label">Upgrade auto-printer</p>
-                            <p class="muted">Passive press that keeps the credits flowing between sessions.</p>
-                        </div>
-                        <div class="auto-printer__actions">
-                            <button id="upgrade-printer" class="accent" aria-label="Upgrade auto printer">Upgrade for <span id="upgrade-cost">0</span></button>
-                            <p class="muted" id="passive-note">Passive gains online</p>
-                        </div>
                     </div>
                 </section>
             </div>
