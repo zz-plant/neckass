@@ -8,7 +8,8 @@ This document provides testable specifications for the Neckass Headlines page so
   - `<html lang="en">` must be set.
   - Meta description present and non-empty.
 - **Layout**
-  - Body uses a single-column flow up to 540px viewport width, grid layout (1.4fr/1fr) above 900px, and 1-column grid between 541–899px.
+  - Body uses a single-column flow up to 540px viewport width, a two-column grid with a feature stack and command rail above 900px, and one-column stacking between 541–899px.
+  - The command rail is sticky near the top of the viewport on wide layouts and falls back to normal flow on narrow screens.
   - Maximum content width: 1100px; body padding of at least 18px on small screens and 24px on larger screens.
 - **Color themes**
   - Default theme values must match the CSS root variables in `styles.css`.
@@ -46,7 +47,10 @@ This document provides testable specifications for the Neckass Headlines page so
   - Headline updates should announce via focusable `h2` and `aria-live` status on loader.
   - Buttons include explicit `aria-label` attributes matching their actions.
 
-## Controls panel
+## Controls panel (Command rail)
+- **Shell and intro**
+  - The command rail sits in its own column on wide screens with a sticky stack of cards.
+  - Controls card opens with a "Command desk" eyebrow and helper text plus a pill chip indicating a live session.
 - **Headlines viewed counter**
   - Label text: "Headlines viewed"; numeric value in `#counter` shows count of unique headlines seen in the current storage state.
   - Counter updates whenever a headline is added to `uniqueHeadlines`.
@@ -59,7 +63,7 @@ This document provides testable specifications for the Neckass Headlines page so
   - Success message: "Headline copied to clipboard!" in `#copy-status` with no `error` class. Failure messages include "Unable to access clipboard.", "Copy failed. Please try again.", or "Clipboard unavailable in this browser." and must toggle the `error` class.
   - If fallback copy throws, the Copy button is disabled.
 - **Layout**
-  - Controls panel uses glass card styling with 22px padding and 12px gaps. Theme toggle and copy rows share a top border and 14px vertical padding.
+  - Controls card uses glass styling with a bordered intro block, 22px padding, and separated rows for theme and copy actions.
 - **Accessibility**
   - Copy status uses `aria-live="polite"` and `role="status"`.
 
@@ -72,9 +76,18 @@ This document provides testable specifications for the Neckass Headlines page so
   - Links open in a new tab (`target="_blank"`).
   - When headline text changes, share URLs update to include the encoded headline and current page URL in their respective query parameters: `text` + `url` + hashtag for Twitter, `u` + `quote` for Facebook, `url` + `title` for Reddit.
 - **Layout**
-  - Social links stack in a grid with 10px gaps and 12px padding per item; hover state lifts by 1px and changes background to `#fff9f2`.
+  - Social share lives as its own glass card within the command rail; links stack in a grid with 10px gaps and 12px padding per item, and hover state lifts by 1px while changing background to `#fff9f2`.
 - **Accessibility**
   - Each link includes an `aria-label` describing the destination, e.g., "Share on Twitter".
+
+## Mock front page export
+- **Content**
+  - Section header label: "Mock front page" with helper text about downloading or copying.
+  - Buttons `#download-mock` and `#copy-mock` remain present with the same labels.
+- **Behavior**
+  - Export actions remain wired to the existing download/copy logic in `script.js`.
+- **Layout**
+  - Export controls appear as a dedicated glass card in the command rail with padded buttons and status text below.
 
 ## Persistence & state
 - **LocalStorage keys**
@@ -92,8 +105,8 @@ This document provides testable specifications for the Neckass Headlines page so
 - Headline color selection must never return undefined; if color brightness exceeds threshold in dark mode, it is darkened by a factor of 0.7.
 
 ## Responsive behavior checkpoints
-- **≥900px width**: grid displays two columns (headline and controls) with 18px gap.
-- **541–899px width**: grid collapses to one column; hero margin is 18px.
+- **≥900px width**: grid displays the feature stack alongside the sticky command rail with roughly 20px gap.
+- **541–899px width**: grid collapses to one column and the rail cards flow after the feature stack; hero margin is 18px.
 - **≤540px width**: body padding reduces to 12–18px; button rows stack vertically; theme/copy rows align items to start and Copy button spans full width.
 
 ## Accessibility checklist
