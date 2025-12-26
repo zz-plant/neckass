@@ -101,6 +101,7 @@ class HeadlineApp {
         this.applyDarkMode(this.state.darkModeEnabled);
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
+        this.updateMockDate();
         this.bindEvents();
         this.renderInitialHeadline();
     }
@@ -110,6 +111,8 @@ class HeadlineApp {
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
         this.elements.darkModeToggle.addEventListener('click', () => this.toggleDarkMode());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
+        this.elements.downloadMockButton?.addEventListener('click', () => this.exportMockFront('download'));
+        this.elements.copyMockButton?.addEventListener('click', () => this.exportMockFront('copy'));
     }
 
     handleNext() {
@@ -152,6 +155,7 @@ class HeadlineApp {
 
             this.updateViewedState(index, options);
             this.updateSocialShareLinks(this.headlines[index]);
+            this.updateMockHeadline(this.headlines[index]);
         }, ANIMATION_DELAY_MS);
     }
 
@@ -168,6 +172,7 @@ class HeadlineApp {
         this.elements.headline.textContent = 'No headlines available.';
         this.elements.headline.style.color = '';
         this.updateSocialShareLinks('');
+        this.updateMockHeadline('No headlines available.');
         this.toggleLoader(false);
         this.elements.nextButton.disabled = true;
         this.updateNavigationAvailability();
@@ -222,7 +227,8 @@ class HeadlineApp {
             this.elements.socialShare,
             this.elements.copySection,
             this.elements.themeToggleSection,
-            this.elements.loader
+            this.elements.loader,
+            this.elements.mockFrame
         ].filter(Boolean);
 
         targetNodes.forEach(node => node.classList.toggle('dark-mode', isEnabled));
@@ -295,6 +301,70 @@ class HeadlineApp {
         this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
     }
 
+    updateMockHeadline(text) {
+        if (this.elements.mockHeadline) {
+            this.elements.mockHeadline.textContent = text;
+        }
+    }
+
+    updateMockDate() {
+        if (!this.elements.mockDate) return;
+        const formatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        this.elements.mockDate.textContent = formatter.format(new Date());
+    }
+
+    async exportMockFront(mode) {
+        if (!this.elements.mockFrame || !window.htmlToImage) {
+            this.reportExportStatus('Export unavailable at the moment.', true);
+            return;
+        }
+
+        this.reportExportStatus('Rendering front page...');
+
+        const options = {
+            pixelRatio: window.devicePixelRatio || 2,
+            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')?.trim() || undefined
+        };
+
+        try {
+            if (mode === 'download') {
+                const dataUrl = await window.htmlToImage.toPng(this.elements.mockFrame, options);
+                const link = document.createElement('a');
+                link.download = 'neckass-front-page.png';
+                link.href = dataUrl;
+                link.click();
+                this.reportExportStatus('Mock front page downloaded.');
+                return;
+            }
+
+            if (!navigator.clipboard || !navigator.clipboard.write) {
+                this.reportExportStatus('Clipboard unavailable for images.', true);
+                return;
+            }
+
+            const blob = await window.htmlToImage.toBlob(this.elements.mockFrame, options);
+            if (!blob) {
+                throw new Error('Failed to render image');
+            }
+
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    [blob.type]: blob
+                })
+            ]);
+
+            this.reportExportStatus('Image copied to clipboard.');
+        } catch (error) {
+            this.reportExportStatus('Export failed. Please try again.', true);
+        }
+    }
+
+    reportExportStatus(message, isError = false) {
+        if (!this.elements.exportStatus) return;
+        this.elements.exportStatus.textContent = message;
+        this.elements.exportStatus.classList.toggle('error', isError);
+    }
+
     getRandomIndex() {
         if (this.headlines.length <= 1) {
             return 0;
@@ -331,6 +401,12 @@ function mapElements() {
         darkModeToggle: document.getElementById('toggle-dark-mode'),
         copyButton: document.getElementById('copy-btn'),
         copyStatus: document.getElementById('copy-status'),
+        downloadMockButton: document.getElementById('download-mock'),
+        copyMockButton: document.getElementById('copy-mock'),
+        exportStatus: document.getElementById('export-status'),
+        mockFrame: document.getElementById('mock-front'),
+        mockHeadline: document.getElementById('mock-headline'),
+        mockDate: document.getElementById('mock-date'),
         containers: Array.from(document.querySelectorAll('.container')),
         headlineSection: document.querySelector('.headline-section'),
         controls: document.querySelector('.controls'),

@@ -154,6 +154,75 @@ body {
     color: var(--muted);
 }
 
+.mock-front {
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #fffdf8, #fffaf2);
+    box-shadow: 0 16px 40px rgba(31, 42, 55, 0.08);
+    overflow: hidden;
+}
+
+.mock-front__masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fffaf5;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.masthead-title {
+    font-size: 0.95rem;
+}
+
+.masthead-date {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.mock-front__headline {
+    padding: 18px 16px 20px;
+    display: grid;
+    gap: 8px;
+}
+
+.mock-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+#mock-headline {
+    font-size: clamp(1.6rem, 2vw, 2.1rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.mock-front__footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 16px 14px;
+    border-top: 1px solid var(--border);
+    background: #fffdf8;
+}
+
+.footnote {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.footnote--accent {
+    color: var(--accent);
+    font-weight: 600;
+}
+
 .button-row {
     display: flex;
     gap: 10px;
@@ -255,6 +324,34 @@ button.dark-mode:disabled {
     padding-top: 14px;
 }
 
+.export-actions {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 10px;
+    display: grid;
+    gap: 12px;
+}
+
+.export-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.export-buttons button {
+    min-width: 210px;
+}
+
+.export-status {
+    min-height: 1.2em;
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.export-status.error {
+    color: #f43f5e;
+}
+
 .social-grid {
     display: grid;
     gap: 10px;
@@ -326,6 +423,15 @@ body.dark-mode {
 
 .loader.dark-mode {
     color: var(--muted);
+}
+
+.mock-front.dark-mode {
+    background: linear-gradient(180deg, #0f172a, #0b1225);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.mock-front.dark-mode .mock-front__footer {
+    background: #0c1224;
 }
 
 /* Responsive */
