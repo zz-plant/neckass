@@ -120,6 +120,61 @@
                     <p id="export-status" class="export-status" aria-live="polite" role="status"></p>
                 </div>
             </section>
+
+            <section class="progression glass-card" aria-label="Progression and idle rewards">
+                <div class="section-header">
+                    <p class="label">Pressroom progression</p>
+                    <p class="muted">Earn credits, build hype combos, and let the auto-printer keep the presses warm.</p>
+                </div>
+
+                <div class="reward-grid">
+                    <div class="reward-pill" id="credits-pill">
+                        <div class="pill-label">Credits</div>
+                        <div class="pill-value">
+                            <span id="credit-balance">0</span>
+                            <span class="pill-chip">idle ready</span>
+                        </div>
+                    </div>
+                    <div class="reward-pill" id="combo-pill">
+                        <div class="pill-label">Combo hype</div>
+                        <div class="pill-value">
+                            <span id="combo-count">x1</span>
+                            <span class="pill-chip" id="hype-bonus">+0%</span>
+                        </div>
+                    </div>
+                    <div class="reward-pill" id="printer-pill">
+                        <div class="pill-label">Auto printer</div>
+                        <div class="pill-value">
+                            <span id="printer-rate">0/s</span>
+                            <span class="pill-chip" id="printer-level">Lv. 1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hype-meter" aria-label="Hype meter">
+                    <div class="hype-meter__header">
+                        <div>
+                            <p class="label">Hype meter</p>
+                            <p class="muted">Stack quick pulls to boost rewards with a rolling combo.</p>
+                        </div>
+                        <span id="hype-percent" class="pill-chip">0%</span>
+                    </div>
+                    <div class="hype-meter__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="hype-meter__fill" id="hype-fill"></div>
+                    </div>
+                </div>
+
+                <div class="auto-printer">
+                    <div>
+                        <p class="label">Upgrade auto-printer</p>
+                        <p class="muted">Passive press that keeps the credits flowing between sessions.</p>
+                    </div>
+                    <div class="auto-printer__actions">
+                        <button id="upgrade-printer" class="accent" aria-label="Upgrade auto printer">Upgrade for <span id="upgrade-cost">0</span></button>
+                        <p class="muted" id="passive-note">Passive gains online</p>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
