@@ -77,7 +77,27 @@ const headlines = [
     "Neckass Unveils Fitness Plan: Pace Around Complaining About Gyms",
     "BREAKING: Neckass Starts Neighborhood Watch to Make Sure Everyone Notices Him",
     "Neckass Hosts TEDx Talk in His Living Room; Audience of Three Gives Standing Ovation",
-    "Local Neckass Says He’s ‘Going Minimalist’—Keeps Only Things That Have His Name On Them"
+    "Local Neckass Says He’s ‘Going Minimalist’—Keeps Only Things That Have His Name On Them",
+    "BREAKING: Neckass Opens Museum Dedicated to Himself—Tours Offered Every Hour by Him, Featuring Him",
+    "Neckass Patents the Phrase ‘You’re Welcome’—Demands Royalties for Basic Manners",
+    "Local Neckass Tries to Summon Thunder by Clapping—Claims It Worked Because It Rained Tomorrow",
+    "BREAKING: Neckass Declares Email ‘Too Corporate’—Insists All Messages Be Sent Via Carrier Pigeon",
+    "Neckass Attempts to Invent Square Wheels to ‘Disrupt Transportation’—Blames Physics for Failure",
+    "Local Neckass Hosts Silent Disco Alone—Says It’s ‘An Exclusive Invitation to His Inner Genius’",
+    "BREAKING: Neckass Starts Pyramid Scheme Shaped Like a Circle—Says It’s ‘Geometrically Innovative’",
+    "Neckass Claims He Doesn’t Need Alarm Clocks Because Time Bows to His Schedule",
+    "Local Neckass Creates Motivational Posters Featuring Only His Signature",
+    "BREAKING: Neckass Applies for Trademark on the Word ‘Innovation’—Cites His Mirror as Proof",
+    "Neckass Declares Wi-Fi a ‘Government Mirage’—Installs Ethernet Cables in His Backyard Garden",
+    "Local Neckass Attempts to Crowdsource a Statue of Himself—Offers Exposure as Payment",
+    "BREAKING: Neckass Tries to Cancel Mondays—Threatens Legal Action Against the Calendar",
+    "Neckass Opens Pop-Up Store Selling Invisible Merchandise—Claims It Sold Out Instantly",
+    "Local Neckass Writes Think Piece on Why Gravity Is ‘Just a Suggestion for the Weak’",
+    "BREAKING: Neckass Announces Reality TV Show Where He Judges People for Not Being Him",
+    "Neckass Refuses to Update His Phone—Says Software Should Adapt to His Aura Instead",
+    "Local Neckass Offers Masterclass in Breathing—Charges Extra for Exhaling Techniques",
+    "BREAKING: Neckass Declares He Invented Silence—Asks Everyone to Stop Using It Without Permission",
+    "Neckass Launches Wellness App That Sends Hourly Reminders to Admire Him"
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
