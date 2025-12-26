@@ -28,7 +28,7 @@ body {
     color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
-    padding: 24px 18px 48px;
+    padding: 24px 24px 48px;
     background-attachment: fixed;
 }
 
@@ -387,6 +387,50 @@ button.dark-mode:disabled {
     font-size: 1rem;
     display: none;
     color: var(--muted);
+}
+
+@media (max-width: 899px) {
+    body {
+        padding: 24px 18px 40px;
+    }
+
+    .layout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        margin-bottom: 18px;
+    }
+}
+
+@media (max-width: 540px) {
+    body {
+        padding: 18px 12px 32px;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+    .button-row button {
+        width: 100%;
+    }
+
+    .theme-toggle,
+    .copy-headline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .copy-actions,
+    .export-buttons {
+        width: 100%;
+    }
+
+    .copy-actions .accent,
+    .export-buttons button {
+        width: 100%;
+    }
 }
 
 /* Dark Mode (body toggles class via JS) */
