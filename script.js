@@ -1,7 +1,8 @@
 const STORAGE_KEYS = {
     viewedCount: 'headlinesViewed',
     viewedList: 'viewedHeadlines',
-    navigationStack: 'viewedStack',
+    navigationStack: 'navigationStack',
+    navigationStackLegacy: 'viewedStack',
     uniqueHeadlines: 'uniqueHeadlines',
     darkMode: 'darkMode'
 };
@@ -420,13 +421,16 @@ function createStorageAdapter() {
     return {
         restore(totalHeadlines) {
             const storedStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStack), null);
+            const legacyNavigationStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStackLegacy), null);
             const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
             const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
             const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
 
             const rawStack = Array.isArray(storedStack)
                 ? storedStack
-                : (Array.isArray(viewedListLegacy) ? viewedListLegacy : []);
+                : (Array.isArray(legacyNavigationStack)
+                    ? legacyNavigationStack
+                    : (Array.isArray(viewedListLegacy) ? viewedListLegacy : []));
 
             const sanitizedStack = rawStack.filter(index => isValidHeadlineIndex(index, totalHeadlines));
             const uniqueHeadlines = new Set(
@@ -447,6 +451,7 @@ function createStorageAdapter() {
             localStorage.setItem(STORAGE_KEYS.viewedCount, state.uniqueHeadlines.size);
             localStorage.setItem(STORAGE_KEYS.viewedList, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.navigationStack, JSON.stringify(state.navigationStack));
+            localStorage.setItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
             localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
         }
