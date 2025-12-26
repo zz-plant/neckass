@@ -4,7 +4,7 @@ This document provides testable specifications for the Neckass Headlines page so
 
 ## Page-wide expectations
 - **Document metadata**
-  - Title text: "Neckass Headlines - Absurd Edition".
+  - Title text: "Neckass Headlines".
   - `<html lang="en">` must be set.
   - Meta description present and non-empty.
 - **Layout**
@@ -20,17 +20,17 @@ This document provides testable specifications for the Neckass Headlines page so
 - **Content**
   - Eyebrow text: "Ridiculous news desk" using `.eyebrow` style.
   - Heading: `<h1>` with text "Neckass Headlines Generator".
-  - Lede paragraph begins with "Dive into a feed of chaotic brilliance".
-  - Pills list contains exactly three `<span class="pill">` items: "Instant shuffle", "Dark mode ready", "Shareable absurdity".
+  - Lede paragraph begins with "Dive into a feed where".
+  - Pills list contains exactly three `<span class="pill">` items: "Instant shuffle", "Dark mode ready", "Share-ready format".
 - **Layout & spacing**
   - Hero sits above the grid with a bottom margin of 18px on small screens and 28px otherwise.
   - Pill items wrap when horizontal space is limited and maintain 10px gaps.
 - **Accessibility**
   - Heading hierarchy starts at `h1` with no skipped level before the main content.
 
-## Headline section (Featured absurdity)
+## Headline section (Featured headline)
 - **Structure & labels**
-  - Section contains label text "Featured absurdity" plus an accent dot.
+  - Section contains label text "Featured headline" plus an accent dot.
   - Headline element: `<h2 id="headline">` with default text "Loading..." and `tabindex="0"`.
   - Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`.
 - **Data & behavior**
@@ -65,7 +65,7 @@ This document provides testable specifications for the Neckass Headlines page so
 
 ## Social share section
 - **Content & links**
-  - Section header label: "Broadcast the chaos" with helper text about sharing.
+  - Section header label: "Share the latest scoop" with helper text about sharing.
   - Contains three links with IDs `twitter-share`, `facebook-share`, `reddit-share` each wrapping an icon `<img>` and text label.
   - Icon images load SVG files from `icons/` with `alt` matching the platform name followed by "icon".
 - **Behavior**
