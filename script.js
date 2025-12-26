@@ -225,6 +225,7 @@ class HeadlineApp {
         this.startAutoPrinter();
         this.startHypeDecay();
         this.bindEvents();
+        this.applyUrlHeadlineSelection();
         this.renderInitialHeadline();
     }
 
@@ -236,6 +237,7 @@ class HeadlineApp {
         this.elements.downloadMockButton?.addEventListener('click', () => this.exportMockFront('download'));
         this.elements.copyMockButton?.addEventListener('click', () => this.exportMockFront('copy'));
         this.elements.upgradePrinterButton?.addEventListener('click', () => this.upgradeAutoPrinter());
+        window.addEventListener('popstate', (event) => this.handlePopState(event));
     }
 
     handleNext() {
@@ -263,10 +265,10 @@ class HeadlineApp {
         this.persistState();
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
-        this.renderHeadline(previousIndex, { pushToStack: false });
+        this.renderHeadline(previousIndex, { pushToStack: false, replaceState: false });
     }
 
-    renderHeadline(index, options = { pushToStack: true }) {
+    renderHeadline(index, options = { pushToStack: true, replaceState: false }) {
         this.toggleLoader(true);
         this.elements.headline.classList.remove('show');
 
@@ -277,19 +279,21 @@ class HeadlineApp {
             this.toggleLoader(false);
 
             this.updateViewedState(index, options);
-            this.updateSocialShareLinks(this.headlines[index]);
+            this.updateDocumentMetadata(this.headlines[index], index);
+            this.updateSocialShareLinks(this.headlines[index], index);
             this.updateMockHeadline(this.headlines[index]);
             if (options.pushToStack) {
                 this.grantHeadlineRewards();
             } else {
                 this.updateProgressionUI();
             }
+            this.updateHistoryState(index, { replace: options.replaceState });
         }, ANIMATION_DELAY_MS);
     }
 
     renderInitialHeadline() {
         if (this.state.navigationStack.length > 0 && isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)) {
-            this.renderHeadline(this.state.currentIndex, { pushToStack: false });
+            this.renderHeadline(this.state.currentIndex, { pushToStack: false, replaceState: true });
             return;
         }
 
@@ -299,7 +303,8 @@ class HeadlineApp {
     renderEmptyState() {
         this.elements.headline.textContent = 'No headlines available.';
         this.elements.headline.style.color = '';
-        this.updateSocialShareLinks('');
+        this.updateDocumentMetadata('', -1);
+        this.updateSocialShareLinks('', -1);
         this.updateMockHeadline('No headlines available.');
         this.toggleLoader(false);
         this.elements.nextButton.disabled = true;
@@ -319,13 +324,14 @@ class HeadlineApp {
         this.updateNavigationAvailability();
     }
 
-    updateSocialShareLinks(headline) {
+    updateSocialShareLinks(headline, index) {
         const encodedHeadline = encodeURIComponent(headline);
-        const pageUrl = encodeURIComponent(window.location.href);
+        const canonicalUrl = this.getCanonicalUrl(index);
+        const encodedUrl = encodeURIComponent(canonicalUrl);
 
-        this.elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${pageUrl}&hashtags=Neckass`;
-        this.elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${encodedHeadline}`;
-        this.elements.redditShareLink.href = `https://www.reddit.com/submit?url=${pageUrl}&title=${encodedHeadline}`;
+        this.elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;
+        this.elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedHeadline}`;
+        this.elements.redditShareLink.href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedHeadline}`;
     }
 
     updateHeadlineCounter() {
@@ -334,6 +340,141 @@ class HeadlineApp {
 
     updateNavigationAvailability() {
         this.elements.previousButton.disabled = this.state.navigationStack.length <= 1;
+    }
+
+    applyUrlHeadlineSelection() {
+        const identifier = this.getHeadlineIdentifierFromUrl();
+        const index = this.identifierToIndex(identifier);
+
+        if (isValidHeadlineIndex(index, this.headlines.length)) {
+            this.state.navigationStack = [index];
+            this.state.uniqueHeadlines.add(index);
+            this.state.currentIndex = index;
+            this.persistState();
+            this.updateHeadlineCounter();
+            this.updateNavigationAvailability();
+            this.updateHistoryState(index, { replace: true });
+        } else if (identifier !== null) {
+            this.updateHistoryState(-1, { replace: true });
+        }
+    }
+
+    getHeadlineIdentifierFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const queryIdentifier = params.get('headline');
+        if (queryIdentifier) return queryIdentifier;
+
+        const hashMatch = window.location.hash.match(/headline-([^&]+)/i);
+        return hashMatch ? hashMatch[1] : null;
+    }
+
+    identifierToIndex(identifier) {
+        if (identifier === null || identifier === undefined) return null;
+        const parsed = Number.parseInt(identifier, 10);
+        return Number.isInteger(parsed) ? parsed : null;
+    }
+
+    indexToIdentifier(index) {
+        return typeof index === 'number' && index >= 0 ? String(index) : '';
+    }
+
+    buildHeadlineUrl(index) {
+        const url = new URL(window.location.href);
+        url.hash = '';
+        if (isValidHeadlineIndex(index, this.headlines.length)) {
+            url.searchParams.set('headline', this.indexToIdentifier(index));
+        } else {
+            url.searchParams.delete('headline');
+        }
+
+        return url.toString();
+    }
+
+    getCanonicalUrl(index) {
+        return this.buildHeadlineUrl(index);
+    }
+
+    updateHistoryState(index, { replace = false } = {}) {
+        const url = this.buildHeadlineUrl(index);
+        const state = {
+            headlineIndex: isValidHeadlineIndex(index, this.headlines.length) ? index : null,
+            navigationStack: [...this.state.navigationStack],
+            uniqueHeadlines: Array.from(this.state.uniqueHeadlines)
+        };
+
+        if (replace) {
+            history.replaceState(state, '', url);
+        } else {
+            history.pushState(state, '', url);
+        }
+    }
+
+    handlePopState(event) {
+        const state = event.state || {};
+        const urlIndex = this.identifierToIndex(this.getHeadlineIdentifierFromUrl());
+        const stateIndex = this.identifierToIndex(state.headlineIndex);
+        const targetIndex = isValidHeadlineIndex(stateIndex, this.headlines.length)
+            ? stateIndex
+            : (isValidHeadlineIndex(urlIndex, this.headlines.length) ? urlIndex : null);
+
+        if (targetIndex === null) {
+            this.handleNext();
+            return;
+        }
+
+        const restoredStack = Array.isArray(state.navigationStack)
+            ? state.navigationStack.filter((idx) => isValidHeadlineIndex(idx, this.headlines.length))
+            : [];
+        const restoredUnique = Array.isArray(state.uniqueHeadlines)
+            ? state.uniqueHeadlines.filter((idx) => isValidHeadlineIndex(idx, this.headlines.length))
+            : [];
+
+        this.state.navigationStack = restoredStack.length > 0 ? restoredStack : [targetIndex];
+        if (!this.state.navigationStack.includes(targetIndex)) {
+            this.state.navigationStack.push(targetIndex);
+        }
+
+        this.state.uniqueHeadlines = new Set([...this.state.uniqueHeadlines, ...restoredUnique, targetIndex]);
+        this.state.currentIndex = targetIndex;
+        this.persistState();
+        this.updateHeadlineCounter();
+        this.updateNavigationAvailability();
+        this.renderHeadline(targetIndex, { pushToStack: false, replaceState: true });
+    }
+
+    updateDocumentMetadata(headline, index) {
+        const baseTitle = 'Neckass Headlines';
+        const hasHeadline = typeof headline === 'string' && headline.trim().length > 0 && isValidHeadlineIndex(index, this.headlines.length);
+        const title = hasHeadline ? `${headline} | ${baseTitle}` : baseTitle;
+        const description = hasHeadline ? headline : 'Explore a feed of inventive headlines where every shuffle serves up a fresh take ready to share.';
+        const canonicalUrl = this.getCanonicalUrl(index);
+
+        document.title = title;
+        this.setMetaTag('name', 'description', description);
+        this.setMetaTag('property', 'og:title', title);
+        this.setMetaTag('property', 'og:description', description);
+        this.setMetaTag('property', 'og:url', canonicalUrl);
+        this.setCanonicalLink(canonicalUrl);
+    }
+
+    setMetaTag(attribute, name, content) {
+        let tag = document.querySelector(`meta[${attribute}="${name}"]`);
+        if (!tag) {
+            tag = document.createElement('meta');
+            tag.setAttribute(attribute, name);
+            document.head.appendChild(tag);
+        }
+        tag.setAttribute('content', content);
+    }
+
+    setCanonicalLink(url) {
+        let link = document.querySelector('link[rel="canonical"]');
+        if (!link) {
+            link = document.createElement('link');
+            link.setAttribute('rel', 'canonical');
+            document.head.appendChild(link);
+        }
+        link.setAttribute('href', url);
     }
 
     grantHeadlineRewards() {
