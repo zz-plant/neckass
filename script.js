@@ -154,7 +154,7 @@ const headlines = [
     "BREAKING: Neckass Claims He Can Power a City With His Confidence—City Politely Declines",
     "Neckass Starts a Podcast Reviewing His Dreams—Gives Them All Five Stars",
     "Local Neckass Declares Himself a One-Man Think Tank—Sells Subscriptions to His Shower Thoughts",
-    "BREAKING: Neckass Attempts to Patent the Concept of Daylight—Files Under ‘Personal Branding’"
+    "BREAKING: Neckass Attempts to Patent the Concept of Daylight—Files Under ‘Personal Branding’",
     "Local Neckass Says He Invented Multi-Tasking by Chewing Gum While Standing Still",
     "BREAKING: Neckass Starts Sustainability Initiative—Recycles Only Compliments",
     "Neckass Claims He Can Speak to Wi-Fi Routers, Demands They Respect His Bandwidth",
@@ -642,61 +642,67 @@ class HeadlineApp {
 
     copyHeadline() {
         const headlineText = this.elements.headline.innerText;
-        const clipboardAvailable = navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
 
-        const reportStatus = (message, isError = false) => {
-            if (!this.elements.copyStatus) return;
-            this.elements.copyStatus.textContent = message;
-            this.elements.copyStatus.classList.toggle('error', isError);
-        };
-
-        const handleSuccess = () => reportStatus('Headline copied to clipboard!');
-        const handleFailure = (errorMessage) => reportStatus(errorMessage, true);
-
-        const copyWithClipboardAPI = () =>
-            navigator.clipboard.writeText(headlineText)
-                .then(handleSuccess)
-                .catch(() => handleFailure('Unable to access clipboard.'));
-
-        const copyWithFallback = () => {
-            const textarea = document.createElement('textarea');
-            textarea.value = headlineText;
-            textarea.setAttribute('readonly', '');
-            textarea.style.position = 'absolute';
-            textarea.style.left = '-9999px';
-            document.body.appendChild(textarea);
-
-            const selection = document.getSelection();
-            const selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-
-            textarea.select();
-            const successful = document.execCommand('copy');
-
-            if (selectedRange) {
-                selection.removeAllRanges();
-                selection.addRange(selectedRange);
-            }
-
-            document.body.removeChild(textarea);
-
-            if (successful) {
-                handleSuccess();
-            } else {
-                handleFailure('Copy failed. Please try again.');
-            }
-        };
-
-        if (!clipboardAvailable) {
-            try {
-                copyWithFallback();
-            } catch (error) {
-                handleFailure('Clipboard unavailable in this browser.');
-                this.elements.copyButton.disabled = true;
-            }
+        if (!headlineText) {
+            this.reportCopyStatus('No headline available to copy.', true);
             return;
         }
 
-        copyWithClipboardAPI();
+        if (this.canUseClipboardApi()) {
+            this.copyWithClipboardApi(headlineText);
+            return;
+        }
+
+        try {
+            const success = this.copyWithFallback(headlineText);
+            if (success) {
+                this.reportCopyStatus('Headline copied to clipboard!');
+            } else {
+                this.reportCopyStatus('Copy failed. Please try again.', true);
+            }
+        } catch (error) {
+            this.reportCopyStatus('Clipboard unavailable in this browser.', true);
+            this.elements.copyButton.disabled = true;
+        }
+    }
+
+    canUseClipboardApi() {
+        return navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
+    }
+
+    copyWithClipboardApi(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => this.reportCopyStatus('Headline copied to clipboard!'))
+            .catch(() => this.reportCopyStatus('Unable to access clipboard.', true));
+    }
+
+    copyWithFallback(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+
+        const selection = document.getSelection();
+        const selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+        textarea.select();
+        const successful = document.execCommand('copy');
+
+        if (selectedRange) {
+            selection.removeAllRanges();
+            selection.addRange(selectedRange);
+        }
+
+        document.body.removeChild(textarea);
+        return successful;
+    }
+
+    reportCopyStatus(message, isError = false) {
+        if (!this.elements.copyStatus) return;
+        this.elements.copyStatus.textContent = message;
+        this.elements.copyStatus.classList.toggle('error', isError);
     }
 
     toggleLoader(shouldShow) {
