@@ -30,7 +30,7 @@ body {
     color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
-    padding: 26px 24px 52px;
+    padding: 18px 14px 40px;
     background-image:
         radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 0),
         radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 0);
@@ -71,8 +71,8 @@ body {
 }
 
 .hero {
-    margin-bottom: 28px;
-    padding: 26px 22px 26px;
+    margin-bottom: 18px;
+    padding: 22px 18px 22px;
     background: linear-gradient(180deg, #fbf7f1 0%, #f7f1e7 50%, #f2ebdf 100%);
     border-radius: 18px 18px 0 0;
     border-bottom: 3px double #b7a38d;
@@ -132,17 +132,19 @@ body {
     border-top: 2px solid var(--text);
     border-bottom: 1px solid rgba(30, 20, 12, 0.16);
     padding: 10px 0 12px;
+    overflow-x: auto;
 }
 
 .masthead-nav ul {
     display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
+    gap: 12px;
+    flex-wrap: nowrap;
     list-style: none;
     font-weight: 700;
     font-size: 0.92rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    padding-bottom: 6px;
 }
 
 .masthead-nav li {
@@ -219,8 +221,8 @@ body {
 
 .layout-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
     align-items: start;
 }
 
@@ -231,13 +233,14 @@ body {
 
 .command-rail {
     position: relative;
+    order: -1;
 }
 
 .rail-stack {
-    position: sticky;
-    top: 18px;
+    position: static;
+    top: auto;
     display: grid;
-    gap: 16px;
+    gap: 14px;
 }
 
 .glass-card {
@@ -456,7 +459,7 @@ body {
 .button-row {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .buttons button,
@@ -538,8 +541,8 @@ button.dark-mode:disabled {
 .theme-toggle,
 .copy-headline {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
     gap: 12px;
     padding: 14px 0;
     border-top: 1px solid var(--border);
@@ -630,50 +633,6 @@ button.dark-mode:disabled {
     color: var(--muted);
 }
 
-@media (max-width: 899px) {
-    body {
-        padding: 24px 18px 40px;
-    }
-
-    .layout-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .hero {
-        margin-bottom: 18px;
-    }
-}
-
-@media (max-width: 540px) {
-    body {
-        padding: 18px 12px 32px;
-    }
-
-    .button-row {
-        flex-direction: column;
-    }
-
-    .button-row button {
-        width: 100%;
-    }
-
-    .theme-toggle,
-    .copy-headline {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .copy-actions,
-    .export-buttons {
-        width: 100%;
-    }
-
-    .copy-actions .accent,
-    .export-buttons button {
-        width: 100%;
-    }
-}
-
 /* Dark Mode (body toggles class via JS) */
 body.dark-mode {
     --bg: #0f172a;
@@ -726,21 +685,6 @@ body.dark-mode {
 }
 
 /* Responsive */
-@media (max-width: 899px) {
-    .layout-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .rail-stack {
-        position: relative;
-        top: 0;
-    }
-
-    .hero {
-        margin-bottom: 18px;
-    }
-}
-
 @media (max-width: 540px) {
     body {
         padding: 18px 12px 36px;
@@ -776,30 +720,19 @@ body.dark-mode {
         font-size: clamp(1.4rem, 5.5vw, 2rem);
     }
 
-    .button-row {
-        flex-direction: column;
-    }
-
-    .button-row button {
-        width: 100%;
-    }
-
     .theme-toggle,
     .copy-headline {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .theme-toggle button {
+    .copy-actions,
+    .export-buttons {
         width: 100%;
     }
 
-    .copy-actions {
-        width: 100%;
-        gap: 8px;
-    }
-
-    .copy-actions .accent {
+    .copy-actions .accent,
+    .export-buttons button {
         width: 100%;
     }
 
@@ -809,6 +742,58 @@ body.dark-mode {
 
     .social-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 720px) {
+    body {
+        padding: 22px 18px 48px;
+    }
+
+    .button-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .button-row button {
+        width: auto;
+    }
+
+    .theme-toggle,
+    .copy-headline {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .copy-actions,
+    .export-buttons {
+        width: auto;
+    }
+}
+
+@media (min-width: 900px) {
+    body {
+        padding: 24px 20px 56px;
+    }
+
+    .hero {
+        margin-bottom: 28px;
+    }
+
+    .layout-grid {
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+        gap: 20px;
+    }
+
+    .command-rail {
+        order: 0;
+    }
+
+    .rail-stack {
+        position: sticky;
+        top: 18px;
+        gap: 16px;
     }
 }
 
