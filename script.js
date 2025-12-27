@@ -4,7 +4,8 @@ const STORAGE_KEYS = {
     navigationStack: 'navigationStack',
     navigationStackLegacy: 'viewedStack',
     uniqueHeadlines: 'uniqueHeadlines',
-    darkMode: 'darkMode'
+    darkMode: 'darkMode',
+    generatedHeadlines: 'generatedHeadlines'
 };
 
 const ANIMATION_DELAY_MS = 500;
@@ -164,11 +165,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class HeadlineApp {
     constructor({ headlines: allHeadlines, elements, storage }) {
-        this.headlines = allHeadlines;
+        this.headlines = Array.isArray(allHeadlines) ? [...allHeadlines] : [];
         this.elements = elements;
         this.storage = storage;
-        this.state = storage.restore(allHeadlines.length);
+        this.headlineCache = new Map();
+        this.state = storage.restore(this.headlines.length);
+        this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
+        this.buildHeadlineCache();
+        this.appendGeneratedHeadlines(this.state.generatedHeadlines || []);
         this.handleDirectionalNavigation = this.handleDirectionalNavigation.bind(this);
+    }
+
+    appendGeneratedHeadlines(generatedHeadlines) {
+        const additions = Array.isArray(generatedHeadlines) ? generatedHeadlines : [];
+        additions.forEach((headlineText) => {
+            if (!headlineText || typeof headlineText !== 'string') return;
+            const normalized = headlineText.trim();
+            if (normalized.length === 0) return;
+            if (this.headlineCache.has(normalized)) return;
+
+            this.headlines.push(normalized);
+            this.headlineCache.set(normalized, this.headlines.length - 1);
+        });
+    }
+
+    buildHeadlineCache() {
+        this.headlines.forEach((headlineText, index) => {
+            const normalized = typeof headlineText === 'string' ? headlineText.trim() : '';
+            if (normalized.length === 0) return;
+            if (!this.headlineCache.has(normalized)) {
+                this.headlineCache.set(normalized, index);
+            }
+        });
     }
 
     init() {
@@ -192,13 +220,25 @@ class HeadlineApp {
         document.addEventListener('keydown', this.handleDirectionalNavigation);
     }
 
-    handleNext() {
+    async handleNext() {
         if (this.headlines.length === 0) {
             this.renderEmptyState();
             return;
         }
 
-        const nextIndex = this.getRandomIndex();
+        const generatorAvailable = typeof window.tinyLlmClient?.generateHeadline === 'function';
+        let nextIndex = null;
+
+        if (generatorAvailable) {
+            this.toggleLoader(true, 'Generating headline with the tiny model...');
+            nextIndex = await this.generateHeadlineWithFallback();
+        }
+
+        if (nextIndex === null) {
+            this.toggleLoader(true, 'Shuffling stored headlines...');
+            nextIndex = this.getRandomIndex();
+        }
+
         this.renderHeadline(nextIndex);
     }
 
@@ -220,20 +260,55 @@ class HeadlineApp {
         this.renderHeadline(previousIndex, { pushToStack: false, replaceState: false });
     }
 
+    async generateHeadlineWithFallback() {
+        try {
+            const headlineText = await window.tinyLlmClient.generateHeadline();
+            return this.registerGeneratedHeadline(headlineText);
+        } catch (error) {
+            this.updateLoaderMessage('Generation unavailable, using saved headlines.');
+            return null;
+        }
+    }
+
+    registerGeneratedHeadline(headlineText) {
+        const normalized = typeof headlineText === 'string' ? headlineText.trim() : '';
+        if (!normalized) {
+            throw new Error('No headline text returned');
+        }
+
+        if (this.headlineCache.has(normalized)) {
+            return this.headlineCache.get(normalized);
+        }
+
+        const newIndex = this.headlines.length;
+        this.headlines.push(normalized);
+        this.headlineCache.set(normalized, newIndex);
+        this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
+        this.state.generatedHeadlines.push(normalized);
+        this.persistState();
+        return newIndex;
+    }
+
     renderHeadline(index, options = { pushToStack: true, replaceState: false }) {
-        this.toggleLoader(true);
+        if (!isValidHeadlineIndex(index, this.headlines.length)) {
+            this.renderEmptyState();
+            return;
+        }
+
+        this.toggleLoader(true, this.elements.loader.textContent || 'Loading headline...');
         this.elements.headline.classList.remove('show');
 
         setTimeout(() => {
-            this.elements.headline.textContent = this.headlines[index];
+            const headlineText = this.headlines[index];
+            this.elements.headline.textContent = headlineText;
             this.elements.headline.style.color = selectReadableColor(this.state.darkModeEnabled);
             this.elements.headline.classList.add('show');
             this.toggleLoader(false);
 
             this.updateViewedState(index, options);
-            this.updateDocumentMetadata(this.headlines[index], index);
-            this.updateSocialShareLinks(this.headlines[index], index);
-            this.updateMockHeadline(this.headlines[index]);
+            this.updateDocumentMetadata(headlineText, index);
+            this.updateSocialShareLinks(headlineText, index);
+            this.updateMockHeadline(headlineText);
             this.persistState();
             this.updateHistoryState(index, { replace: options.replaceState });
         }, ANIMATION_DELAY_MS);
@@ -254,13 +329,13 @@ class HeadlineApp {
         this.updateDocumentMetadata('', -1);
         this.updateSocialShareLinks('', -1);
         this.updateMockHeadline('No headlines available.');
-        this.toggleLoader(false);
+        this.toggleLoader(false, 'No headlines available.');
         this.elements.nextButton.disabled = true;
         this.updateNavigationAvailability();
     }
 
     updateViewedState(index, options = { pushToStack: true }) {
-        if (options.pushToStack) {
+        if (options.pushToStack && index !== this.state.currentIndex) {
             this.state.navigationStack.push(index);
         }
 
@@ -535,9 +610,17 @@ class HeadlineApp {
         this.elements.copyStatus.classList.toggle('error', isError);
     }
 
-    toggleLoader(shouldShow) {
+    toggleLoader(shouldShow, message = null) {
+        if (message) {
+            this.elements.loader.textContent = message;
+        }
         this.elements.loader.style.display = shouldShow ? 'block' : 'none';
         this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    }
+
+    updateLoaderMessage(message) {
+        if (!this.elements.loader) return;
+        this.elements.loader.textContent = message;
     }
 
     updateMockHeadline(text) {
@@ -622,7 +705,8 @@ class HeadlineApp {
             navigationStack: this.state.navigationStack,
             uniqueHeadlines: this.state.uniqueHeadlines,
             currentIndex: this.state.currentIndex,
-            darkModeEnabled: this.state.darkModeEnabled
+            darkModeEnabled: this.state.darkModeEnabled,
+            generatedHeadlines: this.state.generatedHeadlines
         });
     }
 }
@@ -657,7 +741,9 @@ function mapElements() {
 
 function createStorageAdapter() {
     return {
-        restore(totalHeadlines) {
+        restore(baseHeadlineCount) {
+            const generatedHeadlines = parseJson(localStorage.getItem(STORAGE_KEYS.generatedHeadlines), []);
+            const totalHeadlines = baseHeadlineCount + (Array.isArray(generatedHeadlines) ? generatedHeadlines.length : 0);
             const storedStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStack), null);
             const legacyNavigationStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStackLegacy), null);
             const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
@@ -681,7 +767,10 @@ function createStorageAdapter() {
                 navigationStack: sanitizedStack,
                 uniqueHeadlines,
                 currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
-                darkModeEnabled
+                darkModeEnabled,
+                generatedHeadlines: Array.isArray(generatedHeadlines)
+                    ? generatedHeadlines.filter(Boolean)
+                    : []
             };
         },
 
@@ -692,6 +781,10 @@ function createStorageAdapter() {
             localStorage.setItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
             localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
+            localStorage.setItem(
+                STORAGE_KEYS.generatedHeadlines,
+                JSON.stringify(Array.isArray(state.generatedHeadlines) ? state.generatedHeadlines : [])
+            );
         }
     };
 }

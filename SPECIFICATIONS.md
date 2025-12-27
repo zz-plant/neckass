@@ -7,6 +7,9 @@ This document provides testable specifications for the Neckass Headlines page so
   - Title text: "Neckass Headlines".
   - `<html lang="en">` must be set.
   - Meta description present and non-empty.
+- **Generation runtime**
+  - `llm.js` must expose a global `tinyLlmClient.generateHeadline()` helper that returns a non-empty string with built-in timeout/error handling.
+  - `handleNext` prefers `tinyLlmClient` output and falls back to the static `headlines` array if generation fails or is unavailable.
 - **Layout**
   - Body uses a single-column flow up to 540px viewport width, a two-column grid with a feature stack and command rail above 900px, and one-column stacking between 541–899px.
   - The command rail is sticky near the top of the viewport on wide layouts and falls back to normal flow on narrow screens.
