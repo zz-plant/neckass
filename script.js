@@ -230,6 +230,8 @@ class HeadlineApp {
             this.elements.headline.classList.add('show');
             this.toggleLoader(false);
 
+            this.updateMockDate();
+
             this.updateViewedState(index, options);
             this.updateDocumentMetadata(this.headlines[index], index);
             this.updateSocialShareLinks(this.headlines[index], index);
@@ -547,9 +549,21 @@ class HeadlineApp {
     }
 
     updateMockDate() {
-        if (!this.elements.mockDate) return;
-        const formatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        this.elements.mockDate.textContent = formatter.format(new Date());
+        const now = new Date();
+        const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        const timeFormatter = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        if (this.elements.mockDate) {
+            this.elements.mockDate.textContent = dateFormatter.format(now);
+        }
+
+        if (this.elements.mastheadDate) {
+            this.elements.mastheadDate.textContent = `${dateFormatter.format(now)} · Digital edition`;
+        }
+
+        if (this.elements.featureDateline) {
+            this.elements.featureDateline.textContent = `Published ${timeFormatter.format(now)}`;
+        }
     }
 
     async exportMockFront(mode) {
@@ -634,6 +648,8 @@ function mapElements() {
         nextButton: document.getElementById('next-btn'),
         previousButton: document.getElementById('prev-btn'),
         counter: document.getElementById('counter'),
+        mastheadDate: document.getElementById('masthead-date'),
+        featureDateline: document.getElementById('feature-date'),
         twitterShareLink: document.getElementById('twitter-share'),
         facebookShareLink: document.getElementById('facebook-share'),
         redditShareLink: document.getElementById('reddit-share'),
