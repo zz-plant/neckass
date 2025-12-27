@@ -4,7 +4,8 @@ const STORAGE_KEYS = {
     navigationStack: 'navigationStack',
     navigationStackLegacy: 'viewedStack',
     uniqueHeadlines: 'uniqueHeadlines',
-    darkMode: 'darkMode'
+    darkMode: 'darkMode',
+    copyDisabled: 'copyDisabled'
 };
 
 const ANIMATION_DELAY_MS = 500;
@@ -173,6 +174,7 @@ class HeadlineApp {
 
     init() {
         this.applyDarkMode(this.state.darkModeEnabled);
+        this.elements.copyButton.disabled = this.state.copyDisabled;
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
@@ -495,6 +497,8 @@ class HeadlineApp {
         } catch (error) {
             this.reportCopyStatus('Clipboard unavailable in this browser.', true);
             this.elements.copyButton.disabled = true;
+            this.state.copyDisabled = true;
+            this.persistState();
         }
     }
 
@@ -636,7 +640,8 @@ class HeadlineApp {
             navigationStack: this.state.navigationStack,
             uniqueHeadlines: this.state.uniqueHeadlines,
             currentIndex: this.state.currentIndex,
-            darkModeEnabled: this.state.darkModeEnabled
+            darkModeEnabled: this.state.darkModeEnabled,
+            copyDisabled: this.state.copyDisabled
         });
     }
 }
@@ -679,6 +684,7 @@ function createStorageAdapter() {
             const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
             const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
             const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
+            const copyDisabled = localStorage.getItem(STORAGE_KEYS.copyDisabled) === 'true';
 
             const rawStack = Array.isArray(storedStack)
                 ? storedStack
@@ -697,7 +703,8 @@ function createStorageAdapter() {
                 navigationStack: sanitizedStack,
                 uniqueHeadlines,
                 currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
-                darkModeEnabled
+                darkModeEnabled,
+                copyDisabled
             };
         },
 
@@ -708,6 +715,7 @@ function createStorageAdapter() {
             localStorage.setItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
             localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
+            localStorage.setItem(STORAGE_KEYS.copyDisabled, String(state.copyDisabled));
         }
     };
 }
