@@ -4,7 +4,6 @@ const STORAGE_KEYS = {
     navigationStack: 'navigationStack',
     navigationStackLegacy: 'viewedStack',
     uniqueHeadlines: 'uniqueHeadlines',
-    darkMode: 'darkMode',
     generatedHeadlines: 'generatedHeadlines'
 };
 
@@ -200,7 +199,6 @@ class HeadlineApp {
     }
 
     init() {
-        this.applyDarkMode(this.state.darkModeEnabled);
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
@@ -212,7 +210,6 @@ class HeadlineApp {
     bindEvents() {
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
-        this.elements.darkModeToggle.addEventListener('click', () => this.toggleDarkMode());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
         this.elements.downloadMockButton?.addEventListener('click', () => this.exportMockFront('download'));
         this.elements.copyMockButton?.addEventListener('click', () => this.exportMockFront('copy'));
@@ -295,15 +292,15 @@ class HeadlineApp {
             return;
         }
 
-        this.toggleLoader(true, this.elements.loader.textContent || 'Loading headline...');
-        this.elements.headline.classList.remove('show');
+            this.toggleLoader(true, this.elements.loader.textContent || 'Loading headline...');
+            this.elements.headline.classList.remove('show');
 
-        setTimeout(() => {
-            const headlineText = this.headlines[index];
-            this.elements.headline.textContent = headlineText;
-            this.elements.headline.style.color = selectReadableColor(this.state.darkModeEnabled);
-            this.elements.headline.classList.add('show');
-            this.toggleLoader(false);
+            setTimeout(() => {
+                const headlineText = this.headlines[index];
+                this.elements.headline.textContent = headlineText;
+                this.elements.headline.style.color = selectReadableColor();
+                this.elements.headline.classList.add('show');
+                this.toggleLoader(false);
 
             this.updateMockDate();
 
@@ -518,35 +515,6 @@ class HeadlineApp {
         link.setAttribute('href', url);
     }
 
-    toggleDarkMode() {
-        this.state.darkModeEnabled = !this.state.darkModeEnabled;
-        this.applyDarkMode(this.state.darkModeEnabled);
-        this.persistState();
-    }
-
-    applyDarkMode(isEnabled) {
-        const containers = Array.isArray(this.elements.containers)
-            ? this.elements.containers
-            : [];
-
-        const targetNodes = [
-            document.body,
-            ...containers,
-            this.elements.headlineSection,
-            this.elements.controls,
-            this.elements.socialShare,
-            this.elements.copySection,
-            this.elements.themeToggleSection,
-            this.elements.loader,
-            this.elements.mockFrame
-        ].filter(Boolean);
-
-        targetNodes.forEach(node => node.classList.toggle('dark-mode', isEnabled));
-        document.querySelectorAll('button').forEach(button => {
-            button.classList.toggle('dark-mode', isEnabled);
-        });
-    }
-
     copyHeadline() {
         const headlineText = this.elements.headline.innerText;
 
@@ -719,7 +687,6 @@ class HeadlineApp {
             navigationStack: this.state.navigationStack,
             uniqueHeadlines: this.state.uniqueHeadlines,
             currentIndex: this.state.currentIndex,
-            darkModeEnabled: this.state.darkModeEnabled,
             generatedHeadlines: this.state.generatedHeadlines
         });
     }
@@ -737,7 +704,6 @@ function mapElements() {
         twitterShareLink: document.getElementById('twitter-share'),
         facebookShareLink: document.getElementById('facebook-share'),
         redditShareLink: document.getElementById('reddit-share'),
-        darkModeToggle: document.getElementById('toggle-dark-mode'),
         copyButton: document.getElementById('copy-btn'),
         copyStatus: document.getElementById('copy-status'),
         downloadMockButton: document.getElementById('download-mock'),
@@ -750,8 +716,7 @@ function mapElements() {
         headlineSection: document.querySelector('.headline-section'),
         controls: document.querySelector('.controls'),
         socialShare: document.querySelector('.social-share'),
-        copySection: document.querySelector('.copy-headline'),
-        themeToggleSection: document.querySelector('.theme-toggle')
+        copySection: document.querySelector('.copy-headline')
     };
 }
 
@@ -764,7 +729,6 @@ function createStorageAdapter() {
             const legacyNavigationStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStackLegacy), null);
             const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
             const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
-            const darkModeEnabled = localStorage.getItem(STORAGE_KEYS.darkMode) === 'true';
 
             const rawStack = Array.isArray(storedStack)
                 ? storedStack
@@ -783,7 +747,6 @@ function createStorageAdapter() {
                 navigationStack: sanitizedStack,
                 uniqueHeadlines,
                 currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
-                darkModeEnabled,
                 generatedHeadlines: Array.isArray(generatedHeadlines)
                     ? generatedHeadlines.filter(Boolean)
                     : []
@@ -796,7 +759,6 @@ function createStorageAdapter() {
             localStorage.setItem(STORAGE_KEYS.navigationStack, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(state.navigationStack));
             localStorage.setItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
-            localStorage.setItem(STORAGE_KEYS.darkMode, String(state.darkModeEnabled));
             localStorage.setItem(
                 STORAGE_KEYS.generatedHeadlines,
                 JSON.stringify(Array.isArray(state.generatedHeadlines) ? state.generatedHeadlines : [])
@@ -818,12 +780,12 @@ function parseJson(value, fallback) {
     }
 }
 
-function selectReadableColor(isDarkMode) {
+function selectReadableColor() {
     const selectedColor = COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
     const rgb = hexToRgb(selectedColor);
     const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
 
-    if (isDarkMode && brightness > BRIGHTNESS_THRESHOLD) {
+    if (brightness > BRIGHTNESS_THRESHOLD) {
         return darkenColor(selectedColor, 0.7);
     }
 
