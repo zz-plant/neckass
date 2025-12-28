@@ -16,7 +16,6 @@ This document provides testable specifications for the Neckass Headlines page so
   - Maximum content width: 1100px; body padding of at least 18px on small screens and 24px on larger screens.
 - **Color themes**
   - Default theme values must match the CSS root variables in `styles.css`.
-  - Dark mode toggling adds `dark-mode` class to `body`, `.container`, `.headline-section`, `.controls`, `.social-share`, `.copy-headline`, `.theme-toggle`, `.loader`, and all `<button>` elements.
 - **Font**: Inter family (or system fallbacks) is loaded via Google Fonts link.
 - **Keyboard support**: All interactive controls (buttons, social links) are reachable via `Tab` order with visible focus outlines inherited from browser defaults or custom styles.
 
@@ -57,16 +56,13 @@ This document provides testable specifications for the Neckass Headlines page so
 - **Headlines viewed counter**
   - Label text: "Headlines viewed"; numeric value in `#counter` shows count of unique headlines seen in the current storage state.
   - Counter updates whenever a headline is added to `uniqueHeadlines`.
-- **Appearance toggle**
-  - Text block includes label "Appearance" and helper copy "Switch between light and dark moods.".
-  - `#toggle-dark-mode` button toggles `dark-mode` class application and persists state to `localStorage` under key `darkMode`.
 - **Clipboard copy**
   - Text block label "Clipboard" with helper text "Grab the headline for your next post.".
   - `#copy-btn` copies the current headline text using Clipboard API when available; fallback uses hidden textarea and `document.execCommand('copy')`.
   - Success message: "Headline copied to clipboard!" in `#copy-status` with no `error` class. Failure messages include "Unable to access clipboard.", "Copy failed. Please try again.", or "Clipboard unavailable in this browser." and must toggle the `error` class.
   - If fallback copy throws, the Copy button is disabled.
 - **Layout**
-  - Controls card uses glass styling with a bordered intro block, 22px padding, and separated rows for theme and copy actions.
+  - Controls card uses glass styling with a bordered intro block, 22px padding, and separated rows for the copy actions.
 - **Accessibility**
   - Copy status uses `aria-live="polite"` and `role="status"`.
 
@@ -97,20 +93,19 @@ This document provides testable specifications for the Neckass Headlines page so
   - `navigationStack`: JSON array of visited headline indices, sanitized to valid range on load.
   - `uniqueHeadlines`: JSON array of indices converted to a `Set` on load; if empty, defaults to sanitized stack values.
   - `viewedList` and `viewedCount`: legacy keys retained; `viewedList` used only when `navigationStack` is absent.
-  - `darkMode`: string "true"/"false" reflecting the toggle state.
 - **Restoration**
   - On page load, state restores using stored values filtered by total headline count; `currentIndex` is the last item of the navigation stack or `-1` when none.
-  - Persisted state updates after each navigation, dark-mode toggle, or copy failure that disables the button.
+  - Persisted state updates after each navigation or copy failure that disables the button.
 
 ## Error and edge cases
 - If `headlines` array length is 0: show empty state message, hide loader, disable Next button, keep Previous button disabled.
 - If `navigator.clipboard` is unavailable and fallback copy fails: show "Clipboard unavailable in this browser." and disable Copy button.
-- Headline color selection must never return undefined; if color brightness exceeds threshold in dark mode, it is darkened by a factor of 0.7.
+- Headline color selection must never return undefined; if color brightness exceeds the readability threshold, it is darkened by a factor of 0.7 for contrast.
 
 ## Responsive behavior checkpoints
 - **≥900px width**: grid displays the feature stack alongside the sticky command rail with roughly 20px gap.
 - **541–899px width**: grid collapses to one column and the rail cards flow after the feature stack; hero margin is 18px.
-- **≤540px width**: body padding reduces to 12–18px; button rows stack vertically; theme/copy rows align items to start and Copy button spans full width.
+- **≤540px width**: body padding reduces to 12–18px; button rows stack vertically; copy rows align items to start and Copy button spans full width.
 
 ## Accessibility checklist
 - All buttons and links have discernible text or `aria-label` values matching their function.

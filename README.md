@@ -9,4 +9,4 @@ A playful headline generator that now supports tiny on-device LLM generation for
 - No external API calls are required. If you swap in a real edge model, ensure it resolves within the same timeout window and returns a non-empty string.
 
 ## Development
-Open `index.html` in a modern browser. The app persists dark mode state and headline navigation in `localStorage`.
+Open `index.html` in a modern browser. The app persists headline navigation in `localStorage`.
