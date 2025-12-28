@@ -1,4 +1,7 @@
 const TINY_LLM_TIMEOUT_MS = 2400;
+const MAX_GENERATION_ATTEMPTS = 5;
+const HEADLINE_MEMORY_LIMIT = 64;
+
 const tinyLlmClient = (() => {
     const prefixes = [
         'Hot off the tiny press:',
@@ -32,8 +35,83 @@ const tinyLlmClient = (() => {
         'forecast calls for 90% chance of group chat drama.'
     ];
 
-    function pickRandom(list) {
-        return list[Math.floor(Math.random() * list.length)];
+    const tokenBags = {
+        prefix: createTokenBag(prefixes),
+        subject: createTokenBag(subjects),
+        action: createTokenBag(actions),
+        ending: createTokenBag(endings)
+    };
+
+    const recentHeadlines = new Set();
+    let lastHeadline = '';
+
+    function createTokenBag(values) {
+        const tokens = [...values];
+        let cursor = shuffle(tokens);
+
+        return {
+            next() {
+                if (cursor.length === 0) {
+                    cursor = shuffle(tokens);
+                }
+                return cursor.shift();
+            }
+        };
+    }
+
+    function shuffle(list) {
+        const items = [...list];
+        for (let i = items.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+        return items;
+    }
+
+    function buildCandidate() {
+        return `${tokenBags.prefix.next()} ${tokenBags.subject.next()} ${tokenBags.action.next()} ${tokenBags.ending.next()}`;
+    }
+
+    function normalizeHeadline(headlineText) {
+        const cleaned = headlineText.replace(/\s+/g, ' ').trim();
+        if (!cleaned.endsWith('.')) {
+            return `${cleaned}.`;
+        }
+        return cleaned;
+    }
+
+    function rememberHeadline(text) {
+        recentHeadlines.add(text);
+        if (recentHeadlines.size > HEADLINE_MEMORY_LIMIT) {
+            const [oldest] = recentHeadlines;
+            recentHeadlines.delete(oldest);
+        }
+        lastHeadline = text;
+    }
+
+    function isFreshCandidate(text) {
+        return text && text !== lastHeadline && !recentHeadlines.has(text);
+    }
+
+    function generateCandidateHeadline() {
+        for (let attempt = 0; attempt < MAX_GENERATION_ATTEMPTS; attempt += 1) {
+            const candidate = normalizeHeadline(buildCandidate());
+            if (isFreshCandidate(candidate)) {
+                rememberHeadline(candidate);
+                return candidate;
+            }
+        }
+
+        const fallback = normalizeHeadline(buildCandidate());
+        rememberHeadline(fallback);
+        return fallback;
+    }
+
+    function withTimeout(promise) {
+        const timeout = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Generation timed out')), TINY_LLM_TIMEOUT_MS);
+        });
+        return Promise.race([promise, timeout]);
     }
 
     async function generateHeadline() {
@@ -41,7 +119,7 @@ const tinyLlmClient = (() => {
             const delay = 450 + Math.floor(Math.random() * 700);
             setTimeout(() => {
                 try {
-                    const headline = `${pickRandom(prefixes)} ${pickRandom(subjects)} ${pickRandom(actions)} ${pickRandom(endings)}`;
+                    const headline = generateCandidateHeadline();
                     if (!headline || headline.trim().length === 0) {
                         reject(new Error('Empty generation result'));
                         return;
@@ -53,11 +131,7 @@ const tinyLlmClient = (() => {
             }, delay);
         });
 
-        const timeout = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Generation timed out')), TINY_LLM_TIMEOUT_MS);
-        });
-
-        return Promise.race([generation, timeout]);
+        return withTimeout(generation);
     }
 
     return { generateHeadline };
