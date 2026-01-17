@@ -17,8 +17,8 @@
     --radius: 18px;
     --glow: 0 6px 26px rgba(111, 124, 255, 0.28);
     --card-blur: blur(14px);
-    --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --headline-font: 'Playfair Display', 'Times New Roman', serif;
+    --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --headline-font: 'Times New Roman', Georgia, serif;
 }
 
 body {

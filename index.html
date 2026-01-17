@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neckass Headlines</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <meta name="description" content="Explore a feed of inventive headlines where every shuffle serves up a fresh take ready to share.">
 
@@ -239,17 +236,7 @@
         </main>
     </div>
 
-    <script>
-        window.__loadHtmlToImageFallback = () => {
-            if (document.getElementById('html-to-image-fallback')) return;
-            const fallbackScript = document.createElement('script');
-            fallbackScript.id = 'html-to-image-fallback';
-            fallbackScript.src = 'https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js';
-            fallbackScript.crossOrigin = 'anonymous';
-            document.head.appendChild(fallbackScript);
-        };
-    </script>
-    <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js" onerror="window.__loadHtmlToImageFallback()"></script>
+    <script src="vendor/html-to-image.js"></script>
     <script src="llm.js"></script>
     <script src="script.js"></script>
 </body>
