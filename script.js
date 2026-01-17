@@ -791,43 +791,32 @@ class HeadlineApp {
         this.updateFilterStatus();
     }
 
-    copyHeadlineLink() {
+    async copyHeadlineLink() {
         const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
         if (!canonicalUrl) {
             this.reportCopyStatus('No headline link available.', true);
             return;
         }
-        if (this.canUseClipboardApi()) {
-            navigator.clipboard.writeText(canonicalUrl)
-                .then(() => this.reportCopyStatus('Headline link copied!'))
-                .catch(() => this.reportCopyStatus('Unable to access clipboard.', true));
-            return;
-        }
-        try {
-            const success = this.copyWithFallback(canonicalUrl);
-            if (success) {
-                this.reportCopyStatus('Headline link copied!');
-            } else {
-                this.reportCopyStatus('Copy failed. Please try again.', true);
-            }
-        } catch (error) {
-            this.reportCopyStatus('Clipboard unavailable in this browser.', true);
-        }
+        await this.copyTextWithFeedback(
+            canonicalUrl,
+            this.elements.copyLinkButton,
+            'Headline link copied!'
+        );
     }
 
     handleDirectionalNavigation(event) {
-        const ignoredTags = ['INPUT', 'TEXTAREA', 'BUTTON', 'A', 'SELECT', 'OPTION'];
-        if (ignoredTags.includes(event.target.tagName)) return;
+        if (event.defaultPrevented) return;
+        if (document.activeElement !== this.elements.headline) return;
 
         const forwardKeys = ['ArrowRight', 'ArrowDown'];
         const backwardKeys = ['ArrowLeft', 'ArrowUp'];
 
         if (forwardKeys.includes(event.key)) {
+            event.preventDefault();
             this.handleNext();
         } else if (backwardKeys.includes(event.key)) {
+            event.preventDefault();
             this.handlePrevious();
-        } else if (event.key === 'Enter' || event.key === ' ') {
-            this.handleNext();
         }
     }
 
@@ -888,18 +877,33 @@ class HeadlineApp {
     identifierToIndex(identifier) {
         if (identifier === null || identifier === undefined) return null;
         const parsed = Number.parseInt(identifier, 10);
-        return Number.isInteger(parsed) ? parsed : null;
+        if (Number.isInteger(parsed) && String(parsed) === String(identifier)) {
+            return parsed;
+        }
+
+        const normalized = normalizeHeadlineText(identifier);
+        if (!normalized) return null;
+        const cachedIndex = this.headlineCache.get(normalized);
+        if (Number.isInteger(cachedIndex)) {
+            return cachedIndex;
+        }
+
+        return this.registerSharedHeadline(normalized);
     }
 
-    indexToIdentifier(index) {
-        return typeof index === 'number' && index >= 0 ? String(index) : '';
+    headlineToIdentifier(headlineText) {
+        return normalizeHeadlineText(headlineText) || '';
     }
 
     buildHeadlineUrl(index) {
         const url = new URL(window.location.href);
         url.hash = '';
-        if (isValidHeadlineIndex(index, this.headlines.length)) {
-            url.searchParams.set('headline', this.indexToIdentifier(index));
+        const headlineText = isValidHeadlineIndex(index, this.headlines.length)
+            ? this.headlines[index]
+            : '';
+        const headlineIdentifier = this.headlineToIdentifier(headlineText);
+        if (headlineIdentifier) {
+            url.searchParams.set('headline', headlineIdentifier);
         } else {
             url.searchParams.delete('headline');
         }
@@ -1026,7 +1030,7 @@ class HeadlineApp {
         link.setAttribute('href', url);
     }
 
-    copyHeadline() {
+    async copyHeadline() {
         const headlineText = this.elements.headline.innerText;
 
         if (!headlineText) {
@@ -1034,32 +1038,23 @@ class HeadlineApp {
             return;
         }
 
-        if (this.canUseClipboardApi()) {
-            this.copyWithClipboardApi(headlineText);
-            return;
-        }
-
-        try {
-            const success = this.copyWithFallback(headlineText);
-            if (success) {
-                this.reportCopyStatus('Headline copied to clipboard!');
-            } else {
-                this.reportCopyStatus('Copy failed. Please try again.', true);
-            }
-        } catch (error) {
-            this.reportCopyStatus('Clipboard unavailable in this browser.', true);
-            this.elements.copyButton.disabled = true;
-        }
+        await this.copyTextWithFeedback(
+            headlineText,
+            this.elements.copyButton,
+            'Headline copied to clipboard!'
+        );
     }
 
     canUseClipboardApi() {
-        return navigator.clipboard && typeof navigator.clipboard.writeText === 'function';
+        return Boolean(
+            window.isSecureContext
+            && navigator.clipboard
+            && typeof navigator.clipboard.writeText === 'function'
+        );
     }
 
-    copyWithClipboardApi(text) {
-        navigator.clipboard.writeText(text)
-            .then(() => this.reportCopyStatus('Headline copied to clipboard!'))
-            .catch(() => this.reportCopyStatus('Unable to access clipboard.', true));
+    async copyWithClipboardApi(text) {
+        await navigator.clipboard.writeText(text);
     }
 
     copyWithFallback(text) {
@@ -1083,6 +1078,37 @@ class HeadlineApp {
 
         document.body.removeChild(textarea);
         return successful;
+    }
+
+    async copyTextWithFeedback(text, button, successMessage) {
+        this.setButtonLoading(button, true);
+        try {
+            if (this.canUseClipboardApi()) {
+                await this.copyWithClipboardApi(text);
+                this.reportCopyStatus(successMessage);
+                return;
+            }
+
+            const success = this.copyWithFallback(text);
+            if (success) {
+                this.reportCopyStatus(successMessage);
+            } else {
+                this.reportCopyStatus('Copy failed. Please try again.', true);
+            }
+        } catch (error) {
+            try {
+                const success = this.copyWithFallback(text);
+                if (success) {
+                    this.reportCopyStatus(successMessage);
+                } else {
+                    this.reportCopyStatus('Clipboard unavailable in this browser.', true);
+                }
+            } catch (fallbackError) {
+                this.reportCopyStatus('Clipboard unavailable in this browser.', true);
+            }
+        } finally {
+            this.setButtonLoading(button, false);
+        }
     }
 
     reportCopyStatus(message, isError = false) {
@@ -1146,7 +1172,7 @@ class HeadlineApp {
 
     async exportMockFront(mode) {
         if (!this.elements.mockFrame || !window.htmlToImage) {
-            this.reportExportStatus('Export unavailable at the moment.', true);
+            this.reportExportStatus('Export unavailable. Image renderer did not load.', true);
             return;
         }
 
@@ -1226,6 +1252,23 @@ class HeadlineApp {
         }
 
         return randomIndex;
+    }
+
+    registerSharedHeadline(headlineText) {
+        const normalized = normalizeHeadlineText(headlineText);
+        if (!normalized) return null;
+        if (this.headlineCache.has(normalized)) {
+            return this.headlineCache.get(normalized);
+        }
+
+        const newIndex = this.headlines.length;
+        this.headlines.push(normalized);
+        this.headlineCache.set(normalized, newIndex);
+        this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
+        this.state.generatedHeadlines.push(normalized);
+        this.persistState();
+        this.refreshFilteredIndexes();
+        return newIndex;
     }
 
     persistState() {
@@ -1383,6 +1426,11 @@ function sanitizeFilters(filters = {}) {
     }
 
     return sanitized;
+}
+
+function normalizeHeadlineText(text) {
+    if (typeof text !== 'string') return '';
+    return text.trim();
 }
 
 function selectReadableColor() {
