@@ -169,10 +169,12 @@ class HeadlineApp {
         this.storage = storage;
         this.headlineCache = new Map();
         this.state = storage.restore(this.headlines.length);
+        this.state.isLoading = false;
         this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
         this.buildHeadlineCache();
         this.appendGeneratedHeadlines(this.state.generatedHeadlines || []);
         this.handleDirectionalNavigation = this.handleDirectionalNavigation.bind(this);
+        this.activeButton = null;
     }
 
     appendGeneratedHeadlines(generatedHeadlines) {
@@ -225,6 +227,7 @@ class HeadlineApp {
 
         const generatorAvailable = typeof window.tinyLlmClient?.generateHeadline === 'function';
         let nextIndex = null;
+        this.activeButton = this.elements.nextButton;
 
         if (generatorAvailable) {
             this.toggleLoader(true, 'Generating headline with the tiny model...');
@@ -243,6 +246,7 @@ class HeadlineApp {
         if (this.state.navigationStack.length <= 1) {
             return;
         }
+        this.activeButton = this.elements.previousButton;
 
         const removedIndex = this.state.navigationStack.pop();
         if (!this.state.navigationStack.includes(removedIndex)) {
@@ -292,15 +296,15 @@ class HeadlineApp {
             return;
         }
 
-            this.toggleLoader(true, this.elements.loader.textContent || 'Loading headline...');
-            this.elements.headline.classList.remove('show');
+        this.toggleLoader(true, this.elements.loader.textContent || 'Loading headline...');
+        this.elements.headline.classList.remove('show');
 
-            setTimeout(() => {
-                const headlineText = this.headlines[index];
-                this.elements.headline.textContent = headlineText;
-                this.elements.headline.style.color = selectReadableColor();
-                this.elements.headline.classList.add('show');
-                this.toggleLoader(false);
+        setTimeout(() => {
+            const headlineText = this.headlines[index];
+            this.elements.headline.textContent = headlineText;
+            this.elements.headline.style.color = selectReadableColor();
+            this.elements.headline.classList.add('show');
+            this.toggleLoader(false);
 
             this.updateMockDate();
 
@@ -329,6 +333,7 @@ class HeadlineApp {
         this.updateSocialShareLinks('', -1);
         this.updateMockHeadline('No headlines available.');
         this.toggleLoader(false, 'No headlines available.');
+        this.state.isLoading = false;
         this.elements.nextButton.disabled = true;
         this.updateNavigationAvailability();
     }
@@ -361,7 +366,8 @@ class HeadlineApp {
     }
 
     updateNavigationAvailability() {
-        this.elements.previousButton.disabled = this.state.navigationStack.length <= 1;
+        this.elements.previousButton.disabled = this.state.isLoading || this.state.navigationStack.length <= 1;
+        this.elements.nextButton.disabled = this.state.isLoading;
     }
 
     handleDirectionalNavigation(event) {
@@ -586,6 +592,22 @@ class HeadlineApp {
         }
         this.elements.loader.style.display = shouldShow ? 'block' : 'none';
         this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        this.setNavigationLoading(shouldShow);
+    }
+
+    setNavigationLoading(shouldShow) {
+        this.state.isLoading = shouldShow;
+        this.updateNavigationAvailability();
+        if (this.activeButton) {
+            this.setButtonLoading(this.activeButton, shouldShow);
+        }
+    }
+
+    setButtonLoading(button, shouldShow) {
+        if (!button) return;
+        button.classList.toggle('is-loading', shouldShow);
+        button.disabled = shouldShow;
+        button.setAttribute('aria-busy', shouldShow ? 'true' : 'false');
     }
 
     updateLoaderMessage(message) {
@@ -624,6 +646,8 @@ class HeadlineApp {
         }
 
         this.reportExportStatus('Rendering front page...');
+        const exportButton = mode === 'download' ? this.elements.downloadMockButton : this.elements.copyMockButton;
+        this.setButtonLoading(exportButton, true);
 
         const options = {
             pixelRatio: window.devicePixelRatio || 2,
@@ -638,11 +662,13 @@ class HeadlineApp {
                 link.href = dataUrl;
                 link.click();
                 this.reportExportStatus('Mock front page downloaded.');
+                this.setButtonLoading(exportButton, false);
                 return;
             }
 
             if (!navigator.clipboard || !navigator.clipboard.write) {
                 this.reportExportStatus('Clipboard unavailable for images.', true);
+                this.setButtonLoading(exportButton, false);
                 return;
             }
 
@@ -658,8 +684,10 @@ class HeadlineApp {
             ]);
 
             this.reportExportStatus('Image copied to clipboard.');
+            this.setButtonLoading(exportButton, false);
         } catch (error) {
             this.reportExportStatus('Export failed. Please try again.', true);
+            this.setButtonLoading(exportButton, false);
         }
     }
 

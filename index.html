@@ -75,9 +75,15 @@
                             <span class="footnote footnote--accent">Printed wherever stories travel</span>
                         </div>
                     </div>
-                    <div class="button-row">
-                        <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
-                        <button id="next-btn" aria-label="View Next Headline" class="accent">Next headline</button>
+                <div class="button-row">
+                        <button id="prev-btn" aria-label="View Previous Headline" class="ghost">
+                            <span class="button-label">Previous</span>
+                            <span class="button-spinner" aria-hidden="true"></span>
+                        </button>
+                        <button id="next-btn" aria-label="View Next Headline" class="accent">
+                            <span class="button-label">Next headline</span>
+                            <span class="button-spinner" aria-hidden="true"></span>
+                        </button>
                     </div>
                 </section>
             </div>
@@ -104,7 +110,10 @@
                                 <p class="muted">Grab the headline for your next post.</p>
                             </div>
                             <div class="copy-actions">
-                                <button id="copy-btn" aria-label="Copy Headline to Clipboard" class="accent">Copy Headline</button>
+                                <button id="copy-btn" aria-label="Copy Headline to Clipboard" class="accent">
+                                    <span class="button-label">Copy Headline</span>
+                                    <span class="button-spinner" aria-hidden="true"></span>
+                                </button>
                                 <p id="copy-status" class="copy-status" aria-live="polite" role="status"></p>
                             </div>
                         </div>
@@ -117,15 +126,15 @@
                         </div>
                         <div class="social-grid">
                             <a href="#" id="twitter-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
-                                <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" onerror="this.onerror=null; this.src='icons/twitter.png'">
+                                <img src="icons/twitter.svg" alt="Twitter icon" loading="lazy" width="20" height="20" onerror="this.onerror=null; this.src='icons/twitter.png'">
                                 Twitter
                             </a>
                             <a href="#" id="facebook-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-                                <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" onerror="this.onerror=null; this.src='icons/facebook.png'">
+                                <img src="icons/facebook.svg" alt="Facebook icon" loading="lazy" width="20" height="20" onerror="this.onerror=null; this.src='icons/facebook.png'">
                                 Facebook
                             </a>
                             <a href="#" id="reddit-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
-                                <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" onerror="this.onerror=null; this.src='icons/reddit.png'">
+                                <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" width="20" height="20" onerror="this.onerror=null; this.src='icons/reddit.png'">
                                 Reddit
                             </a>
                         </div>
@@ -137,8 +146,14 @@
                             <p class="muted">Download or copy a framed take of today’s banner.</p>
                         </div>
                         <div class="export-buttons">
-                            <button id="download-mock" class="accent" aria-label="Download mock front page">Download mock front page</button>
-                            <button id="copy-mock" class="ghost" aria-label="Copy mock front page image">Copy image</button>
+                            <button id="download-mock" class="accent" aria-label="Download mock front page">
+                                <span class="button-label">Download mock front page</span>
+                                <span class="button-spinner" aria-hidden="true"></span>
+                            </button>
+                            <button id="copy-mock" class="ghost" aria-label="Copy mock front page image">
+                                <span class="button-label">Copy image</span>
+                                <span class="button-spinner" aria-hidden="true"></span>
+                            </button>
                         </div>
                         <p id="export-status" class="export-status" aria-live="polite" role="status"></p>
                     </section>
