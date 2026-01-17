@@ -29,11 +29,11 @@
                 <p class="lede">Dive into a feed where each shuffle drops a headline ripped from the group chat, tuned for the chronically online.</p>
                 <nav aria-label="News sections" class="masthead-nav">
                     <ul>
-                        <li>Latest</li>
-                        <li>World</li>
-                        <li>Culture</li>
-                        <li>Tech</li>
-                        <li>Oddities</li>
+                        <li><button type="button" class="section-filter" data-section="latest">Latest</button></li>
+                        <li><button type="button" class="section-filter" data-section="world">World</button></li>
+                        <li><button type="button" class="section-filter" data-section="culture">Culture</button></li>
+                        <li><button type="button" class="section-filter" data-section="tech">Tech</button></li>
+                        <li><button type="button" class="section-filter" data-section="oddities">Oddities</button></li>
                     </ul>
                 </nav>
                 <div class="hero__pills">
@@ -57,6 +57,10 @@
                     <div class="byline-row">
                         <span class="byline">By the Neckass desk</span>
                         <span class="dateline" id="feature-date">Published just now</span>
+                    </div>
+                    <div class="headline-meta">
+                        <span class="pill-chip pill-chip--inline" id="headline-source">Source: curated</span>
+                        <span class="pill-chip pill-chip--inline" id="headline-section">Section: latest</span>
                     </div>
                     <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                 </div>
@@ -84,6 +88,14 @@
                             <span class="button-label">Next headline</span>
                             <span class="button-spinner" aria-hidden="true"></span>
                         </button>
+                        <button id="generate-btn" aria-label="Generate headline with tiny model" class="ghost">
+                            <span class="button-label">Generate with tiny model</span>
+                            <span class="button-spinner" aria-hidden="true"></span>
+                        </button>
+                        <button id="favorite-btn" aria-label="Toggle favorite headline" class="ghost" aria-pressed="false">
+                            <span class="button-label">Save to favorites</span>
+                            <span class="button-spinner" aria-hidden="true"></span>
+                        </button>
                     </div>
                 </section>
             </div>
@@ -104,6 +116,31 @@
                             <p class="stat"><span id="counter">0</span></p>
                         </div>
 
+                        <div class="filter-panel">
+                            <div class="section-header section-header--tight">
+                                <p class="label">Filters &amp; search</p>
+                                <span class="pill-chip pill-chip--inline" id="filter-status">All headlines</span>
+                            </div>
+                            <form class="filter-form" id="search-form">
+                                <div class="input-stack">
+                                    <label for="search-input" class="label label--small">Search headlines</label>
+                                    <input id="search-input" name="q" type="search" placeholder="Search for a keyword" autocomplete="off">
+                                </div>
+                                <div class="button-group">
+                                    <button type="button" id="apply-search" class="accent">Apply search</button>
+                                    <button type="button" id="clear-search" class="ghost">Clear search</button>
+                                </div>
+                            </form>
+                            <div class="input-stack">
+                                <p class="label label--small">Headline source</p>
+                                <div class="toggle-group" role="group" aria-label="Headline source">
+                                    <button type="button" class="toggle-button" data-source="auto">Auto</button>
+                                    <button type="button" class="toggle-button" data-source="generated">Tiny model</button>
+                                    <button type="button" class="toggle-button" data-source="curated">Curated only</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="copy-headline">
                             <div>
                                 <p class="label">Clipboard</p>
@@ -114,9 +151,26 @@
                                     <span class="button-label">Copy Headline</span>
                                     <span class="button-spinner" aria-hidden="true"></span>
                                 </button>
+                                <button id="copy-link" aria-label="Copy Headline link" class="ghost">
+                                    <span class="button-label">Copy Headline Link</span>
+                                    <span class="button-spinner" aria-hidden="true"></span>
+                                </button>
                                 <p id="copy-status" class="copy-status" aria-live="polite" role="status"></p>
                             </div>
                         </div>
+                    </section>
+
+                    <section class="history-panel glass-card" aria-label="Headline history">
+                        <div class="section-header">
+                            <p class="label">Headline desk</p>
+                            <span class="pill-chip pill-chip--inline" id="history-count">0 items</span>
+                        </div>
+                        <div class="toggle-group" role="group" aria-label="Headline desk views">
+                            <button type="button" class="toggle-button" data-panel="recent">Recent</button>
+                            <button type="button" class="toggle-button" data-panel="favorites">Favorites</button>
+                            <button type="button" class="toggle-button" data-panel="generated">Generated</button>
+                        </div>
+                        <ul class="headline-list" id="headline-list"></ul>
                     </section>
 
                     <section class="social-share glass-card">
@@ -137,6 +191,18 @@
                                 <img src="icons/reddit.svg" alt="Reddit icon" loading="lazy" width="20" height="20" onerror="this.onerror=null; this.src='icons/reddit.png'">
                                 Reddit
                             </a>
+                            <a href="#" id="linkedin-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
+                                <img src="icons/linkedin.svg" alt="LinkedIn icon" loading="lazy" width="20" height="20">
+                                LinkedIn
+                            </a>
+                            <a href="#" id="threads-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Threads">
+                                <img src="icons/share.svg" alt="Threads share icon" loading="lazy" width="20" height="20">
+                                Threads
+                            </a>
+                            <a href="#" id="bluesky-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Bluesky">
+                                <img src="icons/globe.svg" alt="Bluesky share icon" loading="lazy" width="20" height="20">
+                                Bluesky
+                            </a>
                         </div>
                     </section>
 
@@ -144,6 +210,14 @@
                         <div class="section-header">
                             <p class="label">Mock front page</p>
                             <p class="muted">Download or copy a framed take of today’s banner.</p>
+                        </div>
+                        <div class="mock-layout">
+                            <p class="label label--small">Export layout</p>
+                            <div class="toggle-group" role="group" aria-label="Mock front page layout">
+                                <button type="button" class="toggle-button" data-layout="standard">Standard</button>
+                                <button type="button" class="toggle-button" data-layout="square">Square</button>
+                                <button type="button" class="toggle-button" data-layout="story">Story</button>
+                            </div>
                         </div>
                         <div class="export-buttons">
                             <button id="download-mock" class="accent" aria-label="Download mock front page">

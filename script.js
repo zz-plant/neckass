@@ -4,11 +4,20 @@ const STORAGE_KEYS = {
     navigationStack: 'navigationStack',
     navigationStackLegacy: 'viewedStack',
     uniqueHeadlines: 'uniqueHeadlines',
-    generatedHeadlines: 'generatedHeadlines'
+    generatedHeadlines: 'generatedHeadlines',
+    favorites: 'favoriteHeadlines',
+    filters: 'headlineFilters'
 };
 
 const ANIMATION_DELAY_MS = 500;
 const BRIGHTNESS_THRESHOLD = 130;
+const DEFAULT_FILTERS = Object.freeze({
+    section: 'latest',
+    query: '',
+    source: 'auto',
+    panel: 'recent',
+    layout: 'standard'
+});
 const COLOR_PALETTE = [
     '#FF5733', '#33FF57', '#3357FF', '#F333FF',
     '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
@@ -165,12 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
 class HeadlineApp {
     constructor({ headlines: allHeadlines, elements, storage }) {
         this.headlines = Array.isArray(allHeadlines) ? [...allHeadlines] : [];
+        this.baseHeadlineCount = this.headlines.length;
         this.elements = elements;
         this.storage = storage;
         this.headlineCache = new Map();
-        this.state = storage.restore(this.headlines.length);
+        this.state = storage.restore(this.headlines.length, this.baseHeadlineCount);
         this.state.isLoading = false;
         this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
+        this.filters = sanitizeFilters(this.state.filters);
+        this.favoriteHeadlines = new Set(Array.isArray(this.state.favorites) ? this.state.favorites : []);
+        this.filteredIndexes = [];
         this.buildHeadlineCache();
         this.appendGeneratedHeadlines(this.state.generatedHeadlines || []);
         this.handleDirectionalNavigation = this.handleDirectionalNavigation.bind(this);
@@ -201,11 +214,11 @@ class HeadlineApp {
     }
 
     init() {
+        this.bindEvents();
+        this.applyUrlState();
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
-        this.bindEvents();
-        this.applyUrlHeadlineSelection();
         this.renderInitialHeadline();
     }
 
@@ -213,8 +226,37 @@ class HeadlineApp {
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
+        this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
+        this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
+        this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
         this.elements.downloadMockButton?.addEventListener('click', () => this.exportMockFront('download'));
         this.elements.copyMockButton?.addEventListener('click', () => this.exportMockFront('copy'));
+        this.elements.applySearchButton?.addEventListener('click', () => this.applySearch());
+        this.elements.clearSearchButton?.addEventListener('click', () => this.clearSearch());
+        this.elements.searchForm?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.applySearch();
+        });
+        this.elements.sectionButtons?.forEach((button) => {
+            button.addEventListener('click', () => this.setSectionFilter(button.dataset.section || 'latest'));
+        });
+        this.elements.sourceButtons?.forEach((button) => {
+            button.addEventListener('click', () => this.setSourceFilter(button.dataset.source || 'auto'));
+        });
+        this.elements.panelButtons?.forEach((button) => {
+            button.addEventListener('click', () => this.setActivePanel(button.dataset.panel || 'recent'));
+        });
+        this.elements.layoutButtons?.forEach((button) => {
+            button.addEventListener('click', () => this.setMockLayout(button.dataset.layout || 'standard'));
+        });
+        this.elements.headlineList?.addEventListener('click', (event) => {
+            const target = event.target.closest('button[data-index]');
+            if (!target) return;
+            const index = Number.parseInt(target.dataset.index, 10);
+            if (Number.isInteger(index)) {
+                this.selectHeadline(index);
+            }
+        });
         window.addEventListener('popstate', (event) => this.handlePopState(event));
         document.addEventListener('keydown', this.handleDirectionalNavigation);
     }
@@ -226,17 +268,28 @@ class HeadlineApp {
         }
 
         const generatorAvailable = typeof window.tinyLlmClient?.generateHeadline === 'function';
+        const wantsGenerated = this.filters.source === 'generated'
+            || (this.filters.source === 'auto' && generatorAvailable);
         let nextIndex = null;
         this.activeButton = this.elements.nextButton;
 
-        if (generatorAvailable) {
+        if (wantsGenerated && generatorAvailable) {
             this.toggleLoader(true, 'Generating headline with the tiny model...');
             nextIndex = await this.generateHeadlineWithFallback();
+        }
+
+        if (this.filters.source === 'generated' && !generatorAvailable) {
+            this.toggleLoader(true, 'Tiny model unavailable, using curated headlines.');
         }
 
         if (nextIndex === null) {
             this.toggleLoader(true, 'Shuffling stored headlines...');
             nextIndex = this.getRandomIndex();
+        }
+
+        if (nextIndex === null) {
+            this.renderEmptyState();
+            return;
         }
 
         this.renderHeadline(nextIndex);
@@ -259,6 +312,42 @@ class HeadlineApp {
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.renderHeadline(previousIndex, { pushToStack: false, replaceState: false });
+    }
+
+    async handleGenerate() {
+        const generatorAvailable = typeof window.tinyLlmClient?.generateHeadline === 'function';
+        this.activeButton = this.elements.generateButton;
+
+        if (!generatorAvailable) {
+            this.reportCopyStatus('Tiny model is unavailable in this session.', true);
+            return;
+        }
+
+        this.toggleLoader(true, 'Generating headline with the tiny model...');
+        const generatedIndex = await this.generateHeadlineWithFallback();
+
+        if (generatedIndex === null) {
+            this.toggleLoader(true, 'Falling back to stored headlines...');
+            const fallbackIndex = this.getRandomIndex();
+            if (fallbackIndex === null) {
+                this.renderEmptyState();
+                return;
+            }
+            this.renderHeadline(fallbackIndex);
+            return;
+        }
+
+        if (!this.isIndexEligible(generatedIndex)) {
+            const fallbackIndex = this.getRandomIndex();
+            if (fallbackIndex === null) {
+                this.renderEmptyState();
+                return;
+            }
+            this.renderHeadline(fallbackIndex);
+            return;
+        }
+
+        this.renderHeadline(generatedIndex);
     }
 
     async generateHeadlineWithFallback() {
@@ -287,6 +376,7 @@ class HeadlineApp {
         this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
         this.state.generatedHeadlines.push(normalized);
         this.persistState();
+        this.refreshFilteredIndexes();
         return newIndex;
     }
 
@@ -309,31 +399,52 @@ class HeadlineApp {
             this.updateMockDate();
 
             this.updateViewedState(index, options);
+            this.updateHeadlineBadges(index);
+            this.updateFavoriteButton();
             this.updateDocumentMetadata(headlineText, index);
             this.updateSocialShareLinks(headlineText, index);
             this.updateMockHeadline(headlineText);
             this.persistState();
             this.updateHistoryState(index, { replace: options.replaceState });
+            this.updateHistoryList();
         }, ANIMATION_DELAY_MS);
     }
 
     renderInitialHeadline() {
-        if (this.state.navigationStack.length > 0 && isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)) {
+        if (this.state.navigationStack.length > 0
+            && isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
+            && this.isIndexEligible(this.state.currentIndex)) {
             this.renderHeadline(this.state.currentIndex, { pushToStack: false, replaceState: true });
             return;
         }
 
-        this.handleNext();
+        if (this.filteredIndexes.length > 0) {
+            const nextIndex = this.filteredIndexes[0];
+            this.state.navigationStack = [nextIndex];
+            this.state.currentIndex = nextIndex;
+            this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
+            return;
+        }
+
+        this.renderEmptyState();
     }
 
     renderEmptyState() {
-        this.elements.headline.textContent = 'No headlines available.';
+        const hasFilters = Boolean(this.filters.query || this.filters.section !== 'latest' || this.filters.source !== 'auto');
+        this.elements.headline.textContent = hasFilters
+            ? 'No headlines match your current filters.'
+            : 'No headlines available.';
         this.elements.headline.style.color = '';
         this.updateDocumentMetadata('', -1);
         this.updateSocialShareLinks('', -1);
         this.updateMockHeadline('No headlines available.');
+        this.updateHeadlineBadges(null);
+        this.updateFavoriteButton();
+        this.updateHistoryList();
         this.toggleLoader(false, 'No headlines available.');
         this.state.isLoading = false;
+        this.state.navigationStack = [];
+        this.state.currentIndex = -1;
         this.elements.nextButton.disabled = true;
         this.updateNavigationAvailability();
     }
@@ -355,10 +466,20 @@ class HeadlineApp {
         const encodedHeadline = encodeURIComponent(headline);
         const canonicalUrl = this.getCanonicalUrl(index);
         const encodedUrl = encodeURIComponent(canonicalUrl);
+        const combinedText = encodeURIComponent(`${headline} ${canonicalUrl}`.trim());
 
         this.elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;
         this.elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedHeadline}`;
         this.elements.redditShareLink.href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedHeadline}`;
+        if (this.elements.linkedinShareLink) {
+            this.elements.linkedinShareLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+        }
+        if (this.elements.threadsShareLink) {
+            this.elements.threadsShareLink.href = `https://www.threads.net/intent/post?text=${combinedText}`;
+        }
+        if (this.elements.blueskyShareLink) {
+            this.elements.blueskyShareLink.href = `https://bsky.app/intent/compose?text=${combinedText}`;
+        }
     }
 
     updateHeadlineCounter() {
@@ -366,8 +487,332 @@ class HeadlineApp {
     }
 
     updateNavigationAvailability() {
+        const hasEligible = this.filteredIndexes.length > 0 || this.filters.source === 'generated';
         this.elements.previousButton.disabled = this.state.isLoading || this.state.navigationStack.length <= 1;
-        this.elements.nextButton.disabled = this.state.isLoading;
+        this.elements.nextButton.disabled = this.state.isLoading || !hasEligible;
+    }
+
+    setSectionFilter(section) {
+        const normalized = section || 'latest';
+        if (this.filters.section === normalized) return;
+        this.filters.section = normalized;
+        this.resetNavigationForFilters();
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.ensureHeadlineMatchesFilters();
+    }
+
+    setSourceFilter(source) {
+        const normalized = source || 'auto';
+        if (this.filters.source === normalized) return;
+        this.filters.source = normalized;
+        this.resetNavigationForFilters();
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.ensureHeadlineMatchesFilters();
+    }
+
+    setActivePanel(panel) {
+        const normalized = panel || 'recent';
+        if (this.filters.panel === normalized) return;
+        this.filters.panel = normalized;
+        this.persistState();
+        this.syncFilterControls();
+        this.updateHistoryList();
+        this.updateHistoryState(this.state.currentIndex, { replace: false });
+    }
+
+    setMockLayout(layout) {
+        const normalized = layout || 'standard';
+        if (this.filters.layout === normalized) return;
+        this.filters.layout = normalized;
+        this.persistState();
+        this.applyMockLayoutClass();
+        this.updateHistoryState(this.state.currentIndex, { replace: false });
+    }
+
+    applyMockLayoutClass() {
+        if (!this.elements.mockFrame) return;
+        this.elements.mockFrame.classList.remove('mock-front--square', 'mock-front--story');
+        if (this.filters.layout === 'square') {
+            this.elements.mockFrame.classList.add('mock-front--square');
+        }
+        if (this.filters.layout === 'story') {
+            this.elements.mockFrame.classList.add('mock-front--story');
+        }
+        this.updateLayoutButtons();
+    }
+
+    applySearch() {
+        const query = this.elements.searchInput?.value ?? '';
+        if (this.filters.query === query.trim()) {
+            this.updateFilterStatus();
+            return;
+        }
+        this.filters.query = query.trim();
+        this.resetNavigationForFilters();
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.ensureHeadlineMatchesFilters();
+    }
+
+    clearSearch() {
+        if (this.elements.searchInput) {
+            this.elements.searchInput.value = '';
+        }
+        if (!this.filters.query) {
+            this.updateFilterStatus();
+            return;
+        }
+        this.filters.query = '';
+        this.resetNavigationForFilters();
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.ensureHeadlineMatchesFilters();
+    }
+
+    resetNavigationForFilters() {
+        const currentIndex = isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
+            ? this.state.currentIndex
+            : null;
+        this.state.navigationStack = currentIndex !== null ? [currentIndex] : [];
+    }
+
+    ensureHeadlineMatchesFilters() {
+        if (this.filteredIndexes.length === 0) {
+            this.renderEmptyState();
+            this.updateHistoryState(-1, { replace: false });
+            return;
+        }
+
+        if (!this.isIndexEligible(this.state.currentIndex)) {
+            const nextIndex = this.filteredIndexes[0];
+            this.state.navigationStack = [nextIndex];
+            this.state.currentIndex = nextIndex;
+            this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
+            return;
+        }
+
+        this.updateHistoryState(this.state.currentIndex, { replace: false });
+        this.updateHistoryList();
+    }
+
+    refreshFilteredIndexes() {
+        this.filteredIndexes = this.getEligibleIndexes();
+        this.updateFilterStatus();
+        this.updateNavigationAvailability();
+        this.updateHistoryList();
+    }
+
+    getEligibleIndexes() {
+        const query = this.filters.query.trim().toLowerCase();
+        return this.headlines
+            .map((_, index) => index)
+            .filter((index) => this.isIndexEligible(index, query));
+    }
+
+    isIndexEligible(index, normalizedQuery = null) {
+        if (!isValidHeadlineIndex(index, this.headlines.length)) return false;
+        const headlineText = this.headlines[index];
+        const query = normalizedQuery ?? this.filters.query.trim().toLowerCase();
+        const section = this.filters.section;
+        const source = this.filters.source;
+        const isGenerated = index >= this.baseHeadlineCount;
+
+        if (source === 'curated' && isGenerated) return false;
+        if (source === 'generated' && !isGenerated) return false;
+        if (section !== 'latest') {
+            const assigned = this.classifyHeadline(headlineText);
+            if (assigned !== section) return false;
+        }
+        if (query) {
+            return headlineText.toLowerCase().includes(query);
+        }
+        return true;
+    }
+
+    classifyHeadline(headlineText) {
+        if (!headlineText) return 'latest';
+        const normalized = headlineText.toLowerCase();
+        const patterns = {
+            world: ['canada', 'federal', 'global', 'climate', 'ambassador', 'space', 'metaverse', 'crypto', 'treaty'],
+            tech: ['app', 'wifi', 'ai', 'bot', 'algorithm', 'ios', 'android', 'tweet', 'stream', 'vr', 'podcast', 'discord', 'zoom'],
+            culture: ['tiktok', 'reels', 'instagram', 'spotify', 'etsy', 'book', 'substack', 'newsletter', 'podcast', 'fashion', 'club'],
+            oddities: ['unhinged', 'manifest', 'ghost', 'meme', 'weird', 'npc', 'pickleball', 'cursed', 'demon', 'zodiac']
+        };
+
+        if (patterns.tech.some((term) => normalized.includes(term))) return 'tech';
+        if (patterns.culture.some((term) => normalized.includes(term))) return 'culture';
+        if (patterns.world.some((term) => normalized.includes(term))) return 'world';
+        if (patterns.oddities.some((term) => normalized.includes(term))) return 'oddities';
+        return 'latest';
+    }
+
+    selectHeadline(index) {
+        if (!this.isIndexEligible(index)) return;
+        this.state.currentIndex = index;
+        if (this.state.navigationStack[this.state.navigationStack.length - 1] !== index) {
+            this.state.navigationStack.push(index);
+        }
+        this.renderHeadline(index, { pushToStack: false, replaceState: false });
+    }
+
+    updateHeadlineBadges(index) {
+        if (this.elements.headlineSource) {
+            const label = index === null || !isValidHeadlineIndex(index, this.headlines.length)
+                ? 'Source: unavailable'
+                : (index >= this.baseHeadlineCount ? 'Source: generated' : 'Source: curated');
+            this.elements.headlineSource.textContent = label;
+        }
+        if (this.elements.headlineSectionBadge) {
+            const label = index === null || !isValidHeadlineIndex(index, this.headlines.length)
+                ? 'Section: latest'
+                : `Section: ${this.classifyHeadline(this.headlines[index])}`;
+            this.elements.headlineSectionBadge.textContent = label;
+        }
+    }
+
+    updateFilterStatus() {
+        if (!this.elements.filterStatus) return;
+        const parts = [];
+        if (this.filters.section !== 'latest') {
+            parts.push(this.filters.section);
+        }
+        if (this.filters.query) {
+            parts.push(`"${this.filters.query}"`);
+        }
+        if (this.filters.source !== 'auto') {
+            parts.push(this.filters.source);
+        }
+        this.elements.filterStatus.textContent = parts.length > 0 ? parts.join(' · ') : 'All headlines';
+    }
+
+    updateFavoriteButton() {
+        if (!this.elements.favoriteButton) return;
+        const headlineText = this.headlines[this.state.currentIndex];
+        const isFavorite = Boolean(headlineText && this.favoriteHeadlines.has(headlineText));
+        this.elements.favoriteButton.setAttribute('aria-pressed', String(isFavorite));
+        this.elements.favoriteButton.querySelector('.button-label').textContent = isFavorite
+            ? 'Saved to favorites'
+            : 'Save to favorites';
+    }
+
+    toggleFavorite() {
+        const headlineText = this.headlines[this.state.currentIndex];
+        if (!headlineText) return;
+        if (this.favoriteHeadlines.has(headlineText)) {
+            this.favoriteHeadlines.delete(headlineText);
+            this.reportCopyStatus('Removed from favorites.');
+        } else {
+            this.favoriteHeadlines.add(headlineText);
+            this.reportCopyStatus('Saved to favorites.');
+        }
+        this.persistState();
+        this.updateFavoriteButton();
+        this.updateHistoryList();
+    }
+
+    updateHistoryList() {
+        if (!this.elements.headlineList) return;
+        const panel = this.filters.panel;
+        const indexes = this.getPanelIndexes(panel);
+        this.elements.headlineList.innerHTML = '';
+
+        if (this.elements.historyCount) {
+            this.elements.historyCount.textContent = `${indexes.length} items`;
+        }
+
+        if (indexes.length === 0) {
+            const item = document.createElement('li');
+            item.className = 'headline-item headline-item--empty';
+            item.textContent = 'No headlines available in this view.';
+            this.elements.headlineList.appendChild(item);
+            return;
+        }
+
+        indexes.forEach((index) => {
+            const item = document.createElement('li');
+            item.className = 'headline-item';
+            if (index === this.state.currentIndex) {
+                item.classList.add('headline-item--active');
+            }
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.dataset.index = String(index);
+            button.textContent = this.headlines[index];
+            item.appendChild(button);
+            this.elements.headlineList.appendChild(item);
+        });
+    }
+
+    getPanelIndexes(panel) {
+        let indexes = [];
+        if (panel === 'favorites') {
+            indexes = Array.from(this.favoriteHeadlines)
+                .map((headline) => this.headlineCache.get(headline))
+                .filter((index) => Number.isInteger(index));
+        } else if (panel === 'generated') {
+            indexes = this.headlines
+                .map((_, index) => index)
+                .filter((index) => index >= this.baseHeadlineCount);
+        } else {
+            indexes = [...this.state.navigationStack].reverse();
+        }
+
+        return indexes.filter((index) => this.isIndexEligible(index));
+    }
+
+    updateLayoutButtons() {
+        if (!this.elements.layoutButtons) return;
+        this.elements.layoutButtons.forEach((button) => {
+            button.classList.toggle('is-active', button.dataset.layout === this.filters.layout);
+        });
+    }
+
+    updateToggleButtons(buttons, value, attribute = 'source') {
+        if (!buttons) return;
+        buttons.forEach((button) => {
+            button.classList.toggle('is-active', button.dataset[attribute] === value);
+        });
+    }
+
+    syncFilterControls() {
+        if (this.elements.searchInput) {
+            this.elements.searchInput.value = this.filters.query;
+        }
+        this.updateToggleButtons(this.elements.sectionButtons, this.filters.section, 'section');
+        this.updateToggleButtons(this.elements.sourceButtons, this.filters.source, 'source');
+        this.updateToggleButtons(this.elements.panelButtons, this.filters.panel, 'panel');
+        this.updateLayoutButtons();
+        this.updateFilterStatus();
+    }
+
+    copyHeadlineLink() {
+        const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
+        if (!canonicalUrl) {
+            this.reportCopyStatus('No headline link available.', true);
+            return;
+        }
+        if (this.canUseClipboardApi()) {
+            navigator.clipboard.writeText(canonicalUrl)
+                .then(() => this.reportCopyStatus('Headline link copied!'))
+                .catch(() => this.reportCopyStatus('Unable to access clipboard.', true));
+            return;
+        }
+        try {
+            const success = this.copyWithFallback(canonicalUrl);
+            if (success) {
+                this.reportCopyStatus('Headline link copied!');
+            } else {
+                this.reportCopyStatus('Copy failed. Please try again.', true);
+            }
+        } catch (error) {
+            this.reportCopyStatus('Clipboard unavailable in this browser.', true);
+        }
     }
 
     handleDirectionalNavigation(event) {
@@ -386,30 +831,58 @@ class HeadlineApp {
         }
     }
 
-    applyUrlHeadlineSelection() {
-        const identifier = this.getHeadlineIdentifierFromUrl();
-        const index = this.identifierToIndex(identifier);
+    applyUrlState() {
+        const urlState = this.getUrlState();
+        const mergedFilters = sanitizeFilters({
+            ...this.filters,
+            section: urlState.section ?? this.filters.section,
+            query: urlState.query ?? this.filters.query,
+            source: urlState.source ?? this.filters.source,
+            panel: urlState.panel ?? this.filters.panel,
+            layout: urlState.layout ?? this.filters.layout
+        });
 
-        if (isValidHeadlineIndex(index, this.headlines.length)) {
-            this.state.navigationStack = [index];
-            this.state.uniqueHeadlines.add(index);
-            this.state.currentIndex = index;
+        this.filters = mergedFilters;
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.applyMockLayoutClass();
+
+        const index = this.identifierToIndex(urlState.headline);
+        const eligibleIndex = isValidHeadlineIndex(index, this.headlines.length) && this.isIndexEligible(index)
+            ? index
+            : null;
+        const fallbackIndex = eligibleIndex ?? this.filteredIndexes[0] ?? null;
+
+        if (fallbackIndex !== null) {
+            this.state.navigationStack = [fallbackIndex];
+            this.state.uniqueHeadlines.add(fallbackIndex);
+            this.state.currentIndex = fallbackIndex;
             this.persistState();
             this.updateHeadlineCounter();
             this.updateNavigationAvailability();
-            this.updateHistoryState(index, { replace: true });
-        } else if (identifier !== null) {
+            this.updateHistoryState(fallbackIndex, { replace: true });
+        } else if (index !== null || urlState.hasHeadlineParam) {
             this.updateHistoryState(-1, { replace: true });
         }
     }
 
-    getHeadlineIdentifierFromUrl() {
+    getUrlState() {
         const params = new URLSearchParams(window.location.search);
-        const queryIdentifier = params.get('headline');
-        if (queryIdentifier) return queryIdentifier;
-
-        const hashMatch = window.location.hash.match(/headline-([^&]+)/i);
-        return hashMatch ? hashMatch[1] : null;
+        let headline = params.get('headline');
+        if (!headline) {
+            const hashMatch = window.location.hash.match(/headline-([^&]+)/i);
+            headline = hashMatch ? hashMatch[1] : null;
+        }
+        return {
+            headline,
+            hasHeadlineParam: params.has('headline'),
+            section: params.get('section'),
+            query: params.get('q'),
+            source: params.get('source'),
+            panel: params.get('panel'),
+            layout: params.get('layout')
+        };
     }
 
     identifierToIndex(identifier) {
@@ -431,6 +904,16 @@ class HeadlineApp {
             url.searchParams.delete('headline');
         }
 
+        url.searchParams.set('section', this.filters.section);
+        if (this.filters.query) {
+            url.searchParams.set('q', this.filters.query);
+        } else {
+            url.searchParams.delete('q');
+        }
+        url.searchParams.set('source', this.filters.source);
+        url.searchParams.set('panel', this.filters.panel);
+        url.searchParams.set('layout', this.filters.layout);
+
         return url.toString();
     }
 
@@ -443,7 +926,8 @@ class HeadlineApp {
         const state = {
             headlineIndex: isValidHeadlineIndex(index, this.headlines.length) ? index : null,
             navigationStack: [...this.state.navigationStack],
-            uniqueHeadlines: Array.from(this.state.uniqueHeadlines)
+            uniqueHeadlines: Array.from(this.state.uniqueHeadlines),
+            filters: { ...this.filters }
         };
 
         if (replace) {
@@ -455,16 +939,31 @@ class HeadlineApp {
 
     handlePopState(event) {
         const state = event.state || {};
-        const urlIndex = this.identifierToIndex(this.getHeadlineIdentifierFromUrl());
+        const urlState = this.getUrlState();
+        const urlIndex = this.identifierToIndex(urlState.headline);
         const stateIndex = this.identifierToIndex(state.headlineIndex);
+        const mergedFilters = sanitizeFilters({
+            ...this.filters,
+            ...state.filters,
+            section: urlState.section ?? state.filters?.section ?? this.filters.section,
+            query: urlState.query ?? state.filters?.query ?? this.filters.query,
+            source: urlState.source ?? state.filters?.source ?? this.filters.source,
+            panel: urlState.panel ?? state.filters?.panel ?? this.filters.panel,
+            layout: urlState.layout ?? state.filters?.layout ?? this.filters.layout
+        });
+
+        this.filters = mergedFilters;
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.applyMockLayoutClass();
+
         const targetIndex = isValidHeadlineIndex(stateIndex, this.headlines.length)
             ? stateIndex
             : (isValidHeadlineIndex(urlIndex, this.headlines.length) ? urlIndex : null);
 
-        if (targetIndex === null) {
-            this.handleNext();
-            return;
-        }
+        const eligibleTarget = targetIndex !== null && this.isIndexEligible(targetIndex)
+            ? targetIndex
+            : this.filteredIndexes[0] ?? null;
 
         const restoredStack = Array.isArray(state.navigationStack)
             ? state.navigationStack.filter((idx) => isValidHeadlineIndex(idx, this.headlines.length))
@@ -473,17 +972,23 @@ class HeadlineApp {
             ? state.uniqueHeadlines.filter((idx) => isValidHeadlineIndex(idx, this.headlines.length))
             : [];
 
-        this.state.navigationStack = restoredStack.length > 0 ? restoredStack : [targetIndex];
-        if (!this.state.navigationStack.includes(targetIndex)) {
-            this.state.navigationStack.push(targetIndex);
+        if (eligibleTarget === null) {
+            this.renderEmptyState();
+            return;
         }
 
-        this.state.uniqueHeadlines = new Set([...this.state.uniqueHeadlines, ...restoredUnique, targetIndex]);
-        this.state.currentIndex = targetIndex;
+        const filteredStack = restoredStack.filter((idx) => this.isIndexEligible(idx));
+        this.state.navigationStack = filteredStack.length > 0 ? filteredStack : [eligibleTarget];
+        if (!this.state.navigationStack.includes(eligibleTarget)) {
+            this.state.navigationStack.push(eligibleTarget);
+        }
+
+        this.state.uniqueHeadlines = new Set([...this.state.uniqueHeadlines, ...restoredUnique, eligibleTarget]);
+        this.state.currentIndex = eligibleTarget;
         this.persistState();
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
-        this.renderHeadline(targetIndex, { pushToStack: false, replaceState: true });
+        this.renderHeadline(eligibleTarget, { pushToStack: false, replaceState: true });
     }
 
     updateDocumentMetadata(headline, index) {
@@ -667,7 +1172,12 @@ class HeadlineApp {
             }
 
             if (!navigator.clipboard || !navigator.clipboard.write) {
-                this.reportExportStatus('Clipboard unavailable for images.', true);
+                const dataUrl = await window.htmlToImage.toPng(this.elements.mockFrame, options);
+                const link = document.createElement('a');
+                link.download = 'neckass-front-page.png';
+                link.href = dataUrl;
+                link.click();
+                this.reportExportStatus('Clipboard unavailable, downloaded instead.');
                 this.setButtonLoading(exportButton, false);
                 return;
             }
@@ -698,13 +1208,21 @@ class HeadlineApp {
     }
 
     getRandomIndex() {
-        if (this.headlines.length <= 1) {
-            return 0;
+        const pool = this.filteredIndexes.length > 0
+            ? this.filteredIndexes
+            : [];
+
+        if (pool.length === 0) {
+            return null;
         }
 
-        let randomIndex = Math.floor(Math.random() * this.headlines.length);
-        while (randomIndex === this.state.currentIndex) {
-            randomIndex = Math.floor(Math.random() * this.headlines.length);
+        if (pool.length === 1) {
+            return pool[0];
+        }
+
+        let randomIndex = pool[Math.floor(Math.random() * pool.length)];
+        while (randomIndex === this.state.currentIndex && pool.length > 1) {
+            randomIndex = pool[Math.floor(Math.random() * pool.length)];
         }
 
         return randomIndex;
@@ -715,7 +1233,9 @@ class HeadlineApp {
             navigationStack: this.state.navigationStack,
             uniqueHeadlines: this.state.uniqueHeadlines,
             currentIndex: this.state.currentIndex,
-            generatedHeadlines: this.state.generatedHeadlines
+            generatedHeadlines: this.state.generatedHeadlines,
+            favorites: Array.from(this.favoriteHeadlines),
+            filters: this.filters
         });
     }
 }
@@ -726,13 +1246,19 @@ function mapElements() {
         loader: document.getElementById('loader'),
         nextButton: document.getElementById('next-btn'),
         previousButton: document.getElementById('prev-btn'),
+        generateButton: document.getElementById('generate-btn'),
+        favoriteButton: document.getElementById('favorite-btn'),
         counter: document.getElementById('counter'),
         mastheadDate: document.getElementById('masthead-date'),
         featureDateline: document.getElementById('feature-date'),
         twitterShareLink: document.getElementById('twitter-share'),
         facebookShareLink: document.getElementById('facebook-share'),
         redditShareLink: document.getElementById('reddit-share'),
+        linkedinShareLink: document.getElementById('linkedin-share'),
+        threadsShareLink: document.getElementById('threads-share'),
+        blueskyShareLink: document.getElementById('bluesky-share'),
         copyButton: document.getElementById('copy-btn'),
+        copyLinkButton: document.getElementById('copy-link'),
         copyStatus: document.getElementById('copy-status'),
         downloadMockButton: document.getElementById('download-mock'),
         copyMockButton: document.getElementById('copy-mock'),
@@ -740,6 +1266,19 @@ function mapElements() {
         mockFrame: document.getElementById('mock-front'),
         mockHeadline: document.getElementById('mock-headline'),
         mockDate: document.getElementById('mock-date'),
+        headlineSource: document.getElementById('headline-source'),
+        headlineSectionBadge: document.getElementById('headline-section'),
+        filterStatus: document.getElementById('filter-status'),
+        historyCount: document.getElementById('history-count'),
+        headlineList: document.getElementById('headline-list'),
+        searchInput: document.getElementById('search-input'),
+        searchForm: document.getElementById('search-form'),
+        applySearchButton: document.getElementById('apply-search'),
+        clearSearchButton: document.getElementById('clear-search'),
+        sectionButtons: Array.from(document.querySelectorAll('.section-filter')),
+        sourceButtons: Array.from(document.querySelectorAll('.toggle-button[data-source]')),
+        panelButtons: Array.from(document.querySelectorAll('.toggle-button[data-panel]')),
+        layoutButtons: Array.from(document.querySelectorAll('.toggle-button[data-layout]')),
         containers: Array.from(document.querySelectorAll('.container')),
         headlineSection: document.querySelector('.headline-section'),
         controls: document.querySelector('.controls'),
@@ -750,13 +1289,15 @@ function mapElements() {
 
 function createStorageAdapter() {
     return {
-        restore(baseHeadlineCount) {
+        restore(baseHeadlineCount, originalCount = baseHeadlineCount) {
             const generatedHeadlines = parseJson(localStorage.getItem(STORAGE_KEYS.generatedHeadlines), []);
             const totalHeadlines = baseHeadlineCount + (Array.isArray(generatedHeadlines) ? generatedHeadlines.length : 0);
             const storedStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStack), null);
             const legacyNavigationStack = parseJson(localStorage.getItem(STORAGE_KEYS.navigationStackLegacy), null);
             const viewedListLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.viewedList), []);
             const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
+            const favorites = parseJson(localStorage.getItem(STORAGE_KEYS.favorites), []);
+            const filters = parseJson(localStorage.getItem(STORAGE_KEYS.filters), {});
 
             const rawStack = Array.isArray(storedStack)
                 ? storedStack
@@ -777,7 +1318,9 @@ function createStorageAdapter() {
                 currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
                 generatedHeadlines: Array.isArray(generatedHeadlines)
                     ? generatedHeadlines.filter(Boolean)
-                    : []
+                    : [],
+                favorites: Array.isArray(favorites) ? favorites.filter(Boolean) : [],
+                filters: sanitizeFilters(filters)
             };
         },
 
@@ -790,6 +1333,14 @@ function createStorageAdapter() {
             localStorage.setItem(
                 STORAGE_KEYS.generatedHeadlines,
                 JSON.stringify(Array.isArray(state.generatedHeadlines) ? state.generatedHeadlines : [])
+            );
+            localStorage.setItem(
+                STORAGE_KEYS.favorites,
+                JSON.stringify(Array.isArray(state.favorites) ? state.favorites : [])
+            );
+            localStorage.setItem(
+                STORAGE_KEYS.filters,
+                JSON.stringify(state.filters || DEFAULT_FILTERS)
             );
         }
     };
@@ -806,6 +1357,32 @@ function parseJson(value, fallback) {
     } catch (error) {
         return fallback;
     }
+}
+
+function sanitizeFilters(filters = {}) {
+    const sanitized = { ...DEFAULT_FILTERS };
+    const allowedSections = ['latest', 'world', 'culture', 'tech', 'oddities'];
+    const allowedSources = ['auto', 'generated', 'curated'];
+    const allowedPanels = ['recent', 'favorites', 'generated'];
+    const allowedLayouts = ['standard', 'square', 'story'];
+
+    if (filters.section && allowedSections.includes(filters.section)) {
+        sanitized.section = filters.section;
+    }
+    if (filters.source && allowedSources.includes(filters.source)) {
+        sanitized.source = filters.source;
+    }
+    if (filters.panel && allowedPanels.includes(filters.panel)) {
+        sanitized.panel = filters.panel;
+    }
+    if (filters.layout && allowedLayouts.includes(filters.layout)) {
+        sanitized.layout = filters.layout;
+    }
+    if (typeof filters.query === 'string') {
+        sanitized.query = filters.query.trim();
+    }
+
+    return sanitized;
 }
 
 function selectReadableColor() {
