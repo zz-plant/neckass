@@ -388,7 +388,8 @@ class HeadlineApp {
             return;
         }
 
-        this.toggleLoader(true, this.elements.loader.textContent || 'Loading headline...');
+        const loaderMessage = this.elements.loaderText?.textContent || this.elements.loader.textContent || 'Loading headline...';
+        this.toggleLoader(true, loaderMessage);
         this.elements.headline.classList.remove('show');
 
         setTimeout(() => {
@@ -1140,10 +1141,12 @@ class HeadlineApp {
     }
 
     toggleLoader(shouldShow, message = null) {
-        if (message) {
+        if (message && this.elements.loaderText) {
+            this.elements.loaderText.textContent = message;
+        } else if (message && this.elements.loader) {
             this.elements.loader.textContent = message;
         }
-        this.elements.loader.style.display = shouldShow ? 'block' : 'none';
+        this.elements.loader.style.display = shouldShow ? 'flex' : 'none';
         this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
         this.setNavigationLoading(shouldShow);
     }
@@ -1164,6 +1167,10 @@ class HeadlineApp {
     }
 
     updateLoaderMessage(message) {
+        if (this.elements.loaderText) {
+            this.elements.loaderText.textContent = message;
+            return;
+        }
         if (!this.elements.loader) return;
         this.elements.loader.textContent = message;
     }
@@ -1309,6 +1316,7 @@ function mapElements() {
     return {
         headline: document.getElementById('headline'),
         loader: document.getElementById('loader'),
+        loaderText: document.getElementById('loader-text'),
         nextButton: document.getElementById('next-btn'),
         previousButton: document.getElementById('prev-btn'),
         generateButton: document.getElementById('generate-btn'),
