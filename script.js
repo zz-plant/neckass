@@ -772,14 +772,18 @@ class HeadlineApp {
     updateLayoutButtons() {
         if (!this.elements.layoutButtons) return;
         this.elements.layoutButtons.forEach((button) => {
-            button.classList.toggle('is-active', button.dataset.layout === this.filters.layout);
+            const isActive = button.dataset.layout === this.filters.layout;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
         });
     }
 
     updateToggleButtons(buttons, value, attribute = 'source') {
         if (!buttons) return;
         buttons.forEach((button) => {
-            button.classList.toggle('is-active', button.dataset[attribute] === value);
+            const isActive = button.dataset[attribute] === value;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
         });
     }
 
