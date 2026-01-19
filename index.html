@@ -113,6 +113,7 @@
                     </div>
                 </div>
                 <div class="callout">Shuffle a headline, revisit the last one, or share it with the controls on the side.</div>
+                <p class="helper-text">Tip: Use ←/→ or ↑/↓ to browse headlines quickly.</p>
                 <div class="mock-front" id="mock-front" aria-label="Mock front page preview">
                     <svg class="mock-front__svg" viewBox="0 0 620 420" role="img" aria-label="Mock front page">
                         <defs>
@@ -172,6 +173,7 @@
                             </svg>
                         </button>
                     </div>
+                    <p class="helper-text helper-text--compact">Auto uses the tiny model when it’s available. Generate always forces a fresh model headline.</p>
                 </section>
             </div>
 
@@ -200,6 +202,7 @@
                                 <div class="input-stack">
                                     <label for="search-input" class="label label--small">Search headlines</label>
                                     <input id="search-input" name="q" type="search" placeholder="Search for a keyword" autocomplete="off">
+                                    <p class="helper-text">Press Enter or “Apply search” to run the filter.</p>
                                 </div>
                                 <div class="button-group">
                                     <button type="submit" id="apply-search" class="accent">Apply search</button>
@@ -244,6 +247,7 @@
                             <p class="label">Headline desk</p>
                             <span class="pill-chip pill-chip--inline" id="history-count">0 items</span>
                         </div>
+                        <p class="muted muted--compact">Quickly jump back to recently viewed, favorited, or generated headlines.</p>
                         <div class="toggle-group" role="group" aria-label="Headline desk views">
                             <button type="button" class="toggle-button" data-panel="recent" aria-pressed="false">Recent</button>
                             <button type="button" class="toggle-button" data-panel="favorites" aria-pressed="false">Favorites</button>
@@ -252,7 +256,7 @@
                         <ul class="headline-list" id="headline-list"></ul>
                     </section>
 
-                    <section class="social-share glass-card">
+                    <section class="social-share glass-card glass-card--subtle">
                         <div class="section-header">
                             <p class="label">Share the latest scoop</p>
                             <p class="muted">Pass along the newest headline to anyone who needs a fresh update.</p>
@@ -297,11 +301,12 @@
                         </div>
                     </section>
 
-                    <section class="export-actions glass-card">
+                    <section class="export-actions glass-card glass-card--subtle">
                         <div class="section-header">
                             <p class="label">Mock front page</p>
                             <p class="muted">Download or copy a framed take of today’s banner.</p>
                         </div>
+                        <p class="muted muted--compact">The preview below mirrors what you’ll export.</p>
                         <div class="mock-layout">
                             <p class="label label--small">Export layout</p>
                             <div class="toggle-group" role="group" aria-label="Mock front page layout">
