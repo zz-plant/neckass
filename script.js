@@ -496,44 +496,36 @@ class HeadlineApp {
     }
 
     setSectionFilter(section) {
-        const normalized = section || 'latest';
-        if (this.filters.section === normalized) return;
-        this.filters.section = normalized;
-        this.resetNavigationForFilters();
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.ensureHeadlineMatchesFilters();
+        this.updateFilterValue('section', section || 'latest', {
+            resetNavigation: true,
+            refreshIndexes: true,
+            ensureHeadline: true,
+            syncControls: true
+        });
     }
 
     setSourceFilter(source) {
-        const normalized = source || 'auto';
-        if (this.filters.source === normalized) return;
-        this.filters.source = normalized;
-        this.resetNavigationForFilters();
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.ensureHeadlineMatchesFilters();
+        this.updateFilterValue('source', source || 'auto', {
+            resetNavigation: true,
+            refreshIndexes: true,
+            ensureHeadline: true,
+            syncControls: true
+        });
     }
 
     setActivePanel(panel) {
-        const normalized = panel || 'recent';
-        if (this.filters.panel === normalized) return;
-        this.filters.panel = normalized;
-        this.persistState();
-        this.syncFilterControls();
-        this.updateHistoryList();
-        this.updateHistoryState(this.state.currentIndex, { replace: false });
+        this.updateFilterValue('panel', panel || 'recent', {
+            syncControls: true,
+            updateHistoryList: true,
+            updateHistoryState: true
+        });
     }
 
     setMockLayout(layout) {
-        const normalized = layout || 'standard';
-        if (this.filters.layout === normalized) return;
-        this.filters.layout = normalized;
-        this.persistState();
-        this.applyMockLayoutClass();
-        this.updateHistoryState(this.state.currentIndex, { replace: false });
+        this.updateFilterValue('layout', layout || 'standard', {
+            applyLayout: true,
+            updateHistoryState: true
+        });
     }
 
     applyMockLayoutClass() {
@@ -550,32 +542,26 @@ class HeadlineApp {
 
     applySearch() {
         const query = this.elements.searchInput?.value ?? '';
-        if (this.filters.query === query.trim()) {
-            this.updateFilterStatus();
-            return;
-        }
-        this.filters.query = query.trim();
-        this.resetNavigationForFilters();
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.ensureHeadlineMatchesFilters();
+        this.updateFilterValue('query', query.trim(), {
+            resetNavigation: true,
+            refreshIndexes: true,
+            ensureHeadline: true,
+            syncControls: true,
+            updateStatusOnNoChange: true
+        });
     }
 
     clearSearch() {
         if (this.elements.searchInput) {
             this.elements.searchInput.value = '';
         }
-        if (!this.filters.query) {
-            this.updateFilterStatus();
-            return;
-        }
-        this.filters.query = '';
-        this.resetNavigationForFilters();
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.ensureHeadlineMatchesFilters();
+        this.updateFilterValue('query', '', {
+            resetNavigation: true,
+            refreshIndexes: true,
+            ensureHeadline: true,
+            syncControls: true,
+            updateStatusOnNoChange: true
+        });
     }
 
     resetNavigationForFilters() {
@@ -737,35 +723,15 @@ class HeadlineApp {
             return;
         }
 
+        const fragment = document.createDocumentFragment();
         indexes.forEach((index) => {
-            const item = document.createElement('li');
-            item.className = 'headline-item';
-            if (index === this.state.currentIndex) {
-                item.classList.add('headline-item--active');
-            }
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.dataset.index = String(index);
-            button.textContent = this.headlines[index];
-            item.appendChild(button);
-            this.elements.headlineList.appendChild(item);
+            fragment.appendChild(this.createHistoryListItem(index));
         });
+        this.elements.headlineList.appendChild(fragment);
     }
 
     getPanelIndexes(panel) {
-        let indexes = [];
-        if (panel === 'favorites') {
-            indexes = Array.from(this.favoriteHeadlines)
-                .map((headline) => this.headlineCache.get(headline))
-                .filter((index) => Number.isInteger(index));
-        } else if (panel === 'generated') {
-            indexes = this.headlines
-                .map((_, index) => index)
-                .filter((index) => index >= this.baseHeadlineCount);
-        } else {
-            indexes = [...this.state.navigationStack].reverse();
-        }
-
+        const indexes = this.getPanelIndexPool(panel);
         return indexes.filter((index) => this.isIndexEligible(index));
     }
 
@@ -796,6 +762,78 @@ class HeadlineApp {
         this.updateToggleButtons(this.elements.panelButtons, this.filters.panel, 'panel');
         this.updateLayoutButtons();
         this.updateFilterStatus();
+    }
+
+    updateFilterValue(filterKey, value, options = {}) {
+        const {
+            resetNavigation = false,
+            refreshIndexes = false,
+            ensureHeadline = false,
+            syncControls = false,
+            updateHistoryList = false,
+            updateHistoryState = false,
+            applyLayout = false,
+            updateStatusOnNoChange = false
+        } = options;
+
+        if (this.filters[filterKey] === value) {
+            if (updateStatusOnNoChange) {
+                this.updateFilterStatus();
+            }
+            return;
+        }
+
+        this.filters[filterKey] = value;
+        if (resetNavigation) {
+            this.resetNavigationForFilters();
+        }
+        this.persistState();
+        if (syncControls) {
+            this.syncFilterControls();
+        }
+        if (refreshIndexes) {
+            this.refreshFilteredIndexes();
+        }
+        if (applyLayout) {
+            this.applyMockLayoutClass();
+        }
+        if (ensureHeadline) {
+            this.ensureHeadlineMatchesFilters();
+        }
+        if (updateHistoryList) {
+            this.updateHistoryList();
+        }
+        if (updateHistoryState) {
+            this.updateHistoryState(this.state.currentIndex, { replace: false });
+        }
+    }
+
+    createHistoryListItem(index) {
+        const item = document.createElement('li');
+        item.className = 'headline-item';
+        if (index === this.state.currentIndex) {
+            item.classList.add('headline-item--active');
+        }
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.index = String(index);
+        button.textContent = this.headlines[index];
+        item.appendChild(button);
+        return item;
+    }
+
+    getPanelIndexPool(panel) {
+        if (panel === 'favorites') {
+            return Array.from(this.favoriteHeadlines)
+                .map((headline) => this.headlineCache.get(headline))
+                .filter((index) => Number.isInteger(index));
+        }
+        if (panel === 'generated') {
+            return this.headlines
+                .map((_, index) => index)
+                .filter((index) => index >= this.baseHeadlineCount);
+        }
+        return [...this.state.navigationStack].reverse();
     }
 
     async copyHeadlineLink() {
