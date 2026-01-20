@@ -256,6 +256,7 @@ class HeadlineApp {
             if (!target) return;
             const index = Number.parseInt(target.dataset.index, 10);
             if (Number.isInteger(index)) {
+                this.activeButton = target;
                 this.selectHeadline(index);
             }
         });
@@ -875,16 +876,7 @@ class HeadlineApp {
 
     applyUrlState() {
         const urlState = this.getUrlState();
-        const mergedFilters = sanitizeFilters({
-            ...this.filters,
-            section: urlState.section ?? this.filters.section,
-            query: urlState.query ?? this.filters.query,
-            source: urlState.source ?? this.filters.source,
-            panel: urlState.panel ?? this.filters.panel,
-            layout: urlState.layout ?? this.filters.layout
-        });
-
-        this.filters = mergedFilters;
+        this.filters = this.getFiltersFromUrl(urlState);
         this.persistState();
         this.syncFilterControls();
         this.refreshFilteredIndexes();
@@ -1011,17 +1003,7 @@ class HeadlineApp {
         const urlState = this.getUrlState();
         const urlIndex = this.identifierToIndex(urlState.headline);
         const stateIndex = this.identifierToIndex(state.headlineIndex);
-        const mergedFilters = sanitizeFilters({
-            ...this.filters,
-            ...state.filters,
-            section: urlState.section ?? state.filters?.section ?? this.filters.section,
-            query: urlState.query ?? state.filters?.query ?? this.filters.query,
-            source: urlState.source ?? state.filters?.source ?? this.filters.source,
-            panel: urlState.panel ?? state.filters?.panel ?? this.filters.panel,
-            layout: urlState.layout ?? state.filters?.layout ?? this.filters.layout
-        });
-
-        this.filters = mergedFilters;
+        this.filters = this.getFiltersFromUrl(urlState);
         this.syncFilterControls();
         this.refreshFilteredIndexes();
         this.applyMockLayoutClass();
@@ -1058,6 +1040,17 @@ class HeadlineApp {
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.renderHeadline(eligibleTarget, { pushToStack: false, replaceState: true });
+    }
+
+    getFiltersFromUrl(urlState) {
+        return sanitizeFilters({
+            ...DEFAULT_FILTERS,
+            section: urlState.section ?? DEFAULT_FILTERS.section,
+            query: urlState.query ?? DEFAULT_FILTERS.query,
+            source: urlState.source ?? DEFAULT_FILTERS.source,
+            panel: urlState.panel ?? DEFAULT_FILTERS.panel,
+            layout: urlState.layout ?? DEFAULT_FILTERS.layout
+        });
     }
 
     updateDocumentMetadata(headline, index) {
@@ -1188,7 +1181,7 @@ class HeadlineApp {
         } else if (message && this.elements.loader) {
             this.elements.loader.textContent = message;
         }
-        this.elements.loader.style.display = shouldShow ? 'flex' : 'none';
+        this.elements.loader.classList.toggle('is-visible', shouldShow);
         this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
         this.setNavigationLoading(shouldShow);
     }
@@ -1198,6 +1191,14 @@ class HeadlineApp {
         this.updateNavigationAvailability();
         if (this.activeButton) {
             this.setButtonLoading(this.activeButton, shouldShow);
+        }
+        if (this.elements.headlineList) {
+            this.elements.headlineList.setAttribute('aria-busy', shouldShow ? 'true' : 'false');
+            this.elements.headlineList
+                .querySelectorAll('button[data-index]')
+                .forEach((button) => {
+                    button.disabled = shouldShow;
+                });
         }
     }
 

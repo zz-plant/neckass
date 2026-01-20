@@ -139,6 +139,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     padding: 12px 0 14px;
     overflow-x: auto;
+    overscroll-behavior: contain;
 }
 
 .masthead-nav ul {
@@ -1052,10 +1053,15 @@ button:disabled {
 
 .loader {
     font-size: 1rem;
-    display: none;
+    display: flex;
+    visibility: hidden;
     color: var(--muted);
     align-items: center;
     gap: 10px;
+}
+
+.loader.is-visible {
+    visibility: visible;
 }
 
 .loader__spinner {
