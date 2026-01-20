@@ -193,24 +193,32 @@
                             <p class="stat"><span id="counter">0</span></p>
                         </div>
 
-                        <div class="filter-panel">
+                        <div class="filter-panel filter-panel--redesign">
                             <div class="section-header section-header--tight">
                                 <p class="label">Filters &amp; search</p>
                                 <span class="pill-chip pill-chip--inline" id="filter-status">All headlines</span>
                             </div>
-                            <form class="filter-form" id="search-form">
-                                <div class="input-stack">
-                                    <label for="search-input" class="label label--small">Search headlines</label>
-                                    <input id="search-input" name="q" type="search" placeholder="Search for a keyword" autocomplete="off">
-                                    <p class="helper-text">Press Enter or “Apply search” to run the filter.</p>
+                            <div class="filter-card">
+                                <form class="filter-form filter-form--redesign" id="search-form">
+                                    <div class="input-stack input-stack--search">
+                                        <label for="search-input" class="label label--small">Search headlines</label>
+                                        <div class="input-shell">
+                                            <span class="input-icon" aria-hidden="true">⌕</span>
+                                            <input id="search-input" name="q" type="search" placeholder="Search for a keyword" autocomplete="off">
+                                        </div>
+                                        <p class="helper-text">Press Enter or “Apply search” to run the filter.</p>
+                                    </div>
+                                    <div class="button-group button-group--stacked">
+                                        <button type="submit" id="apply-search" class="accent">Apply search</button>
+                                        <button type="button" id="clear-search" class="ghost">Clear search</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="filter-card filter-card--source">
+                                <div class="filter-card__header">
+                                    <p class="label label--small">Headline source</p>
+                                    <span class="filter-badge">Live toggles</span>
                                 </div>
-                                <div class="button-group">
-                                    <button type="submit" id="apply-search" class="accent">Apply search</button>
-                                    <button type="button" id="clear-search" class="ghost">Clear search</button>
-                                </div>
-                            </form>
-                            <div class="input-stack">
-                                <p class="label label--small">Headline source</p>
                                 <div class="toggle-group" role="group" aria-label="Headline source">
                                     <button type="button" class="toggle-button" data-source="auto" aria-pressed="false">Auto</button>
                                     <button type="button" class="toggle-button" data-source="generated" aria-pressed="false">Tiny model</button>
@@ -257,46 +265,67 @@
                     </section>
 
                     <section class="social-share glass-card glass-card--subtle">
-                        <div class="section-header">
-                            <p class="label">Share the latest scoop</p>
-                            <p class="muted">Pass along the newest headline to anyone who needs a fresh update.</p>
+                        <div class="section-header section-header--stacked">
+                            <div>
+                                <p class="label">Share the latest scoop</p>
+                                <p class="muted">Pass along the newest headline to anyone who needs a fresh update.</p>
+                            </div>
+                            <span class="share-tag">Ready to post</span>
                         </div>
-                        <div class="social-grid">
-                            <a href="#" id="twitter-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
-                                <svg class="social-icon__glyph" aria-hidden="true">
-                                    <use href="#icon-twitter"></use>
-                                </svg>
-                                Twitter
+                        <div class="social-grid social-grid--redesign">
+                            <a href="#" id="twitter-share" class="social-icon social-icon--brand" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
+                                <span class="social-icon__badge" aria-hidden="true">
+                                    <svg class="social-icon__glyph" aria-hidden="true">
+                                        <use href="#icon-twitter"></use>
+                                    </svg>
+                                </span>
+                                <span class="social-icon__label">Twitter</span>
+                                <span class="social-icon__hint">Latest headline</span>
                             </a>
-                            <a href="#" id="facebook-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-                                <svg class="social-icon__glyph" aria-hidden="true">
-                                    <use href="#icon-facebook"></use>
-                                </svg>
-                                Facebook
+                            <a href="#" id="facebook-share" class="social-icon social-icon--brand" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                                <span class="social-icon__badge" aria-hidden="true">
+                                    <svg class="social-icon__glyph" aria-hidden="true">
+                                        <use href="#icon-facebook"></use>
+                                    </svg>
+                                </span>
+                                <span class="social-icon__label">Facebook</span>
+                                <span class="social-icon__hint">Share to timeline</span>
                             </a>
-                            <a href="#" id="reddit-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
-                                <svg class="social-icon__glyph" aria-hidden="true">
-                                    <use href="#icon-reddit"></use>
-                                </svg>
-                                Reddit
+                            <a href="#" id="reddit-share" class="social-icon social-icon--brand" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
+                                <span class="social-icon__badge" aria-hidden="true">
+                                    <svg class="social-icon__glyph" aria-hidden="true">
+                                        <use href="#icon-reddit"></use>
+                                    </svg>
+                                </span>
+                                <span class="social-icon__label">Reddit</span>
+                                <span class="social-icon__hint">Submit to a thread</span>
                             </a>
-                            <a href="#" id="linkedin-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
-                                <svg class="social-icon__glyph" aria-hidden="true">
-                                    <use href="#icon-linkedin"></use>
-                                </svg>
-                                LinkedIn
+                            <a href="#" id="linkedin-share" class="social-icon social-icon--brand" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
+                                <span class="social-icon__badge" aria-hidden="true">
+                                    <svg class="social-icon__glyph" aria-hidden="true">
+                                        <use href="#icon-linkedin"></use>
+                                    </svg>
+                                </span>
+                                <span class="social-icon__label">LinkedIn</span>
+                                <span class="social-icon__hint">Add to your feed</span>
                             </a>
-                            <a href="#" id="threads-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Threads">
-                                <svg class="social-icon__glyph" aria-hidden="true">
-                                    <use href="#icon-share"></use>
-                                </svg>
-                                Threads
+                            <a href="#" id="threads-share" class="social-icon social-icon--brand" target="_blank" rel="noopener noreferrer" aria-label="Share on Threads">
+                                <span class="social-icon__badge" aria-hidden="true">
+                                    <svg class="social-icon__glyph" aria-hidden="true">
+                                        <use href="#icon-share"></use>
+                                    </svg>
+                                </span>
+                                <span class="social-icon__label">Threads</span>
+                                <span class="social-icon__hint">Quick post</span>
                             </a>
-                            <a href="#" id="bluesky-share" class="social-icon" target="_blank" rel="noopener noreferrer" aria-label="Share on Bluesky">
-                                <svg class="social-icon__glyph" aria-hidden="true">
-                                    <use href="#icon-globe"></use>
-                                </svg>
-                                Bluesky
+                            <a href="#" id="bluesky-share" class="social-icon social-icon--brand" target="_blank" rel="noopener noreferrer" aria-label="Share on Bluesky">
+                                <span class="social-icon__badge" aria-hidden="true">
+                                    <svg class="social-icon__glyph" aria-hidden="true">
+                                        <use href="#icon-globe"></use>
+                                    </svg>
+                                </span>
+                                <span class="social-icon__label">Bluesky</span>
+                                <span class="social-icon__hint">Share the scoop</span>
                             </a>
                         </div>
                     </section>
