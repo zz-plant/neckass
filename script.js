@@ -472,9 +472,15 @@ class HeadlineApp {
         const encodedUrl = encodeURIComponent(canonicalUrl);
         const combinedText = encodeURIComponent(`${headline} ${canonicalUrl}`.trim());
 
-        this.elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;
-        this.elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedHeadline}`;
-        this.elements.redditShareLink.href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedHeadline}`;
+        if (this.elements.twitterShareLink) {
+            this.elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;
+        }
+        if (this.elements.facebookShareLink) {
+            this.elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedHeadline}`;
+        }
+        if (this.elements.redditShareLink) {
+            this.elements.redditShareLink.href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedHeadline}`;
+        }
         if (this.elements.linkedinShareLink) {
             this.elements.linkedinShareLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
         }
