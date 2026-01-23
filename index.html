@@ -29,13 +29,70 @@
         <main class="container simple-layout">
             <section class="headline-section">
                 <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
+                <div class="headline-meta">
+                    <span id="headline-section" class="meta-pill">Section: latest</span>
+                    <span id="headline-source" class="meta-pill">Source: curated</span>
+                </div>
                 <p class="deck">A quick, punchy line meant to sit right above the fold.</p>
+
+                <div class="controls">
+                    <form id="search-form" class="search-form">
+                        <label class="sr-only" for="search-input">Search headlines</label>
+                        <input id="search-input" type="search" placeholder="Search headlines" autocomplete="off">
+                        <div class="search-actions">
+                            <button id="apply-search" class="accent" type="submit">Search</button>
+                            <button id="clear-search" class="ghost" type="button">Clear</button>
+                        </div>
+                    </form>
+
+                    <div class="filter-group">
+                        <p class="filter-label">Section</p>
+                        <div class="toggle-group">
+                            <button class="toggle-button section-filter" data-section="latest" type="button">Latest</button>
+                            <button class="toggle-button section-filter" data-section="world" type="button">World</button>
+                            <button class="toggle-button section-filter" data-section="culture" type="button">Culture</button>
+                            <button class="toggle-button section-filter" data-section="tech" type="button">Tech</button>
+                            <button class="toggle-button section-filter" data-section="oddities" type="button">Oddities</button>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <p class="filter-label">Source</p>
+                        <div class="toggle-group">
+                            <button class="toggle-button" data-source="auto" type="button">Auto</button>
+                            <button class="toggle-button" data-source="curated" type="button">Curated</button>
+                            <button class="toggle-button" data-source="generated" type="button">Generated</button>
+                        </div>
+                    </div>
+
+                    <p id="filter-status" class="filter-status" aria-live="polite">All headlines</p>
+                </div>
 
                 <div class="actions">
                     <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
-                    <button id="next-btn" aria-label="View Next Headline" class="accent">Next</button>
+                    <button id="next-btn" aria-label="Shuffle headline" class="accent">Shuffle</button>
                     <button id="generate-btn" aria-label="Generate headline with tiny model" class="ghost">Generate</button>
+                    <button id="favorite-btn" aria-label="Save to favorites" class="ghost" aria-pressed="false">
+                        <span class="button-label">Save to favorites</span>
+                    </button>
                     <button id="copy-btn" aria-label="Copy headline" class="ghost">Copy</button>
+                </div>
+
+                <div class="copy-feedback">
+                    <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
+                </div>
+
+                <div class="social-share">
+                    <p class="filter-label">Share it</p>
+                    <div class="share-links">
+                        <a id="twitter-share" class="chip" href="#" target="_blank" rel="noreferrer">X / Twitter</a>
+                        <a id="threads-share" class="chip" href="#" target="_blank" rel="noreferrer">Threads</a>
+                        <a id="bluesky-share" class="chip" href="#" target="_blank" rel="noreferrer">Bluesky</a>
+                        <a id="facebook-share" class="chip" href="#" target="_blank" rel="noreferrer">Facebook</a>
+                        <a id="reddit-share" class="chip" href="#" target="_blank" rel="noreferrer">Reddit</a>
+                        <a id="linkedin-share" class="chip" href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+                        <button id="copy-link" class="ghost" type="button">Copy link</button>
+                    </div>
                 </div>
 
                 <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">
@@ -43,6 +100,19 @@
                 </div>
 
                 <p class="counter">Headlines viewed: <span id="counter">0</span></p>
+
+                <section class="history">
+                    <div class="history-header">
+                        <h3>Headline history</h3>
+                        <span id="history-count" class="history-count">0 items</span>
+                    </div>
+                    <div class="toggle-group">
+                        <button class="toggle-button" data-panel="recent" type="button">Recent</button>
+                        <button class="toggle-button" data-panel="favorites" type="button">Favorites</button>
+                        <button class="toggle-button" data-panel="generated" type="button">Generated</button>
+                    </div>
+                    <ul id="headline-list" class="headline-list" aria-live="polite"></ul>
+                </section>
             </section>
         </main>
     </div>
