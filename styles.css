@@ -212,6 +212,14 @@ button:hover {
     border-color: rgba(227, 123, 63, 0.8);
 }
 
+button:disabled,
+.toggle-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
 button:focus-visible {
     outline: 3px solid rgba(227, 123, 63, 0.7);
     outline-offset: 3px;

@@ -218,6 +218,7 @@ class HeadlineApp {
     init() {
         this.bindEvents();
         this.applyUrlState();
+        this.syncGeneratorControls();
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
@@ -265,12 +266,15 @@ class HeadlineApp {
     }
 
     async handleNext() {
+        if (this.state.isLoading) {
+            return;
+        }
         if (this.headlines.length === 0) {
             this.renderEmptyState();
             return;
         }
 
-        const generatorAvailable = typeof window.tinyLlmClient?.generateHeadline === 'function';
+        const generatorAvailable = this.isGeneratorAvailable();
         const wantsGenerated = this.filters.source === 'generated'
             || (this.filters.source === 'auto' && generatorAvailable);
         let nextIndex = null;
@@ -299,6 +303,9 @@ class HeadlineApp {
     }
 
     handlePrevious() {
+        if (this.state.isLoading) {
+            return;
+        }
         if (this.state.navigationStack.length <= 1) {
             return;
         }
@@ -318,7 +325,7 @@ class HeadlineApp {
     }
 
     async handleGenerate() {
-        const generatorAvailable = typeof window.tinyLlmClient?.generateHeadline === 'function';
+        const generatorAvailable = this.isGeneratorAvailable();
         this.activeButton = this.elements.generateButton;
 
         if (!generatorAvailable) {
@@ -389,6 +396,7 @@ class HeadlineApp {
             return;
         }
 
+        this.clearCopyStatus();
         const loaderMessage = this.elements.loaderText?.textContent || this.elements.loader.textContent || 'Loading headline...';
         this.toggleLoader(true, loaderMessage);
         this.elements.headline.classList.remove('show');
@@ -439,6 +447,7 @@ class HeadlineApp {
             ? 'No headlines match your current filters.'
             : 'No headlines available.';
         this.elements.headline.style.color = '';
+        this.clearCopyStatus();
         this.updateDocumentMetadata('', -1);
         this.updateSocialShareLinks('', -1);
         this.updateMockHeadline('No headlines available.');
@@ -512,6 +521,16 @@ class HeadlineApp {
     }
 
     setSourceFilter(source) {
+        if (source === 'generated' && !this.isGeneratorAvailable()) {
+            this.reportCopyStatus('Tiny model unavailable. Source set to auto.', true);
+            this.updateFilterValue('source', 'auto', {
+                resetNavigation: true,
+                refreshIndexes: true,
+                ensureHeadline: true,
+                syncControls: true
+            });
+            return;
+        }
         this.updateFilterValue('source', source || 'auto', {
             resetNavigation: true,
             refreshIndexes: true,
@@ -768,6 +787,7 @@ class HeadlineApp {
         this.updateToggleButtons(this.elements.sourceButtons, this.filters.source, 'source');
         this.updateToggleButtons(this.elements.panelButtons, this.filters.panel, 'panel');
         this.updateLayoutButtons();
+        this.syncGeneratorControls();
         this.updateFilterStatus();
     }
 
@@ -883,6 +903,9 @@ class HeadlineApp {
     applyUrlState() {
         const urlState = this.getUrlState();
         this.filters = this.getFiltersFromUrl(urlState);
+        if (this.filters.source === 'generated' && !this.isGeneratorAvailable()) {
+            this.filters.source = 'auto';
+        }
         this.persistState();
         this.syncFilterControls();
         this.refreshFilteredIndexes();
@@ -1181,6 +1204,12 @@ class HeadlineApp {
         this.elements.copyStatus.classList.toggle('error', isError);
     }
 
+    clearCopyStatus() {
+        if (!this.elements.copyStatus) return;
+        this.elements.copyStatus.textContent = '';
+        this.elements.copyStatus.classList.remove('error');
+    }
+
     toggleLoader(shouldShow, message = null) {
         if (message && this.elements.loaderText) {
             this.elements.loaderText.textContent = message;
@@ -1358,6 +1387,26 @@ class HeadlineApp {
             favorites: Array.from(this.favoriteHeadlines),
             filters: this.filters
         });
+    }
+
+    isGeneratorAvailable() {
+        return typeof window.tinyLlmClient?.generateHeadline === 'function';
+    }
+
+    syncGeneratorControls() {
+        const generatorAvailable = this.isGeneratorAvailable();
+        if (this.elements.generateButton) {
+            this.elements.generateButton.disabled = !generatorAvailable;
+            this.elements.generateButton.setAttribute('aria-disabled', String(!generatorAvailable));
+        }
+        if (this.elements.sourceButtons) {
+            this.elements.sourceButtons.forEach((button) => {
+                if (button.dataset.source === 'generated') {
+                    button.disabled = !generatorAvailable;
+                    button.setAttribute('aria-disabled', String(!generatorAvailable));
+                }
+            });
+        }
     }
 }
 
