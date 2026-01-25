@@ -14,22 +14,17 @@
     --text: #f4f6fb;
     --muted: #aab4c9;
     --accent: #f29f58;
-    --accent-2: #7b8bff;
+    --accent-2: #f5c278;
     --accent-3: #35d6c5;
     --radius: 20px;
     --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --headline-font: 'Fraunces', 'Times New Roman', Georgia, serif;
     --shadow: 0 24px 60px rgba(4, 8, 16, 0.55);
-    --glow: 0 0 32px rgba(123, 139, 255, 0.2);
 }
 
 body {
     font-family: var(--font);
-    background: radial-gradient(circle at top left, rgba(123, 139, 255, 0.22), transparent 45%),
-        radial-gradient(circle at 20% 20%, rgba(53, 214, 197, 0.2), transparent 50%),
-        radial-gradient(circle at 80% 10%, rgba(242, 159, 88, 0.16), transparent 50%),
-        linear-gradient(180deg, rgba(12, 15, 26, 0.9) 0%, rgba(10, 11, 20, 0.95) 35%, #090b13 100%),
-        var(--bg);
+    background: linear-gradient(180deg, #0c0f18 0%, #0a0c14 45%, #080a10 100%);
     color: var(--text);
     min-height: 100vh;
     line-height: 1.7;
@@ -42,7 +37,7 @@ body {
     position: relative;
     max-width: 840px;
     margin: 0 auto;
-    background: linear-gradient(160deg, rgba(20, 26, 46, 0.92), rgba(15, 19, 33, 0.96));
+    background: var(--surface);
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 36px 32px 40px;
@@ -51,14 +46,7 @@ body {
 }
 
 .page-shell::before {
-    content: '';
-    position: absolute;
-    inset: -40% 20% auto auto;
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, rgba(123, 139, 255, 0.35), transparent 60%);
-    opacity: 0.6;
-    pointer-events: none;
+    content: none;
 }
 
 .container {
@@ -108,11 +96,11 @@ body {
 .headline-section {
     display: grid;
     gap: 18px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    background: rgba(255, 255, 255, 0.03);
     border-radius: var(--radius);
     border: 1px solid rgba(255, 255, 255, 0.08);
     padding: 28px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--glow);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     min-width: 0;
 }
 
@@ -170,9 +158,9 @@ body {
 }
 
 .search-form input:focus-visible {
-    outline: 3px solid rgba(111, 124, 255, 0.6);
+    outline: 3px solid rgba(242, 159, 88, 0.5);
     outline-offset: 2px;
-    box-shadow: 0 0 0 1px rgba(111, 124, 255, 0.4);
+    box-shadow: 0 0 0 1px rgba(242, 159, 88, 0.35);
 }
 
 .search-actions {
@@ -217,9 +205,9 @@ body {
 
 .toggle-button.is-active,
 .toggle-button[aria-pressed="true"] {
-    border-color: rgba(111, 124, 255, 0.8);
-    background: rgba(111, 124, 255, 0.22);
-    box-shadow: 0 8px 18px rgba(111, 124, 255, 0.25);
+    border-color: rgba(242, 159, 88, 0.75);
+    background: rgba(242, 159, 88, 0.18);
+    box-shadow: 0 6px 14px rgba(10, 12, 18, 0.35);
 }
 
 .actions {
@@ -244,7 +232,7 @@ button {
 button:hover {
     transform: translateY(-1px);
     border-color: rgba(227, 123, 63, 0.8);
-    box-shadow: 0 10px 18px rgba(227, 123, 63, 0.15);
+    box-shadow: 0 10px 18px rgba(5, 7, 12, 0.35);
 }
 
 button:disabled,
@@ -261,11 +249,11 @@ button:focus-visible {
 }
 
 button.accent {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border-color: transparent;
+    background: var(--accent);
+    border-color: rgba(242, 159, 88, 0.7);
     color: #0b0f16;
     font-weight: 700;
-    box-shadow: 0 12px 28px rgba(123, 139, 255, 0.35);
+    box-shadow: 0 12px 26px rgba(8, 10, 16, 0.45);
 }
 
 button.ghost {
@@ -319,7 +307,7 @@ button.ghost {
 .chip:hover {
     border-color: rgba(227, 123, 63, 0.7);
     transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(227, 123, 63, 0.2);
+    box-shadow: 0 8px 16px rgba(6, 8, 12, 0.35);
 }
 
 .loader.is-visible {
