@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -5,37 +7,56 @@
 }
 
 :root {
-    --bg: #0b0e14;
-    --surface: #151a24;
+    --bg: #0a0b14;
+    --surface: #111626;
+    --surface-soft: rgba(17, 22, 38, 0.85);
     --border: rgba(255, 255, 255, 0.12);
-    --text: #f0f2f7;
-    --muted: #b7c0d2;
-    --accent: #e37b3f;
-    --accent-2: #6f7cff;
-    --radius: 18px;
-    --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --headline-font: 'Times New Roman', Georgia, serif;
+    --text: #f4f6fb;
+    --muted: #aab4c9;
+    --accent: #f29f58;
+    --accent-2: #7b8bff;
+    --accent-3: #35d6c5;
+    --radius: 20px;
+    --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --headline-font: 'Fraunces', 'Times New Roman', Georgia, serif;
     --shadow: 0 24px 60px rgba(4, 8, 16, 0.55);
+    --glow: 0 0 32px rgba(123, 139, 255, 0.2);
 }
 
 body {
     font-family: var(--font);
-    background: radial-gradient(circle at top, rgba(37, 47, 75, 0.5), transparent 55%),
+    background: radial-gradient(circle at top left, rgba(123, 139, 255, 0.22), transparent 45%),
+        radial-gradient(circle at 20% 20%, rgba(53, 214, 197, 0.2), transparent 50%),
+        radial-gradient(circle at 80% 10%, rgba(242, 159, 88, 0.16), transparent 50%),
+        linear-gradient(180deg, rgba(12, 15, 26, 0.9) 0%, rgba(10, 11, 20, 0.95) 35%, #090b13 100%),
         var(--bg);
     color: var(--text);
     min-height: 100vh;
-    line-height: 1.6;
-    padding: 28px 16px 56px;
+    line-height: 1.7;
+    padding: 32px 18px 64px;
 }
 
 .page-shell {
-    max-width: 780px;
+    position: relative;
+    max-width: 840px;
     margin: 0 auto;
-    background: var(--surface);
-    border-radius: 24px;
-    border: 1px solid var(--border);
-    padding: 32px 28px 36px;
+    background: linear-gradient(160deg, rgba(20, 26, 46, 0.92), rgba(15, 19, 33, 0.96));
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 36px 32px 40px;
     box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.page-shell::before {
+    content: '';
+    position: absolute;
+    inset: -40% 20% auto auto;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(123, 139, 255, 0.35), transparent 60%);
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .container {
@@ -43,31 +64,33 @@ body {
 }
 
 .hero {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
-    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 24px;
+    margin-bottom: 26px;
 }
 
 .hero__content {
     display: grid;
-    gap: 10px;
+    gap: 12px;
 }
 
 .eyebrow {
     text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     color: var(--muted);
 }
 
 .hero h1 {
     font-family: var(--headline-font);
-    font-size: clamp(2.1rem, 5vw, 2.85rem);
-    line-height: 1.15;
+    font-size: clamp(2.25rem, 5vw, 3.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .lede {
     color: var(--muted);
+    max-width: 480px;
 }
 
 .meta {
@@ -77,22 +100,24 @@ body {
 
 .simple-layout {
     display: grid;
-    gap: 18px;
+    gap: 20px;
 }
 
 .headline-section {
     display: grid;
     gap: 18px;
-    background: rgba(255, 255, 255, 0.04);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
     border-radius: var(--radius);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 26px;
+    padding: 28px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--glow);
 }
 
 #headline {
     font-family: var(--headline-font);
-    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    font-size: clamp(2.05rem, 4vw, 2.7rem);
     color: #fff;
+    letter-spacing: -0.01em;
 }
 
 .deck {
@@ -106,21 +131,23 @@ body {
 }
 
 .meta-pill {
-    font-size: 0.8rem;
-    padding: 4px 10px;
+    font-size: 0.78rem;
+    padding: 5px 12px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     color: var(--muted);
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
+    letter-spacing: 0.02em;
 }
 
 .controls {
     display: grid;
     gap: 16px;
-    padding: 16px;
-    border-radius: 16px;
-    background: rgba(6, 9, 14, 0.6);
+    padding: 18px;
+    border-radius: 18px;
+    background: var(--surface-soft);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .search-form {
@@ -130,17 +157,19 @@ body {
 
 .search-form input {
     width: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
     color: var(--text);
-    padding: 12px 14px;
+    padding: 12px 16px;
     font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .search-form input:focus-visible {
     outline: 3px solid rgba(111, 124, 255, 0.6);
     outline-offset: 2px;
+    box-shadow: 0 0 0 1px rgba(111, 124, 255, 0.4);
 }
 
 .search-actions {
@@ -180,13 +209,14 @@ body {
     color: var(--text);
     font-size: 0.9rem;
     cursor: pointer;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .toggle-button.is-active,
 .toggle-button[aria-pressed="true"] {
     border-color: rgba(111, 124, 255, 0.8);
-    background: rgba(111, 124, 255, 0.2);
+    background: rgba(111, 124, 255, 0.22);
+    box-shadow: 0 8px 18px rgba(111, 124, 255, 0.25);
 }
 
 .actions {
@@ -204,12 +234,13 @@ button {
     font-size: 0.98rem;
     min-height: 44px;
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
     transform: translateY(-1px);
     border-color: rgba(227, 123, 63, 0.8);
+    box-shadow: 0 10px 18px rgba(227, 123, 63, 0.15);
 }
 
 button:disabled,
@@ -230,6 +261,7 @@ button.accent {
     border-color: transparent;
     color: #0b0f16;
     font-weight: 700;
+    box-shadow: 0 12px 28px rgba(123, 139, 255, 0.35);
 }
 
 button.ghost {
@@ -276,13 +308,14 @@ button.ghost {
     color: var(--text);
     text-decoration: none;
     font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.02);
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    background: rgba(255, 255, 255, 0.04);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .chip:hover {
     border-color: rgba(227, 123, 63, 0.7);
     transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(227, 123, 63, 0.2);
 }
 
 .loader.is-visible {
@@ -297,7 +330,7 @@ button.ghost {
 .history {
     display: grid;
     gap: 12px;
-    padding-top: 10px;
+    padding-top: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -327,7 +360,7 @@ button.ghost {
     text-align: left;
     border-radius: 14px;
     padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid transparent;
     color: var(--text);
     font-size: 0.95rem;
@@ -361,12 +394,12 @@ button.ghost {
     }
 
     .page-shell {
-        padding: 20px 16px 26px;
-        border-radius: 18px;
+        padding: 22px 18px 28px;
+        border-radius: 20px;
     }
 
     .headline-section {
-        padding: 18px;
+        padding: 20px;
     }
 
     .actions {
