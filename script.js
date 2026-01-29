@@ -252,6 +252,7 @@ class HeadlineApp {
         this.elements.layoutButtons?.forEach((button) => {
             button.addEventListener('click', () => this.setMockLayout(button.dataset.layout || 'standard'));
         });
+        this.elements.clearFiltersButton?.addEventListener('click', () => this.clearAllFilters());
         this.elements.headlineList?.addEventListener('click', (event) => {
             const target = event.target.closest('button[data-index]');
             if (!target) return;
@@ -442,7 +443,7 @@ class HeadlineApp {
     }
 
     renderEmptyState() {
-        const hasFilters = Boolean(this.filters.query || this.filters.section !== 'latest' || this.filters.source !== 'auto');
+        const hasFilters = this.hasActiveFilters();
         this.elements.headline.textContent = hasFilters
             ? 'No headlines match your current filters.'
             : 'No headlines available.';
@@ -704,6 +705,11 @@ class HeadlineApp {
             parts.push(this.filters.source);
         }
         this.elements.filterStatus.textContent = parts.length > 0 ? parts.join(' · ') : 'All headlines';
+        if (this.elements.clearFiltersButton) {
+            const hasFilters = this.hasActiveFilters();
+            this.elements.clearFiltersButton.hidden = !hasFilters;
+            this.elements.clearFiltersButton.disabled = !hasFilters;
+        }
     }
 
     updateFavoriteButton() {
@@ -789,6 +795,35 @@ class HeadlineApp {
         this.updateLayoutButtons();
         this.syncGeneratorControls();
         this.updateFilterStatus();
+    }
+
+    clearAllFilters() {
+        const nextFilters = { ...DEFAULT_FILTERS };
+        const shouldReset = Object.keys(nextFilters).some((key) => nextFilters[key] !== this.filters[key]);
+        if (!shouldReset) {
+            this.updateFilterStatus();
+            return;
+        }
+
+        this.filters = nextFilters;
+        if (this.elements.searchInput) {
+            this.elements.searchInput.value = '';
+        }
+        this.resetNavigationForFilters();
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.applyMockLayoutClass();
+        this.ensureHeadlineMatchesFilters();
+        this.updateHistoryState(this.state.currentIndex, { replace: false });
+    }
+
+    hasActiveFilters() {
+        return Boolean(
+            this.filters.query
+            || this.filters.section !== DEFAULT_FILTERS.section
+            || this.filters.source !== DEFAULT_FILTERS.source
+        );
     }
 
     updateFilterValue(filterKey, value, options = {}) {
@@ -1440,6 +1475,7 @@ function mapElements() {
         headlineSource: document.getElementById('headline-source'),
         headlineSectionBadge: document.getElementById('headline-section'),
         filterStatus: document.getElementById('filter-status'),
+        clearFiltersButton: document.getElementById('clear-filters'),
         historyCount: document.getElementById('history-count'),
         headlineList: document.getElementById('headline-list'),
         searchInput: document.getElementById('search-input'),
