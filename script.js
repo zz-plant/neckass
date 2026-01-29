@@ -815,7 +815,6 @@ class HeadlineApp {
         this.refreshFilteredIndexes();
         this.applyMockLayoutClass();
         this.ensureHeadlineMatchesFilters();
-        this.updateHistoryState(this.state.currentIndex, { replace: false });
     }
 
     hasActiveFilters() {
