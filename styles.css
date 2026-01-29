@@ -159,6 +159,24 @@ body {
     color: var(--muted);
 }
 
+.filter-reset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-reset .status-text {
+    margin-right: auto;
+}
+
+.filter-reset button {
+    min-height: 38px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
 .filter-label {
     font-size: 0.85rem;
     text-transform: uppercase;
