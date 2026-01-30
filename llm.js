@@ -19,14 +19,17 @@ const tinyLlmClient = (() => {
         subjects: [
             { text: 'Neckass', pronouns: { possessive: 'his', object: 'him' } },
             { text: 'a sleep-deprived influencer', pronouns: { possessive: 'their', object: 'them' } },
-            { text: 'the neighborhood Wi-Fi sleuth', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'the neighborhood network sleuth', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'a snack-fueled podcaster', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'an overcaffeinated mod', pronouns: { possessive: 'their', object: 'them' } },
-            { text: 'a Bluetooth astrologer', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'an AI horoscope editor', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'the late-night content gremlin', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'a chronically online organizer', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'a live-chat philosopher', pronouns: { possessive: 'their', object: 'them' } },
-            { text: 'the group chat historian', pronouns: { possessive: 'their', object: 'them' } }
+            { text: 'the group chat historian', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'the office snack oracle', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'a meme-savvy meteorologist', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'the unpaid social media intern', pronouns: { possessive: 'their', object: 'them' } }
         ],
         verbs: [
             'liveblogs',
@@ -39,20 +42,27 @@ const tinyLlmClient = (() => {
             'attempts to benchmark',
             'drops a thread explaining how to',
             'publishes a manifesto about how to',
-            'files a report on how to'
+            'files a report on how to',
+            'accidentally schedules a meeting to',
+            'renames the cloud workspace to',
+            'runs a focus group on how to'
         ],
         objects: [
             '{possessive} grocery run like it is Sundance',
             'dark mode as a lifestyle and tax write-off',
-            'vibes with a Google Form',
-            'apologies as NFTs',
+            'vibes with a poll in the group chat',
+            'apologies as limited-edition stickers',
             'mute push notifications with aura',
             '{possessive} hobby as a productivity pivot',
             '{possessive} screen time using vibes per minute',
             'a group chat as a startup incubator',
-            'a ring light as a newsroom upgrade',
+            'a creator studio as a newsroom upgrade',
             '{possessive} to-do list as a cinematic universe',
-            '{possessive} calendar as an escape room'
+            '{possessive} calendar as an escape room',
+            'a fridge note as a breaking news ticker',
+            '{possessive} laundry pile as a mood board',
+            'air-frying leftovers like it is a cooking show finale',
+            '{possessive} inbox as a competitive sport'
         ],
         connectors: [
             'after',
@@ -69,7 +79,10 @@ const tinyLlmClient = (() => {
             'a notification ping demanded applause',
             '{possessive} calendar sent a push notification',
             'the group chat voted unanimously',
-            '{possessive} inbox hit 99+ again'
+            '{possessive} inbox hit 99+ again',
+            'a smart assistant applauded unprompted',
+            'autocorrect insisted on being the co-host',
+            'a delivery bot rolled up with live commentary'
         ],
         impacts: [
             'sources say the backlog of screenshots is heroic.',
@@ -80,7 +93,10 @@ const tinyLlmClient = (() => {
             'a focus group of houseplants requested a sequel.',
             'metrics include three sighs per minute and rising.',
             'witnesses cite an immediate spike in side-eye.',
-            'analysts are calling it a soft pivot with loud vibes.'
+            'analysts are calling it a soft pivot with loud vibes.',
+            'local experts predict a surge in dramatic sighing.',
+            'eyewitnesses confirm the chaos was lightly curated.',
+            'the emoji budget has been completely exhausted.'
         ],
         tags: [
             'Developing story.',
@@ -93,6 +109,16 @@ const tinyLlmClient = (() => {
             '—',
             '·',
             '•'
+        ],
+        scripted: [
+            '{desk} {subject} is back with a plan to {object}. {impact}',
+            '{subject} says {object} is the only way forward. {tag}',
+            'Live update: {subject} just tried to {object} and the chat screamed. {impact}',
+            '{subject} insists the real news is {object}. {impact}',
+            '{desk} {subject} went on record about {object} and caused a ripple. {tag}',
+            '{subject} is treating {object} like a season finale. {impact}',
+            '{desk} {subject} declared {object} the new normal. {tag}',
+            '{subject} returned with a fresh take on {object}. {impact}'
         ]
     };
 
@@ -106,7 +132,17 @@ const tinyLlmClient = (() => {
         ({ subject, verb, object, connector, twist, impact }) =>
             `${subject} ${verb} ${object} ${connector} ${twist}; ${impact}`,
         ({ desk, subject, verb, object, impact, tag }) =>
-            `${desk} ${subject} ${verb} ${object}. ${impact} ${tag}`
+            `${desk} ${subject} ${verb} ${object}. ${impact} ${tag}`,
+        ({ subject, verb, object, connector, twist, impact, tag }) =>
+            `${subject} ${verb} ${object} ${connector} ${twist}. ${impact} ${tag}`,
+        ({ desk, subject, verb, object, impact }) =>
+            `${desk} ${subject} ${verb} ${object} ${impact}`,
+        ({ subject, verb, object, connector, twist }) =>
+            `${subject} ${verb} ${object} ${connector} ${twist}.`,
+        ({ desk, subject, verb, object, connector, twist, breakMark, impact }) =>
+            `${desk} ${subject} ${verb} ${object} ${connector} ${twist} ${breakMark} ${impact}`,
+        ({ subject, verb, object, impact, tag }) =>
+            `${subject} ${verb} ${object}. ${impact} ${tag}`
     ];
 
     const recentHeadlines = loadRecentHeadlines();
@@ -193,9 +229,43 @@ const tinyLlmClient = (() => {
     }
 
     let lastPayload = null;
+    const recentPicks = new Map();
+
+    function getRecentList(key) {
+        if (!recentPicks.has(key)) {
+            recentPicks.set(key, []);
+        }
+        return recentPicks.get(key);
+    }
+
+    function rememberPick(key, value, limit = 3) {
+        if (!value) return;
+        const list = getRecentList(key);
+        list.unshift(value);
+        const trimmed = list.slice(0, limit);
+        recentPicks.set(key, trimmed);
+    }
+
+    function pickWithRecent(list, key, limit = 3) {
+        const recentList = getRecentList(key);
+        const avoid = recentList.slice(0, limit);
+        let candidate = pickRandom(list, avoid);
+        if (!candidate) {
+            candidate = pickRandom(list);
+        }
+        rememberPick(key, candidate, limit);
+        return candidate;
+    }
+
+    function pickWeightedTemplate() {
+        const recentTemplates = getRecentList('template');
+        const candidate = pickRandom(templates, recentTemplates.slice(0, 2));
+        rememberPick('template', candidate, 2);
+        return candidate;
+    }
 
     function buildHeadlineCandidate() {
-        const template = pickRandom(templates);
+        const template = pickWeightedTemplate();
         const rawSubject = pickRandom(
             beats.subjects,
             lastPayload ? [lastPayload.rawSubject] : []
@@ -206,23 +276,41 @@ const tinyLlmClient = (() => {
             object: subject.pronouns.object
         };
 
-        const rawObject = pickRandom(beats.objects, lastPayload ? [lastPayload.rawObject] : []);
-        const rawTwist = pickRandom(beats.twists, lastPayload ? [lastPayload.rawTwist] : []);
+        const rawObject = pickWithRecent(beats.objects, 'object', 4);
+        const rawTwist = pickWithRecent(beats.twists, 'twist', 3);
         const payload = {
-            desk: pickRandom(beats.desks, lastPayload ? [lastPayload.desk] : []),
+            desk: pickWithRecent(beats.desks, 'desk', 2),
             subject: subject.text,
-            verb: pickRandom(beats.verbs, lastPayload ? [lastPayload.verb] : []),
+            verb: pickWithRecent(beats.verbs, 'verb', 3),
             object: applyTokens(rawObject, tokens),
-            connector: pickRandom(beats.connectors, lastPayload ? [lastPayload.connector] : []),
+            connector: pickWithRecent(beats.connectors, 'connector', 3),
             twist: applyTokens(rawTwist, tokens),
-            impact: pickRandom(beats.impacts, lastPayload ? [lastPayload.impact] : []),
-            tag: pickRandom(beats.tags, lastPayload ? [lastPayload.tag] : []),
-            breakMark: pickRandom(beats.styleBreaks)
+            impact: pickWithRecent(beats.impacts, 'impact', 3),
+            tag: pickWithRecent(beats.tags, 'tag', 2),
+            breakMark: pickWithRecent(beats.styleBreaks, 'breakMark', 2)
         };
 
-        const headline = template(payload).replace(/\s+/g, ' ').trim();
+        const useScripted = getSecureRandom() < 0.35;
+        const scriptedTokens = {
+            desk: payload.desk,
+            subject: payload.subject,
+            verb: payload.verb,
+            object: payload.object,
+            connector: payload.connector,
+            twist: payload.twist,
+            impact: payload.impact,
+            tag: payload.tag,
+            breakMark: payload.breakMark
+        };
+        const headline = useScripted
+            ? applyTokens(
+                  pickWithRecent(beats.scripted, 'scripted', 3),
+                  scriptedTokens
+              )
+            : template(payload);
+        const cleanedHeadline = headline.replace(/\s+/g, ' ').trim();
         lastPayload = { ...payload, rawSubject, rawObject, rawTwist };
-        return headline;
+        return cleanedHeadline;
     }
 
     function generateUniqueHeadline() {
