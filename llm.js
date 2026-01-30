@@ -19,14 +19,17 @@ const tinyLlmClient = (() => {
         subjects: [
             { text: 'Neckass', pronouns: { possessive: 'his', object: 'him' } },
             { text: 'a sleep-deprived influencer', pronouns: { possessive: 'their', object: 'them' } },
-            { text: 'the neighborhood Wi-Fi sleuth', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'the neighborhood network sleuth', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'a snack-fueled podcaster', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'an overcaffeinated mod', pronouns: { possessive: 'their', object: 'them' } },
-            { text: 'a Bluetooth astrologer', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'an AI horoscope editor', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'the late-night content gremlin', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'a chronically online organizer', pronouns: { possessive: 'their', object: 'them' } },
             { text: 'a live-chat philosopher', pronouns: { possessive: 'their', object: 'them' } },
-            { text: 'the group chat historian', pronouns: { possessive: 'their', object: 'them' } }
+            { text: 'the group chat historian', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'the office snack oracle', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'a meme-savvy meteorologist', pronouns: { possessive: 'their', object: 'them' } },
+            { text: 'the unpaid social media intern', pronouns: { possessive: 'their', object: 'them' } }
         ],
         verbs: [
             'liveblogs',
@@ -39,20 +42,27 @@ const tinyLlmClient = (() => {
             'attempts to benchmark',
             'drops a thread explaining how to',
             'publishes a manifesto about how to',
-            'files a report on how to'
+            'files a report on how to',
+            'accidentally schedules a meeting to',
+            'renames the cloud workspace to',
+            'runs a focus group on how to'
         ],
         objects: [
             '{possessive} grocery run like it is Sundance',
             'dark mode as a lifestyle and tax write-off',
-            'vibes with a Google Form',
-            'apologies as NFTs',
+            'vibes with a poll in the group chat',
+            'apologies as limited-edition stickers',
             'mute push notifications with aura',
             '{possessive} hobby as a productivity pivot',
             '{possessive} screen time using vibes per minute',
             'a group chat as a startup incubator',
-            'a ring light as a newsroom upgrade',
+            'a creator studio as a newsroom upgrade',
             '{possessive} to-do list as a cinematic universe',
-            '{possessive} calendar as an escape room'
+            '{possessive} calendar as an escape room',
+            'a fridge note as a breaking news ticker',
+            '{possessive} laundry pile as a mood board',
+            'air-frying leftovers like it is a cooking show finale',
+            '{possessive} inbox as a competitive sport'
         ],
         connectors: [
             'after',
@@ -69,7 +79,10 @@ const tinyLlmClient = (() => {
             'a notification ping demanded applause',
             '{possessive} calendar sent a push notification',
             'the group chat voted unanimously',
-            '{possessive} inbox hit 99+ again'
+            '{possessive} inbox hit 99+ again',
+            'a smart assistant applauded unprompted',
+            'autocorrect insisted on being the co-host',
+            'a delivery bot rolled up with live commentary'
         ],
         impacts: [
             'sources say the backlog of screenshots is heroic.',
@@ -80,7 +93,10 @@ const tinyLlmClient = (() => {
             'a focus group of houseplants requested a sequel.',
             'metrics include three sighs per minute and rising.',
             'witnesses cite an immediate spike in side-eye.',
-            'analysts are calling it a soft pivot with loud vibes.'
+            'analysts are calling it a soft pivot with loud vibes.',
+            'local experts predict a surge in dramatic sighing.',
+            'eyewitnesses confirm the chaos was lightly curated.',
+            'the emoji budget has been completely exhausted.'
         ],
         tags: [
             'Developing story.',
@@ -106,7 +122,17 @@ const tinyLlmClient = (() => {
         ({ subject, verb, object, connector, twist, impact }) =>
             `${subject} ${verb} ${object} ${connector} ${twist}; ${impact}`,
         ({ desk, subject, verb, object, impact, tag }) =>
-            `${desk} ${subject} ${verb} ${object}. ${impact} ${tag}`
+            `${desk} ${subject} ${verb} ${object}. ${impact} ${tag}`,
+        ({ subject, verb, object, connector, twist, impact, tag }) =>
+            `${subject} ${verb} ${object} ${connector} ${twist}. ${impact} ${tag}`,
+        ({ desk, subject, verb, object, impact }) =>
+            `${desk} ${subject} ${verb} ${object} ${impact}`,
+        ({ subject, verb, object, connector, twist }) =>
+            `${subject} ${verb} ${object} ${connector} ${twist}.`,
+        ({ desk, subject, verb, object, connector, twist, breakMark, impact }) =>
+            `${desk} ${subject} ${verb} ${object} ${connector} ${twist} ${breakMark} ${impact}`,
+        ({ subject, verb, object, impact, tag }) =>
+            `${subject} ${verb} ${object}. ${impact} ${tag}`
     ];
 
     const recentHeadlines = loadRecentHeadlines();
@@ -193,9 +219,17 @@ const tinyLlmClient = (() => {
     }
 
     let lastPayload = null;
+    let lastTemplate = null;
+    let lastStructure = null;
+    let lastStyleBreak = null;
+    let lastConnector = null;
+
+    function pickDifferent(list, lastValue) {
+        return pickRandom(list, lastValue ? [lastValue] : []);
+    }
 
     function buildHeadlineCandidate() {
-        const template = pickRandom(templates);
+        const template = pickDifferent(templates, lastTemplate);
         const rawSubject = pickRandom(
             beats.subjects,
             lastPayload ? [lastPayload.rawSubject] : []
@@ -213,15 +247,24 @@ const tinyLlmClient = (() => {
             subject: subject.text,
             verb: pickRandom(beats.verbs, lastPayload ? [lastPayload.verb] : []),
             object: applyTokens(rawObject, tokens),
-            connector: pickRandom(beats.connectors, lastPayload ? [lastPayload.connector] : []),
+            connector: pickDifferent(beats.connectors, lastConnector),
             twist: applyTokens(rawTwist, tokens),
             impact: pickRandom(beats.impacts, lastPayload ? [lastPayload.impact] : []),
             tag: pickRandom(beats.tags, lastPayload ? [lastPayload.tag] : []),
-            breakMark: pickRandom(beats.styleBreaks)
+            breakMark: pickDifferent(beats.styleBreaks, lastStyleBreak)
         };
 
+        const structure = {
+            verb: payload.verb,
+            connector: payload.connector,
+            twist: rawTwist
+        };
         const headline = template(payload).replace(/\s+/g, ' ').trim();
         lastPayload = { ...payload, rawSubject, rawObject, rawTwist };
+        lastTemplate = template;
+        lastStyleBreak = payload.breakMark;
+        lastConnector = payload.connector;
+        lastStructure = structure;
         return headline;
     }
 
@@ -231,7 +274,18 @@ const tinyLlmClient = (() => {
         const maxAttempts = RECENT_HEADLINE_HISTORY + 6;
 
         while (attempt < maxAttempts) {
+            const previousStructure = lastStructure;
             headline = buildHeadlineCandidate();
+            if (
+                previousStructure &&
+                lastStructure &&
+                previousStructure.verb === lastStructure.verb &&
+                previousStructure.connector === lastStructure.connector &&
+                previousStructure.twist === lastStructure.twist
+            ) {
+                attempt += 1;
+                continue;
+            }
             if (!isRecentlyUsed(headline)) {
                 break;
             }
