@@ -219,9 +219,17 @@ const tinyLlmClient = (() => {
     }
 
     let lastPayload = null;
+    let lastTemplate = null;
+    let lastStructure = null;
+    let lastStyleBreak = null;
+    let lastConnector = null;
+
+    function pickDifferent(list, lastValue) {
+        return pickRandom(list, lastValue ? [lastValue] : []);
+    }
 
     function buildHeadlineCandidate() {
-        const template = pickRandom(templates);
+        const template = pickDifferent(templates, lastTemplate);
         const rawSubject = pickRandom(
             beats.subjects,
             lastPayload ? [lastPayload.rawSubject] : []
@@ -239,15 +247,24 @@ const tinyLlmClient = (() => {
             subject: subject.text,
             verb: pickRandom(beats.verbs, lastPayload ? [lastPayload.verb] : []),
             object: applyTokens(rawObject, tokens),
-            connector: pickRandom(beats.connectors, lastPayload ? [lastPayload.connector] : []),
+            connector: pickDifferent(beats.connectors, lastConnector),
             twist: applyTokens(rawTwist, tokens),
             impact: pickRandom(beats.impacts, lastPayload ? [lastPayload.impact] : []),
             tag: pickRandom(beats.tags, lastPayload ? [lastPayload.tag] : []),
-            breakMark: pickRandom(beats.styleBreaks)
+            breakMark: pickDifferent(beats.styleBreaks, lastStyleBreak)
         };
 
+        const structure = {
+            verb: payload.verb,
+            connector: payload.connector,
+            twist: rawTwist
+        };
         const headline = template(payload).replace(/\s+/g, ' ').trim();
         lastPayload = { ...payload, rawSubject, rawObject, rawTwist };
+        lastTemplate = template;
+        lastStyleBreak = payload.breakMark;
+        lastConnector = payload.connector;
+        lastStructure = structure;
         return headline;
     }
 
@@ -257,7 +274,18 @@ const tinyLlmClient = (() => {
         const maxAttempts = RECENT_HEADLINE_HISTORY + 6;
 
         while (attempt < maxAttempts) {
+            const previousStructure = lastStructure;
             headline = buildHeadlineCandidate();
+            if (
+                previousStructure &&
+                lastStructure &&
+                previousStructure.verb === lastStructure.verb &&
+                previousStructure.connector === lastStructure.connector &&
+                previousStructure.twist === lastStructure.twist
+            ) {
+                attempt += 1;
+                continue;
+            }
             if (!isRecentlyUsed(headline)) {
                 break;
             }
