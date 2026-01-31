@@ -1,115 +1,113 @@
-# Neckass Headlines Specification
+# Neckass Headlines — Current Feature Specifications
 
-This document provides testable specifications for the Neckass Headlines page so that changes can be validated through specification-driven development. Each section lists expected data, layout, interactions, and accessibility behaviors.
+This document captures the **current, in-repo feature set** for the Neckass Headlines page, based on `index.html`, `styles.css`, `script.js`, and `llm.js`. It doubles as a specification checklist for validating the live experience as it is built today.
+
+## Feature audit summary
+- **Rendered UI in `index.html`**: topbar masthead, hero block, featured headline card with shuffle/previous controls, filter status row with a clear-filters button, command rail cards (command intro, clipboard copy, social share links, mock front page export).【F:index.html†L9-L150】
+- **Script-only capabilities not currently rendered in `index.html`**: optional controls for generator-only actions, headline history list, favorites, search, section/source/panel/layout toggle buttons, copy headline link, and additional social links (LinkedIn/Threads/Bluesky). These hooks exist in `script.js` and become active only if the related elements are added to the DOM later.【F:script.js†L169-L221】【F:script.js†L1388-L1440】
 
 ## Page-wide expectations
-- **Document metadata**
-  - Title text: "Neckass Headlines".
-  - `<html lang="en">` must be set.
-  - Meta description present and non-empty.
-- **Generation runtime**
-  - `llm.js` must expose a global `tinyLlmClient.generateHeadline()` helper that returns a non-empty string with built-in timeout/error handling.
-  - `handleNext` prefers `tinyLlmClient` output and falls back to the static `headlines` array if generation fails or is unavailable.
-- **Layout**
-  - Body uses a single-column flow up to 540px viewport width, a two-column grid with a feature stack and command rail above 900px, and one-column stacking between 541–899px.
-  - The command rail is sticky near the top of the viewport on wide layouts and falls back to normal flow on narrow screens.
-  - Maximum content width: 1100px; body padding of at least 18px on small screens and 24px on larger screens.
-- **Color themes**
-  - Default theme values must match the CSS root variables in `styles.css`.
-- **Font**: Inter family (or system fallbacks) is loaded via Google Fonts link.
-- **Keyboard support**: All interactive controls (buttons, social links) are reachable via `Tab` order with visible focus outlines inherited from browser defaults or custom styles.
+### Document metadata
+- `<html lang="en">` is set, document title is **"Neckass Headlines"**, and a non-empty meta description is present in the HTML head.【F:index.html†L1-L15】
+- Open Graph tags are provided for title, description, image, and URL in the static HTML head; the `og:image` metadata references `og-image.svg` (SVG image metadata for 1200×630).【F:index.html†L16-L23】
+- `script.js` updates metadata at runtime when a headline is rendered, including `<title>`, `meta[name="description"]`, and Open Graph tags for title/description/url. It also writes (or updates) a canonical link element to match the current headline URL state.【F:script.js†L1049-L1095】
+
+### Fonts & base theming
+- Fonts load from Google Fonts for **Inter** and **Fraunces**; body uses Inter and headline typography uses Fraunces (with system fallbacks).【F:styles.css†L1-L18】【F:styles.css†L112-L129】
+- CSS root variables define the color palette, radius, and shadow for the light theme; body uses `--bg` and `--text` with a soft paper-like surface aesthetic.【F:styles.css†L7-L18】【F:styles.css†L20-L30】
+
+### Layout grid & spacing
+- Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. The layout uses a single column under 900px and a two-column grid at ≥900px with a sticky command rail. Body padding is 28/24/48 px (responsive adjustments on small screens).【F:styles.css†L32-L74】【F:styles.css†L200-L272】
+
+## Masthead (topbar)
+- The topbar contains the brand block (“Neckass” and “Digital Gazette”) and a "Live desk" session pill. The row is separated from the hero by a bottom border and margin spacing.【F:index.html†L12-L21】【F:styles.css†L40-L93】【F:styles.css†L175-L199】
 
 ## Hero section
-- **Content**
-  - Eyebrow text: "Ridiculous news desk" using `.eyebrow` style.
-  - Heading: `<h1>` with text "Neckass Headlines Generator".
-  - Lede paragraph begins with "Dive into a feed where".
-  - Pills list contains exactly three `<span class="pill">` items: "Instant shuffle", "Dark mode ready", "Share-ready format".
-- **Layout & spacing**
-  - Hero sits above the grid with a bottom margin of 18px on small screens and 28px otherwise.
-  - Pill items wrap when horizontal space is limited and maintain 10px gaps.
-- **Accessibility**
-  - Heading hierarchy starts at `h1` with no skipped level before the main content.
+- Eyebrow text: **“Ridiculous news desk”** in uppercase styling.【F:index.html†L25-L35】
+- Heading: **“Neckass Headlines Generator”** in `h1` using the headline font.【F:index.html†L26-L31】
+- Lede: **“Dive into a feed where shuffles deliver share-ready scoops.”**【F:index.html†L27-L31】
+- Pill list contains exactly three pills: **Instant shuffle**, **Dark mode ready**, **Share-ready format**.【F:index.html†L29-L33】
+- Meta line: **`#masthead-date`** starts as “Updated daily” and is replaced on load with a localized date + “· Digital edition”.【F:index.html†L23-L36】【F:styles.css†L95-L119】【F:script.js†L1237-L1261】
 
-## Headline section (Featured headline)
-- **Structure & labels**
-  - Section contains label text "Featured headline" plus an accent dot.
-  - Headline element: `<h2 id="headline">` with default text "Loading..." and `tabindex="0"`.
-  - Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`.
-- **Data & behavior**
-  - Headlines are chosen randomly from the `headlines` array in `script.js`.
-  - Initial render: if stored navigation state exists, render that headline; otherwise trigger a random headline.
-  - Next button selects a random headline different from the current one when more than one headline exists; if the array is empty, display "No headlines available." and disable the Next button.
-  - Previous button navigates back through the navigation stack and is disabled when fewer than two items exist in the stack.
-  - Loader visibility toggles with headline updates: shown during headline transition (setTimeout delay) and hidden afterward; `aria-hidden` matches visibility state.
-  - Headline text color is set using `selectReadableColor`, adjusted for dark mode brightness threshold.
-- **Layout**
-  - Headline wrapper reserves at least 150px height to avoid layout shifts during loading.
-- **Accessibility**
-  - Headline updates should announce via focusable `h2` and `aria-live` status on loader.
-  - Buttons include explicit `aria-label` attributes matching their actions.
+## Featured headline section
+### Structure & labels
+- Section label includes an accent dot and **“Featured headline”** text.【F:index.html†L42-L51】
+- Headline element: `<h2 id="headline" tabindex="0" aria-label="Headline">` with initial text “Loading...”.【F:index.html†L52-L55】
+- Deck text below the headline reads **“Lead with the line below.”**【F:index.html†L56-L56】
+- Filter status row shows **“All headlines”** by default in `#filter-status` and includes a **“Clear filters”** button (`#clear-filters`).【F:index.html†L58-L63】
 
-## Controls panel (Command rail)
-- **Shell and intro**
-  - The command rail sits in its own column on wide screens with a sticky stack of cards.
-  - Controls card opens with a "Command desk" eyebrow and helper text plus a pill chip indicating a live session.
-- **Headlines viewed counter**
-  - Label text: "Headlines viewed"; numeric value in `#counter` shows count of unique headlines seen in the current storage state.
-  - Counter updates whenever a headline is added to `uniqueHeadlines`.
-- **Clipboard copy**
-  - Text block label "Clipboard" with helper text "Grab the headline for your next post.".
-  - `#copy-btn` copies the current headline text using Clipboard API when available; fallback uses hidden textarea and `document.execCommand('copy')`.
-  - Success message: "Headline copied to clipboard!" in `#copy-status` with no `error` class. Failure messages include "Unable to access clipboard.", "Copy failed. Please try again.", or "Clipboard unavailable in this browser." and must toggle the `error` class.
-  - If fallback copy throws, the Copy button is disabled.
-- **Layout**
-  - Controls card uses glass styling with a bordered intro block, 22px padding, and separated rows for the copy actions.
-- **Accessibility**
-  - Copy status uses `aria-live="polite"` and `role="status"`.
+### Controls & loader
+- Buttons:
+  - **Previous** (`#prev-btn`, aria-label “View Previous Headline”).
+  - **Shuffle** (`#next-btn`, aria-label “Shuffle headline”).
+- Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`. Loader visibility is toggled via the `.is-visible` class and `aria-hidden` state updates during transitions.【F:index.html†L65-L70】【F:styles.css†L149-L161】【F:script.js†L1193-L1218】
 
-## Social share section
-- **Content & links**
-  - Section header label: "Share the latest scoop" with helper text about sharing.
-  - Contains three links with IDs `twitter-share`, `facebook-share`, `reddit-share` each wrapping an icon `<img>` and text label.
-  - Icon images load SVG files from `icons/` with `alt` matching the platform name followed by "icon".
-- **Behavior**
-  - Links open in a new tab (`target="_blank"`).
-  - When headline text changes, share URLs update to include the encoded headline and current page URL in their respective query parameters: `text` + `url` + hashtag for Twitter, `u` + `quote` for Facebook, `url` + `title` for Reddit.
-- **Layout**
-  - Social share lives as its own glass card within the command rail; links stack in a grid with 10px gaps and 12px padding per item, and hover state lifts by 1px while changing background to `#fff9f2`.
-- **Accessibility**
-  - Each link includes an `aria-label` describing the destination, e.g., "Share on Twitter".
+### Headline behavior
+- Headlines are randomly selected from the curated `headlines` array; additional generated headlines can be appended when the tiny LLM helper succeeds. Next/Shuffle prefers generated headlines if filters indicate so and the generator is available; otherwise it shuffles curated headlines. The next headline differs from the current headline whenever possible.【F:script.js†L31-L115】【F:script.js†L219-L269】【F:script.js†L1325-L1343】
+- Previous navigates back through the stored navigation stack and removes the last index if you go backward. It is disabled whenever the stack has fewer than two items or while loading.【F:script.js†L251-L273】【F:script.js†L445-L452】
+- On render, the headline text color is set using `selectReadableColor()`, which adjusts for brightness and enforces a minimum contrast ratio against the background color token. The update includes a short animation delay (60ms) to show the loader before revealing text.【F:script.js†L26-L30】【F:script.js†L342-L371】【F:script.js†L152-165】
 
-## Mock front page export
-- **Content**
-  - Section header label: "Mock front page" with helper text about downloading or copying.
-  - Buttons `#download-mock` and `#copy-mock` remain present with the same labels.
-- **Behavior**
-  - Export actions remain wired to the existing download/copy logic in `script.js`.
-- **Layout**
-  - Export controls appear as a dedicated glass card in the command rail with padded buttons and status text below.
+### Filter status row
+- The filter status text reflects active filters (section, query, source) when they exist and resets to **“All headlines”** when no filters are active.
+- The Clear filters button is hidden and disabled unless filters are active; clicking it resets filters and refreshes the headline set. (In the current HTML, filter controls other than the Clear button are not rendered; filters can still be supplied via URL parameters.)【F:script.js†L640-L707】【F:script.js†L739-L820】
 
-## Persistence & state
-- **LocalStorage keys**
-  - `navigationStack`: JSON array of visited headline indices, sanitized to valid range on load.
-  - `uniqueHeadlines`: JSON array of indices converted to a `Set` on load; if empty, defaults to sanitized stack values.
-  - `viewedList` and `viewedCount`: legacy keys retained; `viewedList` used only when `navigationStack` is absent.
-- **Restoration**
-  - On page load, state restores using stored values filtered by total headline count; `currentIndex` is the last item of the navigation stack or `-1` when none.
-  - Persisted state updates after each navigation or copy failure that disables the button.
+### Accessibility
+- `h2#headline` remains focusable (`tabindex="0"`) so screen readers can re-announce it after updates.
+- Loader uses `role="status"` with `aria-live="polite"`.
+- Buttons retain visible focus outlines via CSS `:focus-visible` styling.【F:index.html†L45-L70】【F:styles.css†L129-L147】
+
+## Command rail (right column on wide screens)
+### Command intro card
+- Card heading “Command desk” with helper text **“Shuffle, copy, share.”**
+- Contains an action map with three steps (Shuffle, Copy, Share) and a “Live session” pill.
+- “Headlines viewed” counter shows the count of unique headlines seen in the current session/state (`#counter`).【F:index.html†L74-L98】【F:styles.css†L163-L218】【F:script.js†L437-L439】
+
+### Clipboard copy card
+- Label **“Clipboard”** with helper text **“Grab the headline for your next post.”**
+- `#copy-btn` copies the current headline to the clipboard. It prefers the Clipboard API and falls back to a hidden `<textarea>` + `document.execCommand('copy')`.
+- Status text `#copy-status` is updated on success (“Headline copied to clipboard!”) or error (“No headline available to copy.”, “Copy failed. Please try again.”, “Clipboard unavailable in this browser.”). Errors toggle the `.error` class for color changes.【F:index.html†L100-L108】【F:script.js†L1096-L1191】【F:styles.css†L149-L157】
+
+### Social share card
+- Header text **“Share the latest scoop”** with helper text **“Send it anywhere.”**【F:index.html†L110-L115】
+- Links for Twitter, Facebook, and Reddit (each with icon and label). URLs update on every headline change and include the encoded headline and a canonical URL with query parameters (`headline`, `section`, `q`, `source`, `panel`, `layout`).【F:index.html†L110-L132】【F:script.js†L422-L452】【F:script.js†L955-L1034】
+- The links open in a new tab (`target="_blank"`) and include `rel="noreferrer"` and `aria-label` values that describe each destination.【F:index.html†L116-L132】
+
+### Mock front page export card
+- Header text **“Mock front page”** with helper text **“Download or copy the layout.”**
+- Mock front page contains a masthead, current date, headline, and “Published” dateline.
+- Two actions:
+  - **Download mock front page** (`#download-mock`), which renders the mock to PNG via `html-to-image` and triggers a download.
+  - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable, downloaded instead.”
+- Status text `#export-status` reports success or failure messages after export attempts.【F:index.html†L134-L149】【F:script.js†L1232-L1318】
+
+## Tiny LLM headline generator (`llm.js`)
+- `llm.js` exposes a global `tinyLlmClient.generateHeadline()` that returns a promise with:
+  - A randomized headline template that draws from subject/verb/object/impact pools and avoids recently generated duplicates.
+  - A simulated latency delay between 420–880ms and a hard timeout at 2400ms. If the generation promise loses the race to timeout, it throws an error and `script.js` falls back to curated headlines.
+  - A recent headline cache stored in localStorage (`tinyLlmRecentHeadlines`).【F:llm.js†L1-L241】
+
+## Persistence & URL state
+- LocalStorage keys:
+  - `navigationStack`, `uniqueHeadlines`, `generatedHeadlines`, `favoriteHeadlines`, `headlineFilters` (current keys), plus legacy keys `headlinesViewed`, `viewedHeadlines`, `viewedStack` for backward compatibility.
+- `navigationStack` is sanitized against current headline count; `uniqueHeadlines` falls back to the sanitized stack when missing.
+- URL query parameters mirror filter state and the current headline: `headline`, `section`, `q`, `source`, `panel`, `layout`. Each headline render pushes or replaces history state and updates these parameters to enable direct linking and back/forward navigation restoration.【F:script.js†L1-L52】【F:script.js†L1413-L1499】【F:script.js†L882-L1047】
+
+## Keyboard interactions
+- Arrow Right / Arrow Down trigger **Shuffle**.
+- Arrow Left / Arrow Up trigger **Previous**.
+- Key navigation is disabled when focus is inside editable elements (inputs, textareas, buttons, etc.).【F:script.js†L860-L880】
 
 ## Error and edge cases
-- If `headlines` array length is 0: show empty state message, hide loader, disable Next button, keep Previous button disabled.
-- If `navigator.clipboard` is unavailable and fallback copy fails: show "Clipboard unavailable in this browser." and disable Copy button.
-- Headline color selection must never return undefined; if color brightness exceeds the readability threshold, it is darkened by a factor of 0.7 for contrast.
+- If no eligible headlines exist (because the list is empty or filters are too strict), the headline shows “No headlines available.” or “No headlines match your current filters.” The Shuffle button is disabled and loader is hidden.【F:script.js†L388-L416】
+- Metadata and social links are cleared when there is no valid headline index.【F:script.js†L388-L407】
+- `selectReadableColor()` never returns undefined; it guarantees a return by either using the palette color, darkening it, or blending it for minimum contrast ratio (4.5).【F:script.js†L394-L407】【F:script.js†L1515-L1652】
 
 ## Responsive behavior checkpoints
-- **≥900px width**: grid displays the feature stack alongside the sticky command rail with roughly 20px gap.
-- **541–899px width**: grid collapses to one column and the rail cards flow after the feature stack; hero margin is 18px.
-- **≤540px width**: body padding reduces to 12–18px; button rows stack vertically; copy rows align items to start and Copy button spans full width.
+- **≥900px width**: two-column grid with sticky command rail at 24px from top.
+- **541–899px width**: one-column stack with reduced hero margin.
+- **≤540px width**: tighter body padding, stacked action buttons, full-width copy button, and smaller headline text size on very small screens (≤600px).【F:styles.css†L200-L288】
 
 ## Accessibility checklist
-- All buttons and links have discernible text or `aria-label` values matching their function.
-- Loader uses `role="status"` with polite announcements and toggles `aria-hidden` with visibility.
-- Headline text remains focusable for screen readers via `tabindex="0"` and updates without page reload.
-- Color contrast expectations: accent buttons use white text over gradient backgrounds; ghost buttons maintain at least the browser default contrast from text to background as defined in CSS variables.
-
+- All visible buttons and links have discernible text or `aria-label`s.
+- Loader and status text areas use `aria-live="polite"` to announce updates.
+- Visible focus outlines are preserved for keyboard navigation (`button:focus-visible`).【F:index.html†L45-L132】【F:styles.css†L129-L147】
