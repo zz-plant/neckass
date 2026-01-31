@@ -1273,26 +1273,23 @@ class HeadlineApp {
             backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')?.trim() || undefined
         };
 
+        const downloadImage = async (message) => {
+            const dataUrl = await window.htmlToImage.toPng(this.elements.mockFrame, options);
+            const link = document.createElement('a');
+            link.download = 'neckass-front-page.png';
+            link.href = dataUrl;
+            link.click();
+            this.reportExportStatus(message);
+        };
+
         try {
             if (mode === 'download') {
-                const dataUrl = await window.htmlToImage.toPng(this.elements.mockFrame, options);
-                const link = document.createElement('a');
-                link.download = 'neckass-front-page.png';
-                link.href = dataUrl;
-                link.click();
-                this.reportExportStatus('Mock front page downloaded.');
-                this.setButtonLoading(exportButton, false);
+                await downloadImage('Mock front page downloaded.');
                 return;
             }
 
             if (!navigator.clipboard || !navigator.clipboard.write) {
-                const dataUrl = await window.htmlToImage.toPng(this.elements.mockFrame, options);
-                const link = document.createElement('a');
-                link.download = 'neckass-front-page.png';
-                link.href = dataUrl;
-                link.click();
-                this.reportExportStatus('Clipboard unavailable, downloaded instead.');
-                this.setButtonLoading(exportButton, false);
+                await downloadImage('Clipboard unavailable, downloaded instead.');
                 return;
             }
 
@@ -1308,9 +1305,9 @@ class HeadlineApp {
             ]);
 
             this.reportExportStatus('Image copied to clipboard.');
-            this.setButtonLoading(exportButton, false);
         } catch (error) {
             this.reportExportStatus('Export failed. Please try again.', true);
+        } finally {
             this.setButtonLoading(exportButton, false);
         }
     }
@@ -1451,12 +1448,7 @@ function createStorageAdapter() {
             const uniqueHeadlinesLegacy = parseJson(localStorage.getItem(STORAGE_KEYS.uniqueHeadlines), null);
             const favorites = parseJson(localStorage.getItem(STORAGE_KEYS.favorites), []);
             const filters = parseJson(localStorage.getItem(STORAGE_KEYS.filters), {});
-
-            const rawStack = Array.isArray(storedStack)
-                ? storedStack
-                : (Array.isArray(legacyNavigationStack)
-                    ? legacyNavigationStack
-                    : (Array.isArray(viewedListLegacy) ? viewedListLegacy : []));
+            const rawStack = resolveNavigationStack(storedStack, legacyNavigationStack, viewedListLegacy);
 
             const sanitizedStack = rawStack.filter(index => isValidHeadlineIndex(index, totalHeadlines));
             const uniqueHeadlines = new Set(
@@ -1510,6 +1502,16 @@ function parseJson(value, fallback) {
     } catch (error) {
         return fallback;
     }
+}
+
+function resolveNavigationStack(primaryStack, legacyStack, viewedList) {
+    if (Array.isArray(primaryStack)) {
+        return primaryStack;
+    }
+    if (Array.isArray(legacyStack)) {
+        return legacyStack;
+    }
+    return Array.isArray(viewedList) ? viewedList : [];
 }
 
 function sanitizeFilters(filters = {}) {
