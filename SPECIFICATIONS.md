@@ -99,7 +99,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 
 ## Error and edge cases
 - If no eligible headlines exist (because the list is empty or filters are too strict), the headline shows “No headlines available.” or “No headlines match your current filters.” The Shuffle button is disabled and loader is hidden.【F:script.js†L388-L416】
-- Metadata and social links are cleared when there is no valid headline index.【F:script.js†L388-L407】
+- Metadata and social links are reverted to the base metadata and canonical URL (headline parameter removed) when there is no valid headline index.【F:script.js†L388-L407】
 - `selectReadableColor()` never returns undefined; it guarantees a return by either using the palette color, darkening it, or blending it for minimum contrast ratio (4.5).【F:script.js†L394-L407】【F:script.js†L1515-L1652】
 
 ## Responsive behavior checkpoints
