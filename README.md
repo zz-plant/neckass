@@ -10,3 +10,10 @@ A playful headline generator that now supports tiny on-device LLM generation for
 
 ## Development
 Open `index.html` in a modern browser. The app persists headline navigation in `localStorage`.
+
+## Project docs
+- `SPECIFICATIONS.md`: UI/UX and accessibility requirements.
+- `CONTRIBUTING.md`: Contribution workflow and local testing guidance.
+- `CODE_OF_CONDUCT.md`: Community expectations.
+- `SECURITY.md`: Vulnerability reporting policy.
+- `CHANGELOG.md`: Notable changes.
