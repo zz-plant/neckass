@@ -297,6 +297,36 @@ button.ghost {
     gap: 10px;
 }
 
+.action-map {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+}
+
+.action-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(45, 31, 16, 0.12);
+    background: rgba(255, 255, 255, 0.75);
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.action-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: rgba(220, 107, 63, 0.15);
+    color: #8a3c1f;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
 .session-pill {
     display: inline-flex;
     align-items: center;
