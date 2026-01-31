@@ -48,13 +48,13 @@ const tinyLlmClient = (() => {
             'runs a focus group on how to'
         ],
         objects: [
-            '{possessive} grocery run like it is Sundance',
-            'dark mode as a lifestyle and tax write-off',
+            '{possessive} grocery run like it is an award show',
+            'dark mode as a lifestyle choice',
             'vibes with a poll in the group chat',
             'apologies as limited-edition stickers',
-            'mute push notifications with aura',
+            'mute push notifications with a spreadsheet',
             '{possessive} hobby as a productivity pivot',
-            '{possessive} screen time using vibes per minute',
+            '{possessive} screen time with a color-coded report',
             'a group chat as a startup incubator',
             'a creator studio as a newsroom upgrade',
             '{possessive} to-do list as a cinematic universe',
@@ -74,7 +74,7 @@ const tinyLlmClient = (() => {
         ],
         twists: [
             'doomscrolling through a meditation app',
-            'someone in chat said "trust"',
+            'someone in chat said \"trust\"',
             'the algorithm begged for mercy',
             'a notification ping demanded applause',
             '{possessive} calendar sent a push notification',
