@@ -309,36 +309,6 @@ button.ghost {
     gap: 10px;
 }
 
-.action-map {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 10px;
-}
-
-.action-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(45, 31, 16, 0.12);
-    background: rgba(255, 255, 255, 0.85);
-    font-size: 0.85rem;
-    color: var(--muted);
-}
-
-.action-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    display: grid;
-    place-items: center;
-    background: rgba(220, 107, 63, 0.15);
-    color: #8a3c1f;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
 .session-pill {
     display: inline-flex;
     align-items: center;
@@ -356,52 +326,6 @@ button.ghost {
 .copy-row {
     display: grid;
     gap: 8px;
-}
-
-.project-actions {
-    display: grid;
-    gap: 12px;
-}
-
-.project-link {
-    font-weight: 600;
-}
-
-.project-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 999px;
-    background: rgba(74, 125, 255, 0.12);
-    color: #2d3f7e;
-    font-size: 0.9rem;
-}
-
-.cc0-badge {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(45, 31, 16, 0.14);
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-}
-
-.cc0-badge img {
-    width: 88px;
-    height: 31px;
-}
-
-.cc0-badge:hover {
-    background: rgba(220, 107, 63, 0.08);
-    border-color: rgba(220, 107, 63, 0.35);
 }
 
 .share-links {
