@@ -20,7 +20,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 - Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. The layout uses a single column under 900px and a two-column grid at ≥900px with a sticky command rail. Body padding is 28/24/48 px (responsive adjustments on small screens).【F:styles.css†L32-L74】【F:styles.css†L200-L272】
 
 ## Masthead (topbar)
-- The topbar contains the brand block (“Neckass” and “Digital Gazette”) and a "Live desk" session pill. The row is separated from the hero by a bottom border and margin spacing.【F:index.html†L12-L21】【F:styles.css†L40-L93】【F:styles.css†L175-L199】
+- The topbar contains the brand block (“Neckass” and “Digital Gazette”). The row is separated from the hero by a bottom border and margin spacing.【F:index.html†L20-L25】【F:styles.css†L40-L88】【F:styles.css†L175-L199】
 
 ## Hero section
 - Eyebrow text: **“Ridiculous news desk”** in uppercase styling.【F:index.html†L25-L35】
