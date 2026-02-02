@@ -831,8 +831,10 @@
         } else if (message && this.elements.loader) {
             this.elements.loader.textContent = message;
         }
-        this.elements.loader.classList.toggle('is-visible', shouldShow);
-        this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        if (this.elements.loader) {
+            this.elements.loader.classList.toggle('is-visible', shouldShow);
+            this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        }
         this.setNavigationLoading(shouldShow);
     }
 
