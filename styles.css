@@ -451,6 +451,26 @@ button.ghost {
     .hero {
         margin-bottom: 18px;
     }
+
+    .headline-frame {
+        min-height: 120px;
+    }
+
+    .filter-reset {
+        align-items: flex-start;
+    }
+
+    .filter-reset button {
+        width: 100%;
+    }
+
+    .rail-card {
+        padding: 18px;
+    }
+
+    .share-link {
+        min-height: 44px;
+    }
 }
 
 .headline-list {
@@ -516,6 +536,15 @@ button.ghost {
         grid-template-columns: 1fr;
     }
 
+    .pill-list {
+        gap: 8px;
+    }
+
+    .pill {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
     .share-links {
         grid-template-columns: 1fr;
     }
@@ -532,5 +561,13 @@ button.ghost {
     .history-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .mock-actions button {
+        width: 100%;
+    }
+
+    .lede {
+        max-width: 100%;
     }
 }
