@@ -1,10 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const { data, HeadlineApp, createStorageAdapter, mapElements } = window.Neckass || {};
-    const app = new HeadlineApp({
-        headlines: data?.HEADLINES || [],
-        elements: mapElements(),
-        storage: createStorageAdapter()
-    });
+    const neckass = window.Neckass || {};
+    const { data, HeadlineApp, createStorageAdapter, mapElements } = neckass;
 
-    app.init();
+    const fallbackHeadline = data?.HEADLINES?.[0] || 'No headlines available.';
+    const headlineEl = document.getElementById('headline');
+    const mockHeadlineEl = document.getElementById('mock-headline');
+    const loaderEl = document.getElementById('loader');
+
+    const showFallback = () => {
+        if (headlineEl) {
+            headlineEl.textContent = fallbackHeadline;
+        }
+        if (mockHeadlineEl) {
+            mockHeadlineEl.textContent = fallbackHeadline;
+        }
+        if (loaderEl) {
+            loaderEl.classList.remove('is-visible');
+            loaderEl.setAttribute('aria-hidden', 'true');
+        }
+    };
+
+    if (typeof HeadlineApp !== 'function'
+        || typeof createStorageAdapter !== 'function'
+        || typeof mapElements !== 'function') {
+        showFallback();
+        return;
+    }
+
+    try {
+        const app = new HeadlineApp({
+            headlines: data?.HEADLINES || [],
+            elements: mapElements(),
+            storage: createStorageAdapter()
+        });
+
+        app.init();
+    } catch (error) {
+        showFallback();
+    }
 });
