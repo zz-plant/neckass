@@ -24,6 +24,7 @@ Thanks for your interest in improving Neckass Headlines! This project is a stati
 ## Testing
 - Manual check: Open `index.html` directly and validate layout and interactions.
 - If you update UI visuals, capture a screenshot to show the change.
+- For automated screenshots, run a local server (for example: `python -m http.server 8001 --directory .`) and capture `http://127.0.0.1:8001/` to avoid headless browser `file://` restrictions.
 
 ## Submitting changes
 - Ensure your update matches `SPECIFICATIONS.md` requirements.
