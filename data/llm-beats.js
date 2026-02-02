@@ -1,4 +1,8 @@
-export const BEATS = {
+(() => {
+    const Neckass = window.Neckass = window.Neckass || {};
+    const data = Neckass.data = Neckass.data || {};
+
+    const BEATS = {
     desks: [
         'Hot off the tiny desk:',
         'Breaking from the micro newsroom:',
@@ -115,7 +119,7 @@ export const BEATS = {
     ]
 };
 
-export const TEMPLATES = [
+    const TEMPLATES = [
     ({ desk, subject, verb, object, connector, twist, impact }) =>
         `${desk} ${subject} ${verb} ${object} ${connector} ${twist}, ${impact}`,
     ({ subject, verb, object, impact }) =>
@@ -136,4 +140,8 @@ export const TEMPLATES = [
         `${desk} ${subject} ${verb} ${object} ${connector} ${twist} ${breakMark} ${impact}`,
     ({ subject, verb, object, impact, tag }) =>
         `${subject} ${verb} ${object}. ${impact} ${tag}`
-];
+    ];
+
+    data.BEATS = BEATS;
+    data.TEMPLATES = TEMPLATES;
+})();

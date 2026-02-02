@@ -1,5 +1,8 @@
-export function mapElements() {
-    return {
+(() => {
+    const Neckass = window.Neckass = window.Neckass || {};
+
+    function mapElements() {
+        return {
         headline: document.getElementById('headline'),
         loader: document.getElementById('loader'),
         loaderText: document.getElementById('loader-text'),
@@ -44,50 +47,57 @@ export function mapElements() {
         controls: document.querySelector('.controls'),
         socialShare: document.querySelector('.social-share'),
         copySection: document.querySelector('.copy-headline')
-    };
-}
-
-export function setButtonLoading(button, shouldShow) {
-    if (!button) return;
-    button.classList.toggle('is-loading', shouldShow);
-    button.disabled = shouldShow;
-    button.setAttribute('aria-busy', shouldShow ? 'true' : 'false');
-}
-
-export function updateToggleButtons(buttons, value, attribute = 'source') {
-    if (!buttons) return;
-    buttons.forEach((button) => {
-        const isActive = button.dataset[attribute] === value;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-pressed', String(isActive));
-    });
-}
-
-export function updateLayoutButtons(layoutButtons, layout) {
-    if (!layoutButtons) return;
-    layoutButtons.forEach((button) => {
-        const isActive = button.dataset.layout === layout;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-pressed', String(isActive));
-    });
-}
-
-export function updateFilterStatus({ elements, filters, hasActiveFilters }) {
-    if (!elements.filterStatus) return;
-    const parts = [];
-    if (filters.section !== 'latest') {
-        parts.push(filters.section);
+        };
     }
-    if (filters.query) {
-        parts.push(`"${filters.query}"`);
+
+    function setButtonLoading(button, shouldShow) {
+        if (!button) return;
+        button.classList.toggle('is-loading', shouldShow);
+        button.disabled = shouldShow;
+        button.setAttribute('aria-busy', shouldShow ? 'true' : 'false');
     }
-    if (filters.source !== 'auto') {
-        parts.push(filters.source);
+
+    function updateToggleButtons(buttons, value, attribute = 'source') {
+        if (!buttons) return;
+        buttons.forEach((button) => {
+            const isActive = button.dataset[attribute] === value;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
     }
-    elements.filterStatus.textContent = parts.length > 0 ? parts.join(' · ') : 'All headlines';
-    if (elements.clearFiltersButton) {
-        const hasFilters = hasActiveFilters(filters);
-        elements.clearFiltersButton.hidden = !hasFilters;
-        elements.clearFiltersButton.disabled = !hasFilters;
+
+    function updateLayoutButtons(layoutButtons, layout) {
+        if (!layoutButtons) return;
+        layoutButtons.forEach((button) => {
+            const isActive = button.dataset.layout === layout;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
     }
-}
+
+    function updateFilterStatus({ elements, filters, hasActiveFilters }) {
+        if (!elements.filterStatus) return;
+        const parts = [];
+        if (filters.section !== 'latest') {
+            parts.push(filters.section);
+        }
+        if (filters.query) {
+            parts.push(`"${filters.query}"`);
+        }
+        if (filters.source !== 'auto') {
+            parts.push(filters.source);
+        }
+        elements.filterStatus.textContent = parts.length > 0 ? parts.join(' · ') : 'All headlines';
+        if (elements.clearFiltersButton) {
+            const hasFilters = hasActiveFilters(filters);
+            elements.clearFiltersButton.hidden = !hasFilters;
+            elements.clearFiltersButton.disabled = !hasFilters;
+        }
+    }
+
+    Neckass.mapElements = mapElements;
+    Neckass.setButtonLoading = setButtonLoading;
+    Neckass.updateToggleButtons = updateToggleButtons;
+    Neckass.updateLayoutButtons = updateLayoutButtons;
+    Neckass.updateFilterStatus = updateFilterStatus;
+})();

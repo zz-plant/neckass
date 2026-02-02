@@ -1,22 +1,33 @@
-import { copyTextWithFeedback } from './clipboard.js';
-import {
-    DEFAULT_FILTERS,
-    classifyHeadline,
-    getEligibleIndexes,
-    hasActiveFilters,
-    isIndexEligible,
-    sanitizeFilters
-} from './filters.js';
-import { buildHeadlineUrl, getUrlState, updateHistoryState } from './history.js';
-import { exportMockFront } from './mock-export.js';
-import { updateSocialShareLinks } from './share.js';
-import { appendGeneratedHeadlines, createHeadlineCache } from './state.js';
-import { setButtonLoading, updateFilterStatus as renderFilterStatus, updateLayoutButtons, updateToggleButtons } from './ui.js';
-import { isValidHeadlineIndex, normalizeHeadlineText, selectReadableColor, slugifyHeadline } from './utils.js';
+(() => {
+    const Neckass = window.Neckass = window.Neckass || {};
+    const {
+        copyTextWithFeedback,
+        DEFAULT_FILTERS,
+        classifyHeadline,
+        getEligibleIndexes,
+        hasActiveFilters,
+        isIndexEligible,
+        sanitizeFilters,
+        buildHeadlineUrl,
+        getUrlState,
+        updateHistoryState,
+        exportMockFront,
+        updateSocialShareLinks,
+        appendGeneratedHeadlines,
+        createHeadlineCache,
+        setButtonLoading,
+        updateLayoutButtons,
+        updateToggleButtons,
+        isValidHeadlineIndex,
+        normalizeHeadlineText,
+        selectReadableColor,
+        slugifyHeadline
+    } = Neckass;
+    const renderFilterStatus = Neckass.updateFilterStatus;
 
-const ANIMATION_DELAY_MS = 60;
+    const ANIMATION_DELAY_MS = 60;
 
-export class HeadlineApp {
+    class HeadlineApp {
     constructor({ headlines: allHeadlines, elements, storage }) {
         this.headlines = Array.isArray(allHeadlines) ? [...allHeadlines] : [];
         this.baseHeadlineCount = this.headlines.length;
@@ -1015,3 +1026,6 @@ export class HeadlineApp {
         });
     }
 }
+
+    Neckass.HeadlineApp = HeadlineApp;
+})();
