@@ -1,4 +1,6 @@
-import { BEATS, TEMPLATES } from './data/llm-beats.js';
+const { data: neckassData } = window.Neckass || {};
+const BEATS = neckassData?.BEATS || {};
+const TEMPLATES = neckassData?.TEMPLATES || [];
 
 const TINY_LLM_TIMEOUT_MS = 2400;
 const GENERATION_DELAY_RANGE_MS = { min: 420, max: 880 };

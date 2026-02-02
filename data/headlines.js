@@ -1,4 +1,8 @@
-export const HEADLINES = [
+(() => {
+    const Neckass = window.Neckass = window.Neckass || {};
+    const data = Neckass.data = Neckass.data || {};
+
+    data.HEADLINES = [
     "BREAKING: Neckass opens 19 browser tabs to compare cereal prices, still buys the first one for nostalgia",
     "Local Neckass declares his Google Calendar a 'living document' and holds a memorial for the meeting he never attended",
     "Neckass starts a productivity podcast, records three episodes, spends six hours choosing cover art",
@@ -78,4 +82,5 @@ export const HEADLINES = [
     "Local Neckass builds a 'focus playlist,' gets distracted by track two",
     "Neckass insists his inbox is a museum of intent, closes it for renovations",
     "BREAKING: Neckass asks the group chat for advice, ignores every answer"
-];
+    ];
+})();

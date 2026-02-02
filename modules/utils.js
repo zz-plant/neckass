@@ -1,57 +1,60 @@
-const BRIGHTNESS_THRESHOLD = 130;
-const MIN_CONTRAST_RATIO = 4.5;
-const COLOR_PALETTE = [
+(() => {
+    const Neckass = window.Neckass = window.Neckass || {};
+
+    const BRIGHTNESS_THRESHOLD = 130;
+    const MIN_CONTRAST_RATIO = 4.5;
+    const COLOR_PALETTE = [
     '#FF5733', '#33FF57', '#3357FF', '#F333FF',
     '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
     '#FF33F6', '#FF4500', '#33FFBD', '#FFB533',
     '#FFA833', '#5A5AFF', '#FF33C4', '#FF4444',
     '#44FF88'
 ];
-const BASE_BACKGROUND_COLOR = getComputedStyle(document.documentElement)
-    .getPropertyValue('--bg')
-    ?.trim()
-    || '#0e1116';
+    const BASE_BACKGROUND_COLOR = getComputedStyle(document.documentElement)
+        .getPropertyValue('--bg')
+        ?.trim()
+        || '#0e1116';
 
-export function isValidHeadlineIndex(index, totalHeadlines) {
-    return Number.isInteger(index) && index >= 0 && index < totalHeadlines;
-}
-
-export function normalizeHeadlineText(text) {
-    if (typeof text !== 'string') return '';
-    return text.trim();
-}
-
-export function slugifyHeadline(headlineText) {
-    if (!headlineText) return '';
-    return headlineText
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .slice(0, 60);
-}
-
-export function selectReadableColor() {
-    const selectedColor = COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
-    const rgb = hexToRgb(selectedColor);
-    const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-    const background = parseColor(BASE_BACKGROUND_COLOR);
-
-    let adjustedColor = selectedColor;
-    if (brightness > BRIGHTNESS_THRESHOLD) {
-        adjustedColor = darkenColor(selectedColor, 0.7);
+    function isValidHeadlineIndex(index, totalHeadlines) {
+        return Number.isInteger(index) && index >= 0 && index < totalHeadlines;
     }
 
-    const adjustedRgb = parseColor(adjustedColor);
-    if (adjustedRgb && background) {
-        const contrast = contrastRatio(adjustedRgb, background);
-        if (contrast < MIN_CONTRAST_RATIO) {
-            const improved = boostContrast(adjustedRgb, background);
-            return rgbToString(improved);
+    function normalizeHeadlineText(text) {
+        if (typeof text !== 'string') return '';
+        return text.trim();
+    }
+
+    function slugifyHeadline(headlineText) {
+        if (!headlineText) return '';
+        return headlineText
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 60);
+    }
+
+    function selectReadableColor() {
+        const selectedColor = COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)];
+        const rgb = hexToRgb(selectedColor);
+        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        const background = parseColor(BASE_BACKGROUND_COLOR);
+
+        let adjustedColor = selectedColor;
+        if (brightness > BRIGHTNESS_THRESHOLD) {
+            adjustedColor = darkenColor(selectedColor, 0.7);
         }
-    }
 
-    return adjustedColor;
-}
+        const adjustedRgb = parseColor(adjustedColor);
+        if (adjustedRgb && background) {
+            const contrast = contrastRatio(adjustedRgb, background);
+            if (contrast < MIN_CONTRAST_RATIO) {
+                const improved = boostContrast(adjustedRgb, background);
+                return rgbToString(improved);
+            }
+        }
+
+        return adjustedColor;
+    }
 
 function hexToRgb(hex) {
     const numeric = parseInt(hex.replace('#', ''), 16);
@@ -137,3 +140,9 @@ function boostContrast(color, background) {
 function rgbToString({ r, g, b }) {
     return `rgb(${r}, ${g}, ${b})`;
 }
+
+    Neckass.isValidHeadlineIndex = isValidHeadlineIndex;
+    Neckass.normalizeHeadlineText = normalizeHeadlineText;
+    Neckass.slugifyHeadline = slugifyHeadline;
+    Neckass.selectReadableColor = selectReadableColor;
+})();
