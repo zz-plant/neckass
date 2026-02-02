@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof HeadlineApp !== 'function'
         || typeof createStorageAdapter !== 'function'
         || typeof mapElements !== 'function') {
+        console.error('Aborting app initialization: One or more core modules are missing or invalid.');
         showFallback();
         return;
     }
