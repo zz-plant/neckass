@@ -129,18 +129,17 @@ const tinyLlmClient = (() => {
         return candidate;
     }
 
-    function buildHeadlineCandidate() {
-        const template = pickWeightedTemplate();
-        const rawSubject = pickRandom(
-            BEATS.subjects,
-            lastPayload ? [lastPayload.rawSubject] : []
-        );
+    function buildSubjectPayload(rawSubject) {
         const subject = normalizeSubject(rawSubject);
         const tokens = {
             possessive: subject.pronouns.possessive,
             object: subject.pronouns.object
         };
+        return { subject, tokens };
+    }
 
+    function buildPayload(rawSubject) {
+        const { subject, tokens } = buildSubjectPayload(rawSubject);
         const rawObject = pickWithRecent(BEATS.objects, 'object', 4);
         const rawTwist = pickWithRecent(BEATS.twists, 'twist', 3);
         const payload = {
@@ -155,8 +154,11 @@ const tinyLlmClient = (() => {
             breakMark: pickWithRecent(BEATS.styleBreaks, 'breakMark', 2)
         };
 
-        const useScripted = getSecureRandom() < 0.35;
-        const scriptedTokens = {
+        return { payload, rawObject, rawTwist };
+    }
+
+    function toScriptedTokens(payload) {
+        return {
             desk: payload.desk,
             subject: payload.subject,
             verb: payload.verb,
@@ -167,13 +169,27 @@ const tinyLlmClient = (() => {
             tag: payload.tag,
             breakMark: payload.breakMark
         };
+    }
+
+    function cleanHeadline(headline) {
+        return headline.replace(/\s+/g, ' ').trim();
+    }
+
+    function buildHeadlineCandidate() {
+        const template = pickWeightedTemplate();
+        const rawSubject = pickRandom(
+            BEATS.subjects,
+            lastPayload ? [lastPayload.rawSubject] : []
+        );
+        const { payload, rawObject, rawTwist } = buildPayload(rawSubject);
+        const useScripted = getSecureRandom() < 0.35;
         const headline = useScripted
             ? applyTokens(
                   pickWithRecent(BEATS.scripted, 'scripted', 3),
-                  scriptedTokens
+                  toScriptedTokens(payload)
               )
             : template(payload);
-        const cleanedHeadline = headline.replace(/\s+/g, ' ').trim();
+        const cleanedHeadline = cleanHeadline(headline);
         lastPayload = { ...payload, rawSubject, rawObject, rawTwist };
         return cleanedHeadline;
     }
@@ -195,8 +211,7 @@ const tinyLlmClient = (() => {
     }
 
     function resolveAfterDelay(task) {
-        const min = GENERATION_DELAY_RANGE_MS.min;
-        const max = GENERATION_DELAY_RANGE_MS.max;
+        const { min, max } = GENERATION_DELAY_RANGE_MS;
         const delay = min + Math.floor(getSecureRandom() * (max - min));
 
         return new Promise((resolve, reject) => {
