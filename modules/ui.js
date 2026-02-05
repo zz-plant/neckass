@@ -1,52 +1,62 @@
 (() => {
     const Neckass = window.Neckass = window.Neckass || {};
 
+    const getById = (id) => document.getElementById(id);
+    const getAll = (selector) => Array.from(document.querySelectorAll(selector));
+
     function mapElements() {
+        const idMap = {
+            headline: 'headline',
+            loader: 'loader',
+            loaderText: 'loader-text',
+            nextButton: 'next-btn',
+            previousButton: 'prev-btn',
+            generateButton: 'generate-btn',
+            favoriteButton: 'favorite-btn',
+            counter: 'counter',
+            mastheadDate: 'masthead-date',
+            featureDateline: 'feature-date',
+            twitterShareLink: 'twitter-share',
+            facebookShareLink: 'facebook-share',
+            redditShareLink: 'reddit-share',
+            linkedinShareLink: 'linkedin-share',
+            threadsShareLink: 'threads-share',
+            blueskyShareLink: 'bluesky-share',
+            copyButton: 'copy-btn',
+            copyLinkButton: 'copy-link',
+            copyStatus: 'copy-status',
+            downloadMockButton: 'download-mock',
+            copyMockButton: 'copy-mock',
+            exportStatus: 'export-status',
+            mockFrame: 'mock-front',
+            mockHeadline: 'mock-headline',
+            mockDate: 'mock-date',
+            headlineSource: 'headline-source',
+            headlineSectionBadge: 'headline-section',
+            filterStatus: 'filter-status',
+            clearFiltersButton: 'clear-filters',
+            historyCount: 'history-count',
+            headlineList: 'headline-list',
+            searchInput: 'search-input',
+            searchForm: 'search-form',
+            applySearchButton: 'apply-search',
+            clearSearchButton: 'clear-search'
+        };
+        const elements = Object.fromEntries(
+            Object.entries(idMap).map(([key, id]) => [key, getById(id)])
+        );
+
         return {
-        headline: document.getElementById('headline'),
-        loader: document.getElementById('loader'),
-        loaderText: document.getElementById('loader-text'),
-        nextButton: document.getElementById('next-btn'),
-        previousButton: document.getElementById('prev-btn'),
-        generateButton: document.getElementById('generate-btn'),
-        favoriteButton: document.getElementById('favorite-btn'),
-        counter: document.getElementById('counter'),
-        mastheadDate: document.getElementById('masthead-date'),
-        featureDateline: document.getElementById('feature-date'),
-        twitterShareLink: document.getElementById('twitter-share'),
-        facebookShareLink: document.getElementById('facebook-share'),
-        redditShareLink: document.getElementById('reddit-share'),
-        linkedinShareLink: document.getElementById('linkedin-share'),
-        threadsShareLink: document.getElementById('threads-share'),
-        blueskyShareLink: document.getElementById('bluesky-share'),
-        copyButton: document.getElementById('copy-btn'),
-        copyLinkButton: document.getElementById('copy-link'),
-        copyStatus: document.getElementById('copy-status'),
-        downloadMockButton: document.getElementById('download-mock'),
-        copyMockButton: document.getElementById('copy-mock'),
-        exportStatus: document.getElementById('export-status'),
-        mockFrame: document.getElementById('mock-front'),
-        mockHeadline: document.getElementById('mock-headline'),
-        mockDate: document.getElementById('mock-date'),
-        headlineSource: document.getElementById('headline-source'),
-        headlineSectionBadge: document.getElementById('headline-section'),
-        filterStatus: document.getElementById('filter-status'),
-        clearFiltersButton: document.getElementById('clear-filters'),
-        historyCount: document.getElementById('history-count'),
-        headlineList: document.getElementById('headline-list'),
-        searchInput: document.getElementById('search-input'),
-        searchForm: document.getElementById('search-form'),
-        applySearchButton: document.getElementById('apply-search'),
-        clearSearchButton: document.getElementById('clear-search'),
-        sectionButtons: Array.from(document.querySelectorAll('.section-filter')),
-        sourceButtons: Array.from(document.querySelectorAll('.toggle-button[data-source]')),
-        panelButtons: Array.from(document.querySelectorAll('.toggle-button[data-panel]')),
-        layoutButtons: Array.from(document.querySelectorAll('.toggle-button[data-layout]')),
-        containers: Array.from(document.querySelectorAll('.container')),
-        headlineSection: document.querySelector('.headline-section'),
-        controls: document.querySelector('.controls'),
-        socialShare: document.querySelector('.social-share'),
-        copySection: document.querySelector('.copy-headline')
+            ...elements,
+            sectionButtons: getAll('.section-filter'),
+            sourceButtons: getAll('.toggle-button[data-source]'),
+            panelButtons: getAll('.toggle-button[data-panel]'),
+            layoutButtons: getAll('.toggle-button[data-layout]'),
+            containers: getAll('.container'),
+            headlineSection: document.querySelector('.headline-section'),
+            controls: document.querySelector('.controls'),
+            socialShare: document.querySelector('.social-share'),
+            copySection: document.querySelector('.copy-headline')
         };
     }
 
