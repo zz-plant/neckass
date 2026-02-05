@@ -64,6 +64,36 @@ body {
     z-index: 1;
 }
 
+.topbar-links {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.topbar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(45, 31, 16, 0.16);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.topbar-link img {
+    width: 16px;
+    height: 16px;
+}
+
+.topbar-link:hover {
+    background: rgba(220, 107, 63, 0.08);
+    border-color: rgba(220, 107, 63, 0.35);
+}
+
 .brand-mark {
     display: grid;
     gap: 4px;
@@ -329,6 +359,11 @@ button.ghost {
 }
 
 .share-links {
+    display: grid;
+    gap: 10px;
+}
+
+.github-links {
     display: grid;
     gap: 10px;
 }
