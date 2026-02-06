@@ -63,6 +63,7 @@
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
+        this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline());
         this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
         this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
         this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
@@ -232,6 +233,7 @@
         }
 
         this.clearCopyStatus();
+        this.clearShareStatus();
         const loaderMessage = this.elements.loaderText?.textContent || this.elements.loader.textContent || 'Loading headline...';
         this.toggleLoader(true, loaderMessage);
         this.elements.headline.classList.remove('show');
@@ -637,6 +639,53 @@
         return [...this.state.navigationStack].reverse();
     }
 
+    async shareHeadline() {
+        const headline = this.headlines[this.state.currentIndex];
+        const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
+
+        if (!headline || !canonicalUrl) {
+            this.reportShareStatus('No headline available to share.', true);
+            return;
+        }
+
+        if (!navigator.share || typeof navigator.share !== 'function') {
+            this.reportShareStatus('Native sharing unavailable in this browser.', true);
+            return;
+        }
+
+        const payload = {
+            title: 'Neckass Headlines',
+            text: headline,
+            url: canonicalUrl
+        };
+
+        if (navigator.canShare && typeof navigator.canShare === 'function') {
+            try {
+                if (!navigator.canShare(payload)) {
+                    this.reportShareStatus('Native sharing unavailable in this browser.', true);
+                    return;
+                }
+            } catch (error) {
+                this.reportShareStatus('Native sharing unavailable in this browser.', true);
+                return;
+            }
+        }
+
+        setButtonLoading(this.elements.nativeShareButton, true);
+        try {
+            await navigator.share(payload);
+            this.reportShareStatus('Shared from your device.', false);
+        } catch (error) {
+            if (error && error.name === 'AbortError') {
+                this.reportShareStatus('Share canceled.', false);
+            } else {
+                this.reportShareStatus('Share failed. Please try again.', true);
+            }
+        } finally {
+            setButtonLoading(this.elements.nativeShareButton, false);
+        }
+    }
+
     async copyHeadlineLink() {
         const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
         if (!canonicalUrl) {
@@ -823,6 +872,18 @@
         if (!this.elements.copyStatus) return;
         this.elements.copyStatus.textContent = '';
         this.elements.copyStatus.classList.remove('error');
+    }
+
+    reportShareStatus(message, isError = false) {
+        if (!this.elements.shareStatus) return;
+        this.elements.shareStatus.textContent = message;
+        this.elements.shareStatus.classList.toggle('error', isError);
+    }
+
+    clearShareStatus() {
+        if (!this.elements.shareStatus) return;
+        this.elements.shareStatus.textContent = '';
+        this.elements.shareStatus.classList.remove('error');
     }
 
     toggleLoader(shouldShow, message = null) {

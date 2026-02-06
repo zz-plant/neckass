@@ -30,6 +30,7 @@ The UI loads `llm.js`, which exposes `tinyLlmClient.generateHeadline()`.
 
 ## ✅ Documentation
 - `SPECIFICATIONS.md`: UI/UX and accessibility requirements.
+- `TECH_STACK_CAPABILITIES_2026.md`: research notes on newer browser/platform capabilities relevant to this stack.
 - `CONTRIBUTING.md`: contribution workflow and local testing guidance.
 - `CODE_OF_CONDUCT.md`: community expectations.
 - `SECURITY.md`: vulnerability reporting policy.
