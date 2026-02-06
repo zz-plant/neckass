@@ -408,6 +408,12 @@ button.ghost {
     gap: 8px;
 }
 
+
+.share-actions {
+    display: grid;
+    gap: 8px;
+}
+
 .share-links {
     display: grid;
     gap: 10px;

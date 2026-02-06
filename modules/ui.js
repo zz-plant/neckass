@@ -25,6 +25,8 @@
             copyButton: 'copy-btn',
             copyLinkButton: 'copy-link',
             copyStatus: 'copy-status',
+            nativeShareButton: 'native-share',
+            shareStatus: 'share-status',
             downloadMockButton: 'download-mock',
             copyMockButton: 'copy-mock',
             exportStatus: 'export-status',
