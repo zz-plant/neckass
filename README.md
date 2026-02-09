@@ -1,38 +1,48 @@
 # Neckass Headlines
 
-A playful, privacy-friendly headline generator that mixes curated favorites with an on-device “tiny LLM” mock for fresh ideas. Built as a static, zero-build site—open the HTML and you’re running.
+A privacy-first, static headline generator with curated prompts, optional on-device tiny-model generation, and built-in share/export tools.
 
-## ✨ Highlights
-- **Instant, offline-friendly**: no server required, no API calls. Headlines stay on-device.
-- **Hybrid generation**: cycles through a curated catalog and an optional tiny LLM mock.
-- **Share-ready**: copy, export, and share flows stay synced with the current headline.
-- **Persistent navigation**: remembers your place with `localStorage`.
+No build system. No backend. Open `index.html` and you are running.
 
-## 🚀 Quick start
-1. Clone the repo.
+## What this project is
+- **Static-first**: works from local files or any static host.
+- **Generator hybrid**: curated headline catalog + optional tiny local LLM mock.
+- **Share-ready UX**: clipboard copy, social links, and mock front-page export.
+- **State-aware**: navigation/session context is persisted with `localStorage` and URL params.
+
+## Quick start
+1. Clone the repository.
 2. Open `index.html` in a modern browser.
-3. Click **Next** to cycle headlines or generate a fresh one.
+3. Use **Shuffle** to generate and cycle headlines.
 
-## 📚 Documentation map
+If tooling blocks `file://` URLs, run:
 
-### Start here
-- `README.md` (this file): project overview and quick start.
-- `SPECIFICATIONS.md`: source of truth for UI/UX and accessibility requirements.
+```bash
+python -m http.server 8001 --directory .
+```
 
-### For contributors
-- `CONTRIBUTING.md`: contribution workflow, expectations, and PR checklist.
-- `DEVELOPMENT.md`: architecture notes, file map, and local validation flow.
+Then open `http://127.0.0.1:8001/`.
+
+## Documentation map
+
+### Product & behavior
+- `SPECIFICATIONS.md` — canonical UI/UX + accessibility requirements.
+
+### For contributors and maintainers
+- `CONTRIBUTING.md` — contribution workflow, quality bar, PR checklist.
+- `DEVELOPMENT.md` — architecture map, local validation, change strategy.
+- `CHANGELOG.md` — notable project changes (Keep a Changelog style).
 
 ### Governance
-- `CODE_OF_CONDUCT.md`: community expectations.
-- `SECURITY.md`: vulnerability reporting policy.
-- `CHANGELOG.md`: notable project changes.
+- `CODE_OF_CONDUCT.md` — collaboration expectations and enforcement.
+- `SECURITY.md` — vulnerability reporting and response process.
+- `LICENSE` — project license.
 
-### Research and reference
-- `TECH_STACK_CAPABILITIES_2026.md`: forward-looking browser/platform capabilities relevant to this stack.
+### Agent-facing
+- `AGENTS.md` — repository-specific instructions for coding agents.
 
-## 🤝 Contributing
-Contributions are welcome! Please read `CONTRIBUTING.md` first, then use `DEVELOPMENT.md` while implementing your changes.
+### Research / forward-looking
+- `TECH_STACK_CAPABILITIES_2026.md` — optional modernization opportunities.
 
-## 🛡️ License
-Licensed under the terms in `LICENSE`.
+## Contributing
+PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.
