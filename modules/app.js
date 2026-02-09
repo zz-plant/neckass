@@ -64,7 +64,9 @@
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
+        this.elements.mobileCopyButton?.addEventListener('click', () => this.copyHeadline());
         this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline());
+        this.elements.mobileShareButton?.addEventListener('click', () => this.shareHeadline());
         this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
         this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
         this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());

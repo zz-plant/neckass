@@ -60,32 +60,12 @@
                 <span class="brand-kicker">Neckass</span>
                 <span class="brand-title">Digital Gazette</span>
             </div>
-            <div class="topbar-links">
-                <a class="topbar-link" href="https://github.com/zz-plant/neckass" target="_blank" rel="noopener noreferrer">
-                    <img src="icons/github.svg" alt="" aria-hidden="true">
-                    <span>GitHub HQ</span>
-                </a>
-            </div>
         </div>
         <header class="hero">
             <div class="container hero__content">
                 <p class="eyebrow">Ridiculous news desk</p>
                 <h1>Neckass Headlines Generator</h1>
                 <p class="lede">Dive into a feed where shuffles deliver share-ready scoops.</p>
-                <div class="pill-list" aria-label="Highlights">
-                    <span class="pill">Instant shuffle</span>
-                    <span class="pill">Dark mode ready</span>
-                    <span class="pill">Share-ready format</span>
-                </div>
-                <div class="hero-actions" aria-label="GitHub actions">
-                    <a class="action-link" href="https://github.com/zz-plant/neckass" target="_blank" rel="noopener noreferrer">
-                        <img src="icons/github.svg" alt="" aria-hidden="true">
-                        <span>View on GitHub</span>
-                    </a>
-                    <a class="action-link ghost" href="https://github.com/zz-plant/neckass/stargazers" target="_blank" rel="noopener noreferrer">
-                        <span>Star the repo</span>
-                    </a>
-                </div>
                 <p class="meta" id="masthead-date">Updated daily</p>
             </div>
         </header>
@@ -112,25 +92,18 @@
                         <button id="next-btn" aria-label="Shuffle headline" class="accent">Shuffle</button>
                     </div>
 
+                    <div class="mobile-quick-actions" aria-label="Quick actions">
+                        <button id="mobile-copy-btn" class="ghost" type="button">Copy</button>
+                        <button id="mobile-share-btn" class="ghost" type="button">Share</button>
+                    </div>
+
+                    <p class="counter counter-inline">Headlines viewed: <span id="counter">0</span></p>
+
                     <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                 </section>
             </section>
 
             <aside class="command-rail" aria-label="Command rail">
-                <section class="rail-card">
-                    <div class="rail-intro">
-                        <p class="eyebrow">Command desk</p>
-                        <p class="meta">Shuffle, copy, share.</p>
-                        <div class="pill-list" aria-label="Headline flow">
-                            <span class="pill">Shuffle</span>
-                            <span class="pill">Copy</span>
-                            <span class="pill">Share</span>
-                        </div>
-                        <span class="session-pill">Live session</span>
-                    </div>
-                    <p class="counter">Headlines viewed: <span id="counter">0</span></p>
-                </section>
-
                 <section class="rail-card copy-headline">
                     <div>
                         <p class="filter-label">Clipboard</p>
@@ -163,31 +136,6 @@
                         <a id="reddit-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
                             <img src="icons/reddit.svg" alt="Reddit icon">
                             <span>Reddit</span>
-                        </a>
-                    </div>
-                </section>
-
-                <section class="rail-card github-rail">
-                    <div>
-                        <p class="filter-label">Open-source HQ</p>
-                        <p class="meta">Track updates, file issues, and remix the newsroom.</p>
-                    </div>
-                    <div class="github-links">
-                        <a class="share-link" href="https://github.com/zz-plant/neckass" target="_blank" rel="noopener noreferrer">
-                            <img src="icons/github.svg" alt="" aria-hidden="true">
-                            <span>View source on GitHub</span>
-                        </a>
-                        <a class="share-link" href="https://github.com/zz-plant/neckass/issues/new/choose" target="_blank" rel="noopener noreferrer">
-                            <span>Report a headline glitch</span>
-                        </a>
-                        <a class="share-link" href="https://github.com/zz-plant/neckass/pulls" target="_blank" rel="noopener noreferrer">
-                            <span>See what’s shipping next</span>
-                        </a>
-                        <a class="share-link" href="https://github.com/zz-plant/neckass/blob/main/README.md" target="_blank" rel="noopener noreferrer">
-                            <span>Read the README</span>
-                        </a>
-                        <a class="share-link" href="https://github.com/zz-plant/neckass/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer">
-                            <span>Scan the changelog</span>
                         </a>
                     </div>
                 </section>
