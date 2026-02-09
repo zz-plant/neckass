@@ -87,19 +87,27 @@
         });
     }
 
+    function formatFilterLabel(value) {
+        return value ? `${value.charAt(0).toUpperCase()}${value.slice(1)}` : value;
+    }
+
     function updateFilterStatus({ elements, filters, hasActiveFilters }) {
         if (!elements.filterStatus) return;
         const parts = [];
         if (filters.section !== 'latest') {
-            parts.push(filters.section);
+            parts.push(`Section: ${formatFilterLabel(filters.section)}`);
         }
         if (filters.query) {
-            parts.push(`"${filters.query}"`);
+            parts.push(`Query: "${filters.query}"`);
         }
         if (filters.source !== 'auto') {
-            parts.push(filters.source);
+            parts.push(`Source: ${formatFilterLabel(filters.source)}`);
         }
-        elements.filterStatus.textContent = parts.length > 0 ? parts.join(' · ') : 'All headlines';
+
+        elements.filterStatus.textContent = parts.length > 0
+            ? `Filtered by ${parts.join(' · ')}`
+            : 'All headlines';
+
         if (elements.clearFiltersButton) {
             const hasFilters = hasActiveFilters(filters);
             elements.clearFiltersButton.hidden = !hasFilters;

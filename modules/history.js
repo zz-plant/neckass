@@ -31,15 +31,31 @@
             url.searchParams.delete('headline');
         }
 
-        url.searchParams.set('section', filters.section);
+        if (filters.section && filters.section !== 'latest') {
+            url.searchParams.set('section', filters.section);
+        } else {
+            url.searchParams.delete('section');
+        }
         if (filters.query) {
             url.searchParams.set('q', filters.query);
         } else {
             url.searchParams.delete('q');
         }
-        url.searchParams.set('source', filters.source);
-        url.searchParams.set('panel', filters.panel);
-        url.searchParams.set('layout', filters.layout);
+        if (filters.source && filters.source !== 'auto') {
+            url.searchParams.set('source', filters.source);
+        } else {
+            url.searchParams.delete('source');
+        }
+        if (filters.panel && filters.panel !== 'recent') {
+            url.searchParams.set('panel', filters.panel);
+        } else {
+            url.searchParams.delete('panel');
+        }
+        if (filters.layout && filters.layout !== 'standard') {
+            url.searchParams.set('layout', filters.layout);
+        } else {
+            url.searchParams.delete('layout');
+        }
 
         return url.toString();
     }
