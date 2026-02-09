@@ -56,6 +56,7 @@
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
+        this.preflightExportAvailability();
         this.renderInitialHeadline();
     }
 
@@ -88,6 +89,18 @@
             button.addEventListener('click', () => this.setMockLayout(button.dataset.layout || 'standard'));
         });
         this.elements.clearFiltersButton?.addEventListener('click', () => this.clearAllFilters());
+        [
+            this.elements.twitterShareLink,
+            this.elements.facebookShareLink,
+            this.elements.redditShareLink,
+            this.elements.linkedinShareLink,
+            this.elements.threadsShareLink,
+            this.elements.blueskyShareLink
+        ].filter(Boolean).forEach((link) => {
+            link.addEventListener('click', () => {
+                this.reportShareStatus('Share destination opened in a new tab.');
+            });
+        });
         this.elements.headlineList?.addEventListener('click', (event) => {
             const target = event.target.closest('button[data-index]');
             if (!target) return;
@@ -207,7 +220,7 @@
     }
 
     registerGeneratedHeadline(headlineText) {
-        const normalized = typeof headlineText === 'string' ? headlineText.trim() : '';
+        const normalized = this.normalizeGeneratedHeadline(headlineText);
         if (!normalized) {
             throw new Error('No headline text returned');
         }
@@ -552,6 +565,7 @@
         const shouldReset = Object.keys(nextFilters).some((key) => nextFilters[key] !== this.filters[key]);
         if (!shouldReset) {
             this.updateFilterStatus();
+            this.pushHistoryState(this.state.currentIndex, { replace: true });
             return;
         }
 
@@ -559,12 +573,21 @@
         if (this.elements.searchInput) {
             this.elements.searchInput.value = '';
         }
-        this.resetNavigationForFilters();
         this.persistState();
         this.syncFilterControls();
         this.refreshFilteredIndexes();
         this.applyMockLayoutClass();
-        this.ensureHeadlineMatchesFilters();
+
+        if (this.filteredIndexes.length === 0) {
+            this.renderEmptyState();
+            this.pushHistoryState(-1, { replace: true });
+            return;
+        }
+
+        const nextIndex = this.filteredIndexes[0];
+        this.state.navigationStack = [nextIndex];
+        this.state.currentIndex = nextIndex;
+        this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
     }
 
     updateFilterValue(filterKey, value, options = {}) {
@@ -718,7 +741,9 @@
 
         if (forwardKeys.includes(event.key)) {
             event.preventDefault();
-            this.handleNext();
+            this.handleNext().catch(() => {
+                this.toggleLoader(false);
+            });
         } else if (backwardKeys.includes(event.key)) {
             event.preventDefault();
             this.handlePrevious();
@@ -930,6 +955,21 @@
         }
     }
 
+    preflightExportAvailability() {
+        if (!this.elements.exportStatus) return;
+        if (this.elements.downloadMockButton) {
+            this.elements.downloadMockButton.disabled = !window.htmlToImage;
+            this.elements.downloadMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
+        }
+        if (this.elements.copyMockButton) {
+            this.elements.copyMockButton.disabled = !window.htmlToImage;
+            this.elements.copyMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
+        }
+        if (!window.htmlToImage) {
+            this.reportExportStatus('Mock export unavailable right now. Try reloading the page.', true);
+        }
+    }
+
     updateMockDate() {
         const now = new Date();
         const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -982,6 +1022,23 @@
         }
 
         return randomIndex;
+    }
+
+    normalizeGeneratedHeadline(headlineText) {
+        const normalized = typeof headlineText === 'string' ? headlineText.trim() : '';
+        if (!normalized) {
+            return '';
+        }
+
+        const maxLength = 160;
+        if (normalized.length <= maxLength) {
+            return normalized;
+        }
+
+        const clipped = normalized.slice(0, maxLength);
+        const lastBreak = Math.max(clipped.lastIndexOf(' · '), clipped.lastIndexOf(' — '), clipped.lastIndexOf(', '), clipped.lastIndexOf(' '));
+        const safeClip = lastBreak > 90 ? clipped.slice(0, lastBreak) : clipped;
+        return `${safeClip.trim()}…`;
     }
 
     registerSharedHeadline(headlineText) {

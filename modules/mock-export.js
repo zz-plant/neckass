@@ -3,7 +3,10 @@
 
     async function exportMockFront({ mode, elements, reportStatus, setButtonLoading }) {
         if (!elements.mockFrame || !window.htmlToImage) {
-            reportStatus('Export unavailable. Image renderer did not load.', true);
+            const fallbackMessage = mode === 'copy'
+                ? 'Export unavailable. Image renderer did not load. Try Download mock front page.'
+                : 'Export unavailable. Image renderer did not load.';
+            reportStatus(fallbackMessage, true);
             return;
         }
 
@@ -41,13 +44,16 @@
                 throw new Error('Failed to render image');
             }
 
-            await navigator.clipboard.write([
-                new ClipboardItem({
-                    [blob.type]: blob
-                })
-            ]);
-
-            reportStatus('Image copied to clipboard.');
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({
+                        [blob.type]: blob
+                    })
+                ]);
+                reportStatus('Image copied to clipboard.');
+            } catch (error) {
+                await downloadImage('Clipboard unavailable, downloaded instead.');
+            }
         } catch (error) {
             reportStatus('Export failed. Please try again.', true);
         } finally {
