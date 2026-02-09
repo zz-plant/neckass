@@ -15,13 +15,14 @@ Then open `http://127.0.0.1:8001/`.
 
 ## Architecture overview
 
-### Entry points
-- `index.html` — semantic page layout and app mounting points.
+### Entry points and startup path
+- `index.html` — document shell and script loading order.
+- `script.js` — runtime bootstrap (`DOMContentLoaded`) that instantiates `HeadlineApp`.
 - `styles.css` — layout, theme, components, responsive behavior.
-- `llm.js` — tiny on-device/mock generation client.
+- `llm.js` — tiny on-device/mock generation client loaded before bootstrap.
 
 ### Runtime modules
-- `modules/app.js` — app bootstrap, event wiring, orchestration.
+- `modules/app.js` — `HeadlineApp` class and orchestration logic used by `script.js`.
 - `modules/state.js` — session/navigation state model.
 - `modules/history.js` — browser history and URL-sync behavior.
 - `modules/storage.js` — `localStorage` persistence helpers.
@@ -37,6 +38,13 @@ Then open `http://127.0.0.1:8001/`.
 - `data/llm-beats.js` — generation phrase components.
 - `icons/` — SVG assets used by UI and share controls.
 - `vendor/html-to-image.js` — export dependency.
+
+
+## Bootstrap sequence
+1. `index.html` loads data/vendor/module scripts.
+2. `modules/app.js` defines `window.Neckass.HeadlineApp` and related helpers.
+3. `llm.js` registers the tiny-model client.
+4. `script.js` listens for `DOMContentLoaded`, validates dependencies, and calls `app.init()`.
 
 ## Source-of-truth hierarchy
 1. `SPECIFICATIONS.md` for user-facing behavior and accessibility.
