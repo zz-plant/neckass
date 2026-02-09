@@ -1,15 +1,26 @@
 # Security Policy
 
 ## Supported versions
-This is a small static site with no formal release process. Security fixes are applied to the default branch.
+This project ships as a static site without versioned release branches.
+Security fixes are applied to the default branch and shipped as soon as practical.
 
 ## Reporting a vulnerability
-If you believe you’ve found a security vulnerability:
-1. Open a GitHub issue with a clear description and reproduction steps.
-2. If the issue includes sensitive details, please limit the information to essentials and mark it clearly.
+If you discover a potential security issue:
 
-We’ll acknowledge receipt and work toward a fix as quickly as possible.
+1. Prefer opening a **private security advisory** on GitHub (if available).
+2. If advisories are unavailable, open an issue with minimal sensitive detail and mark it clearly as security-related.
+3. Include:
+   - Reproduction steps
+   - Impact assessment
+   - Browser/runtime details
 
-## Security considerations
-- The site is static and does not process user accounts or store server-side data.
-- Third-party dependencies are minimal; review any updates carefully.
+## Response expectations
+- We aim to acknowledge reports promptly.
+- We will validate, triage severity, and prepare a fix or mitigation.
+- We may request a coordinated disclosure window before public details are shared.
+
+## Project-specific security notes
+- No server-side user accounts or backend data storage.
+- Primary risk surface is client-side behavior and third-party/browser APIs.
+- Review dependency/vendor updates (`vendor/html-to-image.js`) carefully.
+- Treat URL/query-param handling as untrusted input and preserve sanitization patterns.

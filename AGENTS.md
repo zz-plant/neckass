@@ -1,22 +1,38 @@
 # AGENTS Instructions
 
-## Repo overview
-- **Purpose**: Static headline generator site with optional tiny on-device LLM mock and persistent navigation state.
-- **Entry points**: `index.html`, `styles.css`, `script.js`, `llm.js`.
-- **Spec**: `SPECIFICATIONS.md` describes expected UI behavior, layout, and accessibility checks.
+## Mission
+Maintain a static, browser-first headline generator with strong UX/accessibility defaults, no build pipeline, and minimal complexity.
 
-## Project layout
-- `index.html`: Markup for hero, headline, command rail, and share/export sections.
-- `styles.css`: Layout, theming, component styles.
-- `script.js`: Headline navigation, copy/share/export logic, localStorage persistence.
-- `llm.js`: Tiny LLM generator helper used by `script.js`.
-- `icons/`: Social share SVG assets.
+## Critical references
+- `SPECIFICATIONS.md` is the source of truth for UI/UX and accessibility behavior.
+- `DEVELOPMENT.md` covers architecture and local validation flow.
+- `CONTRIBUTING.md` defines contributor expectations/checklists.
+
+## Project layout (current)
+- `index.html` — page structure and semantic regions.
+- `styles.css` — all visual/layout styling.
+- `llm.js` — tiny local/mock headline generation client.
+- `modules/*.js` — modular app logic (state, UI, history, filters, share, clipboard, export).
+- `data/` — curated headline and generator phrase data.
+- `icons/` — SVG assets.
+- `vendor/html-to-image.js` — export helper dependency.
+
+## Change priorities
+1. Preserve spec-compliant behavior and accessibility.
+2. Prefer small, targeted edits over broad refactors.
+3. Keep no-build/static-host compatibility.
+4. Reuse existing strings and interaction patterns where possible.
 
 ## Local testing
-- Open `index.html` directly in a modern browser; no build step.
-- If you update UI visuals, capture a screenshot per repo instructions.
+- Default: open `index.html` directly.
+- If browser tooling requires HTTP:
+  - `python -m http.server 8001 --directory .`
+  - open `http://127.0.0.1:8001/`
 
-## Notes for changes
-- Match `SPECIFICATIONS.md` for UI/UX expectations and accessibility requirements.
-- Prefer minimal JS changes; keep behavior in `script.js` and avoid inline scripts.
-- Keep copy/share messages aligned with existing strings for consistency.
+## When changing visible UI
+- Capture a screenshot with available browser tooling.
+
+## Guardrails
+- Do not add inline scripts for behavior changes.
+- Avoid introducing dependencies for straightforward DOM/state work.
+- Keep copy/share/export messaging consistent with existing UX tone.

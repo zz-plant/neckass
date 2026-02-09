@@ -1,8 +1,11 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented in this file.
 
-## Unreleased
-- Reorganized developer/contributor documentation with a clearer doc map in `README.md`.
-- Refocused `CONTRIBUTING.md` on workflow/checklists and moved implementation details to new `DEVELOPMENT.md`.
-- Add contributor, conduct, security, and changelog documentation.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [Unreleased]
+### Changed
+- Modernized the contributor/developer documentation set (`README`, `CONTRIBUTING`, `DEVELOPMENT`) with clearer workflow, architecture mapping, and validation guidance.
+- Refreshed governance docs (`SECURITY`, `CODE_OF_CONDUCT`) with clearer reporting, response, and enforcement language.
+- Updated `AGENTS.md` to reflect the current modular architecture and current agent guardrails.

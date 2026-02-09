@@ -1,6 +1,6 @@
 # Tech Stack Research: Newer Capabilities (2026)
 
-This project is a static, browser-first app (`index.html`, `styles.css`, `script.js`, `llm.js`) with no build step. The items below focus on **newer capabilities you can adopt incrementally** without changing the deployment model.
+This project is a static, browser-first app (`index.html`, `styles.css`, `llm.js`, and `modules/*.js`) with no build step. The items below focus on **newer capabilities you can adopt incrementally** without changing the deployment model.
 
 ## 1) HTML platform capabilities
 

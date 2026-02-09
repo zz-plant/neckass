@@ -1,47 +1,62 @@
 # Development Guide
 
-This guide is for developers and maintainers working on implementation details.
+This guide is for maintainers, contributors, and coding agents changing implementation details.
 
 ## Local development
-- No build step is required.
-- Open `index.html` directly in a modern browser.
-- For browser automation or screenshot tooling that blocks `file://`, run:
-  - `python -m http.server 8001 --directory .`
-  - then open `http://127.0.0.1:8001/`.
+- No build step required.
+- Primary flow: open `index.html` in a modern browser.
+- If your tooling requires HTTP (screenshots/automation), run:
 
-## Project architecture
+```bash
+python -m http.server 8001 --directory .
+```
 
-### Current entry point and modules
-- `index.html`: page structure and semantic landmarks.
-- `modules/app.js`: app bootstrap and event wiring.
-- `modules/state.js`: headline/navigation state handling.
-- `modules/ui.js`: DOM updates and visual state sync.
-- `modules/history.js`: history/back-forward style traversal logic.
-- `modules/storage.js`: persistence (`localStorage`) helpers.
-- `modules/filters.js`: filtering-related logic.
-- `modules/share.js`: social and native share behavior.
-- `modules/clipboard.js`: copy-to-clipboard flows.
-- `modules/mock-export.js`: local export helpers.
-- `modules/utils.js`: shared utility helpers.
-- `icons/`: SVG assets used by sharing/actions.
+Then open `http://127.0.0.1:8001/`.
 
-### Source-of-truth docs
-- `SPECIFICATIONS.md`: expected UX, component behavior, and accessibility constraints.
-- `TECH_STACK_CAPABILITIES_2026.md`: optional future enhancements; not mandatory for current changes.
+## Architecture overview
 
-## Validation flow
+### Entry points
+- `index.html` — semantic page layout and app mounting points.
+- `styles.css` — layout, theme, components, responsive behavior.
+- `llm.js` — tiny on-device/mock generation client.
 
-### Manual checks
-1. Headline generation/navigation works (`next`, `previous`, random/manual flows if present).
-2. Copy/share/export actions remain aligned with the active headline.
-3. Persistence restores expected state after refresh.
-4. Focus styles, aria labels, and live-region announcements still behave correctly.
-5. Responsive layout works at narrow and wide widths.
+### Runtime modules
+- `modules/app.js` — app bootstrap, event wiring, orchestration.
+- `modules/state.js` — session/navigation state model.
+- `modules/history.js` — browser history and URL-sync behavior.
+- `modules/storage.js` — `localStorage` persistence helpers.
+- `modules/ui.js` — rendering and status updates.
+- `modules/filters.js` — query/filter logic.
+- `modules/share.js` — social/native share URL flows.
+- `modules/clipboard.js` — text/image clipboard behavior.
+- `modules/mock-export.js` — mock front-page image export.
+- `modules/utils.js` — shared helpers.
 
-### Visual changes
-- If a change affects visible UI, include a screenshot in your PR.
+### Data and assets
+- `data/headlines.js` — curated headline corpus.
+- `data/llm-beats.js` — generation phrase components.
+- `icons/` — SVG assets used by UI and share controls.
+- `vendor/html-to-image.js` — export dependency.
 
-## Change-sizing guidance
-- Keep behavior changes in existing modules unless a clear extraction improves readability.
-- Avoid introducing new dependencies for simple DOM/state tasks.
-- Prefer additive, incremental changes over large rewrites.
+## Source-of-truth hierarchy
+1. `SPECIFICATIONS.md` for user-facing behavior and accessibility.
+2. Existing in-code behavior for non-specified edge handling.
+3. Contributor/maintainer docs (`README`, `CONTRIBUTING`, this file).
+
+## Validation checklist (manual)
+1. Shuffle/previous/generate flows work and update visible headline.
+2. Copy/share/export actions target the active headline.
+3. URL params and reload restore expected state.
+4. Empty/filter edge states communicate clearly and disable invalid actions.
+5. Keyboard navigation and focus-visible styles remain functional.
+6. Layout remains usable across small and wide viewports.
+
+## UI change requirements
+- Include screenshot(s) for visible changes.
+- Keep ARIA/live-region semantics intact.
+- Avoid introducing motion or transitions that reduce readability/accessibility.
+
+## Change strategy
+- Prefer incremental edits over broad rewrites.
+- Keep behavior in existing modules unless extraction materially improves clarity.
+- Preserve static-host/no-build compatibility.
