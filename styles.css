@@ -380,6 +380,18 @@ button.ghost {
     display: none;
 }
 
+
+.mobile-quick-actions {
+    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.mobile-quick-actions button {
+    min-height: 48px;
+    font-weight: 600;
+}
+
 .status-text {
     font-size: 0.9rem;
     color: var(--muted);
@@ -524,6 +536,10 @@ button.ghost {
     color: var(--muted);
 }
 
+.counter-inline {
+    margin-top: -2px;
+}
+
 @media (hover: none) and (pointer: coarse) {
     .topbar-link,
     .action-link,
@@ -569,16 +585,62 @@ button.ghost {
 
 @media (max-width: 540px) {
     body {
-        padding: calc(20px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right))
-            calc(40px + env(safe-area-inset-bottom)) calc(18px + env(safe-area-inset-left));
+        padding: calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right))
+            calc(28px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));
+    }
+
+    .page-shell {
+        padding: 20px 16px 24px;
+        border-radius: 20px;
     }
 
     .page-topbar {
         align-items: flex-start;
     }
 
+    .hero {
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+    }
+
+    .hero h1 {
+        font-size: clamp(1.9rem, 8.5vw, 2.35rem);
+    }
+
+    .topbar-links,
+    .hero-actions,
+    .pill-list {
+        width: 100%;
+    }
+
+    .topbar-link,
+    .action-link {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .headline-section {
+        padding: 20px;
+    }
+
+    .headline-frame {
+        min-height: 106px;
+    }
+
+    #headline {
+        font-size: clamp(1.55rem, 7.2vw, 1.95rem);
+    }
+
     .actions {
         grid-template-columns: 1fr;
+    }
+
+    .mobile-quick-actions {
+        display: grid;
+    }
+
+    .command-rail {
+        gap: 14px;
     }
 
     .copy-row {
@@ -587,14 +649,6 @@ button.ghost {
 
     .copy-row button {
         width: 100%;
-    }
-
-    .hero {
-        margin-bottom: 18px;
-    }
-
-    .headline-frame {
-        min-height: 120px;
     }
 
     .filter-reset {
@@ -606,11 +660,23 @@ button.ghost {
     }
 
     .rail-card {
-        padding: 18px;
+        padding: 16px;
     }
 
     .share-link {
         min-height: 44px;
+    }
+
+    .topbar-links,
+    .hero-actions,
+    .hero .pill-list,
+    .github-rail {
+        display: none;
+    }
+
+    .counter-inline {
+        margin-top: 2px;
+        font-size: 0.88rem;
     }
 }
 
