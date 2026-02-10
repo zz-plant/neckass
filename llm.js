@@ -7,6 +7,8 @@ const GENERATION_DELAY_RANGE_MS = { min: 420, max: 880 };
 const RECENT_HEADLINE_HISTORY = 12;
 const RECENT_STORAGE_KEY = 'tinyLlmRecentHeadlines';
 const MAX_RECENT_STORAGE = 24;
+const MIN_FUNNY_SCORE = 5;
+const MAX_QUALITY_ATTEMPTS = 10;
 
 const tinyLlmClient = (() => {
 
@@ -175,6 +177,48 @@ const tinyLlmClient = (() => {
         return headline.replace(/\s+/g, ' ').trim();
     }
 
+    function scoreHeadlineHumor(headline) {
+        if (!headline || typeof headline !== 'string') return 0;
+
+        const normalized = headline.toLowerCase();
+        const humorSignals = [
+            'group chat',
+            'algorithm',
+            'vibe check',
+            'chaos',
+            'side-eye',
+            'season finale',
+            'breaking news',
+            'push notification',
+            'soft pivot',
+            'chat screamed',
+            'houseplants',
+            'autocorrect',
+            'doomscrolling',
+            '99+',
+            'emoji budget',
+            'dramatic sighing',
+            'live commentary',
+            'snack',
+            'hot off',
+            'cursed'
+        ];
+
+        let score = 0;
+        humorSignals.forEach((phrase) => {
+            if (normalized.includes(phrase)) {
+                score += 1;
+            }
+        });
+
+        if (/[;:]/.test(headline)) score += 1;
+        if ((headline.match(/\./g) || []).length >= 2) score += 1;
+        if (headline.length >= 90 && headline.length <= 190) score += 1;
+        if (/\b(like it is|just tried to|insists|declared)\b/i.test(headline)) score += 1;
+
+        return score;
+    }
+
     function buildHeadlineCandidate() {
         const template = pickWeightedTemplate();
         const rawSubject = pickRandom(
@@ -182,7 +226,7 @@ const tinyLlmClient = (() => {
             lastPayload ? [lastPayload.rawSubject] : []
         );
         const { payload, rawObject, rawTwist } = buildPayload(rawSubject);
-        const useScripted = getSecureRandom() < 0.35;
+        const useScripted = getSecureRandom() < 0.58;
         const headline = useScripted
             ? applyTokens(
                   pickWithRecent(BEATS.scripted, 'scripted', 3),
@@ -196,18 +240,31 @@ const tinyLlmClient = (() => {
 
     function generateUniqueHeadline() {
         let attempt = 0;
-        let headline = '';
-        const maxAttempts = RECENT_HEADLINE_HISTORY + 6;
+        let bestHeadline = '';
+        let bestScore = -1;
+        const maxAttempts = RECENT_HEADLINE_HISTORY + MAX_QUALITY_ATTEMPTS;
 
         while (attempt < maxAttempts) {
-            headline = buildHeadlineCandidate();
-            if (!isRecentlyUsed(headline)) {
-                break;
+            const candidate = buildHeadlineCandidate();
+            if (isRecentlyUsed(candidate)) {
+                attempt += 1;
+                continue;
             }
+
+            const score = scoreHeadlineHumor(candidate);
+            if (score > bestScore) {
+                bestHeadline = candidate;
+                bestScore = score;
+            }
+
+            if (score >= MIN_FUNNY_SCORE) {
+                return candidate;
+            }
+
             attempt += 1;
         }
 
-        return headline;
+        return bestHeadline;
     }
 
     function resolveAfterDelay(task) {
