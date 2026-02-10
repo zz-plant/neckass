@@ -312,6 +312,13 @@ button.ghost {
     font-weight: 600;
 }
 
+.mobile-actions-hint {
+    display: none;
+    margin-top: -4px;
+    font-size: 0.84rem;
+    color: var(--muted);
+}
+
 .status-text {
     font-size: 0.9rem;
     color: var(--muted);
@@ -445,6 +452,20 @@ button.ghost {
     gap: 10px;
 }
 
+.mock-actions button {
+    display: grid;
+    align-items: start;
+    justify-items: start;
+    gap: 2px;
+    border-radius: 16px;
+    text-align: left;
+}
+
+.mock-actions button small {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
 .counter {
     font-size: 0.95rem;
     color: var(--muted);
@@ -531,6 +552,10 @@ button.ghost {
 
     .mobile-quick-actions {
         display: grid;
+    }
+
+    .mobile-actions-hint {
+        display: block;
     }
 
     .command-rail {
@@ -661,6 +686,10 @@ button.ghost {
 
     .actions {
         grid-template-columns: 1fr;
+    }
+
+    .mobile-actions-hint {
+        display: block;
     }
 
 
