@@ -886,7 +886,7 @@
             successMessage: 'Headline copied to clipboard!',
             onStatus: (message, isError) => {
                 this.reportCopyStatus(message, isError);
-                if (!isError && message === 'Headline copied to clipboard!') {
+                if (!isError) {
                     this.flashCopiedButtonLabel(triggerButton);
                 }
             },
