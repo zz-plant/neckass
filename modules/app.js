@@ -63,10 +63,10 @@
     bindEvents() {
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
-        this.elements.copyButton.addEventListener('click', () => this.copyHeadline());
-        this.elements.mobileCopyButton?.addEventListener('click', () => this.copyHeadline());
-        this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline());
-        this.elements.mobileShareButton?.addEventListener('click', () => this.shareHeadline());
+        this.elements.copyButton.addEventListener('click', () => this.copyHeadline(this.elements.copyButton));
+        this.elements.mobileCopyButton?.addEventListener('click', () => this.copyHeadline(this.elements.mobileCopyButton));
+        this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.nativeShareButton));
+        this.elements.mobileShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.mobileShareButton));
         this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
         this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
         this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
@@ -664,7 +664,7 @@
         return [...this.state.navigationStack].reverse();
     }
 
-    async shareHeadline() {
+    async shareHeadline(triggerButton = this.elements.nativeShareButton) {
         const headline = this.headlines[this.state.currentIndex];
         const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
 
@@ -696,7 +696,7 @@
             }
         }
 
-        setButtonLoading(this.elements.nativeShareButton, true);
+        setButtonLoading(triggerButton, true);
         try {
             await navigator.share(payload);
             this.reportShareStatus('Shared from your device.', false);
@@ -707,7 +707,7 @@
                 this.reportShareStatus('Share failed. Please try again.', true);
             }
         } finally {
-            setButtonLoading(this.elements.nativeShareButton, false);
+            setButtonLoading(triggerButton, false);
         }
     }
 
@@ -872,7 +872,7 @@
         link.setAttribute('href', url);
     }
 
-    async copyHeadline() {
+    async copyHeadline(triggerButton = this.elements.copyButton) {
         const headlineText = this.elements.headline.innerText;
 
         if (!headlineText) {
@@ -882,9 +882,14 @@
 
         await copyTextWithFeedback({
             text: headlineText,
-            button: this.elements.copyButton,
+            button: triggerButton,
             successMessage: 'Headline copied to clipboard!',
-            onStatus: (message, isError) => this.reportCopyStatus(message, isError),
+            onStatus: (message, isError) => {
+                this.reportCopyStatus(message, isError);
+                if (!isError) {
+                    this.flashCopiedButtonLabel(triggerButton);
+                }
+            },
             setButtonLoading
         });
     }
@@ -893,6 +898,20 @@
         if (!this.elements.copyStatus) return;
         this.elements.copyStatus.textContent = message;
         this.elements.copyStatus.classList.toggle('error', isError);
+    }
+
+    flashCopiedButtonLabel(button) {
+        if (!button || button.dataset.copyLabelTimeout === 'active') return;
+
+        const originalContent = button.dataset.originalContent || button.innerHTML;
+        button.dataset.originalContent = originalContent;
+        button.dataset.copyLabelTimeout = 'active';
+        button.innerHTML = 'Copied';
+
+        window.setTimeout(() => {
+            button.innerHTML = originalContent;
+            delete button.dataset.copyLabelTimeout;
+        }, 1400);
     }
 
     clearCopyStatus() {
