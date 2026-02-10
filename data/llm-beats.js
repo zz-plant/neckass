@@ -42,7 +42,13 @@
         'files a report on how to',
         'accidentally schedules a meeting to',
         'renames the cloud workspace to',
-        'runs a focus group on how to'
+        'runs a focus group on how to',
+        'goes live to explain how to',
+        'panic-pitches a plan to',
+        'announces a bold initiative to',
+        'posts a 27-part story about how to',
+        'circulates an emergency memo to',
+        'claims to have cracked the code to'
     ],
     objects: [
         '{possessive} grocery run like it is an award show',
@@ -59,7 +65,13 @@
         'a fridge note as a breaking news ticker',
         '{possessive} laundry pile as a mood board',
         'air-frying leftovers like it is a cooking show finale',
-        '{possessive} inbox as a competitive sport'
+        '{possessive} inbox as a competitive sport',
+        'a typo into a full rebrand campaign',
+        '{possessive} voicemail greeting as an apology tour',
+        'a three-tab panic into a five-year strategy',
+        'office leftovers as a Michelin audition',
+        '{possessive} unread emails into a cinematic multiverse',
+        'a calendar invite as a legally binding vibe check'
     ],
     connectors: [
         'after',
@@ -79,7 +91,12 @@
         '{possessive} inbox hit 99+ again',
         'a smart assistant applauded unprompted',
         'autocorrect insisted on being the co-host',
-        'a delivery bot rolled up with live commentary'
+        'a delivery bot rolled up with live commentary',
+        'three coworkers replied "following" and vanished',
+        'a voice note arrived with legally risky confidence',
+        'the office Slack used seventeen clown emojis',
+        'the family group chat asked for a pilot episode',
+        'an intern whispered "this is cursed"'
     ],
     impacts: [
         'sources say the backlog of screenshots is heroic.',
@@ -93,14 +110,22 @@
         'analysts are calling it a soft pivot with loud vibes.',
         'local experts predict a surge in dramatic sighing.',
         'eyewitnesses confirm the chaos was lightly curated.',
-        'the emoji budget has been completely exhausted.'
+        'the emoji budget has been completely exhausted.',
+        'breaking: someone yelled "this meeting could have been a meme."',
+        'sources confirm two ring lights and one ego were injured.',
+        'a panel of tired moderators rated the chaos "award-eligible."',
+        'finance called it a rounding error; culture called it performance art.',
+        'witnesses say the vibe check passed and then filed an appeal.'
     ],
     tags: [
         'Developing story.',
         'Updates expected at the top of the hour.',
         'Sources confirm the vibe check passed.',
         'Analysts call it a bold pivot.',
-        'Inbox watchers remain on standby.'
+        'Inbox watchers remain on standby.',
+        'Legal asked us to call this "experimental."',
+        'No one is prepared, yet everyone has opinions.',
+        'Producers confirm the sequel is already unnecessary.'
     ],
     styleBreaks: [
         '—',
@@ -115,7 +140,11 @@
         '{desk} {subject} went on record about {object} and caused a ripple. {tag}',
         '{subject} is treating {object} like a season finale. {impact}',
         '{desk} {subject} declared {object} the new normal. {tag}',
-        '{subject} returned with a fresh take on {object}. {impact}'
+        '{subject} returned with a fresh take on {object}. {impact}',
+        'Breaking: {subject} called a press conference to explain {object}. {impact}',
+        '{desk} producers caught {subject} trying to {object} on purpose. {tag}',
+        '{subject} promised this was "low-key," then tried to {object}. {impact}',
+        'Alert: {subject} turned {object} into content and nobody could look away. {tag}'
     ]
 };
 
