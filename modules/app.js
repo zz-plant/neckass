@@ -903,13 +903,13 @@
     flashCopiedButtonLabel(button) {
         if (!button || button.dataset.copyLabelTimeout === 'active') return;
 
-        const originalLabel = button.dataset.originalLabel || button.textContent.trim();
-        button.dataset.originalLabel = originalLabel;
+        const originalContent = button.dataset.originalContent || button.innerHTML;
+        button.dataset.originalContent = originalContent;
         button.dataset.copyLabelTimeout = 'active';
-        button.textContent = 'Copied';
+        button.innerHTML = 'Copied';
 
         window.setTimeout(() => {
-            button.textContent = originalLabel;
+            button.innerHTML = originalContent;
             delete button.dataset.copyLabelTimeout;
         }, 1400);
     }
