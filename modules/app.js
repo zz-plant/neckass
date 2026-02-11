@@ -51,6 +51,8 @@
         this.shuffleStreak = 0;
         this.shouldIncrementStreak = false;
         this.celebrationTimer = null;
+        this.dailyEngagement = this.normalizeDailyEngagement(this.state.dailyEngagement);
+        this.dailyVisitMeta = { isReturnVisitToday: false, advancedStreakToday: false };
     }
 
     init() {
@@ -60,6 +62,8 @@
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.updateMockDate();
+        this.refreshDailyEngagement();
+        this.renderDailyStreak();
         this.preflightExportAvailability();
         this.renderShuffleStreak();
         this.updateNextButtonLabel();
@@ -348,6 +352,110 @@
 
     updateHeadlineCounter() {
         this.elements.counter.textContent = this.state.uniqueHeadlines.size;
+    }
+
+    normalizeDailyEngagement(rawEngagement) {
+        const parsed = rawEngagement && typeof rawEngagement === 'object' ? rawEngagement : {};
+        const streakDays = Number.isInteger(parsed.streakDays) && parsed.streakDays > 0 ? parsed.streakDays : 0;
+        const visitsThisDate = Number.isInteger(parsed.visitsThisDate) && parsed.visitsThisDate > 0 ? parsed.visitsThisDate : 0;
+        const maxStreakDays = Number.isInteger(parsed.maxStreakDays) && parsed.maxStreakDays > 0
+            ? parsed.maxStreakDays
+            : streakDays;
+
+        return {
+            lastVisitDate: typeof parsed.lastVisitDate === 'string' ? parsed.lastVisitDate : '',
+            streakDays,
+            visitsThisDate,
+            maxStreakDays
+        };
+    }
+
+    getDateKey(date = new Date()) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    getDayDifference(previousDateKey, currentDateKey) {
+        const toDate = (key) => {
+            const [year, month, day] = key.split('-').map(Number);
+            return new Date(year, (month || 1) - 1, day || 1);
+        };
+
+        const previous = toDate(previousDateKey);
+        const current = toDate(currentDateKey);
+        if (Number.isNaN(previous.getTime()) || Number.isNaN(current.getTime())) {
+            return Number.NaN;
+        }
+
+        const msPerDay = 24 * 60 * 60 * 1000;
+        return Math.round((current - previous) / msPerDay);
+    }
+
+    refreshDailyEngagement() {
+        const todayKey = this.getDateKey();
+        const engagement = this.normalizeDailyEngagement(this.dailyEngagement);
+        const previousKey = engagement.lastVisitDate;
+
+        this.dailyVisitMeta = {
+            isReturnVisitToday: previousKey === todayKey,
+            advancedStreakToday: false
+        };
+
+        if (!previousKey) {
+            engagement.streakDays = 1;
+            engagement.visitsThisDate = 1;
+        } else if (previousKey === todayKey) {
+            engagement.visitsThisDate += 1;
+        } else {
+            const dayDifference = this.getDayDifference(previousKey, todayKey);
+            engagement.streakDays = dayDifference === 1 ? engagement.streakDays + 1 : 1;
+            engagement.visitsThisDate = 1;
+            this.dailyVisitMeta.advancedStreakToday = dayDifference === 1;
+        }
+
+        engagement.lastVisitDate = todayKey;
+        engagement.maxStreakDays = Math.max(engagement.maxStreakDays || 0, engagement.streakDays);
+
+        this.dailyEngagement = engagement;
+        this.state.dailyEngagement = engagement;
+        this.persistState();
+        this.maybeCelebrateDailyMilestone();
+    }
+
+    renderDailyStreak() {
+        if (!this.elements.dailyStreak) return;
+
+        const streakDays = this.dailyEngagement.streakDays || 1;
+        const visitsToday = this.dailyEngagement.visitsThisDate || 1;
+        const dayLabel = streakDays === 1 ? 'day' : 'days';
+        let suffix = 'Come back tomorrow to build momentum.';
+
+        if (this.dailyVisitMeta.advancedStreakToday && streakDays >= 2) {
+            suffix = streakDays >= 7 ? 'Weekly streak rolling. Keep it alive.' : 'Run extended. Keep the desk hot.';
+        } else if (this.dailyVisitMeta.isReturnVisitToday && visitsToday > 1) {
+            suffix = `Visit ${visitsToday} today.`;
+        }
+
+        this.elements.dailyStreak.textContent = `Daily desk streak: ${streakDays} ${dayLabel} · ${suffix}`;
+    }
+
+    maybeCelebrateDailyMilestone() {
+        if (!this.dailyVisitMeta.advancedStreakToday) {
+            return;
+        }
+
+        const milestoneMessages = {
+            3: 'Daily streak 3: now it is a habit.',
+            7: 'Daily streak 7: full-week momentum.',
+            14: 'Daily streak 14: newsroom legend status.'
+        };
+
+        const message = milestoneMessages[this.dailyEngagement.streakDays];
+        if (message) {
+            this.showToast(message);
+        }
     }
 
     renderShuffleStreak() {
@@ -1235,7 +1343,8 @@
             currentIndex: this.state.currentIndex,
             generatedHeadlines: this.state.generatedHeadlines,
             favorites: Array.from(this.favoriteHeadlines),
-            filters: this.filters
+            filters: this.filters,
+            dailyEngagement: this.dailyEngagement
         });
     }
 

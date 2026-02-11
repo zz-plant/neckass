@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 ### Added
+- Added a persistent daily desk streak indicator that tracks return-day momentum and celebrates key streak milestones (3/7/14 days) to encourage repeat usage.
 - Added a root `robots.txt` that allows crawling and points search engines to the sitemap.
 - Added a root `sitemap.xml` with the canonical homepage URL.
 
