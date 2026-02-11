@@ -849,6 +849,9 @@
         this.setMetaTag('property', 'og:title', title);
         this.setMetaTag('property', 'og:description', description);
         this.setMetaTag('property', 'og:url', canonicalUrl);
+        this.setMetaTag('name', 'twitter:title', title);
+        this.setMetaTag('name', 'twitter:description', description);
+        this.setMetaTag('name', 'twitter:url', canonicalUrl);
         this.setCanonicalLink(canonicalUrl);
     }
 
