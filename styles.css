@@ -292,6 +292,40 @@ a,
     color: var(--muted);
 }
 
+
+.label-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.75;
+}
+
+.button-with-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.button-icon {
+    width: 16px;
+    height: 16px;
+}
+
+button.accent .button-icon {
+    filter: brightness(0) invert(1);
+}
+
+.button-main-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
 .actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

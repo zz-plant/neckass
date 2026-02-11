@@ -110,8 +110,8 @@
                     </div>
 
                     <div class="actions">
-                        <button id="prev-btn" aria-label="View Previous Headline" class="ghost">Previous</button>
-                        <button id="next-btn" aria-label="Shuffle headline" class="accent">Shuffle</button>
+                        <button id="prev-btn" aria-label="View Previous Headline" class="ghost button-with-icon"><img class="button-icon" src="icons/arrow-left.svg" alt="" aria-hidden="true"><span>Previous</span></button>
+                        <button id="next-btn" aria-label="Shuffle headline" class="accent button-with-icon"><img class="button-icon" src="icons/shuffle.svg" alt="" aria-hidden="true"><span>Shuffle</span></button>
                     </div>
 
                     <div class="mobile-quick-actions" aria-label="Quick actions">
@@ -134,22 +134,22 @@
 
                     <section class="command-cluster copy-headline" id="copy-card" aria-labelledby="copy-card-title">
                         <div>
-                            <h3 class="filter-label" id="copy-card-title">Clipboard</h3>
+                            <h3 class="filter-label label-with-icon" id="copy-card-title"><img class="label-icon" src="icons/clipboard.svg" alt="" aria-hidden="true"><span>Clipboard</span></h3>
                             <p class="meta">Copy the current headline.</p>
                         </div>
                         <div class="copy-row">
-                            <button id="copy-btn" aria-label="Copy headline" class="ghost">Copy headline</button>
+                            <button id="copy-btn" aria-label="Copy headline" class="ghost button-with-icon"><img class="button-icon" src="icons/copy.svg" alt="" aria-hidden="true"><span>Copy headline</span></button>
                             <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
                         </div>
                     </section>
 
                     <section class="command-cluster social-share" id="share-card" aria-labelledby="share-card-title">
                         <div>
-                            <h3 class="filter-label" id="share-card-title">Share the latest scoop</h3>
+                            <h3 class="filter-label label-with-icon" id="share-card-title"><img class="label-icon" src="icons/share-2.svg" alt="" aria-hidden="true"><span>Share the latest scoop</span></h3>
                             <p class="meta">Share anywhere.</p>
                         </div>
                         <div class="share-actions">
-                            <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet">Share from device</button>
+                            <button id="native-share" class="ghost button-with-icon" type="button" aria-label="Share headline with device share sheet"><img class="button-icon" src="icons/send.svg" alt="" aria-hidden="true"><span>Share from device</span></button>
                             <p id="share-status" class="status-text" role="status" aria-live="polite"></p>
                         </div>
                         <div class="share-links">
@@ -171,7 +171,7 @@
 
                 <section class="rail-card rail-card--secondary" id="export-card" role="region" aria-labelledby="export-card-title">
                     <div>
-                        <h2 class="filter-label" id="export-card-title">Mock front page</h2>
+                        <h2 class="filter-label label-with-icon" id="export-card-title"><img class="label-icon" src="icons/layout.svg" alt="" aria-hidden="true"><span>Mock front page</span></h2>
                         <p class="meta">Download or copy.</p>
                     </div>
                     <div id="mock-front" class="mock-front">
@@ -184,11 +184,11 @@
                     </div>
                     <div class="mock-actions">
                         <button id="download-mock" class="ghost" type="button">
-                            <span>Download mock front page</span>
+                            <span class="button-main-label"><img class="button-icon" src="icons/download.svg" alt="" aria-hidden="true"><span>Download mock front page</span></span>
                             <small>Save PNG</small>
                         </button>
                         <button id="copy-mock" class="ghost" type="button">
-                            <span>Copy mock front page</span>
+                            <span class="button-main-label"><img class="button-icon" src="icons/image.svg" alt="" aria-hidden="true"><span>Copy mock front page</span></span>
                             <small>Paste image</small>
                         </button>
                     </div>
