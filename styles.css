@@ -409,6 +409,10 @@ button.ghost {
     box-shadow: var(--shadow-soft);
 }
 
+.rail-card--hub {
+    gap: 18px;
+}
+
 .rail-card--secondary {
     opacity: 0.92;
     box-shadow: 0 8px 18px rgba(46, 30, 17, 0.07);
@@ -416,7 +420,19 @@ button.ghost {
 
 .rail-intro {
     display: grid;
-    gap: 10px;
+    gap: 8px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(45, 31, 16, 0.12);
+}
+
+.command-cluster {
+    display: grid;
+    gap: 12px;
+}
+
+.command-cluster + .command-cluster {
+    border-top: 1px solid rgba(45, 31, 16, 0.12);
+    padding-top: 14px;
 }
 
 .session-pill {
@@ -579,7 +595,7 @@ button.ghost {
 
 @media (min-width: 900px) {
     .page-grid {
-        grid-template-columns: minmax(0, 1fr) 320px;
+        grid-template-columns: minmax(0, 1fr) 330px;
         align-items: start;
         gap: 20px;
     }
@@ -743,6 +759,10 @@ button.ghost {
         grid-template-columns: 1fr;
     }
 
+    .command-cluster + .command-cluster {
+        padding-top: 12px;
+    }
+
     .share-link {
         width: 100%;
         justify-content: flex-start;
@@ -753,8 +773,7 @@ button.ghost {
         font-size: clamp(1.7rem, 6vw, 2.2rem);
     }
 
-    .counter-inline {
-        margin-top: 2px;
+    .counter {
         font-size: 0.88rem;
     }
 

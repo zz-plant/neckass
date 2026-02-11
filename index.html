@@ -98,7 +98,7 @@
                         <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
                     </div>
                     <p class="interaction-guide" id="interaction-guide">
-                        Shuffle for a fresh line, then keep your streak rolling before you copy or share.
+                        Shuffle, then copy or share instantly.
                     </p>
                     <p class="streak-text" id="shuffle-streak" aria-live="polite" aria-atomic="true">
                         Shuffle streak: 0 · Start a run.
@@ -120,53 +120,59 @@
                         <button id="jump-export" class="ghost quick-action-secondary" type="button">Go to export</button>
                     </div>
 
-                    <p class="counter counter-inline">Headlines viewed: <span id="counter">0</span></p>
-
                     <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                 </section>
             </section>
 
             <aside class="command-rail" aria-label="Command rail">
-                <section class="rail-card copy-headline" id="copy-card" role="region" aria-labelledby="copy-card-title">
-                    <div>
-                        <h2 class="filter-label" id="copy-card-title">Clipboard</h2>
-                        <p class="meta">Grab the headline for your next post.</p>
+                <section class="rail-card rail-card--hub" role="region" aria-labelledby="command-desk-title">
+                    <div class="rail-intro">
+                        <h2 class="filter-label" id="command-desk-title">Command desk</h2>
+                        <p class="meta">Fast actions in one place.</p>
+                        <p class="counter">Headlines viewed: <span id="counter">0</span></p>
                     </div>
-                    <div class="copy-row">
-                        <button id="copy-btn" aria-label="Copy headline" class="ghost">Copy headline</button>
-                        <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
-                    </div>
-                </section>
 
-                <section class="rail-card social-share" id="share-card" role="region" aria-labelledby="share-card-title">
-                    <div>
-                        <h2 class="filter-label" id="share-card-title">Share the latest scoop</h2>
-                        <p class="meta">Send it anywhere.</p>
-                    </div>
-                    <div class="share-actions">
-                        <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet">Share from device</button>
-                        <p id="share-status" class="status-text" role="status" aria-live="polite"></p>
-                    </div>
-                    <div class="share-links">
-                        <a id="twitter-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
-                            <img src="icons/twitter.svg" alt="Twitter icon">
-                            <span>Twitter</span>
-                        </a>
-                        <a id="facebook-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-                            <img src="icons/facebook.svg" alt="Facebook icon">
-                            <span>Facebook</span>
-                        </a>
-                        <a id="reddit-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
-                            <img src="icons/reddit.svg" alt="Reddit icon">
-                            <span>Reddit</span>
-                        </a>
-                    </div>
+                    <section class="command-cluster copy-headline" id="copy-card" aria-labelledby="copy-card-title">
+                        <div>
+                            <h3 class="filter-label" id="copy-card-title">Clipboard</h3>
+                            <p class="meta">Copy the current headline.</p>
+                        </div>
+                        <div class="copy-row">
+                            <button id="copy-btn" aria-label="Copy headline" class="ghost">Copy headline</button>
+                            <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
+                        </div>
+                    </section>
+
+                    <section class="command-cluster social-share" id="share-card" aria-labelledby="share-card-title">
+                        <div>
+                            <h3 class="filter-label" id="share-card-title">Share the latest scoop</h3>
+                            <p class="meta">Share anywhere.</p>
+                        </div>
+                        <div class="share-actions">
+                            <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet">Share from device</button>
+                            <p id="share-status" class="status-text" role="status" aria-live="polite"></p>
+                        </div>
+                        <div class="share-links">
+                            <a id="twitter-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
+                                <img src="icons/twitter.svg" alt="Twitter icon">
+                                <span>Twitter</span>
+                            </a>
+                            <a id="facebook-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                                <img src="icons/facebook.svg" alt="Facebook icon">
+                                <span>Facebook</span>
+                            </a>
+                            <a id="reddit-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
+                                <img src="icons/reddit.svg" alt="Reddit icon">
+                                <span>Reddit</span>
+                            </a>
+                        </div>
+                    </section>
                 </section>
 
                 <section class="rail-card rail-card--secondary" id="export-card" role="region" aria-labelledby="export-card-title">
                     <div>
                         <h2 class="filter-label" id="export-card-title">Mock front page</h2>
-                        <p class="meta">Download or copy the layout.</p>
+                        <p class="meta">Download or copy.</p>
                     </div>
                     <div id="mock-front" class="mock-front">
                         <div class="mock-masthead">
@@ -179,11 +185,11 @@
                     <div class="mock-actions">
                         <button id="download-mock" class="ghost" type="button">
                             <span>Download mock front page</span>
-                            <small>Save PNG to your device</small>
+                            <small>Save PNG</small>
                         </button>
                         <button id="copy-mock" class="ghost" type="button">
                             <span>Copy mock front page</span>
-                            <small>Paste into supported apps</small>
+                            <small>Paste image</small>
                         </button>
                     </div>
                     <p id="export-status" class="status-text" role="status" aria-live="polite"></p>
