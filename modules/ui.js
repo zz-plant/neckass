@@ -40,6 +40,7 @@
             headlineSource: 'headline-source',
             headlineSectionBadge: 'headline-section',
             filterStatus: 'filter-status',
+            shuffleStreak: 'shuffle-streak',
             clearFiltersButton: 'clear-filters',
             historyCount: 'history-count',
             headlineList: 'headline-list',

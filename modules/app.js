@@ -47,6 +47,9 @@
         });
         this.handleDirectionalNavigation = this.handleDirectionalNavigation.bind(this);
         this.activeButton = null;
+        this.shuffleStreak = 0;
+        this.shouldIncrementStreak = false;
+        this.celebrationTimer = null;
     }
 
     init() {
@@ -57,6 +60,7 @@
         this.updateNavigationAvailability();
         this.updateMockDate();
         this.preflightExportAvailability();
+        this.renderShuffleStreak();
         this.renderInitialHeadline();
     }
 
@@ -131,6 +135,7 @@
             || (this.filters.source === 'auto' && generatorAvailable);
         let nextIndex = null;
         this.activeButton = this.elements.nextButton;
+        this.shouldIncrementStreak = true;
 
         if (wantsGenerated && generatorAvailable) {
             this.toggleLoader(true, 'Generating headline with the tiny model...');
@@ -162,6 +167,7 @@
             return;
         }
         this.activeButton = this.elements.previousButton;
+        this.shouldIncrementStreak = false;
 
         const removedIndex = this.state.navigationStack.pop();
         if (!this.state.navigationStack.includes(removedIndex)) {
@@ -179,6 +185,7 @@
     async handleGenerate() {
         const generatorAvailable = this.isGeneratorAvailable();
         this.activeButton = this.elements.generateButton;
+        this.shouldIncrementStreak = false;
 
         if (!generatorAvailable) {
             this.reportCopyStatus('Tiny model is unavailable in this session.', true);
@@ -251,6 +258,9 @@
         this.clearCopyStatus();
         this.clearShareStatus();
         const loaderMessage = this.elements.loaderText?.textContent || this.elements.loader.textContent || 'Loading headline...';
+        const previousIndex = this.state.currentIndex;
+        const shouldIncrementStreak = this.shouldIncrementStreak;
+        this.shouldIncrementStreak = false;
         this.toggleLoader(true, loaderMessage);
         this.elements.headline.classList.remove('show');
 
@@ -265,6 +275,7 @@
             this.updateMockDate();
 
             this.updateViewedState(index, options);
+            this.updateShuffleStreak(shouldIncrementStreak && previousIndex !== index);
             this.updateHeadlineBadges(index);
             this.updateFavoriteButton();
             this.updateDocumentMetadata(headlineText, index);
@@ -314,6 +325,7 @@
         this.state.currentIndex = -1;
         this.elements.nextButton.disabled = true;
         this.elements.nextButton.textContent = hasFilters ? 'Try a different filter' : 'Shuffle';
+        this.updateShuffleStreak(false);
         if (this.elements.clearFiltersButton) {
             this.elements.clearFiltersButton.hidden = !hasFilters;
             this.elements.clearFiltersButton.disabled = !hasFilters;
@@ -336,6 +348,63 @@
 
     updateHeadlineCounter() {
         this.elements.counter.textContent = this.state.uniqueHeadlines.size;
+    }
+
+    renderShuffleStreak() {
+        if (!this.elements.shuffleStreak) return;
+        if (this.shuffleStreak <= 0) {
+            this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Start a run.';
+            return;
+        }
+
+        const suffix = this.shuffleStreak >= 8
+            ? 'Headline hurricane.'
+            : this.shuffleStreak >= 5
+                ? 'Desk is on fire.'
+                : 'Nice rhythm.';
+        this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix}`;
+    }
+
+    updateShuffleStreak(shouldIncrement) {
+        this.shuffleStreak = shouldIncrement ? this.shuffleStreak + 1 : 0;
+        this.renderShuffleStreak();
+        if (shouldIncrement) {
+            this.handleShuffleMilestone();
+        } else {
+            this.clearCelebration();
+        }
+    }
+
+    handleShuffleMilestone() {
+        const messages = {
+            3: 'Shuffle streak 3: rhythm established.',
+            5: 'Shuffle streak 5: absurdity unlocked.',
+            8: 'Shuffle streak 8: headline hurricane.'
+        };
+        const message = messages[this.shuffleStreak];
+        if (!message) {
+            return;
+        }
+
+        this.showToast(message);
+        this.triggerCelebration();
+    }
+
+    clearCelebration() {
+        if (this.celebrationTimer) {
+            window.clearTimeout(this.celebrationTimer);
+            this.celebrationTimer = null;
+        }
+        this.elements.headlineSection?.classList.remove('is-celebrating');
+    }
+
+    triggerCelebration() {
+        this.clearCelebration();
+        this.elements.headlineSection?.classList.add('is-celebrating');
+        this.celebrationTimer = window.setTimeout(() => {
+            this.elements.headlineSection?.classList.remove('is-celebrating');
+            this.celebrationTimer = null;
+        }, 900);
     }
 
     updateNavigationAvailability() {
@@ -473,6 +542,7 @@
     selectHeadline(index) {
         if (!this.isIndexEligible(index)) return;
         this.state.currentIndex = index;
+        this.shouldIncrementStreak = false;
         if (this.state.navigationStack[this.state.navigationStack.length - 1] !== index) {
             this.state.navigationStack.push(index);
         }

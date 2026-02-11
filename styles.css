@@ -237,6 +237,31 @@ a,
     color: var(--muted);
 }
 
+.streak-text {
+    margin: 8px 0 2px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    min-height: 1.35em;
+}
+
+
+.headline-section.is-celebrating {
+    box-shadow: 0 0 0 1px rgba(220, 107, 63, 0.36), 0 18px 38px rgba(220, 107, 63, 0.22);
+    animation: headline-celebrate 0.9s ease;
+}
+
+@keyframes headline-celebrate {
+    0% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-2px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
 .filter-reset {
     display: flex;
     flex-wrap: wrap;
