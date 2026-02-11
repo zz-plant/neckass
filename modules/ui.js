@@ -15,6 +15,7 @@
             favoriteButton: 'favorite-btn',
             counter: 'counter',
             mastheadDate: 'masthead-date',
+            dailyStreak: 'daily-streak',
             featureDateline: 'feature-date',
             twitterShareLink: 'twitter-share',
             facebookShareLink: 'facebook-share',

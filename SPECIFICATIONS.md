@@ -28,6 +28,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 - Lede: **“Dive into a feed where shuffles deliver share-ready scoops.”**【F:index.html†L27-L31】
 - Pill list contains exactly three pills: **Instant shuffle**, **Dark mode ready**, **Share-ready format**.【F:index.html†L29-L33】
 - Meta line: **`#masthead-date`** starts as “Updated daily” and is replaced on load with a localized date + “· Digital edition”.【F:index.html†L23-L36】【F:styles.css†L95-L119】【F:script.js†L1237-L1261】
+- Daily return line: **`#daily-streak`** announces a local-storage-backed day streak and visit cadence (e.g., first visit encouragement, same-day return count, and streak extension prompts) and updates on load with `aria-live="polite"`.
 
 ## Featured headline section
 ### Structure & labels

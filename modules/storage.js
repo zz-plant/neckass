@@ -9,7 +9,8 @@
         uniqueHeadlines: 'uniqueHeadlines',
         generatedHeadlines: 'generatedHeadlines',
         favorites: 'favoriteHeadlines',
-        filters: 'headlineFilters'
+        filters: 'headlineFilters',
+        dailyEngagement: 'dailyEngagement'
     };
 
     function createStorageAdapter() {
@@ -32,6 +33,8 @@
                         : sanitizedStack
                 );
 
+                const dailyEngagement = parseJson(safeGetItem(STORAGE_KEYS.dailyEngagement), {});
+
                 return {
                     navigationStack: sanitizedStack,
                     uniqueHeadlines,
@@ -40,7 +43,8 @@
                         ? generatedHeadlines.filter(Boolean)
                         : [],
                     favorites: Array.isArray(favorites) ? favorites.filter(Boolean) : [],
-                    filters: Neckass.sanitizeFilters(filters)
+                    filters: Neckass.sanitizeFilters(filters),
+                    dailyEngagement
                 };
             },
 
@@ -61,6 +65,10 @@
                 safeSetItem(
                     STORAGE_KEYS.filters,
                     JSON.stringify(state.filters || Neckass.DEFAULT_FILTERS)
+                );
+                safeSetItem(
+                    STORAGE_KEYS.dailyEngagement,
+                    JSON.stringify(state.dailyEngagement || {})
                 );
             }
         };

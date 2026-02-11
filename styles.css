@@ -175,6 +175,11 @@ a,
     color: var(--muted);
 }
 
+.meta--secondary {
+    font-size: 0.84rem;
+    margin-top: -4px;
+}
+
 .page-grid {
     display: grid;
     gap: 20px;
@@ -762,4 +767,3 @@ button.ghost {
         width: 100%;
     }
 }
-
