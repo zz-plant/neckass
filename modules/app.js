@@ -26,6 +26,7 @@
     const renderFilterStatus = Neckass.updateFilterStatus;
 
     const ANIMATION_DELAY_MS = 60;
+    const STREAK_MILESTONES = [3, 5, 8, 12];
 
     class HeadlineApp {
     constructor({ headlines: allHeadlines, elements, storage }) {
@@ -61,6 +62,7 @@
         this.updateMockDate();
         this.preflightExportAvailability();
         this.renderShuffleStreak();
+        this.updateNextButtonLabel();
         this.renderInitialHeadline();
     }
 
@@ -270,8 +272,6 @@
             this.elements.headline.style.color = selectReadableColor();
             this.elements.headline.classList.add('show');
             this.toggleLoader(false);
-            this.elements.nextButton.textContent = 'Shuffle';
-
             this.updateMockDate();
 
             this.updateViewedState(index, options);
@@ -357,17 +357,22 @@
             return;
         }
 
+        const nextMilestone = STREAK_MILESTONES.find((milestone) => milestone > this.shuffleStreak) || null;
         const suffix = this.shuffleStreak >= 8
             ? 'Headline hurricane.'
             : this.shuffleStreak >= 5
                 ? 'Desk is on fire.'
                 : 'Nice rhythm.';
-        this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix}`;
+        const nextMilestoneText = nextMilestone
+            ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
+            : 'Legend badge unlocked.';
+        this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
     }
 
     updateShuffleStreak(shouldIncrement) {
         this.shuffleStreak = shouldIncrement ? this.shuffleStreak + 1 : 0;
         this.renderShuffleStreak();
+        this.updateNextButtonLabel();
         if (shouldIncrement) {
             this.handleShuffleMilestone();
         } else {
@@ -411,6 +416,16 @@
         const hasEligible = this.filteredIndexes.length > 0 || this.filters.source === 'generated';
         this.elements.previousButton.disabled = this.state.isLoading || this.state.navigationStack.length <= 1;
         this.elements.nextButton.disabled = this.state.isLoading || !hasEligible;
+        this.updateNextButtonLabel();
+    }
+
+    updateNextButtonLabel() {
+        if (!this.elements.nextButton || this.state.isLoading) {
+            return;
+        }
+        this.elements.nextButton.textContent = this.shuffleStreak > 0
+            ? `Keep streak · ${this.shuffleStreak}`
+            : 'Shuffle';
     }
 
     setSectionFilter(section) {
