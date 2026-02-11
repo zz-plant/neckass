@@ -87,6 +87,9 @@
                         <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
                     </div>
                     <p class="deck">Lead with the line below.</p>
+                    <p class="interaction-guide" id="interaction-guide">
+                        Shuffle for a fresh line, then copy or share instantly.
+                    </p>
 
                     <div class="filter-reset" aria-live="polite">
                         <p id="filter-status" class="status-text">All headlines</p>
@@ -99,10 +102,10 @@
                     </div>
 
                     <div class="mobile-quick-actions" aria-label="Quick actions">
-                        <button id="mobile-copy-btn" class="ghost" type="button">Copy</button>
-                        <button id="mobile-share-btn" class="ghost" type="button">Share</button>
+                        <button id="jump-copy" class="ghost" type="button">Go to copy</button>
+                        <button id="jump-share" class="ghost" type="button">Go to share</button>
                     </div>
-                    <p class="mobile-actions-hint">More actions below: share links and mock front page export.</p>
+                    <p class="mobile-actions-hint">Quick jumps: copy and share sections are below.</p>
 
                     <p class="counter counter-inline">Headlines viewed: <span id="counter">0</span></p>
 
@@ -111,9 +114,9 @@
             </section>
 
             <aside class="command-rail" aria-label="Command rail">
-                <section class="rail-card copy-headline">
+                <section class="rail-card copy-headline" id="copy-card" role="region" aria-labelledby="copy-card-title">
                     <div>
-                        <p class="filter-label">Clipboard</p>
+                        <h2 class="filter-label" id="copy-card-title">Clipboard</h2>
                         <p class="meta">Grab the headline for your next post.</p>
                     </div>
                     <div class="copy-row">
@@ -122,9 +125,9 @@
                     </div>
                 </section>
 
-                <section class="rail-card social-share">
+                <section class="rail-card social-share" id="share-card" role="region" aria-labelledby="share-card-title">
                     <div>
-                        <p class="filter-label">Share the latest scoop</p>
+                        <h2 class="filter-label" id="share-card-title">Share the latest scoop</h2>
                         <p class="meta">Send it anywhere.</p>
                     </div>
                     <div class="share-actions">
@@ -147,9 +150,9 @@
                     </div>
                 </section>
 
-                <section class="rail-card">
+                <section class="rail-card rail-card--secondary" id="export-card" role="region" aria-labelledby="export-card-title">
                     <div>
-                        <p class="filter-label">Mock front page</p>
+                        <h2 class="filter-label" id="export-card-title">Mock front page</h2>
                         <p class="meta">Download or copy the layout.</p>
                     </div>
                     <div id="mock-front" class="mock-front">
@@ -192,5 +195,7 @@
     <script src="modules/app.js"></script>
     <script src="llm.js"></script>
     <script src="script.js"></script>
+
+    <div id="global-toast" class="global-toast" role="status" aria-live="polite" aria-hidden="true"></div>
 </body>
 </html>

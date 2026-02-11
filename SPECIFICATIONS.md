@@ -33,8 +33,8 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 ### Structure & labels
 - Section label includes an accent dot and **“Featured headline”** text.【F:index.html†L42-L51】
 - Headline element: `<h2 id="headline" tabindex="0" aria-label="Headline">` with initial text “Loading...”.【F:index.html†L52-L55】
-- Deck text below the headline reads **“Lead with the line below.”**【F:index.html†L56-L56】
-- Filter status row shows **“All headlines”** by default in `#filter-status` and includes a **“Clear filters”** button (`#clear-filters`).【F:index.html†L58-L63】
+- Deck text below the headline reads **“Lead with the line below.”** and a helper line reads **“Shuffle for a fresh line, then copy or share instantly.”**【F:index.html†L89-L91】
+- Filter status row shows **“All headlines”** by default in `#filter-status` and includes a **“Clear filters”** button (`#clear-filters`).【F:index.html†L91-L94】
 
 ### Controls & loader
 - Buttons:
@@ -68,7 +68,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 - Status text `#copy-status` is updated on success (“Headline copied to clipboard!”) or error (“No headline available to copy.”, “Copy failed. Please try again.”, “Clipboard unavailable in this browser.”). Errors toggle the `.error` class for color changes.【F:index.html†L100-L108】【F:script.js†L1096-L1191】【F:styles.css†L149-L157】
 
 ### Social share card
-- Header text **“Share the latest scoop”** with helper text **“Send it anywhere.”**【F:index.html†L110-L115】
+- Header text **“Share the latest scoop”** with helper text **“Send it anywhere.”**【F:index.html†L126-L129】
 - Links for Twitter, Facebook, and Reddit (each with icon and label). URLs update on every headline change and include the encoded headline and a canonical URL with query parameters (`headline`, `section`, `q`, `source`, `panel`, `layout`).【F:index.html†L110-L132】【F:script.js†L422-L452】【F:script.js†L955-L1034】
 - The links open in a new tab (`target="_blank"`) and include `rel="noreferrer"` and `aria-label` values that describe each destination.【F:index.html†L116-L132】
 
@@ -78,7 +78,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 - Two actions:
   - **Download mock front page** (`#download-mock`), which renders the mock to PNG via `html-to-image` and triggers a download.
   - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable, downloaded instead.”
-- Status text `#export-status` reports success or failure messages after export attempts.【F:index.html†L134-L149】【F:script.js†L1232-L1318】
+- Status text `#export-status` reports success or failure messages after export attempts. A global toast (`#global-toast`) provides compact success feedback for copy/share/export actions while inline status remains visible near each control.【F:index.html†L173-L195】【F:modules/app.js†L897-L925】【F:modules/app.js†L1021-L1042】
 
 ## Tiny LLM headline generator (`llm.js`)
 - `llm.js` exposes a global `tinyLlmClient.generateHeadline()` that returns a promise with:

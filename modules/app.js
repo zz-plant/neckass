@@ -64,9 +64,9 @@
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline(this.elements.copyButton));
-        this.elements.mobileCopyButton?.addEventListener('click', () => this.copyHeadline(this.elements.mobileCopyButton));
         this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.nativeShareButton));
-        this.elements.mobileShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.mobileShareButton));
+        this.elements.jumpCopyButton?.addEventListener('click', () => this.jumpToCard('copy'));
+        this.elements.jumpShareButton?.addEventListener('click', () => this.jumpToCard('share'));
         this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
         this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
         this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
@@ -259,6 +259,7 @@
             this.elements.headline.style.color = selectReadableColor();
             this.elements.headline.classList.add('show');
             this.toggleLoader(false);
+            this.elements.nextButton.textContent = 'Shuffle';
 
             this.updateMockDate();
 
@@ -311,6 +312,11 @@
         this.state.navigationStack = [];
         this.state.currentIndex = -1;
         this.elements.nextButton.disabled = true;
+        this.elements.nextButton.textContent = hasFilters ? 'Try a different filter' : 'Shuffle';
+        if (this.elements.clearFiltersButton) {
+            this.elements.clearFiltersButton.hidden = !hasFilters;
+            this.elements.clearFiltersButton.disabled = !hasFilters;
+        }
         this.updateNavigationAvailability();
     }
 
@@ -700,6 +706,7 @@
         try {
             await navigator.share(payload);
             this.reportShareStatus('Shared from your device.', false);
+            this.showToast('Shared from your device.');
         } catch (error) {
             if (error && error.name === 'AbortError') {
                 this.reportShareStatus('Share canceled.', false);
@@ -898,6 +905,9 @@
         if (!this.elements.copyStatus) return;
         this.elements.copyStatus.textContent = message;
         this.elements.copyStatus.classList.toggle('error', isError);
+        if (!isError && message) {
+            this.showToast(message);
+        }
     }
 
     flashCopiedButtonLabel(button) {
@@ -924,6 +934,9 @@
         if (!this.elements.shareStatus) return;
         this.elements.shareStatus.textContent = message;
         this.elements.shareStatus.classList.toggle('error', isError);
+        if (!isError && message) {
+            this.showToast(message);
+        }
     }
 
     clearShareStatus() {
@@ -1022,6 +1035,37 @@
         if (!this.elements.exportStatus) return;
         this.elements.exportStatus.textContent = message;
         this.elements.exportStatus.classList.toggle('error', isError);
+        if (!isError && message) {
+            this.showToast(message);
+        }
+    }
+
+    jumpToCard(type) {
+        const targetCard = type === 'copy' ? this.elements.copySection : this.elements.socialShare;
+        if (!targetCard) return;
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        const focusTarget = type === 'copy' ? this.elements.copyButton : this.elements.nativeShareButton;
+        if (focusTarget) {
+            window.setTimeout(() => {
+                focusTarget.focus({ preventScroll: true });
+            }, 220);
+        }
+    }
+
+    showToast(message) {
+        if (!this.elements.globalToast || !message) return;
+        if (this.toastTimer) {
+            window.clearTimeout(this.toastTimer);
+        }
+        this.elements.globalToast.textContent = message;
+        this.elements.globalToast.classList.add('is-visible');
+        this.elements.globalToast.setAttribute('aria-hidden', 'false');
+
+        this.toastTimer = window.setTimeout(() => {
+            this.elements.globalToast.classList.remove('is-visible');
+            this.elements.globalToast.setAttribute('aria-hidden', 'true');
+        }, 1800);
     }
 
     getRandomIndex() {
