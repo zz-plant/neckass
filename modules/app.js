@@ -328,7 +328,7 @@
         this.state.navigationStack = [];
         this.state.currentIndex = -1;
         this.elements.nextButton.disabled = true;
-        this.elements.nextButton.textContent = hasFilters ? 'Try a different filter' : 'Shuffle';
+        this.setNextButtonLabel(hasFilters ? 'Try a different filter' : 'Shuffle');
         this.updateShuffleStreak(false);
         if (this.elements.clearFiltersButton) {
             this.elements.clearFiltersButton.hidden = !hasFilters;
@@ -527,13 +527,28 @@
         this.updateNextButtonLabel();
     }
 
+    setNextButtonLabel(label) {
+        if (!this.elements.nextButton) {
+            return;
+        }
+
+        const labelElement = this.elements.nextButton.querySelector('.button-label')
+            || this.elements.nextButton.querySelector('span');
+        if (labelElement) {
+            labelElement.textContent = label;
+            return;
+        }
+
+        this.elements.nextButton.textContent = label;
+    }
+
     updateNextButtonLabel() {
         if (!this.elements.nextButton || this.state.isLoading) {
             return;
         }
-        this.elements.nextButton.textContent = this.shuffleStreak > 0
+        this.setNextButtonLabel(this.shuffleStreak > 0
             ? `Keep streak · ${this.shuffleStreak}`
-            : 'Shuffle';
+            : 'Shuffle');
     }
 
     setSectionFilter(section) {
