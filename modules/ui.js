@@ -111,12 +111,14 @@
             parts.push(`Source: ${formatFilterLabel(filters.source)}`);
         }
 
-        elements.filterStatus.textContent = parts.length > 0
+        const hasFilters = hasActiveFilters(filters);
+
+        elements.filterStatus.textContent = hasFilters
             ? `Filtered by ${parts.join(' · ')}`
-            : 'All headlines';
+            : '';
+        elements.filterStatus.hidden = !hasFilters;
 
         if (elements.clearFiltersButton) {
-            const hasFilters = hasActiveFilters(filters);
             elements.clearFiltersButton.hidden = !hasFilters;
             elements.clearFiltersButton.disabled = !hasFilters;
         }
