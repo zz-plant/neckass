@@ -28,6 +28,7 @@
             copyStatus: 'copy-status',
             nativeShareButton: 'native-share',
             jumpShareButton: 'jump-share',
+            jumpExportButton: 'jump-export',
             shareStatus: 'share-status',
             downloadMockButton: 'download-mock',
             copyMockButton: 'copy-mock',
@@ -61,7 +62,8 @@
             headlineSection: document.querySelector('.headline-section'),
             controls: document.querySelector('.controls'),
             socialShare: document.querySelector('.social-share'),
-            copySection: document.querySelector('.copy-headline')
+            copySection: document.querySelector('.copy-headline'),
+            exportSection: document.querySelector('#export-card')
         };
     }
 

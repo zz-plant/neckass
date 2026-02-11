@@ -67,6 +67,7 @@
         this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.nativeShareButton));
         this.elements.jumpCopyButton?.addEventListener('click', () => this.jumpToCard('copy'));
         this.elements.jumpShareButton?.addEventListener('click', () => this.jumpToCard('share'));
+        this.elements.jumpExportButton?.addEventListener('click', () => this.jumpToCard('export'));
         this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
         this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
         this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
@@ -100,7 +101,7 @@
             this.elements.blueskyShareLink
         ].filter(Boolean).forEach((link) => {
             link.addEventListener('click', () => {
-                this.reportShareStatus('Share destination opened in a new tab.');
+                this.reportShareStatus('Opened in a new tab.');
             });
         });
         this.elements.headlineList?.addEventListener('click', (event) => {
@@ -574,6 +575,7 @@
         if (!shouldReset) {
             this.updateFilterStatus();
             this.pushHistoryState(this.state.currentIndex, { replace: true });
+            this.showToast('Filters already clear.');
             return;
         }
 
@@ -596,6 +598,8 @@
         this.state.navigationStack = [nextIndex];
         this.state.currentIndex = nextIndex;
         this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
+        this.showToast('Filters cleared.');
+
     }
 
     updateFilterValue(filterKey, value, options = {}) {
@@ -705,8 +709,7 @@
         setButtonLoading(triggerButton, true);
         try {
             await navigator.share(payload);
-            this.reportShareStatus('Shared from your device.', false);
-            this.showToast('Shared from your device.');
+            this.reportShareStatus('Shared successfully.', false);
         } catch (error) {
             if (error && error.name === 'AbortError') {
                 this.reportShareStatus('Share canceled.', false);
@@ -1003,7 +1006,7 @@
             this.elements.copyMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
         }
         if (!window.htmlToImage) {
-            this.reportExportStatus('Mock export unavailable right now. Try reloading the page.', true);
+            this.reportExportStatus('Export unavailable right now. Try reloading the page.', true);
         }
     }
 
@@ -1044,14 +1047,28 @@
     }
 
     jumpToCard(type) {
-        const targetCard = type === 'copy' ? this.elements.copySection : this.elements.socialShare;
-        if (!targetCard) return;
-        targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const cardMap = {
+            copy: {
+                section: this.elements.copySection,
+                focus: this.elements.copyButton
+            },
+            share: {
+                section: this.elements.socialShare,
+                focus: this.elements.nativeShareButton
+            },
+            export: {
+                section: this.elements.exportSection,
+                focus: this.elements.downloadMockButton
+            }
+        };
 
-        const focusTarget = type === 'copy' ? this.elements.copyButton : this.elements.nativeShareButton;
-        if (focusTarget) {
+        const target = cardMap[type];
+        if (!target?.section) return;
+        target.section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        if (target.focus) {
             window.setTimeout(() => {
-                focusTarget.focus({ preventScroll: true });
+                target.focus.focus({ preventScroll: true });
             }, 220);
         }
     }
