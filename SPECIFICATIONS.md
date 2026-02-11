@@ -33,13 +33,14 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 ### Structure & labels
 - Section label includes an accent dot and **“Featured headline”** text.【F:index.html†L42-L51】
 - Headline element: `<h2 id="headline" tabindex="0" aria-label="Headline">` with initial text “Loading...”.【F:index.html†L52-L55】
-- Deck text below the headline reads **“Lead with the line below.”** and a helper line reads **“Shuffle for a fresh line, then copy or share instantly.”**【F:index.html†L89-L91】
+- Helper line below the headline reads **“Shuffle for a fresh line, then copy or share it instantly.”**【F:index.html†L99-L102】
 - Filter status row shows **“All headlines”** by default in `#filter-status` and includes a **“Clear filters”** button (`#clear-filters`).【F:index.html†L91-L94】
 
 ### Controls & loader
 - Buttons:
   - **Previous** (`#prev-btn`, aria-label “View Previous Headline”).
   - **Shuffle** (`#next-btn`, aria-label “Shuffle headline”).
+  - On small screens, quick-jump buttons route to copy/share/export cards (`#jump-copy`, `#jump-share`, `#jump-export`), with export styled as a secondary full-width quick action.
 - Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`. Loader visibility is toggled via the `.is-visible` class and `aria-hidden` state updates during transitions.【F:index.html†L65-L70】【F:styles.css†L149-L161】【F:script.js†L1193-L1218】
 
 ### Headline behavior
@@ -77,8 +78,8 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 - Mock front page contains a masthead, current date, headline, and “Published” dateline.
 - Two actions:
   - **Download mock front page** (`#download-mock`), which renders the mock to PNG via `html-to-image` and triggers a download.
-  - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable, downloaded instead.”
-- Status text `#export-status` reports success or failure messages after export attempts. A global toast (`#global-toast`) provides compact success feedback for copy/share/export actions while inline status remains visible near each control.【F:index.html†L173-L195】【F:modules/app.js†L897-L925】【F:modules/app.js†L1021-L1042】
+  - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable. Downloaded front page instead.”
+- Status text `#export-status` reports success or failure messages after export attempts (for example “Preparing export…”, “Downloaded front page.”, and clipboard-download fallback messaging). A global toast (`#global-toast`) provides compact success feedback for copy/share/export actions while inline status remains visible near each control.【F:index.html†L163-L187】【F:modules/mock-export.js†L13-L59】【F:modules/app.js†L1037-L1043】
 
 ## Tiny LLM headline generator (`llm.js`)
 - `llm.js` exposes a global `tinyLlmClient.generateHeadline()` that returns a promise with:
@@ -105,7 +106,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 ## Responsive behavior checkpoints
 - **≥900px width**: two-column grid with sticky command rail at 24px from top.
 - **541–899px width**: one-column stack with reduced hero margin.
-- **≤540px width**: tighter body padding, stacked action buttons, full-width copy button, and smaller headline text size on very small screens (≤600px).【F:styles.css†L200-L288】
+- **≤600px width**: tighter body padding, stacked action buttons, visible quick-jump controls, full-width copy button, and reduced headline text size.【F:styles.css†L552-L669】
 
 ## Accessibility checklist
 - All visible buttons and links have discernible text or `aria-label`s.

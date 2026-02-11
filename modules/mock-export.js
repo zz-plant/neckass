@@ -4,13 +4,13 @@
     async function exportMockFront({ mode, elements, reportStatus, setButtonLoading }) {
         if (!elements.mockFrame || !window.htmlToImage) {
             const fallbackMessage = mode === 'copy'
-                ? 'Export unavailable. Image renderer did not load. Try Download mock front page.'
-                : 'Export unavailable. Image renderer did not load.';
+                ? 'Export unavailable right now. Try Download mock front page.'
+                : 'Export unavailable right now.';
             reportStatus(fallbackMessage, true);
             return;
         }
 
-        reportStatus('Rendering front page...');
+        reportStatus('Preparing export...');
         const exportButton = mode === 'download' ? elements.downloadMockButton : elements.copyMockButton;
         setButtonLoading(exportButton, true);
 
@@ -30,12 +30,12 @@
 
         try {
             if (mode === 'download') {
-                await downloadImage('Mock front page downloaded.');
+                await downloadImage('Downloaded front page.');
                 return;
             }
 
             if (!navigator.clipboard || !navigator.clipboard.write) {
-                await downloadImage('Clipboard unavailable, downloaded instead.');
+                await downloadImage('Clipboard unavailable. Downloaded front page instead.');
                 return;
             }
 
@@ -50,9 +50,9 @@
                         [blob.type]: blob
                     })
                 ]);
-                reportStatus('Image copied to clipboard.');
+                reportStatus('Copied front page to clipboard.');
             } catch (error) {
-                await downloadImage('Clipboard unavailable, downloaded instead.');
+                await downloadImage('Clipboard unavailable. Downloaded front page instead.');
             }
         } catch (error) {
             reportStatus('Export failed. Please try again.', true);
