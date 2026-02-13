@@ -231,6 +231,15 @@ a,
     font-size: clamp(2.05rem, 4vw, 2.7rem);
     color: #1b1815;
     letter-spacing: -0.01em;
+    view-transition-name: featured-headline;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(featured-headline),
+    ::view-transition-new(featured-headline) {
+        animation-duration: 180ms;
+        animation-timing-function: ease;
+    }
 }
 
 .deck {
