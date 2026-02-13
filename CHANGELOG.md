@@ -29,3 +29,4 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Updated `AGENTS.md` to reflect the current modular architecture and current agent guardrails.
 - Strengthened SEO metadata in `index.html` with absolute canonical/social image URLs, OG/Twitter image alt text, locale tagging, and expanded structured data for site search discovery.
 - Followed up SEO metadata hardening by extending robots directives (`max-image-preview:large`), adding `og:image:secure_url`, and keeping runtime Twitter title/description/url metadata synchronized with the active headline state.
+- Modernized runtime behavior with progressive enhancement for View Transitions, background-priority state persistence (`scheduler.postTask`/`requestIdleCallback` fallback), and `structuredClone` snapshots to keep interactions responsive on modern browsers without breaking static hosting.

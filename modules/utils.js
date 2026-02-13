@@ -141,8 +141,67 @@ function rgbToString({ r, g, b }) {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
+function cloneStateSnapshot(value) {
+    if (typeof structuredClone === 'function') {
+        try {
+            return structuredClone(value);
+        } catch (error) {
+            // Fall through to shallow fallback.
+        }
+    }
+
+    if (Array.isArray(value)) {
+        return value.slice();
+    }
+
+    if (value && typeof value === 'object') {
+        return { ...value };
+    }
+
+    return value;
+}
+
+function scheduleBackgroundTask(task) {
+    if (typeof task !== 'function') {
+        return;
+    }
+
+    if (window.scheduler && typeof window.scheduler.postTask === 'function') {
+        window.scheduler.postTask(task, { priority: 'background' });
+        return;
+    }
+
+    if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(() => task(), { timeout: 180 });
+        return;
+    }
+
+    window.setTimeout(task, 0);
+}
+
+function runViewTransition(updateDom) {
+    if (typeof updateDom !== 'function') {
+        return;
+    }
+
+    const prefersReducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion || typeof document.startViewTransition !== 'function') {
+        updateDom();
+        return;
+    }
+
+    document.startViewTransition(() => {
+        updateDom();
+    });
+}
+
     Neckass.isValidHeadlineIndex = isValidHeadlineIndex;
     Neckass.normalizeHeadlineText = normalizeHeadlineText;
     Neckass.slugifyHeadline = slugifyHeadline;
     Neckass.selectReadableColor = selectReadableColor;
+    Neckass.cloneStateSnapshot = cloneStateSnapshot;
+    Neckass.scheduleBackgroundTask = scheduleBackgroundTask;
+    Neckass.runViewTransition = runViewTransition;
 })();

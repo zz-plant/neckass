@@ -21,7 +21,8 @@
         isValidHeadlineIndex,
         normalizeHeadlineText,
         selectReadableColor,
-        slugifyHeadline
+        slugifyHeadline,
+        runViewTransition
     } = Neckass;
     const renderFilterStatus = Neckass.updateFilterStatus;
 
@@ -272,9 +273,11 @@
 
         setTimeout(() => {
             const headlineText = this.headlines[index];
-            this.elements.headline.textContent = headlineText;
-            this.elements.headline.style.color = selectReadableColor();
-            this.elements.headline.classList.add('show');
+            runViewTransition(() => {
+                this.elements.headline.textContent = headlineText;
+                this.elements.headline.style.color = selectReadableColor();
+                this.elements.headline.classList.add('show');
+            });
             this.toggleLoader(false);
             this.updateMockDate();
 

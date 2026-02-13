@@ -14,6 +14,39 @@
     };
 
     function createStorageAdapter() {
+        let queuedState = null;
+        let persistScheduled = false;
+
+        const flushPersist = () => {
+            persistScheduled = false;
+            if (!queuedState) return;
+
+            const snapshot = queuedState;
+            queuedState = null;
+
+            safeSetItem(STORAGE_KEYS.viewedCount, snapshot.uniqueHeadlines.size);
+            safeSetItem(STORAGE_KEYS.viewedList, JSON.stringify(snapshot.navigationStack));
+            safeSetItem(STORAGE_KEYS.navigationStack, JSON.stringify(snapshot.navigationStack));
+            safeSetItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(snapshot.navigationStack));
+            safeSetItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(snapshot.uniqueHeadlines)));
+            safeSetItem(
+                STORAGE_KEYS.generatedHeadlines,
+                JSON.stringify(Array.isArray(snapshot.generatedHeadlines) ? snapshot.generatedHeadlines : [])
+            );
+            safeSetItem(
+                STORAGE_KEYS.favorites,
+                JSON.stringify(Array.isArray(snapshot.favorites) ? snapshot.favorites : [])
+            );
+            safeSetItem(
+                STORAGE_KEYS.filters,
+                JSON.stringify(snapshot.filters || Neckass.DEFAULT_FILTERS)
+            );
+            safeSetItem(
+                STORAGE_KEYS.dailyEngagement,
+                JSON.stringify(snapshot.dailyEngagement || {})
+            );
+        };
+
         return {
             restore(baseHeadlineCount) {
                 const generatedHeadlines = parseJson(safeGetItem(STORAGE_KEYS.generatedHeadlines), []);
@@ -49,27 +82,11 @@
             },
 
             persist(state) {
-                safeSetItem(STORAGE_KEYS.viewedCount, state.uniqueHeadlines.size);
-                safeSetItem(STORAGE_KEYS.viewedList, JSON.stringify(state.navigationStack));
-                safeSetItem(STORAGE_KEYS.navigationStack, JSON.stringify(state.navigationStack));
-                safeSetItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(state.navigationStack));
-                safeSetItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(state.uniqueHeadlines)));
-                safeSetItem(
-                    STORAGE_KEYS.generatedHeadlines,
-                    JSON.stringify(Array.isArray(state.generatedHeadlines) ? state.generatedHeadlines : [])
-                );
-                safeSetItem(
-                    STORAGE_KEYS.favorites,
-                    JSON.stringify(Array.isArray(state.favorites) ? state.favorites : [])
-                );
-                safeSetItem(
-                    STORAGE_KEYS.filters,
-                    JSON.stringify(state.filters || Neckass.DEFAULT_FILTERS)
-                );
-                safeSetItem(
-                    STORAGE_KEYS.dailyEngagement,
-                    JSON.stringify(state.dailyEngagement || {})
-                );
+                queuedState = Neckass.cloneStateSnapshot(state);
+
+                if (persistScheduled) return;
+                persistScheduled = true;
+                Neckass.scheduleBackgroundTask(flushPersist);
             }
         };
     }
