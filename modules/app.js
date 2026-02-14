@@ -1430,6 +1430,90 @@
         return this.buildHeadlineUrl(index);
     }
 
+    getCurrentHeadlineText() {
+        if (!isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)) {
+            return '';
+        }
+        return this.headlines[this.state.currentIndex] || '';
+    }
+
+    getAgentSnapshot() {
+        const currentIndex = isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
+            ? this.state.currentIndex
+            : null;
+        return {
+            index: currentIndex,
+            identifier: currentIndex === null ? null : this.identifierFromIndex(currentIndex),
+            headline: this.getCurrentHeadlineText(),
+            url: currentIndex === null ? null : this.getCanonicalUrl(currentIndex),
+            filters: { ...this.filters },
+            poolSize: this.filteredIndexes.length,
+            totalHeadlines: this.headlines.length,
+            generatorAvailable: this.isGeneratorAvailable()
+        };
+    }
+
+    setFiltersForAgent(partialFilters = {}) {
+        const incoming = partialFilters && typeof partialFilters === 'object' ? partialFilters : {};
+        const nextFilters = sanitizeFilters({
+            ...DEFAULT_FILTERS,
+            ...this.filters,
+            ...incoming
+        });
+
+        const changed = Object.keys(nextFilters).some((key) => nextFilters[key] !== this.filters[key]);
+        if (!changed) {
+            return this.getAgentSnapshot();
+        }
+
+        this.filters = nextFilters;
+        if (this.elements.searchInput) {
+            this.elements.searchInput.value = this.filters.query;
+        }
+        this.persistState();
+        this.syncFilterControls();
+        this.refreshFilteredIndexes();
+        this.applyMockLayoutClass();
+
+        if (this.filteredIndexes.length === 0) {
+            this.renderEmptyState();
+            this.pushHistoryState(-1, { replace: true });
+            return this.getAgentSnapshot();
+        }
+
+        const nextIndex = this.isIndexEligible(this.state.currentIndex)
+            ? this.state.currentIndex
+            : this.filteredIndexes[0];
+        this.state.navigationStack = [nextIndex];
+        this.state.currentIndex = nextIndex;
+        this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
+        return this.getAgentSnapshot();
+    }
+
+    selectHeadlineByIdentifier(identifier) {
+        const index = this.identifierToIndex(identifier);
+        if (!this.isIndexEligible(index)) {
+            return null;
+        }
+        this.selectHeadline(index);
+        return this.getAgentSnapshot();
+    }
+
+    listHeadlinesForAgent({ offset = 0, limit = 25, scope = 'eligible' } = {}) {
+        const pool = scope === 'all'
+            ? this.headlines.map((_, index) => index)
+            : [...this.filteredIndexes];
+        const start = Math.max(0, Number.parseInt(offset, 10) || 0);
+        const max = Math.min(100, Math.max(1, Number.parseInt(limit, 10) || 25));
+
+        return pool.slice(start, start + max).map((index) => ({
+            index,
+            identifier: this.identifierFromIndex(index),
+            headline: this.headlines[index],
+            source: index >= this.baseHeadlineCount ? 'generated' : 'curated'
+        }));
+    }
+
     pushHistoryState(index, { replace = false } = {}) {
         updateHistoryState({
             index,

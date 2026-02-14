@@ -31,6 +31,7 @@ Then open `http://127.0.0.1:8001/`.
 - `modules/share.js` — social/native share URL flows.
 - `modules/clipboard.js` — text/image clipboard behavior.
 - `modules/mock-export.js` — mock front-page image export.
+- `modules/agent-interface.js` — browser-callable tool surface for agentic workflows.
 - `modules/utils.js` — shared helpers.
 
 ### Module boundary rules
