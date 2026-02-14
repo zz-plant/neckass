@@ -23,6 +23,26 @@ python -m http.server 8001 --directory .
 
 Then open `http://127.0.0.1:8001/`.
 
+## Agentic interface
+A lightweight browser-side tool interface is exposed at `window.Neckass.agent` after app initialization, so browser automation and agentic LLM runtimes can call headline actions without clicking UI controls directly.
+
+Available tools:
+- `get_state`
+- `shuffle`
+- `previous`
+- `generate`
+- `set_filters`
+- `clear_filters`
+- `select_headline`
+- `list_headlines`
+
+Example:
+
+```js
+const state = await window.Neckass.agent.call('get_state');
+const next = await window.Neckass.agent.call('shuffle');
+```
+
 ## Optional smoke tests
 An optional Playwright smoke suite validates key flows (shuffle, URL restore,
 share links, export controls) without changing the no-build runtime model.

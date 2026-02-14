@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const neckass = window.Neckass || {};
-    const { data, HeadlineApp, createStorageAdapter, mapElements } = neckass;
+    const { data, HeadlineApp, createStorageAdapter, mapElements, createAgentInterface } = neckass;
 
     const fallbackHeadline = data?.HEADLINES?.[0] || 'No headlines available.';
     const headlineEl = document.getElementById('headline');
@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         app.init();
+        neckass.app = app;
+
+        if (typeof createAgentInterface === 'function') {
+            neckass.agent = createAgentInterface(app);
+        }
     } catch (error) {
         showFallback();
     }

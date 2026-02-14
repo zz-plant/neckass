@@ -44,4 +44,19 @@ test.describe('Neckass smoke flows', () => {
     await expect(page.locator('#download-mock')).toBeEnabled();
     await expect(page.locator('#copy-mock')).toBeEnabled();
   });
+
+  test('agent interface exposes callable tools', async ({ page }) => {
+    await page.goto(BASE_URL);
+
+    const initial = await page.evaluate(async () => window.Neckass.agent.call('get_state'));
+    expect(initial).toBeTruthy();
+    expect(typeof initial.headline).toBe('string');
+
+    const shuffled = await page.evaluate(async () => window.Neckass.agent.call('shuffle'));
+    expect(shuffled).toBeTruthy();
+    expect(shuffled.identifier).toBeTruthy();
+
+    const listed = await page.evaluate(async () => window.Neckass.agent.call('list_headlines', { limit: 5 }));
+    expect(Array.isArray(listed.items)).toBeTruthy();
+  });
 });
