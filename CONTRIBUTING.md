@@ -13,7 +13,7 @@ This guide covers **how to contribute**. For implementation details, see `DEVELO
 1. Fork + clone the repository.
 2. Create a focused branch (`feat/...`, `fix/...`, `docs/...` recommended).
 3. Implement your change.
-4. Validate locally (manual checks in `DEVELOPMENT.md`).
+4. Validate locally (manual checks in `DEVELOPMENT.md`, plus optional smoke tests when relevant).
 5. Update docs/changelog when behavior or contributor workflow changes.
 6. Open a PR with:
    - What changed
@@ -31,6 +31,7 @@ This guide covers **how to contribute**. For implementation details, see `DEVELO
 ## Pull request checklist
 - [ ] Change is aligned with `SPECIFICATIONS.md`.
 - [ ] Manual validation completed locally.
+- [ ] Optional smoke tests run for changed critical flows (if applicable).
 - [ ] Documentation updated where relevant.
 - [ ] `CHANGELOG.md` updated for user-visible or process-significant updates.
 - [ ] Screenshot(s) included for visible UI changes.

@@ -6,11 +6,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 ### Added
+- Added an optional Playwright smoke-test harness (`tests/smoke.spec.mjs`) for shuffle, URL restore, share-link, and export-availability checks.
 - Added a persistent daily desk streak indicator that tracks return-day momentum and celebrates key streak milestones (3/7/14 days) to encourage repeat usage.
 - Added a root `robots.txt` that allows crawling and points search engines to the sitemap.
 - Added a root `sitemap.xml` with the canonical homepage URL.
 
 ### Changed
+- Clarified `DEVELOPMENT.md` module boundary rules (app orchestration vs UI rendering vs persistence/integration modules) and documented an optional non-required build path.
 - Simplified the headline card by removing the mobile quick-actions helper hint and tightening the helper sentence copy.
 - Standardized share/export success and fallback status wording for clearer, consistent feedback.
 - Added clear-filters toast confirmations ("Filters cleared." / "Filters already clear.") to reinforce reset actions.

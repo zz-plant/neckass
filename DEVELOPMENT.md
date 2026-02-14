@@ -33,6 +33,26 @@ Then open `http://127.0.0.1:8001/`.
 - `modules/mock-export.js` — mock front-page image export.
 - `modules/utils.js` — shared helpers.
 
+### Module boundary rules
+Use these boundaries to prevent `app.js` / `ui.js` from turning into generic catch-alls.
+
+- `modules/app.js`
+  - Owns workflow orchestration and event-to-action control flow.
+  - May call helpers from other modules.
+  - Should avoid direct low-level DOM mutation except where wiring requires it.
+- `modules/ui.js`
+  - Owns presentational DOM writes (labels, classes, status text, button states).
+  - Should remain stateless and derived from inputs provided by `HeadlineApp`.
+  - Must not read/write URL state or storage directly.
+- `modules/state.js`, `modules/history.js`, `modules/storage.js`
+  - Own canonical state transitions and persistence/URL synchronization.
+  - Should not encode UI copy.
+- `modules/share.js`, `modules/clipboard.js`, `modules/mock-export.js`
+  - Own integration-specific behavior (share targets, clipboard APIs, export APIs).
+  - Surface small functions consumed by `HeadlineApp`.
+- `modules/utils.js`
+  - Keep pure, reusable helpers with no side effects.
+
 ### Data and assets
 - `data/headlines.js` — curated headline corpus.
 - `data/llm-beats.js` — generation phrase components.
@@ -58,6 +78,27 @@ Then open `http://127.0.0.1:8001/`.
 4. Empty/filter edge states communicate clearly and disable invalid actions.
 5. Keyboard navigation and focus-visible styles remain functional.
 6. Layout remains usable across small and wide viewports.
+
+## Smoke test harness (optional, no-build compatible)
+An optional Playwright smoke suite is included for critical flows:
+- Shuffle updates headline.
+- URL restore returns the same headline.
+- Share links target the active headline.
+- Export controls are available.
+
+Run:
+
+```bash
+npm install
+npm run test:smoke
+```
+
+This does not change runtime architecture: `index.html` remains the default startup path.
+
+## Optional build path (not required)
+The project remains static-first and zero-build by default. If deployment needs evolve
+(cache-busting, stricter lint/type steps, or module bundling), add an **optional** build
+workflow that outputs static assets while keeping `index.html` runnable in source form.
 
 ## UI change requirements
 - Include screenshot(s) for visible changes.
