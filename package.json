@@ -1,0 +1,12 @@
+{
+  "name": "neckass-headlines",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:smoke": "playwright test",
+    "test:smoke:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

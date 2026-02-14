@@ -23,6 +23,15 @@ python -m http.server 8001 --directory .
 
 Then open `http://127.0.0.1:8001/`.
 
+## Optional smoke tests
+An optional Playwright smoke suite validates key flows (shuffle, URL restore,
+share links, export controls) without changing the no-build runtime model.
+
+```bash
+npm install
+npm run test:smoke
+```
+
 ## Documentation map
 
 ### Product & behavior
