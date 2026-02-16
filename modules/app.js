@@ -28,6 +28,12 @@
 
     const ANIMATION_DELAY_MS = 60;
     const STREAK_MILESTONES = [3, 5, 8, 12];
+    const SHUFFLE_BADGE_LABELS = {
+        3: 'Rhythm',
+        5: 'Absurdity',
+        8: 'Hurricane',
+        12: 'Legend'
+    };
 
     class HeadlineApp {
     constructor({ headlines: allHeadlines, elements, storage }) {
@@ -465,6 +471,7 @@
         if (!this.elements.shuffleStreak) return;
         if (this.shuffleStreak <= 0) {
             this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Start a run.';
+            this.renderShuffleBadges();
             return;
         }
 
@@ -478,6 +485,34 @@
             ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
             : 'Legend badge unlocked.';
         this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
+        this.renderShuffleBadges(nextMilestone);
+    }
+
+    renderShuffleBadges(nextMilestone = STREAK_MILESTONES[0]) {
+        if (!this.elements.streakBadges) {
+            return;
+        }
+
+        const badgeItems = Array.from(this.elements.streakBadges.querySelectorAll('[data-milestone]'));
+        badgeItems.forEach((badge) => {
+            const milestone = Number.parseInt(badge.dataset.milestone || '', 10);
+            if (!Number.isFinite(milestone)) {
+                return;
+            }
+
+            const isEarned = this.shuffleStreak >= milestone;
+            const isNext = !isEarned && milestone === nextMilestone;
+            const remaining = Math.max(milestone - this.shuffleStreak, 0);
+            const label = SHUFFLE_BADGE_LABELS[milestone] || `Badge ${milestone}`;
+            const statusText = isEarned
+                ? `${label} badge unlocked at ${milestone} shuffles.`
+                : `${remaining} shuffles to unlock ${label} badge at ${milestone}.`;
+
+            badge.classList.toggle('is-earned', isEarned);
+            badge.classList.toggle('is-next', isNext);
+            badge.setAttribute('aria-label', statusText);
+            badge.setAttribute('title', statusText);
+        });
     }
 
     updateShuffleStreak(shouldIncrement) {
