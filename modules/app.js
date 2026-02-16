@@ -82,9 +82,9 @@
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline(this.elements.copyButton));
         this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.nativeShareButton));
-        this.elements.jumpCopyButton?.addEventListener('click', () => this.jumpToCard('copy'));
-        this.elements.jumpShareButton?.addEventListener('click', () => this.jumpToCard('share'));
-        this.elements.jumpExportButton?.addEventListener('click', () => this.jumpToCard('export'));
+        this.elements.jumpCopyButton?.addEventListener('click', () => this.copyHeadline(this.elements.jumpCopyButton));
+        this.elements.jumpShareButton?.addEventListener('click', () => this.handleQuickShare());
+        this.elements.jumpExportButton?.addEventListener('click', () => this.handleQuickExport());
         this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
         this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
         this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
@@ -980,6 +980,27 @@
             onStatus: (message, isError) => this.reportCopyStatus(message, isError),
             setButtonLoading
         });
+    }
+
+    async handleQuickShare() {
+        const canUseNativeShare = navigator.share && typeof navigator.share === 'function';
+        if (!canUseNativeShare) {
+            this.jumpToCard('share');
+            this.reportShareStatus('Native sharing unavailable in this browser.', true);
+            return;
+        }
+
+        await this.shareHeadline(this.elements.jumpShareButton || this.elements.nativeShareButton);
+    }
+
+    async handleQuickExport() {
+        if (!window.htmlToImage) {
+            this.jumpToCard('export');
+            this.reportExportStatus('Export unavailable right now. Try Download mock front page after reloading.', true);
+            return;
+        }
+
+        await this.handleMockExport('download');
     }
 
     handleDirectionalNavigation(event) {
