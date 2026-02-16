@@ -1252,7 +1252,7 @@
             this.elements.copyMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
         }
         if (!window.htmlToImage) {
-            this.reportExportStatus('Export unavailable right now. Try reloading the page.', true);
+            this.reportExportStatus('Export unavailable right now. Try Download mock front page after reloading.', true);
         }
     }
 

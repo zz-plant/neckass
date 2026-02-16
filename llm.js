@@ -9,6 +9,7 @@ const RECENT_STORAGE_KEY = 'tinyLlmRecentHeadlines';
 const MAX_RECENT_STORAGE = 24;
 const MIN_FUNNY_SCORE = 5;
 const MAX_QUALITY_ATTEMPTS = 10;
+const MAX_DISPLAY_HEADLINE_CHARS = 140;
 
 const tinyLlmClient = (() => {
 
@@ -174,7 +175,20 @@ const tinyLlmClient = (() => {
     }
 
     function cleanHeadline(headline) {
-        return headline.replace(/\s+/g, ' ').trim();
+        const normalized = headline.replace(/\s+/g, ' ').trim();
+        if (normalized.length <= MAX_DISPLAY_HEADLINE_CHARS) {
+            return normalized;
+        }
+
+        const clipped = normalized.slice(0, MAX_DISPLAY_HEADLINE_CHARS + 1);
+        const boundary = Math.max(
+            clipped.lastIndexOf('; '),
+            clipped.lastIndexOf(': '),
+            clipped.lastIndexOf(', '),
+            clipped.lastIndexOf(' ')
+        );
+        const truncated = boundary > 80 ? clipped.slice(0, boundary) : clipped.slice(0, MAX_DISPLAY_HEADLINE_CHARS);
+        return `${truncated.trimEnd()}...`;
     }
 
     function scoreHeadlineHumor(headline) {

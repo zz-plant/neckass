@@ -95,11 +95,11 @@ a,
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 9px;
     align-items: center;
     justify-content: flex-start;
-    padding-bottom: 18px;
-    margin-bottom: 24px;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
     border-bottom: 1px solid var(--border);
     z-index: 1;
 }
@@ -125,8 +125,8 @@ a,
 
 .hero {
     border-bottom: 1px solid var(--border);
-    padding-bottom: 24px;
-    margin-bottom: 28px;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 .hero__content {
@@ -187,11 +187,12 @@ a,
     width: fit-content;
     max-width: 100%;
     border-radius: 999px;
-    border: 1px solid rgba(74, 125, 255, 0.2);
-    background: linear-gradient(120deg, rgba(74, 125, 255, 0.08), rgba(220, 107, 63, 0.1));
+    border: 1px solid rgba(74, 125, 255, 0.18);
+    background: linear-gradient(120deg, rgba(74, 125, 255, 0.07), rgba(220, 107, 63, 0.08));
     color: #2c3245;
     font-weight: 500;
-    padding: 7px 12px;
+    font-size: 0.8rem;
+    padding: 5px 10px;
 }
 
 .page-grid {
@@ -268,52 +269,58 @@ a,
 }
 
 .streak-text {
-    margin: 4px 0 0;
-    font-size: 0.88rem;
-    color: #3b2d22;
-    border: 1px solid rgba(220, 107, 63, 0.2);
-    background: linear-gradient(120deg, rgba(255, 240, 229, 0.85), rgba(255, 255, 255, 0.9));
-    border-radius: 14px;
-    padding: 9px 12px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    min-height: 1.35em;
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+    color: #4a3a2e;
+    border: 1px solid rgba(220, 107, 63, 0.16);
+    background: linear-gradient(120deg, rgba(255, 240, 229, 0.72), rgba(255, 255, 255, 0.88));
+    border-radius: 10px;
+    padding: 6px 10px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    min-height: 1.2em;
 }
 
 .streak-badges {
-    margin-top: -8px;
+    margin-top: -4px;
     list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
 }
 
 .streak-badge {
-    border: 1px solid rgba(38, 32, 24, 0.14);
-    border-radius: 14px;
-    padding: 9px 10px;
-    background: rgba(255, 255, 255, 0.75);
-    display: grid;
-    gap: 1px;
+    border: 1px solid rgba(38, 32, 24, 0.13);
+    border-radius: 999px;
+    padding: 5px 9px;
+    background: rgba(255, 255, 255, 0.72);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex: 0 0 auto;
     transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
 
 .streak-badge__title {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     color: #4f463f;
 }
 
 .streak-badge__goal {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     color: #6a625b;
 }
 
 .streak-badge.is-earned {
-    background: linear-gradient(140deg, rgba(220, 107, 63, 0.16), rgba(244, 162, 97, 0.24));
-    border-color: rgba(220, 107, 63, 0.5);
-    box-shadow: 0 10px 18px rgba(220, 107, 63, 0.18);
+    background: linear-gradient(140deg, rgba(220, 107, 63, 0.14), rgba(244, 162, 97, 0.2));
+    border-color: rgba(220, 107, 63, 0.45);
+    box-shadow: 0 6px 12px rgba(220, 107, 63, 0.14);
 }
 
 .streak-badge.is-earned .streak-badge__title {
@@ -322,8 +329,7 @@ a,
 
 .streak-badge.is-next {
     border-color: rgba(74, 125, 255, 0.42);
-    box-shadow: 0 0 0 2px rgba(74, 125, 255, 0.13);
-    transform: translateY(-1px);
+    box-shadow: 0 0 0 2px rgba(74, 125, 255, 0.12);
 }
 
 .history-card {
@@ -426,6 +432,7 @@ button.accent .button-icon {
     gap: 12px;
 }
 
+
 button {
     border-radius: 999px;
     border: 1px solid rgba(34, 26, 20, 0.18);
@@ -493,53 +500,42 @@ button.ghost {
 }
 
 
-.mobile-quick-actions {
-    display: none;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+
+.headline-quick-actions {
+    display: grid;
+    gap: 8px;
+    margin-top: 2px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(45, 31, 16, 0.12);
 }
 
-.mobile-quick-actions-panel {
-    display: none;
-}
-
-.mobile-quick-actions-toggle {
-    list-style: none;
-    cursor: pointer;
-    user-select: none;
-    font-weight: 600;
+.headline-quick-actions__title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
     color: var(--muted);
-    border: 1px solid rgba(45, 31, 16, 0.16);
-    border-radius: 999px;
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.72);
 }
 
-.mobile-quick-actions-toggle::-webkit-details-marker {
-    display: none;
+.headline-quick-actions__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
 }
 
-.mobile-quick-actions-toggle::before {
-    content: '+';
-    margin-right: 8px;
-    color: var(--accent);
-    font-weight: 700;
-}
-
-.mobile-quick-actions-panel[open] .mobile-quick-actions-toggle::before {
-    content: '−';
-}
-
-.mobile-quick-actions button {
-    min-height: 48px;
+.headline-quick-actions__grid button {
+    min-height: 44px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    padding: 10px 12px;
     font-weight: 600;
 }
 
-.mobile-quick-actions .quick-action-secondary {
-    grid-column: 1 / -1;
+.headline-quick-actions__grid .quick-action-secondary {
+    border-color: rgba(74, 125, 255, 0.32);
+    background: rgba(74, 125, 255, 0.1);
 }
-
 
 .status-text {
     font-size: 0.9rem;
@@ -910,18 +906,32 @@ button.ghost {
         min-height: 104px;
     }
 
+    .streak-text {
+        font-size: 0.76rem;
+        padding: 6px 9px;
+    }
+
+    .streak-badge {
+        padding: 4px 8px;
+    }
+
     .actions {
         grid-template-columns: 1fr;
     }
 
-    .mobile-quick-actions {
-        display: grid;
+    #prev-btn {
+        border-color: rgba(34, 26, 20, 0.16);
+        background: rgba(255, 255, 255, 0.5);
     }
 
-    .mobile-quick-actions-panel {
-        display: block;
+    #next-btn {
+        font-weight: 700;
+        box-shadow: 0 12px 22px rgba(220, 107, 63, 0.24);
     }
 
+    .headline-quick-actions__grid {
+        grid-template-columns: 1fr;
+    }
 
     .command-rail {
         gap: 14px;
@@ -984,3 +994,4 @@ button.ghost {
         width: 100%;
     }
 }
+
