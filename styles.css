@@ -12,7 +12,7 @@
     --surface-soft: rgba(255, 255, 255, 0.9);
     --border: rgba(38, 32, 24, 0.12);
     --text: #1e1c18;
-    --muted: #6e675f;
+    --muted: #5f5951;
     --accent: #dc6b3f;
     --accent-2: #f4a261;
     --accent-3: #4a7dff;
@@ -258,6 +258,23 @@ a,
     min-height: 1.35em;
 }
 
+.history-card {
+    display: grid;
+    gap: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 252, 248, 0.9));
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    padding: 18px;
+    box-shadow: var(--shadow-soft);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
 
 .headline-section.is-celebrating {
     box-shadow: 0 0 0 1px rgba(220, 107, 63, 0.36), 0 18px 38px rgba(220, 107, 63, 0.22);
@@ -411,6 +428,38 @@ button.ghost {
     display: none;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+    margin-top: 10px;
+}
+
+.mobile-quick-actions-panel {
+    display: none;
+}
+
+.mobile-quick-actions-toggle {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1px solid rgba(45, 31, 16, 0.16);
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.mobile-quick-actions-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.mobile-quick-actions-toggle::before {
+    content: '+';
+    margin-right: 8px;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.mobile-quick-actions-panel[open] .mobile-quick-actions-toggle::before {
+    content: '−';
 }
 
 .mobile-quick-actions button {
@@ -495,6 +544,17 @@ button.ghost {
 .copy-row {
     display: grid;
     gap: 8px;
+}
+
+#copy-btn {
+    border-color: rgba(220, 107, 63, 0.5);
+    background: rgba(220, 107, 63, 0.12);
+    font-weight: 600;
+}
+
+#copy-btn:hover {
+    background: rgba(220, 107, 63, 0.2);
+    border-color: rgba(220, 107, 63, 0.65);
 }
 
 
@@ -647,6 +707,10 @@ button.ghost {
         position: sticky;
         top: 24px;
     }
+
+    .page-shell {
+        padding-bottom: 26px;
+    }
 }
 
 @media (max-width: 899px) and (min-width: 541px) {
@@ -773,6 +837,10 @@ button.ghost {
         display: grid;
     }
 
+    .mobile-quick-actions-panel {
+        display: block;
+    }
+
 
     .command-rail {
         gap: 14px;
@@ -814,6 +882,7 @@ button.ghost {
 
     #headline {
         font-size: clamp(1.7rem, 6vw, 2.2rem);
+        color: #6f1f52 !important;
     }
 
     .counter {

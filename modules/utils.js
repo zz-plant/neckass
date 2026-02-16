@@ -4,11 +4,9 @@
     const BRIGHTNESS_THRESHOLD = 130;
     const MIN_CONTRAST_RATIO = 4.5;
     const COLOR_PALETTE = [
-    '#FF5733', '#33FF57', '#3357FF', '#F333FF',
-    '#FF33A8', '#FF8F33', '#33FFF5', '#338FFF',
-    '#FF33F6', '#FF4500', '#33FFBD', '#FFB533',
-    '#FFA833', '#5A5AFF', '#FF33C4', '#FF4444',
-    '#44FF88'
+    '#6b2f1b', '#7a3b22', '#5f2a44', '#4f356f',
+    '#5b3f1f', '#6d2f3e', '#2f4a73', '#66462a',
+    '#5b2737', '#3f3a6b', '#734236', '#4a3d2a'
 ];
     const BASE_BACKGROUND_COLOR = getComputedStyle(document.documentElement)
         .getPropertyValue('--bg')
