@@ -129,14 +129,14 @@
                         <button id="next-btn" aria-label="Shuffle headline" class="accent button-with-icon"><img class="button-icon" src="icons/shuffle.svg" alt="" aria-hidden="true"><span class="button-label">Shuffle</span></button>
                     </div>
 
-                    <details class="mobile-quick-actions-panel">
-                        <summary class="mobile-quick-actions-toggle">More mobile actions (copy/share/export)</summary>
-                        <div class="mobile-quick-actions" aria-label="Quick actions">
-                            <button id="jump-copy" class="ghost" type="button">Go to copy</button>
-                            <button id="jump-share" class="ghost" type="button">Go to share</button>
-                            <button id="jump-export" class="ghost quick-action-secondary" type="button">Go to export</button>
+                    <div class="headline-quick-actions" aria-label="Quick actions">
+                        <p class="headline-quick-actions__title">Quick actions</p>
+                        <div class="headline-quick-actions__grid">
+                            <button id="jump-copy" class="ghost button-with-icon" type="button"><img class="button-icon" src="icons/copy.svg" alt="" aria-hidden="true"><span>Copy</span></button>
+                            <button id="jump-share" class="ghost button-with-icon" type="button"><img class="button-icon" src="icons/send.svg" alt="" aria-hidden="true"><span>Share</span></button>
+                            <button id="jump-export" class="ghost button-with-icon quick-action-secondary" type="button"><img class="button-icon" src="icons/layout.svg" alt="" aria-hidden="true"><span>Export</span></button>
                         </div>
-                    </details>
+                    </div>
 
                     <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                 </section>
@@ -211,10 +211,12 @@
                     <div class="mock-actions">
                         <button id="download-mock" class="ghost" type="button">
                             <span class="button-main-label"><img class="button-icon" src="icons/download.svg" alt="" aria-hidden="true"><span>Download mock front page</span></span>
+                            <small>Save PNG to your device.</small>
 
                         </button>
                         <button id="copy-mock" class="ghost" type="button">
                             <span class="button-main-label"><img class="button-icon" src="icons/image.svg" alt="" aria-hidden="true"><span>Copy mock front page</span></span>
+                            <small>Paste image into apps.</small>
 
                         </button>
                     </div>
