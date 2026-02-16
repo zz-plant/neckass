@@ -42,6 +42,7 @@
             headlineSectionBadge: 'headline-section',
             filterStatus: 'filter-status',
             shuffleStreak: 'shuffle-streak',
+            streakBadges: 'streak-badges',
             clearFiltersButton: 'clear-filters',
             historyCount: 'history-count',
             headlineList: 'headline-list',
