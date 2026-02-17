@@ -59,6 +59,7 @@
         this.shouldIncrementStreak = false;
         this.celebrationTimer = null;
         this.dailyEngagement = this.normalizeDailyEngagement(this.state.dailyEngagement);
+        this.feedbackLog = this.normalizeFeedbackLog(this.state.feedbackLog);
         this.dailyVisitMeta = { isReturnVisitToday: false, advancedStreakToday: false };
     }
 
@@ -74,6 +75,7 @@
         this.preflightExportAvailability();
         this.renderShuffleStreak();
         this.updateNextButtonLabel();
+        this.updateFeedbackCount();
         this.renderInitialHeadline();
     }
 
@@ -109,6 +111,9 @@
             button.addEventListener('click', () => this.setMockLayout(button.dataset.layout || 'standard'));
         });
         this.elements.clearFiltersButton?.addEventListener('click', () => this.clearAllFilters());
+        this.elements.feedbackGoodButton?.addEventListener('click', () => this.captureHeadlineFeedback('up'));
+        this.elements.feedbackBadButton?.addEventListener('click', () => this.captureHeadlineFeedback('down'));
+        this.elements.feedbackExportButton?.addEventListener('click', () => this.copyFeedbackLog());
         [
             this.elements.twitterShareLink,
             this.elements.facebookShareLink,
@@ -270,6 +275,7 @@
 
         this.clearCopyStatus();
         this.clearShareStatus();
+        this.clearFeedbackStatus();
         const loaderMessage = this.elements.loaderText?.textContent || this.elements.loader.textContent || 'Loading headline...';
         const previousIndex = this.state.currentIndex;
         const shouldIncrementStreak = this.shouldIncrementStreak;
@@ -1152,6 +1158,97 @@
         link.setAttribute('href', url);
     }
 
+
+    normalizeFeedbackLog(feedbackLog) {
+        if (!Array.isArray(feedbackLog)) return [];
+
+        return feedbackLog
+            .filter((entry) => entry && typeof entry === 'object')
+            .map((entry) => ({
+                headline: typeof entry.headline === 'string' ? entry.headline.trim() : '',
+                preference: entry.preference === 'up' ? 'up' : 'down',
+                source: entry.source === 'generated' ? 'generated' : 'curated',
+                timestamp: typeof entry.timestamp === 'string' ? entry.timestamp : new Date().toISOString()
+            }))
+            .filter((entry) => entry.headline);
+    }
+
+    captureHeadlineFeedback(preference) {
+        const index = this.state.currentIndex;
+        if (!isValidHeadlineIndex(index, this.headlines.length)) {
+            this.reportFeedbackStatus('No headline available to rate.', true);
+            return;
+        }
+
+        const headline = this.headlines[index];
+        const source = index >= this.baseHeadlineCount ? 'generated' : 'curated';
+        const existingEntryIndex = this.feedbackLog.findIndex((entry) => entry.headline === headline);
+        const nextEntry = {
+            headline,
+            preference: preference === 'up' ? 'up' : 'down',
+            source,
+            timestamp: new Date().toISOString()
+        };
+
+        if (existingEntryIndex >= 0) {
+            this.feedbackLog[existingEntryIndex] = nextEntry;
+            this.reportFeedbackStatus('Updated RLHF label for this headline.');
+        } else {
+            this.feedbackLog.push(nextEntry);
+            this.reportFeedbackStatus('Saved RLHF label for this headline.');
+        }
+
+        this.feedbackLog = this.feedbackLog.slice(-300);
+        this.state.feedbackLog = this.feedbackLog;
+        this.updateFeedbackCount();
+        this.persistState();
+    }
+
+    async copyFeedbackLog() {
+        if (!this.feedbackLog.length) {
+            this.reportFeedbackStatus('Label a few headlines first, then copy the RLHF log.', true);
+            return;
+        }
+
+        const payload = this.feedbackLog
+            .map((entry) => JSON.stringify({
+                prompt: 'Generate a satirical, absurd news-style headline.',
+                completion: entry.headline,
+                preference: entry.preference,
+                source: entry.source,
+                timestamp: entry.timestamp
+            }))
+            .join('\n');
+
+        await copyTextWithFeedback({
+            text: payload,
+            button: this.elements.feedbackExportButton,
+            successMessage: 'RLHF log copied to clipboard.',
+            onStatus: (message, isError) => this.reportFeedbackStatus(message, isError),
+            setButtonLoading
+        });
+    }
+
+    updateFeedbackCount() {
+        if (!this.elements.feedbackCount) return;
+        this.elements.feedbackCount.textContent = String(this.feedbackLog.length);
+    }
+
+    reportFeedbackStatus(message, isError = false) {
+        if (!this.elements.feedbackStatus) return;
+        this.elements.feedbackStatus.textContent = message;
+        this.elements.feedbackStatus.classList.toggle('error', isError);
+        if (!isError && message) {
+            this.showToast(message);
+        }
+    }
+
+    clearFeedbackStatus() {
+        if (!this.elements.feedbackStatus) return;
+        this.elements.feedbackStatus.textContent = '';
+        this.elements.feedbackStatus.classList.remove('error');
+    }
+
     async copyHeadline(triggerButton = this.elements.copyButton) {
         const headlineText = this.elements.headline.innerText;
 
@@ -1418,7 +1515,8 @@
             generatedHeadlines: this.state.generatedHeadlines,
             favorites: Array.from(this.favoriteHeadlines),
             filters: this.filters,
-            dailyEngagement: this.dailyEngagement
+            dailyEngagement: this.dailyEngagement,
+            feedbackLog: this.feedbackLog
         });
     }
 
