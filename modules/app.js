@@ -123,7 +123,7 @@
             this.elements.blueskyShareLink
         ].filter(Boolean).forEach((link) => {
             link.addEventListener('click', () => {
-                this.reportShareStatus('Opened in a new tab.');
+                this.reportShareStatus('Share window opened.');
             });
         });
         this.elements.headlineList?.addEventListener('click', (event) => {
@@ -1283,13 +1283,22 @@
     flashCopiedButtonLabel(button) {
         if (!button || button.dataset.copyLabelTimeout === 'active') return;
 
-        const originalContent = button.dataset.originalContent || button.innerHTML;
-        button.dataset.originalContent = originalContent;
+        const label = button.querySelector('span:last-child') || button.querySelector('span');
+        const originalLabel = label ? label.textContent : button.textContent;
         button.dataset.copyLabelTimeout = 'active';
-        button.innerHTML = 'Copied';
+
+        if (label) {
+            label.textContent = 'Copied';
+        } else {
+            button.textContent = 'Copied';
+        }
 
         window.setTimeout(() => {
-            button.innerHTML = originalContent;
+            if (label) {
+                label.textContent = originalLabel;
+            } else {
+                button.textContent = originalLabel;
+            }
             delete button.dataset.copyLabelTimeout;
         }, 1400);
     }
@@ -1479,7 +1488,7 @@
             return '';
         }
 
-        const maxLength = 160;
+        const maxLength = 132;
         if (normalized.length <= maxLength) {
             return normalized;
         }
