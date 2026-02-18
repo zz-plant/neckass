@@ -14,6 +14,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added an Automation beta command-rail card with a copyable agent snippet and API waitlist CTA, plus a local growth metrics snapshot card that tracks key actions and copies an investor-friendly metrics JSON payload.
 
 ### Changed
+- Tightened verbose streak, quick-action, feedback, automation, and export fallback copy to keep the UI concise while preserving accessibility messaging.
 - Added optional haptic feedback for shuffle, copy, share, export, favorites, and RLHF labeling actions (with reduced-motion and unsupported-browser safeguards).
 - Clarified `DEVELOPMENT.md` module boundary rules (app orchestration vs UI rendering vs persistence/integration modules) and documented an optional non-required build path.
 - Simplified the headline card by removing the mobile quick-actions helper hint and tightening the helper sentence copy.

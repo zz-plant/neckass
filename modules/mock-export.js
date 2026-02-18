@@ -4,8 +4,8 @@
     async function exportMockFront({ mode, elements, reportStatus, setButtonLoading }) {
         if (!elements.mockFrame || !window.htmlToImage) {
             const fallbackMessage = mode === 'copy'
-                ? 'Export unavailable right now. Try Download mock front page.'
-                : 'Export unavailable right now.';
+                ? 'Export unavailable. Try Download mock front page.'
+                : 'Export unavailable.';
             reportStatus(fallbackMessage, true);
             return;
         }
@@ -39,7 +39,7 @@
             }
 
             if (!navigator.clipboard || !navigator.clipboard.write) {
-                await downloadImage('Clipboard unavailable. Downloaded front page instead.');
+                await downloadImage('Clipboard unavailable. Downloaded front page.');
                 return;
             }
 
@@ -56,7 +56,7 @@
                 ]);
                 reportStatus('Copied front page to clipboard.');
             } catch (error) {
-                await downloadImage('Clipboard unavailable. Downloaded front page instead.');
+                await downloadImage('Clipboard unavailable. Downloaded front page.');
             }
         } catch (error) {
             reportStatus('Export failed. Please try again.', true);

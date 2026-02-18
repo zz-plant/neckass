@@ -79,7 +79,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 - Mock front page contains a masthead, current date, headline, and “Published” dateline.
 - Two actions:
   - **Download mock front page** (`#download-mock`), which renders the mock to PNG via `html-to-image` and triggers a download.
-  - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable. Downloaded front page instead.”
+  - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable. Downloaded front page.”
 - Status text `#export-status` reports success or failure messages after export attempts (for example “Preparing export…”, “Downloaded front page.”, and clipboard-download fallback messaging). A global toast (`#global-toast`) provides compact success feedback for copy/share/export actions while inline status remains visible near each control.【F:index.html†L163-L187】【F:modules/mock-export.js†L13-L59】【F:modules/app.js†L1037-L1043】
 
 ## Tiny LLM headline generator (`llm.js`)
