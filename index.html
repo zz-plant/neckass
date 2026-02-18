@@ -52,7 +52,7 @@
         {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            "name": "Neckass Headlines Generator",
+            "name": "Neckass Headlines",
             "url": "https://neckass.com/",
             "description": "Use Neckass to instantly generate absurd, social-ready headlines you can copy, share, or export as a mock front page.",
             "isPartOf": {
@@ -74,14 +74,6 @@
         </div>
         <header class="hero">
             <div class="container hero__content">
-                <p class="eyebrow">Ridiculous news desk</p>
-                <h1>Neckass Headlines Generator</h1>
-                <p class="lede">Generate quick, share-ready headlines.</p>
-                <div class="pill-list" aria-label="Highlights">
-                    <span class="pill">Instant shuffle</span>
-                    <span class="pill">Dark mode ready</span>
-                    <span class="pill">Share-ready format</span>
-                </div>
                 <p class="meta" id="masthead-date">Updated daily</p>
                 <p class="meta meta--secondary streak-pill" id="daily-streak" aria-live="polite" aria-atomic="true">Daily desk streak: 1 day · Come back tomorrow to build momentum.</p>
             </div>
@@ -95,7 +87,7 @@
                         Featured story
                     </div>
                     <div class="headline-frame">
-                        <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
+                        <h1 id="headline" tabindex="0" aria-label="Headline">Loading...</h1>
                     </div>
                     <p class="streak-text" id="shuffle-streak" aria-live="polite" aria-atomic="true">
                         Shuffle streak: 0 · Start a run.
@@ -243,8 +235,12 @@
                             <span class="mock-title">Neckass Daily</span>
                             <span id="mock-date" class="mock-date">Loading...</span>
                         </div>
+                        <p class="mock-kicker">Breaking satire bulletin</p>
+                        <div class="mock-rule" aria-hidden="true"></div>
                         <h3 id="mock-headline" class="mock-headline">Loading...</h3>
+                        <p class="mock-deck">Satire from the digital city desk.</p>
                         <p id="feature-date" class="mock-dateline">Published 8:45 AM</p>
+                        <p class="mock-footer">neckass.com · humor desk</p>
                     </div>
                     <div class="mock-actions">
                         <button id="download-mock" class="ghost" type="button">

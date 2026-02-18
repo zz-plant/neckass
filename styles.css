@@ -732,12 +732,55 @@ button.ghost {
 }
 
 .mock-front {
+    position: relative;
+    overflow: hidden;
     display: grid;
-    gap: 8px;
-    padding: 16px;
-    border-radius: 16px;
-    background: transparent;
-    border: 1px solid rgba(45, 31, 16, 0.16);
+    gap: 9px;
+    padding: 20px 18px 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #fffef9 0%, #f6efe3 100%);
+    border: 1px solid rgba(45, 31, 16, 0.22);
+    box-shadow: 0 14px 26px -22px rgba(24, 18, 10, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    min-height: 290px;
+    align-content: start;
+}
+
+.mock-front::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: linear-gradient(90deg, #533319, #9c693c, #533319);
+}
+
+.mock-front--square {
+    aspect-ratio: 1 / 1;
+    min-height: 260px;
+}
+
+.mock-front--square .mock-headline {
+    font-size: clamp(1.06rem, 2vw, 1.34rem);
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mock-front--square .mock-deck {
+    display: none;
+}
+
+.mock-front--story {
+    aspect-ratio: 4 / 5;
+    min-height: 340px;
+}
+
+.mock-front--story .mock-headline {
+    font-size: clamp(1.12rem, 1.75vw, 1.48rem);
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .mock-masthead {
@@ -745,26 +788,70 @@ button.ghost {
     justify-content: space-between;
     align-items: baseline;
     gap: 12px;
-    font-size: 0.85rem;
-    color: var(--muted);
+    font-size: 0.82rem;
+    color: #5f5345;
 }
 
 .mock-title {
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-weight: 600;
-    color: var(--text);
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    color: #2b2014;
+}
+
+.mock-date {
+    font-variant-numeric: tabular-nums;
+}
+
+.mock-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.74rem;
+    color: #6f604f;
+}
+
+.mock-rule {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(48, 34, 18, 0), rgba(48, 34, 18, 0.36), rgba(48, 34, 18, 0));
 }
 
 .mock-headline {
+    margin: 2px 0 1px;
     font-family: var(--headline-font);
-    font-size: 1.2rem;
-    color: var(--text);
+    font-size: clamp(1.16rem, 1.55vw, 1.42rem);
+    line-height: 1.14;
+    letter-spacing: -0.01em;
+    color: #1f150d;
+    text-wrap: balance;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.mock-deck {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: #5a4a39;
 }
 
 .mock-dateline {
-    font-size: 0.9rem;
-    color: #524a41;
+    margin: 0;
+    font-size: 0.84rem;
+    color: #645647;
+}
+
+.mock-footer {
+    margin: auto 0 0;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(63, 44, 21, 0.24);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6c5d4d;
 }
 
 .mock-actions {
