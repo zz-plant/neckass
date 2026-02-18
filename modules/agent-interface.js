@@ -54,6 +54,9 @@
                 if (typeof tool !== 'function') {
                     throw new Error(`Unknown tool: ${toolName}`);
                 }
+                if (typeof app.trackGrowthEvent === 'function') {
+                    app.trackGrowthEvent('agent_call', { tool: toolName });
+                }
                 return tool(args);
             }
         };

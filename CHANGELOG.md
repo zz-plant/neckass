@@ -11,6 +11,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added a persistent daily desk streak indicator that tracks return-day momentum and celebrates key streak milestones (3/7/14 days) to encourage repeat usage.
 - Added a root `robots.txt` that allows crawling and points search engines to the sitemap.
 - Added a root `sitemap.xml` with the canonical homepage URL.
+- Added an Automation beta command-rail card with a copyable agent snippet and API waitlist CTA, plus a local growth metrics snapshot card that tracks key actions and copies an investor-friendly metrics JSON payload.
 
 ### Changed
 - Clarified `DEVELOPMENT.md` module boundary rules (app orchestration vs UI rendering vs persistence/integration modules) and documented an optional non-required build path.
