@@ -61,6 +61,9 @@
         this.dailyEngagement = this.normalizeDailyEngagement(this.state.dailyEngagement);
         this.feedbackLog = this.normalizeFeedbackLog(this.state.feedbackLog);
         this.dailyVisitMeta = { isReturnVisitToday: false, advancedStreakToday: false };
+        this.metrics = typeof Neckass.createMetricsTracker === 'function'
+            ? Neckass.createMetricsTracker()
+            : null;
     }
 
     init() {
@@ -76,6 +79,11 @@
         this.renderShuffleStreak();
         this.updateNextButtonLabel();
         this.updateFeedbackCount();
+        this.updateMetricsSummary();
+        this.trackGrowthEvent('session_start', {
+            hasGenerator: this.isGeneratorAvailable(),
+            sourceFilter: this.filters.source
+        });
         this.renderInitialHeadline();
     }
 
@@ -114,6 +122,12 @@
         this.elements.feedbackGoodButton?.addEventListener('click', () => this.captureHeadlineFeedback('up'));
         this.elements.feedbackBadButton?.addEventListener('click', () => this.captureHeadlineFeedback('down'));
         this.elements.feedbackExportButton?.addEventListener('click', () => this.copyFeedbackLog());
+        this.elements.copyAgentSnippetButton?.addEventListener('click', () => this.copyAgentSnippet());
+        this.elements.exportMetricsButton?.addEventListener('click', () => this.copyMetricsSnapshot());
+        this.elements.apiWaitlistLink?.addEventListener('click', () => {
+            this.trackGrowthEvent('api_waitlist_click', { source: 'automation_card' });
+            this.reportAutomationStatus('Opening waitlist email draft.');
+        });
         [
             this.elements.twitterShareLink,
             this.elements.facebookShareLink,
@@ -124,6 +138,7 @@
         ].filter(Boolean).forEach((link) => {
             link.addEventListener('click', () => {
                 this.reportShareStatus('Share window opened.');
+                this.trackGrowthEvent('share_link_opened', { channel: link.id || 'social' });
             });
         });
         this.elements.headlineList?.addEventListener('click', (event) => {
@@ -174,6 +189,10 @@
             return;
         }
 
+        this.trackGrowthEvent('shuffle', {
+            source: wantsGenerated && generatorAvailable ? 'generated' : 'curated',
+            hasActiveFilters: hasActiveFilters(this.filters)
+        });
         this.renderHeadline(nextIndex);
     }
 
@@ -197,6 +216,7 @@
         this.persistState();
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
+        this.trackGrowthEvent('previous', { stackDepth: this.state.navigationStack.length });
         this.renderHeadline(previousIndex, { pushToStack: false, replaceState: false });
     }
 
@@ -220,6 +240,7 @@
                 this.renderEmptyState();
                 return;
             }
+            this.trackGrowthEvent('generate_fallback', { reason: 'generation-unavailable' });
             this.renderHeadline(fallbackIndex);
             return;
         }
@@ -230,10 +251,12 @@
                 this.renderEmptyState();
                 return;
             }
+            this.trackGrowthEvent('generate_fallback', { reason: 'generated-ineligible' });
             this.renderHeadline(fallbackIndex);
             return;
         }
 
+        this.trackGrowthEvent('generate_success', { source: 'tiny-llm' });
         this.renderHeadline(generatedIndex);
     }
 
@@ -962,6 +985,7 @@
         try {
             await navigator.share(payload);
             this.reportShareStatus('Shared successfully.', false);
+            this.trackGrowthEvent('share_success', { channel: 'native' });
         } catch (error) {
             if (error && error.name === 'AbortError') {
                 this.reportShareStatus('Share canceled.', false);
@@ -983,7 +1007,12 @@
             text: canonicalUrl,
             button: this.elements.copyLinkButton,
             successMessage: 'Headline link copied!',
-            onStatus: (message, isError) => this.reportCopyStatus(message, isError),
+            onStatus: (message, isError) => {
+                this.reportCopyStatus(message, isError);
+                if (!isError) {
+                    this.trackGrowthEvent('copy_link_success', { source: 'copy-link' });
+                }
+            },
             setButtonLoading
         });
     }
@@ -1265,10 +1294,91 @@
                 this.reportCopyStatus(message, isError);
                 if (!isError) {
                     this.flashCopiedButtonLabel(triggerButton);
+                    this.trackGrowthEvent('copy_success', { source: triggerButton?.id || 'copy-button' });
                 }
             },
             setButtonLoading
         });
+    }
+
+    async copyAgentSnippet() {
+        const snippet = [
+            "const state = await window.Neckass.agent.call('get_state');",
+            "const next = await window.Neckass.agent.call('shuffle');",
+            "const generated = await window.Neckass.agent.call('generate');"
+        ].join('\n');
+
+        await copyTextWithFeedback({
+            text: snippet,
+            button: this.elements.copyAgentSnippetButton,
+            successMessage: 'Agent snippet copied.',
+            onStatus: (message, isError) => {
+                this.reportAutomationStatus(message, isError);
+                if (!isError) {
+                    this.trackGrowthEvent('agent_snippet_copy', { source: 'automation_card' });
+                }
+            },
+            setButtonLoading
+        });
+    }
+
+    async copyMetricsSnapshot() {
+        if (!this.metrics) {
+            this.reportMetricsStatus('Metrics unavailable in this browser.', true);
+            return;
+        }
+
+        const payload = JSON.stringify(
+            this.metrics.exportSnapshot({
+                currentHeadline: this.headlines[this.state.currentIndex] || null,
+                viewedCount: this.state.uniqueHeadlines.size
+            }),
+            null,
+            2
+        );
+
+        await copyTextWithFeedback({
+            text: payload,
+            button: this.elements.exportMetricsButton,
+            successMessage: 'Metrics snapshot copied.',
+            onStatus: (message, isError) => {
+                this.reportMetricsStatus(message, isError);
+                if (!isError) {
+                    this.trackGrowthEvent('metrics_export', { source: 'metrics_card' });
+                }
+            },
+            setButtonLoading
+        });
+    }
+
+    reportAutomationStatus(message, isError = false) {
+        if (!this.elements.automationStatus) return;
+        this.elements.automationStatus.textContent = message;
+        this.elements.automationStatus.classList.toggle('error', isError);
+        if (!isError && message) {
+            this.showToast(message);
+        }
+    }
+
+    reportMetricsStatus(message, isError = false) {
+        if (!this.elements.metricsStatus) return;
+        this.elements.metricsStatus.textContent = message;
+        this.elements.metricsStatus.classList.toggle('error', isError);
+        if (!isError && message) {
+            this.showToast(message);
+        }
+    }
+
+    trackGrowthEvent(eventName, details = {}) {
+        if (!this.metrics) return;
+        this.metrics.track(eventName, details);
+        this.updateMetricsSummary();
+    }
+
+    updateMetricsSummary() {
+        if (!this.metrics || !this.elements.metricsSummary) return;
+        const summary = this.metrics.getSummary();
+        this.elements.metricsSummary.textContent = `Sessions: ${summary.sessions} · Shuffles: ${summary.shuffles} · Share actions: ${summary.shares}`;
     }
 
     reportCopyStatus(message, isError = false) {
@@ -1416,6 +1526,9 @@
         this.elements.exportStatus.classList.toggle('error', isError);
         if (!isError && message) {
             this.showToast(message);
+            if (message.includes('Downloaded') || message.includes('Copied front page')) {
+                this.trackGrowthEvent('export_success', { message });
+            }
         }
     }
 

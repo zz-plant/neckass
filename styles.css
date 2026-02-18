@@ -675,6 +675,11 @@ button.ghost {
     gap: 8px;
 }
 
+.automation-actions {
+    display: grid;
+    gap: 8px;
+}
+
 .feedback-note {
     margin: 0;
     font-size: 0.92rem;
