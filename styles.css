@@ -118,6 +118,7 @@ a,
 }
 
 .brand-title {
+    margin: 0;
     font-family: var(--headline-font);
     font-size: 1.4rem;
     letter-spacing: -0.01em;
@@ -760,10 +761,6 @@ button.ghost {
 
 .mock-front--square .mock-headline {
     font-size: clamp(1.06rem, 2vw, 1.34rem);
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 .mock-front--square .mock-deck {
@@ -777,10 +774,6 @@ button.ghost {
 
 .mock-front--story .mock-headline {
     font-size: clamp(1.12rem, 1.75vw, 1.48rem);
-    display: -webkit-box;
-    -webkit-line-clamp: 7;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 .mock-masthead {
@@ -825,10 +818,6 @@ button.ghost {
     letter-spacing: -0.01em;
     color: #1f150d;
     text-wrap: balance;
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 .mock-deck {
