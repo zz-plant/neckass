@@ -24,10 +24,13 @@
         }
 
         function getSummary() {
+            const nativeShares = metrics.totals.share_success || 0;
+            const socialLinkShares = metrics.totals.share_link_opened || 0;
+
             return {
                 sessions: metrics.totals.session_start || 0,
                 shuffles: metrics.totals.shuffle || 0,
-                shares: metrics.totals.share_success || 0,
+                shares: nativeShares + socialLinkShares,
                 copies: metrics.totals.copy_success || 0,
                 exports: metrics.totals.export_success || 0,
                 agentCalls: metrics.totals.agent_call || 0
