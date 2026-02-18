@@ -92,7 +92,7 @@
                 <section class="headline-section">
                     <div class="headline-label">
                         <span class="accent-dot" aria-hidden="true"></span>
-                        Featured headline
+                        Featured story
                     </div>
                     <div class="headline-frame">
                         <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
@@ -100,7 +100,7 @@
                     <p class="streak-text" id="shuffle-streak" aria-live="polite" aria-atomic="true">
                         Shuffle streak: 0 · Start a run.
                     </p>
-                    <ul class="streak-badges" id="streak-badges" aria-label="Shuffle streak badges">
+                    <ul class="streak-badges" id="streak-badges" aria-label="Shuffle streak badges" hidden>
                         <li class="streak-badge" data-milestone="3">
                             <span class="streak-badge__title">Rhythm</span>
                             <span class="streak-badge__goal">3 shuffles</span>
@@ -129,7 +129,7 @@
                         <button id="next-btn" aria-label="Shuffle headline" class="accent button-with-icon"><img class="button-icon" src="icons/shuffle.svg" alt="" aria-hidden="true"><span class="button-label">Shuffle</span></button>
                     </div>
 
-                    <div class="headline-quick-actions" aria-label="Quick actions">
+                    <div class="headline-quick-actions" id="headline-quick-actions" aria-label="Quick actions" hidden>
                         <p class="headline-quick-actions__title">Quick actions</p>
                         <p class="headline-quick-actions__hint">More actions below: copy, share, and export.</p>
                         <div class="headline-quick-actions__grid">
@@ -159,9 +159,9 @@
                         <p class="counter">Headlines viewed: <span id="counter">0</span></p>
                     </div>
 
-                    <section class="command-cluster copy-headline" id="copy-card" aria-labelledby="copy-card-title">
+                    <section class="command-cluster command-cluster--paired copy-headline" id="copy-card" aria-labelledby="copy-card-title">
                         <div>
-                            <h3 class="filter-label label-with-icon" id="copy-card-title"><img class="label-icon" src="icons/clipboard.svg" alt="" aria-hidden="true"><span>Clipboard</span></h3>
+                            <h3 class="filter-label" id="copy-card-title">Clipboard</h3>
 
                         </div>
                         <div class="copy-row">
@@ -170,9 +170,9 @@
                         <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
                     </section>
 
-                    <section class="command-cluster social-share" id="share-card" aria-labelledby="share-card-title">
+                    <section class="command-cluster command-cluster--paired social-share" id="share-card" aria-labelledby="share-card-title">
                         <div>
-                            <h3 class="filter-label label-with-icon" id="share-card-title"><img class="label-icon" src="icons/share-2.svg" alt="" aria-hidden="true"><span>Share</span></h3>
+                            <h3 class="filter-label" id="share-card-title">Share</h3>
 
                         </div>
                         <div class="share-actions">
@@ -197,7 +197,7 @@
 
                     <section class="command-cluster feedback-cluster" id="feedback-card" aria-labelledby="feedback-card-title">
                         <div>
-                            <h3 class="filter-label label-with-icon" id="feedback-card-title"><img class="label-icon" src="icons/target.svg" alt="" aria-hidden="true"><span>Training feedback</span></h3>
+                            <h3 class="filter-label" id="feedback-card-title">Training feedback</h3>
                             <p class="feedback-note">Mark headline quality to build an exportable RLHF log.</p>
                         </div>
                         <div class="feedback-actions" role="group" aria-label="Rate the current headline">

@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const headlineEl = document.getElementById('headline');
     const mockHeadlineEl = document.getElementById('mock-headline');
     const loaderEl = document.getElementById('loader');
+    const streakBadgesEl = document.getElementById('streak-badges');
+    const headlineQuickActionsEl = document.getElementById('headline-quick-actions');
 
     const showFallback = () => {
         if (headlineEl) {
@@ -19,6 +21,27 @@ document.addEventListener('DOMContentLoaded', () => {
             loaderEl.setAttribute('aria-hidden', 'true');
         }
     };
+
+    const revealSecondaryIntro = () => {
+        if (streakBadgesEl?.hasAttribute('hidden')) {
+            streakBadgesEl.removeAttribute('hidden');
+        }
+
+        if (headlineQuickActionsEl?.hasAttribute('hidden')) {
+            headlineQuickActionsEl.removeAttribute('hidden');
+        }
+    };
+
+    const revealOnFirstInteraction = () => {
+        revealSecondaryIntro();
+        ['pointerdown', 'keydown'].forEach((eventName) => {
+            document.removeEventListener(eventName, revealOnFirstInteraction, true);
+        });
+    };
+
+    ['pointerdown', 'keydown'].forEach((eventName) => {
+        document.addEventListener(eventName, revealOnFirstInteraction, true);
+    });
 
     if (typeof HeadlineApp !== 'function'
         || typeof createStorageAdapter !== 'function'
