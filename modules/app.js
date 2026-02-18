@@ -22,7 +22,8 @@
         normalizeHeadlineText,
         selectReadableColor,
         slugifyHeadline,
-        runViewTransition
+        runViewTransition,
+        triggerHapticFeedback
     } = Neckass;
     const renderFilterStatus = Neckass.updateFilterStatus;
 
@@ -193,6 +194,7 @@
             source: wantsGenerated && generatorAvailable ? 'generated' : 'curated',
             hasActiveFilters: hasActiveFilters(this.filters)
         });
+        triggerHapticFeedback('selection');
         this.renderHeadline(nextIndex);
     }
 
@@ -217,6 +219,7 @@
         this.updateHeadlineCounter();
         this.updateNavigationAvailability();
         this.trackGrowthEvent('previous', { stackDepth: this.state.navigationStack.length });
+        triggerHapticFeedback('selection');
         this.renderHeadline(previousIndex, { pushToStack: false, replaceState: false });
     }
 
@@ -797,6 +800,7 @@
             this.favoriteHeadlines.add(headlineText);
             this.reportCopyStatus('Saved to favorites.');
         }
+        triggerHapticFeedback('light');
         this.persistState();
         this.updateFavoriteButton();
         this.updateHistoryList();
@@ -872,6 +876,7 @@
         const nextIndex = this.filteredIndexes[0];
         this.state.navigationStack = [nextIndex];
         this.state.currentIndex = nextIndex;
+        triggerHapticFeedback('light');
         this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
         this.showToast('Filters cleared.');
 
@@ -985,6 +990,7 @@
         try {
             await navigator.share(payload);
             this.reportShareStatus('Shared successfully.', false);
+            triggerHapticFeedback('success');
             this.trackGrowthEvent('share_success', { channel: 'native' });
         } catch (error) {
             if (error && error.name === 'AbortError') {
@@ -1226,6 +1232,7 @@
             this.feedbackLog.push(nextEntry);
             this.reportFeedbackStatus('Saved RLHF label for this headline.');
         }
+        triggerHapticFeedback('light');
 
         this.feedbackLog = this.feedbackLog.slice(-300);
         this.state.feedbackLog = this.feedbackLog;
@@ -1293,6 +1300,7 @@
             onStatus: (message, isError) => {
                 this.reportCopyStatus(message, isError);
                 if (!isError) {
+                    triggerHapticFeedback('success');
                     this.flashCopiedButtonLabel(triggerButton);
                     this.trackGrowthEvent('copy_success', { source: triggerButton?.id || 'copy-button' });
                 }
@@ -1385,6 +1393,9 @@
         if (!this.elements.copyStatus) return;
         this.elements.copyStatus.textContent = message;
         this.elements.copyStatus.classList.toggle('error', isError);
+        if (isError && message) {
+            triggerHapticFeedback('error');
+        }
         if (!isError && message) {
             this.showToast(message);
         }
@@ -1423,6 +1434,9 @@
         if (!this.elements.shareStatus) return;
         this.elements.shareStatus.textContent = message;
         this.elements.shareStatus.classList.toggle('error', isError);
+        if (isError && message) {
+            triggerHapticFeedback('error');
+        }
         if (!isError && message) {
             this.showToast(message);
         }
@@ -1524,9 +1538,13 @@
         if (!this.elements.exportStatus) return;
         this.elements.exportStatus.textContent = message;
         this.elements.exportStatus.classList.toggle('error', isError);
+        if (isError && message) {
+            triggerHapticFeedback('error');
+        }
         if (!isError && message) {
             this.showToast(message);
             if (message.includes('Downloaded') || message.includes('Copied front page')) {
+                triggerHapticFeedback('success');
                 this.trackGrowthEvent('export_success', { message });
             }
         }
