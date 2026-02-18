@@ -14,9 +14,13 @@
         const exportButton = mode === 'download' ? elements.downloadMockButton : elements.copyMockButton;
         setButtonLoading(exportButton, true);
 
+        const bounds = elements.mockFrame.getBoundingClientRect();
         const options = {
-            pixelRatio: window.devicePixelRatio || 2,
-            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')?.trim() || undefined
+            pixelRatio: Math.min(3, Math.max(2, (window.devicePixelRatio || 1) * 1.25)),
+            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')?.trim() || undefined,
+            cacheBust: true,
+            width: Math.max(1, Math.round(bounds.width)),
+            height: Math.max(1, Math.round(bounds.height))
         };
 
         const downloadImage = async (message) => {
