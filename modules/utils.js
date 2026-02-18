@@ -195,6 +195,32 @@ function runViewTransition(updateDom) {
     });
 }
 
+function triggerHapticFeedback(type = 'light') {
+    if (!navigator || typeof navigator.vibrate !== 'function') {
+        return false;
+    }
+
+    const prefersReducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        return false;
+    }
+
+    const patterns = {
+        light: 8,
+        selection: 10,
+        success: [14, 22, 18],
+        error: [22, 36, 22]
+    };
+    const pattern = patterns[type] || patterns.light;
+
+    try {
+        return navigator.vibrate(pattern);
+    } catch (error) {
+        return false;
+    }
+}
+
     Neckass.isValidHeadlineIndex = isValidHeadlineIndex;
     Neckass.normalizeHeadlineText = normalizeHeadlineText;
     Neckass.slugifyHeadline = slugifyHeadline;
@@ -202,4 +228,5 @@ function runViewTransition(updateDom) {
     Neckass.cloneStateSnapshot = cloneStateSnapshot;
     Neckass.scheduleBackgroundTask = scheduleBackgroundTask;
     Neckass.runViewTransition = runViewTransition;
+    Neckass.triggerHapticFeedback = triggerHapticFeedback;
 })();
