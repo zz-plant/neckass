@@ -471,10 +471,10 @@
         const streakDays = this.dailyEngagement.streakDays || 1;
         const visitsToday = this.dailyEngagement.visitsThisDate || 1;
         const dayLabel = streakDays === 1 ? 'day' : 'days';
-        let suffix = 'Come back tomorrow to build momentum.';
+        let suffix = 'Back tomorrow.';
 
         if (this.dailyVisitMeta.advancedStreakToday && streakDays >= 2) {
-            suffix = streakDays >= 7 ? 'Weekly streak rolling. Keep it alive.' : 'Run extended. Keep the desk hot.';
+            suffix = streakDays >= 7 ? 'Week streak active.' : 'Streak extended.';
         } else if (this.dailyVisitMeta.isReturnVisitToday && visitsToday > 1) {
             suffix = `Visit ${visitsToday} today.`;
         }
@@ -488,9 +488,9 @@
         }
 
         const milestoneMessages = {
-            3: 'Daily streak 3: now it is a habit.',
-            7: 'Daily streak 7: full-week momentum.',
-            14: 'Daily streak 14: newsroom legend status.'
+            3: 'Daily streak 3: habit formed.',
+            7: 'Daily streak 7: full week.',
+            14: 'Daily streak 14: legend status.'
         };
 
         const message = milestoneMessages[this.dailyEngagement.streakDays];
@@ -502,17 +502,17 @@
     renderShuffleStreak() {
         if (!this.elements.shuffleStreak) return;
         if (this.shuffleStreak <= 0) {
-            this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Start a run.';
+            this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Start.';
             this.renderShuffleBadges();
             return;
         }
 
         const nextMilestone = STREAK_MILESTONES.find((milestone) => milestone > this.shuffleStreak) || null;
         const suffix = this.shuffleStreak >= 8
-            ? 'Headline hurricane.'
+            ? 'Headline mode.'
             : this.shuffleStreak >= 5
-                ? 'Desk is on fire.'
-                : 'Nice rhythm.';
+                ? 'Strong run.'
+                : 'Nice pace.';
         const nextMilestoneText = nextMilestone
             ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
             : 'Legend badge unlocked.';
@@ -560,9 +560,9 @@
 
     handleShuffleMilestone() {
         const messages = {
-            3: 'Shuffle streak 3: rhythm established.',
+            3: 'Shuffle streak 3: rhythm.',
             5: 'Shuffle streak 5: absurdity unlocked.',
-            8: 'Shuffle streak 8: headline hurricane.'
+            8: 'Shuffle streak 8: headline mode.'
         };
         const message = messages[this.shuffleStreak];
         if (!message) {
@@ -1037,7 +1037,7 @@
     async handleQuickExport() {
         if (!window.htmlToImage) {
             this.jumpToCard('export');
-            this.reportExportStatus('Export unavailable right now. Try Download mock front page after reloading.', true);
+            this.reportExportStatus('Export unavailable. Try Download mock front page after reloading.', true);
             return;
         }
 
@@ -1503,7 +1503,7 @@
             this.elements.copyMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
         }
         if (!window.htmlToImage) {
-            this.reportExportStatus('Export unavailable right now. Try Download mock front page after reloading.', true);
+            this.reportExportStatus('Export unavailable. Try Download mock front page after reloading.', true);
         }
     }
 
