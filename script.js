@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const revealOnFirstInteraction = () => {
         revealSecondaryIntro();
-        ['pointerdown', 'keydown'].forEach((eventName) => {
+        ['click'].forEach((eventName) => {
             document.removeEventListener(eventName, revealOnFirstInteraction, true);
         });
     };
 
-    ['pointerdown', 'keydown'].forEach((eventName) => {
+    ['click'].forEach((eventName) => {
         document.addEventListener(eventName, revealOnFirstInteraction, true);
     });
 
