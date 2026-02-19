@@ -3,6 +3,7 @@ const BEATS = neckassData?.BEATS || {};
 const TEMPLATES = neckassData?.TEMPLATES || [];
 
 const TINY_LLM_TIMEOUT_MS = 2400;
+const WEBGPU_FIRST_RUN_TIMEOUT_BONUS_MS = 900;
 const GENERATION_DELAY_RANGE_MS = { min: 420, max: 880 };
 const RECENT_HEADLINE_HISTORY = 12;
 const RECENT_STORAGE_KEY = 'tinyLlmRecentHeadlines';
@@ -52,6 +53,15 @@ const tinyLlmClient = (() => {
     const modePriors = loadPriorMap(MODE_PRIOR_STORAGE_KEY);
     const tokenPriors = loadPriorMap(TOKEN_PRIOR_STORAGE_KEY);
     const corpusTokenStats = buildCorpusTokenStats();
+    let activeBackend = null;
+    let webgpuWarmup = { attempted: false, ready: false };
+    let lastGenerationDiagnostics = {
+        backend: 'cpu-mock',
+        warm: false,
+        timeoutMs: TINY_LLM_TIMEOUT_MS,
+        fallback: null
+    };
+    let hasCompletedWebGpuGeneration = false;
 
     function getSecureRandom() {
         if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
@@ -274,9 +284,7 @@ const tinyLlmClient = (() => {
     }
 
     function maybeAttachTag(headline, tag, shouldAttach) {
-        if (!headline || !tag || !shouldAttach || headline.includes(tag)) {
-            return headline;
-        }
+        if (!headline || !tag || !shouldAttach || headline.includes(tag)) return headline;
         return `${headline} ${tag}`;
     }
 
@@ -304,9 +312,7 @@ const tinyLlmClient = (() => {
             .filter((token) => token.length > 2);
     }
 
-    function tokenSetSimilarity(a, b) {
-        const left = new Set(tokenize(a));
-        const right = new Set(tokenize(b));
+    function tokenSetSimilaritySets(left, right) {
         if (left.size === 0 || right.size === 0) return 0;
 
         let intersection = 0;
@@ -316,6 +322,10 @@ const tinyLlmClient = (() => {
 
         const union = left.size + right.size - intersection;
         return union > 0 ? intersection / union : 0;
+    }
+
+    function tokenSetSimilarity(a, b) {
+        return tokenSetSimilaritySets(new Set(tokenize(a)), new Set(tokenize(b)));
     }
 
     function buildCorpusTokenStats() {
@@ -476,13 +486,17 @@ const tinyLlmClient = (() => {
         const cleanedHeadline = cleanHeadline(withDeskTone);
         lastPayload = { ...payload, rawSubject, rawObject, rawTwist };
 
-        return { headline: cleanedHeadline, mode };
+        return {
+            headline: cleanedHeadline,
+            mode,
+            tokenSet: new Set(tokenize(cleanedHeadline))
+        };
     }
 
-    function scoreCandidate(candidate, poolHeadlines) {
+    function scoreCandidate(candidate, poolHeadlines, similarityScores = {}) {
         const humor = scoreHeadlineHumor(candidate.headline, candidate.mode);
         const coherence = scoreCoherence(candidate.headline);
-        const novelty = scoreNovelty(candidate.headline, poolHeadlines);
+        const novelty = similarityScores.novelty ?? scoreNovelty(candidate.headline, poolHeadlines);
         const informativeness = scoreInformativeness(candidate.headline);
         const priorAlignment = scorePriorAlignment(candidate.headline, candidate.mode);
         const rhythmBonus = /[;:.]/.test(candidate.headline) ? 1 : 0;
@@ -524,7 +538,7 @@ const tinyLlmClient = (() => {
         return candidates[0];
     }
 
-    function rankByMMR(scoredPool) {
+    function rankByMMR(scoredPool, similarityMatrix = []) {
         const ranked = [];
         const remaining = scoredPool.slice();
 
@@ -534,10 +548,11 @@ const tinyLlmClient = (() => {
 
             remaining.forEach((candidate, index) => {
                 const similarityPenalty = ranked.length
-                    ? ranked.reduce(
-                        (max, selected) => Math.max(max, tokenSetSimilarity(candidate.headline, selected.headline)),
-                        0
-                    )
+                    ? ranked.reduce((max, selected) => {
+                        const pairSimilarity = similarityMatrix[candidate.poolIndex]?.[selected.poolIndex]
+                            ?? tokenSetSimilarity(candidate.headline, selected.headline);
+                        return Math.max(max, pairSimilarity);
+                    }, 0)
                     : 0;
 
                 const mmrScore = (MMR_LAMBDA * candidate.score.total)
@@ -553,6 +568,58 @@ const tinyLlmClient = (() => {
         }
 
         return ranked;
+    }
+
+    function buildSimilarityMatrix(pool) {
+        const matrix = pool.map(() => pool.map(() => 0));
+        for (let leftIndex = 0; leftIndex < pool.length; leftIndex += 1) {
+            for (let rightIndex = leftIndex + 1; rightIndex < pool.length; rightIndex += 1) {
+                const similarity = tokenSetSimilaritySets(pool[leftIndex].tokenSet, pool[rightIndex].tokenSet);
+                matrix[leftIndex][rightIndex] = similarity;
+                matrix[rightIndex][leftIndex] = similarity;
+            }
+        }
+        return matrix;
+    }
+
+    async function warmupWebGpuBackend() {
+        if (webgpuWarmup.attempted) return webgpuWarmup;
+        webgpuWarmup = { attempted: true, ready: false };
+
+        if (typeof navigator === 'undefined' || !navigator.gpu?.requestAdapter) {
+            return webgpuWarmup;
+        }
+
+        try {
+            const adapter = await navigator.gpu.requestAdapter();
+            if (!adapter) return webgpuWarmup;
+            const device = await adapter.requestDevice();
+            if (!device) return webgpuWarmup;
+            webgpuWarmup = { attempted: true, ready: true };
+            return webgpuWarmup;
+        } catch (error) {
+            return webgpuWarmup;
+        }
+    }
+
+    function scheduleBackendWarmup() {
+        if (typeof window === 'undefined' || webgpuWarmup.attempted) return;
+        window.setTimeout(() => {
+            warmupWebGpuBackend();
+        }, 120);
+    }
+
+    async function selectGenerationBackend() {
+        if (activeBackend) {
+            return activeBackend;
+        }
+
+        const webGpuState = await warmupWebGpuBackend();
+        activeBackend = webGpuState.ready
+            ? { id: 'webgpu-similarity', isWarm: true }
+            : { id: 'cpu-mock', isWarm: true };
+
+        return activeBackend;
     }
 
     function updateLearningSignals(chosen) {
@@ -598,17 +665,27 @@ const tinyLlmClient = (() => {
             return fallback.headline;
         }
 
-        const scoredPool = pool.map((candidate) => {
+        const similarityMatrix = buildSimilarityMatrix(pool);
+
+        const scoredPool = pool.map((candidate, index) => {
             const peerHeadlines = pool
-                .filter((item) => item !== candidate)
+                .filter((item, peerIndex) => peerIndex !== index)
                 .map((item) => item.headline);
+            const novelty = 5
+                - Math.max(
+                    recentHeadlines
+                        .slice(0, RECENT_HEADLINE_HISTORY)
+                        .reduce((max, item) => Math.max(max, tokenSetSimilarity(candidate.headline, item)), 0),
+                    similarityMatrix[index].reduce((max, similarity) => Math.max(max, similarity), 0)
+                ) * 5;
             return {
                 ...candidate,
-                score: scoreCandidate(candidate, peerHeadlines)
+                poolIndex: index,
+                score: scoreCandidate(candidate, peerHeadlines, { novelty })
             };
         });
 
-        const ranked = rankByMMR(scoredPool);
+        const ranked = rankByMMR(scoredPool, similarityMatrix);
         const shortlist = ranked.slice(0, 3);
         const picked = shortlist.length === 1
             ? shortlist[0]
@@ -639,23 +716,53 @@ const tinyLlmClient = (() => {
     }
 
     async function generateHeadline() {
+        const backend = await selectGenerationBackend();
+        const firstWebGpuRun = backend.id === 'webgpu-similarity' && !hasCompletedWebGpuGeneration;
+        const timeoutMs = TINY_LLM_TIMEOUT_MS + (firstWebGpuRun ? WEBGPU_FIRST_RUN_TIMEOUT_BONUS_MS : 0);
+
         const generation = resolveAfterDelay(() => {
             const headline = generateUniqueHeadline();
             if (!headline || headline.trim().length === 0) {
                 throw new Error('Empty generation result');
             }
             rememberHeadline(headline);
+            lastGenerationDiagnostics = {
+                backend: backend.id,
+                warm: backend.id === 'webgpu-similarity' ? !firstWebGpuRun : true,
+                timeoutMs,
+                fallback: null
+            };
+            if (backend.id === 'webgpu-similarity') {
+                hasCompletedWebGpuGeneration = true;
+            }
             return headline;
         });
 
         const timeout = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Generation timed out')), TINY_LLM_TIMEOUT_MS);
+            setTimeout(() => reject(new Error('Generation timed out')), timeoutMs);
         });
 
-        return Promise.race([generation, timeout]);
+        try {
+            return await Promise.race([generation, timeout]);
+        } catch (error) {
+            lastGenerationDiagnostics = {
+                backend: backend.id,
+                warm: backend.id === 'webgpu-similarity' ? hasCompletedWebGpuGeneration : true,
+                timeoutMs,
+                fallback: error?.message || 'generation-error'
+            };
+            throw error;
+        }
     }
 
-    return { generateHeadline };
+    scheduleBackendWarmup();
+
+    return {
+        generateHeadline,
+        getLastDiagnostics() {
+            return { ...lastGenerationDiagnostics };
+        }
+    };
 })();
 
 if (typeof window !== 'undefined') {

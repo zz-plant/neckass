@@ -266,8 +266,28 @@
     async generateHeadlineWithFallback() {
         try {
             const headlineText = await window.tinyLlmClient.generateHeadline();
+            const diagnostics = typeof window.tinyLlmClient?.getLastDiagnostics === 'function'
+                ? window.tinyLlmClient.getLastDiagnostics()
+                : null;
+            if (diagnostics?.backend) {
+                this.trackGrowthEvent('generate_backend', {
+                    backend: diagnostics.backend,
+                    timeoutMs: diagnostics.timeoutMs || 0,
+                    warm: diagnostics.warm === true
+                });
+            }
             return this.registerGeneratedHeadline(headlineText);
         } catch (error) {
+            const diagnostics = typeof window.tinyLlmClient?.getLastDiagnostics === 'function'
+                ? window.tinyLlmClient.getLastDiagnostics()
+                : null;
+            if (diagnostics?.backend) {
+                this.trackGrowthEvent('generate_backend_fallback', {
+                    backend: diagnostics.backend,
+                    timeoutMs: diagnostics.timeoutMs || 0,
+                    reason: diagnostics.fallback || 'generation-error'
+                });
+            }
             this.updateLoaderMessage('Generation unavailable, using saved headlines.');
             return null;
         }
