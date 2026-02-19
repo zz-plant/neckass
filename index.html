@@ -71,7 +71,7 @@
         <header class="hero">
             <div class="container hero__content">
                 <p class="meta" id="masthead-date">Updated daily</p>
-                <p class="meta meta--secondary streak-pill" id="daily-streak" aria-live="polite" aria-atomic="true">Daily desk streak: 1 day · Back tomorrow.</p>
+                <p class="meta meta--secondary streak-pill" id="daily-streak" aria-live="polite" aria-atomic="true">Daily streak: 1 day · Come back tomorrow.</p>
             </div>
         </header>
 
@@ -85,7 +85,7 @@
                     <div class="headline-frame">
                         <h2 id="headline" tabindex="0" aria-label="Headline">Loading...</h2>
                     </div>
-                    <p class="streak-text" id="shuffle-streak" aria-live="polite" aria-atomic="true">Shuffle streak: 0 · Start.</p>
+                    <p class="streak-text" id="shuffle-streak" aria-live="polite" aria-atomic="true">Shuffle streak: 0 · Shuffle to begin.</p>
                     <ul class="streak-badges" id="streak-badges" aria-label="Shuffle streak badges" hidden>
                         <li class="streak-badge" data-milestone="3">
                             <span class="streak-badge__title">Rhythm</span>
@@ -140,7 +140,7 @@
             <aside class="command-rail" aria-label="Command rail">
                 <section class="rail-card rail-card--hub" role="region" aria-labelledby="command-desk-title">
                     <div class="rail-intro">
-                        <h2 class="filter-label" id="command-desk-title">Command desk</h2>
+                        <h2 class="filter-label" id="command-desk-title">Quick actions</h2>
 
                         <p class="counter">Headlines viewed: <span id="counter">0</span></p>
                     </div>
@@ -184,26 +184,26 @@
                     <section class="command-cluster feedback-cluster" id="feedback-card" aria-labelledby="feedback-card-title">
                         <div>
                             <h3 class="filter-label" id="feedback-card-title">Training feedback</h3>
-                            <p class="feedback-note">Rate this headline for the RLHF log.</p>
+                            <p class="feedback-note">Rate this headline to help improve suggestions.</p>
                         </div>
                         <div class="feedback-actions" role="group" aria-label="Rate the current headline">
                             <button id="feedback-good" class="ghost button-with-icon" type="button" aria-label="Mark headline as high quality"><img class="button-icon" src="icons/thumbs-up.svg" alt="" aria-hidden="true"><span>Useful</span></button>
                             <button id="feedback-bad" class="ghost button-with-icon" type="button" aria-label="Mark headline as low quality"><img class="button-icon" src="icons/thumbs-down.svg" alt="" aria-hidden="true"><span>Needs work</span></button>
                         </div>
-                        <button id="feedback-export" class="ghost button-with-icon" type="button" aria-label="Copy RLHF feedback log"><img class="button-icon" src="icons/copy.svg" alt="" aria-hidden="true"><span>Copy RLHF log (<span id="feedback-count">0</span>)</span></button>
+                        <button id="feedback-export" class="ghost button-with-icon" type="button" aria-label="Copy feedback history"><img class="button-icon" src="icons/copy.svg" alt="" aria-hidden="true"><span>Copy feedback history (<span id="feedback-count">0</span>)</span></button>
                         <p id="feedback-status" class="status-text" role="status" aria-live="polite"></p>
                     </section>
 
                     <section class="command-cluster" id="automation-card" aria-labelledby="automation-card-title">
                         <div>
-                            <h3 class="filter-label" id="automation-card-title">Automation beta</h3>
-                            <p class="feedback-note">Run scripted workflows with the agent tools.</p>
+                            <h3 class="filter-label" id="automation-card-title">Automation tools (beta)</h3>
+                            <p class="feedback-note">Run advanced actions automatically.</p>
                         </div>
                         <div class="automation-actions">
-                            <button id="copy-agent-snippet" class="ghost button-with-icon" type="button" aria-label="Copy agent integration snippet"><img class="button-icon" src="icons/code.svg" alt="" aria-hidden="true"><span>Copy agent snippet</span></button>
+                            <button id="copy-agent-snippet" class="ghost button-with-icon" type="button" aria-label="Copy automation code"><img class="button-icon" src="icons/code.svg" alt="" aria-hidden="true"><span>Copy automation code</span></button>
                             <a id="api-waitlist-link" class="share-link" href="mailto:founders@neckass.com?subject=Neckass%20Automation%20Beta%20Waitlist&body=I%20want%20early%20access%20to%20the%20Automation%20Beta.%20My%20primary%20use%20case%20is%3A%20" aria-label="Join the Automation Beta waitlist by email">
                                 <img src="icons/mail.svg" alt="Mail icon">
-                                <span>Join API waitlist</span>
+                                <span>Join developer waitlist</span>
                             </a>
                         </div>
                         <p id="automation-status" class="status-text" role="status" aria-live="polite"></p>
@@ -211,10 +211,10 @@
 
                     <section class="command-cluster" id="metrics-card" aria-labelledby="metrics-card-title">
                         <div>
-                            <h3 class="filter-label" id="metrics-card-title">Growth metrics</h3>
+                            <h3 class="filter-label" id="metrics-card-title">Usage stats</h3>
                             <p class="feedback-note" id="metrics-summary">Sessions: 0 · Shuffles: 0 · Share actions: 0</p>
                         </div>
-                        <button id="export-metrics" class="ghost button-with-icon" type="button" aria-label="Copy growth metrics snapshot"><img class="button-icon" src="icons/bar-chart-2.svg" alt="" aria-hidden="true"><span>Copy metrics snapshot</span></button>
+                        <button id="export-metrics" class="ghost button-with-icon" type="button" aria-label="Copy usage summary"><img class="button-icon" src="icons/bar-chart-2.svg" alt="" aria-hidden="true"><span>Copy usage summary</span></button>
                         <p id="metrics-status" class="status-text" role="status" aria-live="polite"></p>
                     </section>
                 </section>

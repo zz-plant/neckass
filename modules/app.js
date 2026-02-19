@@ -479,7 +479,7 @@
             suffix = `Visit ${visitsToday} today.`;
         }
 
-        this.elements.dailyStreak.textContent = `Daily desk streak: ${streakDays} ${dayLabel} · ${suffix}`;
+        this.elements.dailyStreak.textContent = `Daily streak: ${streakDays} ${dayLabel} · ${suffix}`;
     }
 
     maybeCelebrateDailyMilestone() {
@@ -502,7 +502,7 @@
     renderShuffleStreak() {
         if (!this.elements.shuffleStreak) return;
         if (this.shuffleStreak <= 0) {
-            this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Start.';
+            this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Shuffle to begin.';
             this.renderShuffleBadges();
             return;
         }
@@ -1227,10 +1227,10 @@
 
         if (existingEntryIndex >= 0) {
             this.feedbackLog[existingEntryIndex] = nextEntry;
-            this.reportFeedbackStatus('Updated RLHF label for this headline.');
+            this.reportFeedbackStatus('Updated your rating for this headline.');
         } else {
             this.feedbackLog.push(nextEntry);
-            this.reportFeedbackStatus('Saved RLHF label for this headline.');
+            this.reportFeedbackStatus('Saved your rating for this headline.');
         }
         triggerHapticFeedback('light');
 
@@ -1242,7 +1242,7 @@
 
     async copyFeedbackLog() {
         if (!this.feedbackLog.length) {
-            this.reportFeedbackStatus('Label a few headlines first, then copy the RLHF log.', true);
+            this.reportFeedbackStatus('Rate a few headlines first, then copy your feedback history.', true);
             return;
         }
 
@@ -1259,7 +1259,7 @@
         await copyTextWithFeedback({
             text: payload,
             button: this.elements.feedbackExportButton,
-            successMessage: 'RLHF log copied to clipboard.',
+            successMessage: 'Feedback history copied to clipboard.',
             onStatus: (message, isError) => this.reportFeedbackStatus(message, isError),
             setButtonLoading
         });
