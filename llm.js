@@ -284,12 +284,7 @@ const tinyLlmClient = (() => {
     }
 
     function maybeAttachTag(headline, tag, shouldAttach) {
-        if (!headline || !tag || !shouldAttach || headline.includes(tag)) {
-            if (backend.id === 'webgpu-similarity') {
-                hasCompletedWebGpuGeneration = true;
-            }
-            return headline;
-        }
+        if (!headline || !tag || !shouldAttach || headline.includes(tag)) return headline;
         return `${headline} ${tag}`;
     }
 
