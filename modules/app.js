@@ -1625,6 +1625,11 @@
             return pool[0];
         }
 
+        const unvisitedPool = pool.filter((index) => !this.state.navigationStack.includes(index));
+        if (unvisitedPool.length > 0) {
+            return unvisitedPool[Math.floor(Math.random() * unvisitedPool.length)];
+        }
+
         let randomIndex = pool[Math.floor(Math.random() * pool.length)];
         while (randomIndex === this.state.currentIndex && pool.length > 1) {
             randomIndex = pool[Math.floor(Math.random() * pool.length)];
