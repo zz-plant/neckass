@@ -57,6 +57,23 @@
             }
         }
     </script>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Neckass Headline Generator",
+            "url": "https://neckass.com/",
+            "applicationCategory": "EntertainmentApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript. Works in modern desktop and mobile browsers.",
+            "description": "Generate absurd, funny headlines in seconds, then copy, share, or export a mock front page.",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            }
+        }
+    </script>
 </head>
 <body>
     <a class="skip-link" href="#headline">Skip to featured headline</a>
@@ -67,6 +84,10 @@
                 <span class="brand-kicker">Neckass</span>
                 <span class="brand-title">Digital Gazette</span>
             </div>
+            <nav class="top-nav" aria-label="Site">
+                <a href="/about.html">About</a>
+                <a href="/examples.html">Examples</a>
+            </nav>
         </div>
         <header class="hero">
             <div class="container hero__content">
@@ -134,6 +155,20 @@
                         <p class="counter counter-inline" id="history-count">0 items</p>
                     </div>
                     <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
+                </section>
+                <section class="history-card seo-copy" aria-labelledby="how-it-works-title">
+                    <h2 class="filter-label" id="how-it-works-title">How this headline generator works</h2>
+                    <p>Neckass is a browser-first satire headline generator. Tap <strong>Shuffle</strong> to rotate through curated absurd headlines, then quickly copy, share, or export the result as a mock front page image.</p>
+                    <p>Everything runs on-device in your browser. Your session features—like recent headlines and streaks—use local storage so you can pick up where you left off.</p>
+                    <h3 class="filter-label">Quick FAQ</h3>
+                    <dl class="faq-list">
+                        <dt>Is this free to use?</dt>
+                        <dd>Yes. Neckass is free and runs as a static website.</dd>
+                        <dt>Do I need an account?</dt>
+                        <dd>No account is required. Open the page and start generating headlines immediately.</dd>
+                        <dt>Can I share generated headlines?</dt>
+                        <dd>Yes. Use copy/share actions, or export the mock front page to PNG and post it anywhere.</dd>
+                    </dl>
                 </section>
             </section>
 
