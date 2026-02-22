@@ -1639,7 +1639,7 @@
     }
 
     normalizeGeneratedHeadline(headlineText) {
-        const normalized = typeof headlineText === 'string' ? headlineText.trim() : '';
+        const normalized = normalizeHeadlineText(headlineText);
         if (!normalized) {
             return '';
         }
