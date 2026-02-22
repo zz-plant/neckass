@@ -19,7 +19,11 @@
 
     function normalizeHeadlineText(text) {
         if (typeof text !== 'string') return '';
-        return text.trim();
+
+        return text
+            .replace(/[\u0000-\u001F\u007F]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
     }
 
     function slugifyHeadline(headlineText) {

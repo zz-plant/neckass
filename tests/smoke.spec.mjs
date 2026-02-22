@@ -38,6 +38,19 @@ test.describe('Neckass smoke flows', () => {
     expect(decodeURIComponent(twitterHref)).toContain(headline);
   });
 
+
+  test('URL headline input is rendered as plain text without DOM injection', async ({ page }) => {
+    const payload = encodeURIComponent('<img src=x onerror=alert(1)> Breaking');
+    await page.goto(`${BASE_URL}?headline=${payload}&source=generated`);
+
+    await expect(page.locator('#headline')).not.toHaveText('Loading...');
+    const headline = await headlineText(page);
+
+    expect(headline).toContain('<img src=x onerror=alert(1)> Breaking');
+    await expect(page.locator('#headline img')).toHaveCount(0);
+    await expect(page.locator('#headline [onerror]')).toHaveCount(0);
+  });
+
   test('export actions are available for current headline', async ({ page }) => {
     await page.goto(BASE_URL);
 
