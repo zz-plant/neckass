@@ -499,14 +499,14 @@ const tinyLlmClient = (() => {
         const novelty = similarityScores.novelty ?? scoreNovelty(candidate.headline, poolHeadlines);
         const informativeness = scoreInformativeness(candidate.headline);
         const priorAlignment = scorePriorAlignment(candidate.headline, candidate.mode);
-        const rhythmBonus = /[;:.]/.test(candidate.headline) ? 1 : 0;
+        const punctuationBonus = /[;:.]/.test(candidate.headline) ? 1 : 0;
 
         const total = (humor * 1.35)
             + (coherence * 1.15)
             + novelty
             + (informativeness * 0.9)
             + priorAlignment
-            + rhythmBonus;
+            + punctuationBonus;
 
         return {
             total,

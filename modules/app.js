@@ -30,10 +30,10 @@
     const ANIMATION_DELAY_MS = 60;
     const STREAK_MILESTONES = [3, 5, 8, 12];
     const SHUFFLE_BADGE_LABELS = {
-        3: 'Rhythm',
-        5: 'Absurdity',
-        8: 'Hurricane',
-        12: 'Legend'
+        3: 'Starter',
+        5: 'Momentum',
+        8: 'Surge',
+        12: 'All-star'
     };
 
     class HeadlineApp {
@@ -510,7 +510,7 @@
         const milestoneMessages = {
             3: 'Daily streak 3: habit formed.',
             7: 'Daily streak 7: full week.',
-            14: 'Daily streak 14: legend status.'
+            14: 'Daily streak 14: streak pro.'
         };
 
         const message = milestoneMessages[this.dailyEngagement.streakDays];
@@ -535,7 +535,7 @@
                 : 'Nice pace.';
         const nextMilestoneText = nextMilestone
             ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
-            : 'Legend badge unlocked.';
+            : 'Top badge unlocked.';
         this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
         this.renderShuffleBadges(nextMilestone);
     }
@@ -580,8 +580,8 @@
 
     handleShuffleMilestone() {
         const messages = {
-            3: 'Shuffle streak 3: rhythm.',
-            5: 'Shuffle streak 5: absurdity unlocked.',
+            3: 'Shuffle streak 3: smooth run.',
+            5: 'Shuffle streak 5: momentum unlocked.',
             8: 'Shuffle streak 8: headline mode.'
         };
         const message = messages[this.shuffleStreak];
