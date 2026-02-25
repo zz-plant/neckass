@@ -1,0 +1,26 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Headline examples social preview with prominent sample headlines">
+  <defs>
+    <linearGradient id="bg-examples" x1="110" y1="20" x2="1080" y2="620" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#11172A"/>
+      <stop offset="1" stop-color="#1F2540"/>
+    </linearGradient>
+    <linearGradient id="accent-examples" x1="96" y1="0" x2="650" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E37B3F"/>
+      <stop offset="1" stop-color="#FFD166"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="40" fill="url(#bg-examples)"/>
+  <rect x="62" y="78" width="1076" height="474" rx="32" fill="#0F1526" stroke="#FFFFFF" stroke-opacity="0.12"/>
+
+  <text x="96" y="136" fill="#DBE3F7" font-family="Inter, Arial, sans-serif" font-size="18" letter-spacing="2.5">HEADLINE EXAMPLES</text>
+  <text x="96" y="206" fill="#FFFFFF" font-family="Playfair Display, Georgia, serif" font-size="66" font-weight="700">See the Neckass Tone</text>
+  <rect x="96" y="222" width="540" height="6" rx="3" fill="url(#accent-examples)"/>
+
+  <rect x="96" y="258" width="1008" height="236" rx="22" fill="#0B1221" stroke="#FFFFFF" stroke-opacity="0.1"/>
+  <text x="128" y="322" fill="#F4F7FF" font-family="Playfair Display, Georgia, serif" font-size="44" font-weight="700">"Startup Pivots To Handwritten</text>
+  <text x="128" y="372" fill="#F4F7FF" font-family="Playfair Display, Georgia, serif" font-size="44" font-weight="700">Push Notifications For Better Engagement"</text>
+  <text x="128" y="432" fill="#D9E2F7" font-family="Inter, Arial, sans-serif" font-size="30">More absurd examples ready to share.</text>
+
+  <text x="96" y="520" fill="#BAC7E1" font-family="Inter, Arial, sans-serif" font-size="24">Use examples for inspiration, then generate your own.</text>
+</svg>
