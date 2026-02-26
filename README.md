@@ -15,6 +15,10 @@ No build system. No backend. Open `index.html` and you are running.
 2. Open `index.html` in a modern browser.
 3. Use **Shuffle** to generate and cycle headlines.
 
+## Requirements
+- **Runtime:** any modern browser (no build pipeline required).
+- **Optional smoke tests:** Node.js + npm (Playwright is a dev dependency installed via `npm install`).
+
 If tooling blocks `file://` URLs, run:
 
 ```bash
@@ -22,6 +26,17 @@ python -m http.server 8001 --directory .
 ```
 
 Then open `http://127.0.0.1:8001/`.
+
+## App pages
+- `index.html` — main generator experience.
+- `about.html` — product overview and feature summary.
+- `examples.html` — sample headlines and tone reference.
+
+## Using the app
+1. Click **Shuffle** to cycle featured headlines.
+2. Use **Previous** to move backward through your local session history.
+3. Use copy/share controls to publish a headline quickly.
+4. Use export controls to create a mock front-page image.
 
 ## Agentic interface
 A lightweight browser-side tool interface is exposed at `window.Neckass.agent` after app initialization, so browser automation and agentic LLM runtimes can call headline actions without clicking UI controls directly.
@@ -72,6 +87,7 @@ npm run test:smoke
 
 ### Research / forward-looking
 - `TECH_STACK_CAPABILITIES_2026.md` — optional modernization opportunities.
+
 
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.
