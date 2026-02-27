@@ -1,709 +1,316 @@
 const { data: neckassData } = window.Neckass || {};
 const BEATS = neckassData?.BEATS || {};
-const TEMPLATES = neckassData?.TEMPLATES || [];
 
-const TINY_LLM_TIMEOUT_MS = 2400;
-const WEBGPU_FIRST_RUN_TIMEOUT_BONUS_MS = 900;
-const GENERATION_DELAY_RANGE_MS = { min: 420, max: 880 };
-const RECENT_HEADLINE_HISTORY = 12;
-const RECENT_STORAGE_KEY = 'tinyLlmRecentHeadlines';
-const MODE_PRIOR_STORAGE_KEY = 'tinyLlmModePriors';
-const TOKEN_PRIOR_STORAGE_KEY = 'tinyLlmTokenPriors';
-const MAX_RECENT_STORAGE = 24;
-const MAX_TOKEN_PRIOR_SIZE = 220;
-const MIN_FUNNY_SCORE = 5;
-const MAX_QUALITY_ATTEMPTS = 12;
-const MAX_DISPLAY_HEADLINE_CHARS = 140;
-const MIN_DISPLAY_HEADLINE_CHARS = 68;
-const CANDIDATE_POOL_SIZE = 8;
-const MODE_MEMORY = 6;
-const SOFTMAX_TEMPERATURE = 0.85;
-const MMR_LAMBDA = 0.78;
+const TINY_LLM_TIMEOUT_MS = 1800;
+const GENERATION_DELAY_RANGE_MS = { min: 280, max: 720 };
+const LEGACY_RECENT_STORAGE_KEY = 'tinyLlmRecentHeadlines';
+const RECENT_STORAGE_KEY = 'tinyLlmV2Recent';
+const MAX_RECENT_STORAGE = 60;
+const DUPLICATE_WINDOW = 30;
+const NEAR_DUPLICATE_WINDOW = 10;
+const MIN_LENGTH = 45;
+const TARGET_MAX_LENGTH = 110;
+const HARD_MAX_LENGTH = 140;
+const CANDIDATE_MIN = 12;
+const CANDIDATE_MAX = 24;
 
-const STORY_MODES = [
-    {
-        id: 'bulletin',
-        chance: 0.35,
-        forceDesk: true,
-        forceTag: true,
-        scriptedBias: 0.62,
-        humorSignals: ['breaking', 'dispatch', 'updates expected', 'developing story']
-    },
-    {
-        id: 'live',
-        chance: 0.35,
-        forceDesk: false,
-        forceTag: false,
-        scriptedBias: 0.74,
-        humorSignals: ['live update', 'chat screamed', 'season finale', 'press conference']
-    },
-    {
-        id: 'analysis',
-        chance: 0.3,
-        forceDesk: false,
-        forceTag: true,
-        scriptedBias: 0.45,
-        humorSignals: ['analysts', 'sources confirm', 'vibe check', 'performance art']
-    }
-];
+const SECTION_HINTS = {
+    latest: ['breaking', 'local', 'headline', 'update', 'report'],
+    world: ['global', 'federal', 'ambassador', 'treaty', 'space', 'climate'],
+    culture: ['podcast', 'club', 'newsletter', 'fashion', 'book', 'spotify', 'instagram'],
+    tech: ['ai', 'app', 'algorithm', 'wifi', 'discord', 'stream', 'cloud', 'bot'],
+    oddities: ['cursed', 'weird', 'ghost', 'zodiac', 'manifest', 'meme', 'chaos']
+};
+
+const HARASSMENT_TERMS = ['idiot', 'moron', 'stupid', 'hate', 'loser'];
 
 const tinyLlmClient = (() => {
-    const recentHeadlines = loadRecentHeadlines();
-    const recentModes = [];
-    const modePriors = loadPriorMap(MODE_PRIOR_STORAGE_KEY);
-    const tokenPriors = loadPriorMap(TOKEN_PRIOR_STORAGE_KEY);
-    const corpusTokenStats = buildCorpusTokenStats();
-    let activeBackend = null;
-    let webgpuWarmup = { attempted: false, ready: false };
-    let lastGenerationDiagnostics = {
-        backend: 'cpu-mock',
-        warm: false,
+    let lastDiagnostics = {
+        backend: 'v2-heuristic',
         timeoutMs: TINY_LLM_TIMEOUT_MS,
-        fallback: null
+        fallback: null,
+        warm: true,
+        reasonCodes: []
     };
-    let hasCompletedWebGpuGeneration = false;
 
-    function getSecureRandom() {
+    function canUseLocalStorage() {
+        return typeof localStorage !== 'undefined';
+    }
+
+    function safeJsonParse(raw, fallback) {
+        try {
+            const parsed = JSON.parse(raw);
+            return parsed ?? fallback;
+        } catch (error) {
+            return fallback;
+        }
+    }
+
+    function loadRecentEntries() {
+        if (!canUseLocalStorage()) return [];
+
+        const v2Stored = safeJsonParse(localStorage.getItem(RECENT_STORAGE_KEY), []);
+        if (Array.isArray(v2Stored) && v2Stored.length > 0) {
+            return v2Stored
+                .filter((entry) => entry && typeof entry.headline === 'string' && entry.headline.trim())
+                .slice(0, MAX_RECENT_STORAGE);
+        }
+
+        const legacyStored = safeJsonParse(localStorage.getItem(LEGACY_RECENT_STORAGE_KEY), []);
+        if (!Array.isArray(legacyStored) || legacyStored.length === 0) return [];
+
+        const nowIso = new Date().toISOString();
+        const migrated = legacyStored
+            .filter(Boolean)
+            .slice(0, MAX_RECENT_STORAGE)
+            .map((headline) => ({ headline, generatedAt: nowIso, section: 'latest' }));
+
+        persistRecentEntries(migrated);
+        return migrated;
+    }
+
+    function persistRecentEntries(entries) {
+        if (!canUseLocalStorage()) return;
+        try {
+            localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(entries.slice(0, MAX_RECENT_STORAGE)));
+        } catch (error) {
+            return;
+        }
+    }
+
+    const recentEntries = loadRecentEntries();
+
+    function addRecentEntry(result) {
+        recentEntries.unshift({
+            headline: result.headline,
+            generatedAt: result.generatedAt,
+            section: result.section
+        });
+
+        if (recentEntries.length > MAX_RECENT_STORAGE) {
+            recentEntries.length = MAX_RECENT_STORAGE;
+        }
+
+        persistRecentEntries(recentEntries);
+    }
+
+    function createSeededRng(seed) {
+        let state = (seed >>> 0) || 1;
+        return () => {
+            state = (1664525 * state + 1013904223) >>> 0;
+            return state / 0x100000000;
+        };
+    }
+
+    function getRandom(rng) {
+        if (typeof rng === 'function') return rng();
         if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
             const buffer = new Uint32Array(1);
             crypto.getRandomValues(buffer);
-            return buffer[0] / (0xffffffff + 1);
+            return buffer[0] / 0x100000000;
         }
         return Math.random();
     }
 
-    function pickRandom(list, avoid = []) {
-        if (!Array.isArray(list) || list.length === 0) return null;
-        if (list.length === 1) return list[0];
-        let candidate = list[Math.floor(getSecureRandom() * list.length)];
-        let attempts = 0;
-        while (attempts < list.length && avoid.includes(candidate)) {
-            candidate = list[Math.floor(getSecureRandom() * list.length)];
-            attempts += 1;
-        }
-        return candidate;
+    function pick(list, rng) {
+        if (!Array.isArray(list) || list.length === 0) return '';
+        return list[Math.floor(getRandom(rng) * list.length)] || '';
     }
 
-    function normalizeSubject(subject) {
-        if (!subject || typeof subject === 'string') {
-            return {
-                text: subject || 'someone online',
-                pronouns: { possessive: 'their', object: 'them' }
-            };
+    function normalizeText(value) {
+        return String(value || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function tokenize(value) {
+        const normalized = normalizeText(value).toLowerCase();
+        if (!normalized) return [];
+
+        if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') {
+            const segmenter = new Intl.Segmenter('en', { granularity: 'word' });
+            return Array.from(segmenter.segment(normalized))
+                .map((entry) => entry.segment)
+                .filter((segment) => /[a-z0-9]/.test(segment));
         }
-        const pronouns = subject.pronouns || {};
-        return {
-            text: subject.text || 'someone online',
-            pronouns: {
-                possessive: pronouns.possessive || 'their',
-                object: pronouns.object || 'them'
+
+        return normalized.split(/[^a-z0-9]+/).filter(Boolean);
+    }
+
+    function formatSentenceCase(text) {
+        const normalized = normalizeText(text);
+        if (!normalized) return '';
+        const withoutTrailingPunctuation = normalized.replace(/[!?]+$/g, '');
+        return withoutTrailingPunctuation.charAt(0).toUpperCase() + withoutTrailingPunctuation.slice(1);
+    }
+
+    function clampHeadlineLength(text) {
+        const normalized = normalizeText(text);
+        if (normalized.length <= HARD_MAX_LENGTH) return normalized;
+        const clipped = normalized.slice(0, HARD_MAX_LENGTH + 1);
+        const boundary = Math.max(clipped.lastIndexOf('; '), clipped.lastIndexOf(', '), clipped.lastIndexOf(' '));
+        const safe = boundary > 60 ? clipped.slice(0, boundary) : clipped.slice(0, HARD_MAX_LENGTH);
+        return safe.trim();
+    }
+
+    function inferSectionFromText(text) {
+        const tokens = new Set(tokenize(text));
+        let bestSection = 'latest';
+        let bestScore = 0;
+
+        Object.entries(SECTION_HINTS).forEach(([section, hints]) => {
+            const score = hints.reduce((acc, hint) => acc + (tokens.has(hint) ? 1 : 0), 0);
+            if (score > bestScore) {
+                bestSection = section;
+                bestScore = score;
             }
-        };
-    }
-
-    function applyTokens(text, tokens) {
-        if (!text) return '';
-        return text.replace(/\{(\w+)\}/g, (match, key) => (tokens[key] ? tokens[key] : match));
-    }
-
-    function loadRecentHeadlines() {
-        if (typeof localStorage === 'undefined') return [];
-        try {
-            const stored = JSON.parse(localStorage.getItem(RECENT_STORAGE_KEY));
-            return Array.isArray(stored) ? stored.filter(Boolean) : [];
-        } catch (error) {
-            return [];
-        }
-    }
-
-    function loadPriorMap(key) {
-        if (typeof localStorage === 'undefined') return {};
-        try {
-            const stored = JSON.parse(localStorage.getItem(key));
-            return stored && typeof stored === 'object' ? stored : {};
-        } catch (error) {
-            return {};
-        }
-    }
-
-    function persistPriorMap(key, mapObject, maxSize) {
-        if (typeof localStorage === 'undefined') return;
-        try {
-            const entries = Object.entries(mapObject)
-                .filter(([, value]) => Number.isFinite(value))
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, maxSize);
-            localStorage.setItem(key, JSON.stringify(Object.fromEntries(entries)));
-        } catch (error) {
-            return;
-        }
-    }
-
-    function updatePrior(mapObject, key, reward, floor = -6, ceil = 8) {
-        const current = Number.isFinite(mapObject[key]) ? mapObject[key] : 0;
-        const updated = Math.max(floor, Math.min(ceil, current + reward));
-        mapObject[key] = updated;
-    }
-
-    function persistRecentHeadlines(headlines) {
-        if (typeof localStorage === 'undefined') return;
-        try {
-            localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(headlines.slice(0, MAX_RECENT_STORAGE)));
-        } catch (error) {
-            return;
-        }
-    }
-
-    function rememberHeadline(headline) {
-        recentHeadlines.unshift(headline);
-        if (recentHeadlines.length > RECENT_HEADLINE_HISTORY) {
-            recentHeadlines.pop();
-        }
-        persistRecentHeadlines(recentHeadlines);
-    }
-
-    function rememberMode(modeId) {
-        if (!modeId) return;
-        recentModes.unshift(modeId);
-        if (recentModes.length > MODE_MEMORY) {
-            recentModes.pop();
-        }
-    }
-
-    function isRecentlyUsed(headline) {
-        return recentHeadlines.includes(headline);
-    }
-
-    let lastPayload = null;
-    const recentPicks = new Map();
-
-    function getRecentList(key) {
-        if (!recentPicks.has(key)) {
-            recentPicks.set(key, []);
-        }
-        return recentPicks.get(key);
-    }
-
-    function rememberPick(key, value, limit = 3) {
-        if (!value) return;
-        const list = getRecentList(key);
-        list.unshift(value);
-        recentPicks.set(key, list.slice(0, limit));
-    }
-
-    function pickWithRecent(list, key, limit = 3) {
-        const recentList = getRecentList(key);
-        const avoid = recentList.slice(0, limit);
-        let candidate = pickRandom(list, avoid);
-        if (!candidate) candidate = pickRandom(list);
-        rememberPick(key, candidate, limit);
-        return candidate;
-    }
-
-    function pickWeightedTemplate() {
-        const recentTemplates = getRecentList('template');
-        const candidate = pickRandom(TEMPLATES, recentTemplates.slice(0, 2));
-        rememberPick('template', candidate, 2);
-        return candidate;
-    }
-
-    function countRecentModes() {
-        return recentModes.reduce((counts, modeId) => {
-            counts[modeId] = (counts[modeId] || 0) + 1;
-            return counts;
-        }, {});
-    }
-
-    function pickStoryMode() {
-        const modeCounts = countRecentModes();
-        const weightedModes = STORY_MODES.map((mode) => {
-            const recencyPenalty = 1 / (1 + (modeCounts[mode.id] || 0));
-            const priorBias = 1 + ((modePriors[mode.id] || 0) * 0.08);
-            return {
-                mode,
-                weight: Math.max(0.01, mode.chance * recencyPenalty * priorBias)
-            };
         });
 
-        const total = weightedModes.reduce((sum, entry) => sum + entry.weight, 0);
-        if (total <= 0) return STORY_MODES[0];
-
-        const roll = getSecureRandom() * total;
-        let cursor = 0;
-        for (const entry of weightedModes) {
-            cursor += entry.weight;
-            if (roll <= cursor) return entry.mode;
-        }
-
-        return STORY_MODES[0];
+        return bestSection;
     }
 
-    function buildSubjectPayload(rawSubject) {
-        const subject = normalizeSubject(rawSubject);
-        return {
-            subject,
-            tokens: {
-                possessive: subject.pronouns.possessive,
-                object: subject.pronouns.object
-            }
-        };
-    }
-
-    function buildPayload(rawSubject) {
-        const { subject, tokens } = buildSubjectPayload(rawSubject);
-        const rawObject = pickWithRecent(BEATS.objects, 'object', 4);
-        const rawTwist = pickWithRecent(BEATS.twists, 'twist', 3);
-
-        const payload = {
-            desk: pickWithRecent(BEATS.desks, 'desk', 2),
-            subject: subject.text,
-            verb: pickWithRecent(BEATS.verbs, 'verb', 3),
-            object: applyTokens(rawObject, tokens),
-            connector: pickWithRecent(BEATS.connectors, 'connector', 3),
-            twist: applyTokens(rawTwist, tokens),
-            impact: pickWithRecent(BEATS.impacts, 'impact', 3),
-            tag: pickWithRecent(BEATS.tags, 'tag', 2),
-            breakMark: pickWithRecent(BEATS.styleBreaks, 'breakMark', 2)
-        };
-
-        return { payload, rawObject, rawTwist };
-    }
-
-    function toScriptedTokens(payload) {
-        return {
-            desk: payload.desk,
-            subject: payload.subject,
-            verb: payload.verb,
-            object: payload.object,
-            connector: payload.connector,
-            twist: payload.twist,
-            impact: payload.impact,
-            tag: payload.tag,
-            breakMark: payload.breakMark
-        };
-    }
-
-    function maybeAttachTag(headline, tag, shouldAttach) {
-        if (!headline || !tag || !shouldAttach || headline.includes(tag)) return headline;
-        return `${headline} ${tag}`;
-    }
-
-    function cleanHeadline(headline) {
-        const normalized = (headline || '').replace(/\s+/g, ' ').trim();
-        if (normalized.length <= MAX_DISPLAY_HEADLINE_CHARS) return normalized;
-
-        const clipped = normalized.slice(0, MAX_DISPLAY_HEADLINE_CHARS + 1);
-        const boundary = Math.max(
-            clipped.lastIndexOf('; '),
-            clipped.lastIndexOf(': '),
-            clipped.lastIndexOf(', '),
-            clipped.lastIndexOf(' ')
-        );
-
-        const truncated = boundary > 80 ? clipped.slice(0, boundary) : clipped.slice(0, MAX_DISPLAY_HEADLINE_CHARS);
-        return `${truncated.trimEnd()}...`;
-    }
-
-    function tokenize(text) {
-        return (text || '')
-            .toLowerCase()
-            .replace(/[^a-z0-9+\s]/g, ' ')
-            .split(/\s+/)
-            .filter((token) => token.length > 2);
-    }
-
-    function tokenSetSimilaritySets(left, right) {
-        if (left.size === 0 || right.size === 0) return 0;
-
+    function headlineTokenOverlap(left, right) {
+        const a = new Set(tokenize(left));
+        const b = new Set(tokenize(right));
+        if (!a.size || !b.size) return 0;
         let intersection = 0;
-        left.forEach((token) => {
-            if (right.has(token)) intersection += 1;
+        a.forEach((token) => {
+            if (b.has(token)) intersection += 1;
         });
-
-        const union = left.size + right.size - intersection;
-        return union > 0 ? intersection / union : 0;
+        return intersection / Math.max(a.size, b.size);
     }
 
-    function tokenSetSimilarity(a, b) {
-        return tokenSetSimilaritySets(new Set(tokenize(a)), new Set(tokenize(b)));
+    function buildPayload(section, rng) {
+        const subject = pick(BEATS.subjects, rng);
+        const normalizedSubject = typeof subject === 'object' ? subject.text : subject;
+        const possessive = typeof subject === 'object' ? subject?.pronouns?.possessive || 'their' : 'their';
+        const objectPhrase = String(pick(BEATS.objects, rng) || '').replace('{possessive}', possessive);
+        const twist = String(pick(BEATS.twists, rng) || '').replace('{possessive}', possessive);
+
+        return {
+            desk: pick(BEATS.desks, rng),
+            subject: normalizedSubject || 'someone online',
+            verb: pick(BEATS.verbs, rng),
+            object: objectPhrase,
+            connector: pick(BEATS.connectors, rng),
+            twist,
+            impact: pick(BEATS.impacts, rng),
+            section,
+            marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng)
+        };
     }
 
-    function buildCorpusTokenStats() {
-        const fields = ['desks', 'subjects', 'verbs', 'objects', 'connectors', 'twists', 'impacts', 'tags', 'scripted'];
-        const counts = {};
-        let documents = 0;
-
-        fields.forEach((field) => {
-            const source = BEATS[field] || [];
-            source.forEach((entry) => {
-                const raw = typeof entry === 'string' ? entry : entry?.text || '';
-                const tokens = new Set(tokenize(raw));
-                if (tokens.size === 0) return;
-                documents += 1;
-                tokens.forEach((token) => {
-                    counts[token] = (counts[token] || 0) + 1;
-                });
-            });
-        });
-
-        return { counts, documents: Math.max(1, documents) };
-    }
-
-    function scoreHeadlineHumor(headline, mode) {
-        if (!headline || typeof headline !== 'string') return 0;
-
-        const normalized = headline.toLowerCase();
-        const humorSignals = [
-            'group chat',
-            'algorithm',
-            'vibe check',
-            'chaos',
-            'side-eye',
-            'season finale',
-            'breaking news',
-            'push notification',
-            'soft pivot',
-            'chat screamed',
-            'houseplants',
-            'autocorrect',
-            'doomscrolling',
-            '99+',
-            'emoji budget',
-            'dramatic sighing',
-            'live commentary',
-            'snack',
-            'hot off',
-            'cursed'
+    function synthesizeCandidate(payload, rng) {
+        const patterns = [
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}; ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object} while ${payload.marker} watchers refresh dashboards; ${payload.impact}`,
+            `Breaking: ${payload.subject} ${payload.verb} ${payload.object}, because ${payload.twist}; ${payload.impact}`,
+            `${payload.desk} ${payload.subject} frames ${payload.marker} as the real story and ${payload.verb} ${payload.object}; ${payload.impact}`
         ];
 
+        return clampHeadlineLength(formatSentenceCase(pick(patterns, rng)));
+    }
+
+    function looksSafeTone(headline) {
+        const normalized = headline.toLowerCase();
+        return !HARASSMENT_TERMS.some((term) => normalized.includes(term));
+    }
+
+    function scoreCandidate(candidate, options, recentHeadlines) {
+        const reasonCodes = [];
         let score = 0;
-        humorSignals.forEach((phrase) => {
-            if (normalized.includes(phrase)) score += 1;
-        });
+        const tokens = tokenize(candidate.headline);
 
-        if (mode?.humorSignals?.length) {
-            mode.humorSignals.forEach((phrase) => {
-                if (normalized.includes(phrase)) score += 1;
-            });
+        if (candidate.section === options.section || options.section === 'latest') {
+            score += 0.22;
+            reasonCodes.push('section-match');
         }
 
-        if (/[;:]/.test(headline)) score += 1;
-        if ((headline.match(/\./g) || []).length >= 2) score += 1;
-        if (headline.length >= 90 && headline.length <= 190) score += 1;
-        if (headline.length >= MIN_DISPLAY_HEADLINE_CHARS) score += 1;
-        if (/\b(like it is|just tried to|insists|declared)\b/i.test(headline)) score += 1;
-        if (/\b(breaking|alert|live update|sources|analysts|developing)\b/i.test(headline)) score += 1;
-
-        return score;
-    }
-
-    function scoreCoherence(headline) {
-        if (!headline) return 0;
-
-        const words = tokenize(headline);
-        const uniqueWords = new Set(words);
-        const uniqueRatio = words.length ? uniqueWords.size / words.length : 0;
-
-        let score = 0;
-        if (/^[A-Z]/.test(headline)) score += 1;
-        if (/[.!?]$/.test(headline)) score += 1;
-        if (!/(\b\w+\b)(\s+\1\b)/i.test(headline)) score += 1;
-        if (uniqueRatio >= 0.7) score += 1;
-        if (!/\.{4,}/.test(headline)) score += 0.5;
-
-        return score;
-    }
-
-    function scoreNovelty(headline, poolHeadlines) {
-        const historical = recentHeadlines.slice(0, RECENT_HEADLINE_HISTORY);
-        const maxHistoricalSimilarity = historical.reduce(
-            (max, item) => Math.max(max, tokenSetSimilarity(headline, item)),
-            0
-        );
-
-        const maxPoolSimilarity = poolHeadlines.reduce(
-            (max, item) => Math.max(max, tokenSetSimilarity(headline, item)),
-            0
-        );
-
-        const noveltyFromHistory = 1 - maxHistoricalSimilarity;
-        const noveltyFromPool = 1 - maxPoolSimilarity;
-
-        return (noveltyFromHistory * 3) + (noveltyFromPool * 2);
-    }
-
-    function scoreInformativeness(headline) {
-        const tokens = tokenize(headline);
-        if (tokens.length === 0) return 0;
-
-        const { counts, documents } = corpusTokenStats;
-        const idfTotal = tokens.reduce((sum, token) => {
-            const frequency = counts[token] || 0;
-            const idf = Math.log((documents + 1) / (frequency + 1));
-            return sum + idf;
-        }, 0);
-
-        return Math.min(4, idfTotal / tokens.length);
-    }
-
-    function scorePriorAlignment(headline, mode) {
-        const modeBonus = (modePriors[mode.id] || 0) * 0.35;
-        const tokenBonus = tokenize(headline)
-            .slice(0, 9)
-            .reduce((sum, token) => sum + ((tokenPriors[token] || 0) * 0.05), 0);
-        return modeBonus + tokenBonus;
-    }
-
-    function selectTemplateByMode(mode) {
-        if (!Array.isArray(TEMPLATES) || TEMPLATES.length === 0) {
-            return () => '';
+        const queryTokens = tokenize(options.query);
+        if (queryTokens.length) {
+            const overlap = queryTokens.filter((token) => tokens.includes(token)).length;
+            const queryScore = overlap / queryTokens.length;
+            score += queryScore * 0.35;
+            if (queryScore > 0) reasonCodes.push('query-match');
         }
-        if (mode.id === 'bulletin') {
-            return pickRandom(TEMPLATES.slice(0, 5)) || pickWeightedTemplate();
+
+        const duplicates = recentHeadlines.slice(0, DUPLICATE_WINDOW);
+        if (!duplicates.includes(candidate.headline)) {
+            score += 0.18;
+            reasonCodes.push('not-recent-duplicate');
         }
-        if (mode.id === 'analysis') {
-            return pickRandom(TEMPLATES.slice(3)) || pickWeightedTemplate();
+
+        const nearWindow = recentHeadlines.slice(0, NEAR_DUPLICATE_WINDOW);
+        const maxOverlap = nearWindow.reduce((max, item) => Math.max(max, headlineTokenOverlap(candidate.headline, item)), 0);
+        score += (1 - maxOverlap) * 0.2;
+        if (maxOverlap < 0.5) reasonCodes.push('novel-structure');
+
+        const length = candidate.headline.length;
+        if (length >= MIN_LENGTH && length <= TARGET_MAX_LENGTH) {
+            score += 0.15;
+            reasonCodes.push('target-length');
+        } else if (length <= HARD_MAX_LENGTH) {
+            score += 0.07;
         }
-        return pickWeightedTemplate();
-    }
 
-    function buildHeadlineCandidate() {
-        const mode = pickStoryMode();
-        const template = selectTemplateByMode(mode);
-        const rawSubject = pickRandom(BEATS.subjects, lastPayload ? [lastPayload.rawSubject] : []);
-        const { payload, rawObject, rawTwist } = buildPayload(rawSubject);
-        const useScripted = getSecureRandom() < mode.scriptedBias;
-
-        const baseHeadline = useScripted
-            ? applyTokens(pickWithRecent(BEATS.scripted, 'scripted', 3), toScriptedTokens(payload))
-            : template(payload);
-
-        const withModeTone = maybeAttachTag(baseHeadline, payload.tag, mode.forceTag);
-        const withDeskTone = mode.forceDesk && !withModeTone.startsWith(payload.desk)
-            ? `${payload.desk} ${withModeTone}`
-            : withModeTone;
-
-        const cleanedHeadline = cleanHeadline(withDeskTone);
-        lastPayload = { ...payload, rawSubject, rawObject, rawTwist };
+        if (looksSafeTone(candidate.headline)) {
+            score += 0.1;
+            reasonCodes.push('tone-safe');
+        }
 
         return {
-            headline: cleanedHeadline,
-            mode,
-            tokenSet: new Set(tokenize(cleanedHeadline))
+            score: Math.max(0, Math.min(1, score)),
+            reasonCodes
         };
     }
 
-    function scoreCandidate(candidate, poolHeadlines, similarityScores = {}) {
-        const humor = scoreHeadlineHumor(candidate.headline, candidate.mode);
-        const coherence = scoreCoherence(candidate.headline);
-        const novelty = similarityScores.novelty ?? scoreNovelty(candidate.headline, poolHeadlines);
-        const informativeness = scoreInformativeness(candidate.headline);
-        const priorAlignment = scorePriorAlignment(candidate.headline, candidate.mode);
-        const punctuationBonus = /[;:.]/.test(candidate.headline) ? 1 : 0;
+    function buildCandidates(options, rng) {
+        const total = CANDIDATE_MIN + Math.floor(getRandom(rng) * (CANDIDATE_MAX - CANDIDATE_MIN + 1));
+        const section = options.section && SECTION_HINTS[options.section] ? options.section : 'latest';
 
-        const total = (humor * 1.35)
-            + (coherence * 1.15)
-            + novelty
-            + (informativeness * 0.9)
-            + priorAlignment
-            + punctuationBonus;
-
-        return {
-            total,
-            humor,
-            coherence,
-            novelty,
-            informativeness,
-            priorAlignment
-        };
-    }
-
-    function selectBySoftmax(candidates) {
-        const scaled = candidates.map((candidate) => ({
-            candidate,
-            weight: Math.exp(candidate.score.total / SOFTMAX_TEMPERATURE)
-        }));
-        const total = scaled.reduce((sum, entry) => sum + entry.weight, 0);
-        if (total <= 0) return candidates[0];
-
-        let cursor = 0;
-        const roll = getSecureRandom() * total;
-        for (const entry of scaled) {
-            cursor += entry.weight;
-            if (roll <= cursor) {
-                return entry.candidate;
-            }
-        }
-
-        return candidates[0];
-    }
-
-    function rankByMMR(scoredPool, similarityMatrix = []) {
-        const ranked = [];
-        const remaining = scoredPool.slice();
-
-        while (remaining.length > 0) {
-            let bestIndex = 0;
-            let bestValue = -Infinity;
-
-            remaining.forEach((candidate, index) => {
-                const similarityPenalty = ranked.length
-                    ? ranked.reduce((max, selected) => {
-                        const pairSimilarity = similarityMatrix[candidate.poolIndex]?.[selected.poolIndex]
-                            ?? tokenSetSimilarity(candidate.headline, selected.headline);
-                        return Math.max(max, pairSimilarity);
-                    }, 0)
-                    : 0;
-
-                const mmrScore = (MMR_LAMBDA * candidate.score.total)
-                    - ((1 - MMR_LAMBDA) * similarityPenalty * 6);
-
-                if (mmrScore > bestValue) {
-                    bestValue = mmrScore;
-                    bestIndex = index;
-                }
-            });
-
-            ranked.push(remaining.splice(bestIndex, 1)[0]);
-        }
-
-        return ranked;
-    }
-
-    function buildSimilarityMatrix(pool) {
-        const matrix = pool.map(() => pool.map(() => 0));
-        for (let leftIndex = 0; leftIndex < pool.length; leftIndex += 1) {
-            for (let rightIndex = leftIndex + 1; rightIndex < pool.length; rightIndex += 1) {
-                const similarity = tokenSetSimilaritySets(pool[leftIndex].tokenSet, pool[rightIndex].tokenSet);
-                matrix[leftIndex][rightIndex] = similarity;
-                matrix[rightIndex][leftIndex] = similarity;
-            }
-        }
-        return matrix;
-    }
-
-    async function warmupWebGpuBackend() {
-        if (webgpuWarmup.attempted) return webgpuWarmup;
-        webgpuWarmup = { attempted: true, ready: false };
-
-        if (typeof navigator === 'undefined' || !navigator.gpu?.requestAdapter) {
-            return webgpuWarmup;
-        }
-
-        try {
-            const adapter = await navigator.gpu.requestAdapter();
-            if (!adapter) return webgpuWarmup;
-            const device = await adapter.requestDevice();
-            if (!device) return webgpuWarmup;
-            webgpuWarmup = { attempted: true, ready: true };
-            return webgpuWarmup;
-        } catch (error) {
-            return webgpuWarmup;
-        }
-    }
-
-    function scheduleBackendWarmup() {
-        if (typeof window === 'undefined' || webgpuWarmup.attempted) return;
-        window.setTimeout(() => {
-            warmupWebGpuBackend();
-        }, 120);
-    }
-
-    async function selectGenerationBackend() {
-        if (activeBackend) {
-            return activeBackend;
-        }
-
-        const webGpuState = await warmupWebGpuBackend();
-        activeBackend = webGpuState.ready
-            ? { id: 'webgpu-similarity', isWarm: true }
-            : { id: 'cpu-mock', isWarm: true };
-
-        return activeBackend;
-    }
-
-    function updateLearningSignals(chosen) {
-        if (!chosen || !chosen.mode) return;
-
-        const score = chosen.score || { total: 0, novelty: 0 };
-        const normalizedReward = Math.max(-0.25, Math.min(0.35, (score.total - 9) / 28));
-        const noveltyReward = Math.max(-0.2, Math.min(0.3, (score.novelty - 2) / 8));
-        const reward = normalizedReward + noveltyReward;
-
-        updatePrior(modePriors, chosen.mode.id, reward);
-        tokenize(chosen.headline)
-            .slice(0, 10)
-            .forEach((token) => updatePrior(tokenPriors, token, reward * 0.8, -3, 4));
-
-        persistPriorMap(MODE_PRIOR_STORAGE_KEY, modePriors, STORY_MODES.length + 2);
-        persistPriorMap(TOKEN_PRIOR_STORAGE_KEY, tokenPriors, MAX_TOKEN_PRIOR_SIZE);
-    }
-
-    function generateUniqueHeadline() {
-        let attempt = 0;
-        const maxAttempts = RECENT_HEADLINE_HISTORY + MAX_QUALITY_ATTEMPTS;
-        const pool = [];
-
-        while (attempt < maxAttempts && pool.length < CANDIDATE_POOL_SIZE) {
-            const candidate = buildHeadlineCandidate();
-            if (!candidate.headline || candidate.headline.length < MIN_DISPLAY_HEADLINE_CHARS) {
-                attempt += 1;
-                continue;
-            }
-            if (isRecentlyUsed(candidate.headline)) {
-                attempt += 1;
-                continue;
-            }
-
-            pool.push(candidate);
-            attempt += 1;
-        }
-
-        if (pool.length === 0) {
-            const fallback = buildHeadlineCandidate();
-            rememberMode(fallback.mode.id);
-            return fallback.headline;
-        }
-
-        const similarityMatrix = buildSimilarityMatrix(pool);
-
-        const scoredPool = pool.map((candidate, index) => {
-            const peerHeadlines = pool
-                .filter((item, peerIndex) => peerIndex !== index)
-                .map((item) => item.headline);
-            const novelty = 5
-                - Math.max(
-                    recentHeadlines
-                        .slice(0, RECENT_HEADLINE_HISTORY)
-                        .reduce((max, item) => Math.max(max, tokenSetSimilarity(candidate.headline, item)), 0),
-                    similarityMatrix[index].reduce((max, similarity) => Math.max(max, similarity), 0)
-                ) * 5;
+        return Array.from({ length: total }).map(() => {
+            const weightedSection = section === 'latest' && getRandom(rng) < 0.35
+                ? pick(['world', 'culture', 'tech', 'oddities'], rng)
+                : section;
+            const payload = buildPayload(weightedSection, rng);
+            const queryToken = tokenize(options.query || '')[0];
+            const generated = synthesizeCandidate(payload, rng);
+            const headline = queryToken && getRandom(rng) < 0.55 && !generated.toLowerCase().includes(queryToken)
+                ? clampHeadlineLength(`${generated} as ${queryToken} chatter keeps climbing`)
+                : generated;
             return {
-                ...candidate,
-                poolIndex: index,
-                score: scoreCandidate(candidate, peerHeadlines, { novelty })
+                headline,
+                section: weightedSection
             };
         });
-
-        const ranked = rankByMMR(scoredPool, similarityMatrix);
-        const shortlist = ranked.slice(0, 3);
-        const picked = shortlist.length === 1
-            ? shortlist[0]
-            : selectBySoftmax(shortlist);
-
-        const finalSelection = picked.score.humor >= MIN_FUNNY_SCORE
-            ? picked
-            : ranked[0];
-
-        rememberMode(finalSelection.mode.id);
-        updateLearningSignals(finalSelection);
-        return finalSelection.headline;
     }
 
-    function resolveAfterDelay(task) {
-        const { min, max } = GENERATION_DELAY_RANGE_MS;
-        const delay = min + Math.floor(getSecureRandom() * (max - min));
+    function pickBestCandidate(candidates, options, threshold) {
+        const recent = recentEntries.map((entry) => entry.headline);
+        const excluded = new Set((options.exclude || []).map((value) => normalizeText(value).toLowerCase()));
 
+        const scored = candidates
+            .filter((candidate) => {
+                const normalized = normalizeText(candidate.headline).toLowerCase();
+                if (!normalized || normalized.length > HARD_MAX_LENGTH) return false;
+                if (excluded.has(normalized)) return false;
+                if (recent.slice(0, DUPLICATE_WINDOW).includes(candidate.headline)) return false;
+                return true;
+            })
+            .map((candidate) => {
+                const result = scoreCandidate(candidate, options, recent);
+                return {
+                    ...candidate,
+                    confidence: result.score,
+                    reasonCodes: result.reasonCodes
+                };
+            })
+            .sort((a, b) => b.confidence - a.confidence);
+
+        return scored.find((candidate) => candidate.confidence >= threshold) || null;
+    }
+
+    function resolveAfterDelay(task, rng) {
+        const { min, max } = GENERATION_DELAY_RANGE_MS;
+        const delay = min + Math.floor(getRandom(rng) * (max - min + 1));
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 try {
@@ -715,56 +322,80 @@ const tinyLlmClient = (() => {
         });
     }
 
-    async function generateHeadline() {
-        const backend = await selectGenerationBackend();
-        const firstWebGpuRun = backend.id === 'webgpu-similarity' && !hasCompletedWebGpuGeneration;
-        const timeoutMs = TINY_LLM_TIMEOUT_MS + (firstWebGpuRun ? WEBGPU_FIRST_RUN_TIMEOUT_BONUS_MS : 0);
+    async function generateHeadline(options = {}) {
+        const request = {
+            section: normalizeText(options.section || 'latest').toLowerCase(),
+            source: options.source || 'any',
+            query: normalizeText(options.query || ''),
+            exclude: Array.isArray(options.exclude) ? options.exclude : [],
+            seed: Number.isInteger(options.seed) ? options.seed : null
+        };
 
-        const generation = resolveAfterDelay(() => {
-            const headline = generateUniqueHeadline();
-            if (!headline || headline.trim().length === 0) {
-                throw new Error('Empty generation result');
+        const rng = request.seed !== null ? createSeededRng(request.seed) : null;
+        const runGeneration = () => {
+            const candidates = buildCandidates(request, rng);
+            let picked = pickBestCandidate(candidates, request, 0.52);
+            if (!picked) {
+                picked = pickBestCandidate(candidates, request, 0.42);
             }
-            rememberHeadline(headline);
-            lastGenerationDiagnostics = {
-                backend: backend.id,
-                warm: backend.id === 'webgpu-similarity' ? !firstWebGpuRun : true,
-                timeoutMs,
-                fallback: null
+
+            if (!picked) {
+                const error = new Error('v2-no-eligible-candidate');
+                error.code = 'NO_ELIGIBLE_CANDIDATE';
+                throw error;
+            }
+
+            const result = {
+                headline: picked.headline,
+                section: inferSectionFromText(picked.headline) || picked.section || 'latest',
+                confidence: picked.confidence,
+                reasonCodes: picked.reasonCodes,
+                generatedAt: new Date().toISOString()
             };
-            if (backend.id === 'webgpu-similarity') {
-                hasCompletedWebGpuGeneration = true;
-            }
-            return headline;
-        });
 
+            addRecentEntry(result);
+            lastDiagnostics = {
+                backend: 'v2-heuristic',
+                timeoutMs: TINY_LLM_TIMEOUT_MS,
+                fallback: null,
+                warm: true,
+                reasonCodes: picked.reasonCodes
+            };
+            return result;
+        };
+
+        const generation = resolveAfterDelay(runGeneration, rng);
         const timeout = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Generation timed out')), timeoutMs);
+            setTimeout(() => {
+                const error = new Error('Generation timed out');
+                error.code = 'GENERATION_TIMEOUT';
+                reject(error);
+            }, TINY_LLM_TIMEOUT_MS);
         });
 
         try {
             return await Promise.race([generation, timeout]);
         } catch (error) {
-            lastGenerationDiagnostics = {
-                backend: backend.id,
-                warm: backend.id === 'webgpu-similarity' ? hasCompletedWebGpuGeneration : true,
-                timeoutMs,
-                fallback: error?.message || 'generation-error'
+            lastDiagnostics = {
+                backend: 'v2-heuristic',
+                timeoutMs: TINY_LLM_TIMEOUT_MS,
+                fallback: error?.code || error?.message || 'generation-error',
+                warm: true,
+                reasonCodes: []
             };
             throw error;
         }
     }
 
-    scheduleBackendWarmup();
-
     return {
         generateHeadline,
         getLastDiagnostics() {
-            return { ...lastGenerationDiagnostics };
+            return { ...lastDiagnostics };
         }
     };
 })();
 
 if (typeof window !== 'undefined') {
     window.tinyLlmClient = tinyLlmClient;
+    window.tinyLlmClientV2 = tinyLlmClient;
 }
