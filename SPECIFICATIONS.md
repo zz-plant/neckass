@@ -88,6 +88,111 @@ This document captures the **current, in-repo feature set** for the Neckass Head
   - A simulated latency delay between 420–880ms and a hard timeout at 2400ms. If the generation promise loses the race to timeout, it throws an error and `script.js` falls back to curated headlines.
   - A recent headline cache stored in localStorage (`tinyLlmRecentHeadlines`).【F:llm.js†L1-L241】
 
+## Headline generation v2 specification (proposed)
+
+This section defines a **v2 generation model** that keeps the app fully static/no-build while improving output quality, predictability, and accessibility-safe behavior. The v2 contract is additive: it can run alongside the current generator until rollout is complete.
+
+### Product goals
+- Generate headlines that feel more intentional and less repetitive while preserving the satirical tone.
+- Keep generation resilient in constrained environments (local file, no network, older browsers).
+- Provide deterministic behavior when users apply filters, so Shuffle feels relevant to the selected context.
+- Make generator outcomes inspectable for debugging and future tuning without shipping analytics dependencies.
+
+### Non-goals
+- No server calls or external LLM dependency.
+- No new build tooling, bundlers, or transpilation requirements.
+- No breaking changes to existing keyboard controls, copy/share/export flows, or URL semantics.
+
+### Optional modern-web enhancements (progressive)
+- v2 **may** use modern browser capabilities as progressive enhancements, with graceful fallback to the current baseline behavior.
+- Recommended candidates:
+  - `crypto.getRandomValues()` for stronger randomization than `Math.random()` when available.
+  - `Intl.Segmenter` for better tokenization in query/relevance scoring.
+  - `requestIdleCallback` for low-priority cache cleanup/diagnostic pruning.
+  - `AbortController` to cancel stale in-flight generation requests when users rapidly shuffle.
+  - Web Worker offload for candidate scoring if profiling shows main-thread jank.
+- Compatibility contract:
+  - Never require these APIs for core headline generation.
+  - Feature-detect every API and fall back to lightweight synchronous logic.
+  - Preserve direct `file://` compatibility and no-build/static hosting.
+
+### v2 generator interface
+- Expose `tinyLlmClientV2.generateHeadline(options)` as an async function.
+- `options` shape:
+  - `section?: string` — preferred section (for example: Local, Politics, Sports).
+  - `source?: "curated" | "generated" | "any"` — generation preference.
+  - `query?: string` — optional free-text constraint used as a soft relevance hint.
+  - `exclude?: string[]` — headlines to avoid (typically recent stack entries).
+  - `seed?: number` — optional deterministic seed for reproducible outputs.
+- Return shape:
+  - `headline: string`
+  - `section: string`
+  - `confidence: number` (0–1 heuristic score)
+  - `reasonCodes: string[]` (debuggable labels like `"query-match"`, `"novel-structure"`)
+  - `generatedAt: string` (ISO timestamp)
+
+### Generation pipeline
+1. **Context assembly**
+   - Build a compact context object from active filters and URL state (`section`, `q`, `source`).
+   - Normalize text (trim, collapse whitespace, lowercase for matching only).
+2. **Candidate synthesis**
+   - Assemble 12–24 candidates by combining template slots and phrase pools.
+   - Use weighted pools by section so output reflects selected context before ranking.
+3. **Scoring and ranking**
+   - Score each candidate with a weighted heuristic:
+     - Relevance to `query` tokens.
+     - Novelty against recent generated/cache history.
+     - Structural diversity (length/pattern variance).
+     - Readability guardrail (avoid awkward punctuation clusters).
+   - Select the highest-scoring candidate above a minimum threshold.
+4. **Fallback handling**
+   - If no candidate meets threshold, lower threshold once and retry ranking.
+   - If still unavailable, throw a typed error consumed by existing curated fallback logic.
+
+### Quality guardrails
+- **Length target:** 45–110 characters, hard cap at 140.
+- **Duplicate suppression:** no exact match with the last 30 generated headlines.
+- **Near-duplicate suppression:** reject candidates with very high token overlap against last 10 shown headlines.
+- **Safety/tone:** avoid direct harassment terms and preserve absurd-news voice rather than personal attacks.
+- **Formatting:** sentence case headline text, no trailing punctuation unless stylistically required.
+
+### State and persistence
+- New localStorage key: `tinyLlmV2Recent` containing up to 60 entries with timestamps.
+- Maintain backward compatibility with `tinyLlmRecentHeadlines`; on first load, migrate legacy entries into the new structure.
+- Persist lightweight diagnostics only in memory for current session (no network reporting).
+
+### Performance and resilience requirements
+- Simulated generation latency: 280–720ms (faster than v1) with jitter.
+- Hard timeout: 1800ms.
+- On timeout or exception, return control to existing curated shuffle path with no blocking UI state.
+- Generator must remain safe when localStorage is unavailable (private mode or quota errors).
+
+### Accessibility and UX requirements
+- Existing loader/status live regions remain the source of truth for announcing generation progress.
+- Error messages must reuse established tone (brief, plain-language, action-oriented).
+- Shuffle interaction must always conclude with either:
+  - a newly rendered headline, or
+  - a clear fallback outcome with controls restored.
+
+### Integration plan
+- Phase 1: ship `tinyLlmClientV2` behind a constant feature flag in `script.js` (default off).
+- Phase 2: dual-run scoring in development mode to compare v1 vs v2 outputs without user-visible changes.
+- Phase 3: enable v2 by default and retain v1 as emergency fallback path for one release window.
+- Phase 4: remove v1-only code after stability checklist passes.
+
+### Acceptance criteria
+- With no filters, 20 consecutive Shuffles produce at least 16 unique headlines.
+- With a section filter enabled, at least 80% of 20 generated headlines align to that section's phrase pool.
+- With a query filter, generated headlines contain at least one query token (or close variant) in at least 60% of attempts.
+- Timeout/error paths never leave loader visible or controls disabled after completion.
+- Previous navigation continues to function across mixed curated+generated sessions.
+
+### Validation checklist for implementation
+- Add unit-style deterministic checks for seed-based reproducibility of candidate ranking.
+- Add regression checks for duplicate suppression window behavior.
+- Verify local file (`file://`) and `python -m http.server` workflows both function.
+- Manually validate keyboard navigation, copy/share/export actions after v2 integration.
+
 ## Persistence & URL state
 - LocalStorage keys:
   - `navigationStack`, `uniqueHeadlines`, `generatedHeadlines`, `favoriteHeadlines`, `headlineFilters` (current keys), plus legacy keys `headlinesViewed`, `viewedHeadlines`, `viewedStack` for backward compatibility.

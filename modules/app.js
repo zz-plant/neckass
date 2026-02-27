@@ -265,7 +265,15 @@
 
     async generateHeadlineWithFallback() {
         try {
-            const headlineText = await window.tinyLlmClient.generateHeadline();
+            const result = await window.tinyLlmClient.generateHeadline({
+                section: this.filters.section,
+                source: this.filters.source === 'curated' ? 'any' : this.filters.source,
+                query: this.filters.query,
+                exclude: this.state.navigationStack
+                    .map((index) => this.headlines[index])
+                    .filter(Boolean)
+                    .slice(-10)
+            });
             const diagnostics = typeof window.tinyLlmClient?.getLastDiagnostics === 'function'
                 ? window.tinyLlmClient.getLastDiagnostics()
                 : null;
@@ -276,6 +284,7 @@
                     warm: diagnostics.warm === true
                 });
             }
+            const headlineText = typeof result === 'string' ? result : result?.headline;
             return this.registerGeneratedHeadline(headlineText);
         } catch (error) {
             const diagnostics = typeof window.tinyLlmClient?.getLastDiagnostics === 'function'
