@@ -143,6 +143,16 @@ function rgbToString({ r, g, b }) {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
+
+function safeJsonParse(raw, fallback) {
+    try {
+        const parsed = JSON.parse(raw);
+        return parsed ?? fallback;
+    } catch (error) {
+        return fallback;
+    }
+}
+
 function cloneStateSnapshot(value) {
     if (typeof structuredClone === 'function') {
         try {
@@ -229,6 +239,7 @@ function triggerHapticFeedback(type = 'light') {
     Neckass.normalizeHeadlineText = normalizeHeadlineText;
     Neckass.slugifyHeadline = slugifyHeadline;
     Neckass.selectReadableColor = selectReadableColor;
+    Neckass.safeJsonParse = safeJsonParse;
     Neckass.cloneStateSnapshot = cloneStateSnapshot;
     Neckass.scheduleBackgroundTask = scheduleBackgroundTask;
     Neckass.runViewTransition = runViewTransition;

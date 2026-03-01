@@ -54,14 +54,14 @@
 
         return {
             restore(baseHeadlineCount) {
-                const generatedHeadlines = parseJson(safeGetItem(STORAGE_KEYS.generatedHeadlines), []);
+                const generatedHeadlines = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.generatedHeadlines), []);
                 const totalHeadlines = baseHeadlineCount + (Array.isArray(generatedHeadlines) ? generatedHeadlines.length : 0);
-                const storedStack = parseJson(safeGetItem(STORAGE_KEYS.navigationStack), null);
-                const legacyNavigationStack = parseJson(safeGetItem(STORAGE_KEYS.navigationStackLegacy), null);
-                const viewedListLegacy = parseJson(safeGetItem(STORAGE_KEYS.viewedList), []);
-                const uniqueHeadlinesLegacy = parseJson(safeGetItem(STORAGE_KEYS.uniqueHeadlines), null);
-                const favorites = parseJson(safeGetItem(STORAGE_KEYS.favorites), []);
-                const filters = parseJson(safeGetItem(STORAGE_KEYS.filters), {});
+                const storedStack = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.navigationStack), null);
+                const legacyNavigationStack = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.navigationStackLegacy), null);
+                const viewedListLegacy = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.viewedList), []);
+                const uniqueHeadlinesLegacy = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.uniqueHeadlines), null);
+                const favorites = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.favorites), []);
+                const filters = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.filters), {});
                 const rawStack = resolveNavigationStack(storedStack, legacyNavigationStack, viewedListLegacy);
 
                 const sanitizedStack = rawStack.filter((index) => Neckass.isValidHeadlineIndex(index, totalHeadlines));
@@ -71,8 +71,8 @@
                         : sanitizedStack
                 );
 
-                const dailyEngagement = parseJson(safeGetItem(STORAGE_KEYS.dailyEngagement), {});
-                const feedbackLog = parseJson(safeGetItem(STORAGE_KEYS.feedbackLog), []);
+                const dailyEngagement = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.dailyEngagement), {});
+                const feedbackLog = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.feedbackLog), []);
 
                 return {
                     navigationStack: sanitizedStack,
@@ -111,15 +111,6 @@
             localStorage.setItem(key, value);
         } catch (error) {
             return;
-        }
-    }
-
-    function parseJson(value, fallback) {
-        try {
-            if (value === null) return fallback;
-            return JSON.parse(value);
-        } catch (error) {
-            return fallback;
         }
     }
 

@@ -27,6 +27,8 @@ Then open `http://127.0.0.1:8001/`.
 - `modules/history.js` — browser history and URL-sync behavior.
 - `modules/storage.js` — `localStorage` persistence helpers.
 - `modules/ui.js` — rendering and status updates.
+- `modules/head.js` — document metadata and canonical link updates.
+- `modules/history-list.js` — history panel list derivation and rendering.
 - `modules/filters.js` — query/filter logic.
 - `modules/share.js` — social/native share URL flows.
 - `modules/clipboard.js` — text/image clipboard behavior.
