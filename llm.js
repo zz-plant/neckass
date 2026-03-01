@@ -1,4 +1,4 @@
-const { data: neckassData } = window.Neckass || {};
+const { data: neckassData, safeJsonParse: sharedSafeJsonParse } = window.Neckass || {};
 const BEATS = neckassData?.BEATS || {};
 
 const TINY_LLM_TIMEOUT_MS = 1800;
@@ -37,14 +37,15 @@ const tinyLlmClient = (() => {
         return typeof localStorage !== 'undefined';
     }
 
-    function safeJsonParse(raw, fallback) {
-        try {
-            const parsed = JSON.parse(raw);
-            return parsed ?? fallback;
-        } catch (error) {
-            return fallback;
-        }
-    }
+    const safeJsonParse = sharedSafeJsonParse
+        || ((raw, fallback) => {
+            try {
+                const parsed = JSON.parse(raw);
+                return parsed ?? fallback;
+            } catch (error) {
+                return fallback;
+            }
+        });
 
     function loadRecentEntries() {
         if (!canUseLocalStorage()) return [];

@@ -23,7 +23,9 @@
         selectReadableColor,
         slugifyHeadline,
         runViewTransition,
-        triggerHapticFeedback
+        triggerHapticFeedback,
+        updateDocumentMetadata: updateHeadMetadata,
+        updateHistoryList: renderHistoryList
     } = Neckass;
     const renderFilterStatus = Neckass.updateFilterStatus;
 
@@ -352,7 +354,13 @@
             this.updateShuffleStreak(shouldIncrementStreak && previousIndex !== index);
             this.updateHeadlineBadges(index);
             this.updateFavoriteButton();
-            this.updateDocumentMetadata(headlineText, index);
+            updateHeadMetadata({
+                headline: headlineText,
+                index,
+                headlinesLength: this.headlines.length,
+                isValidHeadlineIndex,
+                getCanonicalUrl: (targetIndex) => this.getCanonicalUrl(targetIndex)
+            });
             updateSocialShareLinks(this.elements, headlineText, this.getCanonicalUrl(index));
             this.updateMockHeadline(headlineText);
             this.persistState();
@@ -387,7 +395,13 @@
             : 'No headlines available.';
         this.elements.headline.style.color = '';
         this.clearCopyStatus();
-        this.updateDocumentMetadata('', -1);
+        updateHeadMetadata({
+            headline: '',
+            index: -1,
+            headlinesLength: this.headlines.length,
+            isValidHeadlineIndex,
+            getCanonicalUrl: (targetIndex) => this.getCanonicalUrl(targetIndex)
+        });
         updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
         this.updateMockHeadline('No headlines available.');
         this.updateHeadlineBadges(null);
@@ -836,36 +850,21 @@
     }
 
     updateHistoryList() {
-        if (!this.elements.headlineList) return;
-        const panel = this.filters.panel;
-        const indexes = this.getPanelIndexes(panel);
-        this.elements.headlineList.innerHTML = '';
-
-        if (this.elements.historyCount) {
-            this.elements.historyCount.textContent = `${indexes.length} items`;
-        }
-
-        if (indexes.length === 0) {
-            const item = document.createElement('li');
-            item.className = 'headline-item headline-item--empty';
-            item.textContent = 'No headlines available in this view.';
-            this.elements.headlineList.appendChild(item);
-            return;
-        }
-
-        const fragment = document.createDocumentFragment();
-        indexes.forEach((index) => {
-            fragment.appendChild(this.createHistoryListItem(index));
+        renderHistoryList({
+            elements: this.elements,
+            panel: this.filters.panel,
+            isIndexEligible: (index) => this.isIndexEligible(index),
+            favoriteHeadlines: this.favoriteHeadlines,
+            headlineCache: this.headlineCache,
+            headlines: this.headlines,
+            baseHeadlineCount: this.baseHeadlineCount,
+            navigationStack: this.state.navigationStack,
+            currentIndex: this.state.currentIndex
         });
-        this.elements.headlineList.appendChild(fragment);
-    }
-
-    getPanelIndexes(panel) {
-        const indexes = this.getPanelIndexPool(panel);
-        return indexes.filter((index) => this.isIndexEligible(index));
     }
 
     syncFilterControls() {
+
         if (this.elements.searchInput) {
             this.elements.searchInput.value = this.filters.query;
         }
@@ -955,33 +954,6 @@
         }
     }
 
-    createHistoryListItem(index) {
-        const item = document.createElement('li');
-        item.className = 'headline-item';
-        if (index === this.state.currentIndex) {
-            item.classList.add('headline-item--active');
-        }
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.dataset.index = String(index);
-        button.textContent = this.headlines[index];
-        item.appendChild(button);
-        return item;
-    }
-
-    getPanelIndexPool(panel) {
-        if (panel === 'favorites') {
-            return Array.from(this.favoriteHeadlines)
-                .map((headline) => this.headlineCache.get(headline))
-                .filter((index) => Number.isInteger(index));
-        }
-        if (panel === 'generated') {
-            return this.headlines
-                .map((_, index) => index)
-                .filter((index) => index >= this.baseHeadlineCount);
-        }
-        return [...this.state.navigationStack].reverse();
-    }
 
     async shareHeadline(triggerButton = this.elements.nativeShareButton) {
         const headline = this.headlines[this.state.currentIndex];
@@ -1182,44 +1154,6 @@
             panel: urlState.panel ?? DEFAULT_FILTERS.panel,
             layout: urlState.layout ?? DEFAULT_FILTERS.layout
         });
-    }
-
-    updateDocumentMetadata(headline, index) {
-        const baseTitle = 'Neckass Headlines';
-        const hasHeadline = typeof headline === 'string' && headline.trim().length > 0 && isValidHeadlineIndex(index, this.headlines.length);
-        const title = hasHeadline ? `${headline} | ${baseTitle}` : baseTitle;
-        const description = hasHeadline ? headline : 'Explore a feed of inventive headlines where every shuffle serves up a fresh take ready to share.';
-        const canonicalUrl = this.getCanonicalUrl(index);
-
-        document.title = title;
-        this.setMetaTag('name', 'description', description);
-        this.setMetaTag('property', 'og:title', title);
-        this.setMetaTag('property', 'og:description', description);
-        this.setMetaTag('property', 'og:url', canonicalUrl);
-        this.setMetaTag('name', 'twitter:title', title);
-        this.setMetaTag('name', 'twitter:description', description);
-        this.setMetaTag('name', 'twitter:url', canonicalUrl);
-        this.setCanonicalLink(canonicalUrl);
-    }
-
-    setMetaTag(attribute, name, content) {
-        let tag = document.querySelector(`meta[${attribute}="${name}"]`);
-        if (!tag) {
-            tag = document.createElement('meta');
-            tag.setAttribute(attribute, name);
-            document.head.appendChild(tag);
-        }
-        tag.setAttribute('content', content);
-    }
-
-    setCanonicalLink(url) {
-        let link = document.querySelector('link[rel="canonical"]');
-        if (!link) {
-            link = document.createElement('link');
-            link.setAttribute('rel', 'canonical');
-            document.head.appendChild(link);
-        }
-        link.setAttribute('href', url);
     }
 
 
