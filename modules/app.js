@@ -703,6 +703,7 @@
     setMockLayout(layout) {
         this.updateFilterValue('layout', layout || 'standard', {
             applyLayout: true,
+            syncControls: true,
             updateHistoryState: true
         });
     }
