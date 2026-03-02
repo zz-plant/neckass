@@ -41,6 +41,8 @@
             filters.query
             || filters.section !== DEFAULT_FILTERS.section
             || filters.source !== DEFAULT_FILTERS.source
+            || filters.panel !== DEFAULT_FILTERS.panel
+            || filters.layout !== DEFAULT_FILTERS.layout
         );
     }
 
