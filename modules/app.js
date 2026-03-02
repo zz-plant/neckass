@@ -1038,7 +1038,7 @@
     async handleQuickExport() {
         if (!window.htmlToImage) {
             this.jumpToCard('export');
-            this.reportExportStatus('Export unavailable. Try Download mock front page after reloading.', true);
+            this.reportExportStatus('Export unavailable. Reload, then try Download mock front page.', true);
             return;
         }
 
@@ -1466,7 +1466,7 @@
             this.elements.copyMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
         }
         if (!window.htmlToImage) {
-            this.reportExportStatus('Export unavailable. Try Download mock front page after reloading.', true);
+            this.reportExportStatus('Export unavailable. Reload, then try Download mock front page.', true);
         }
     }
 

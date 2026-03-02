@@ -1,6 +1,6 @@
 # SEO Audit: Potential Limits on Search Engine Presence
 
-Date: 2026-02-21
+Date: 2026-03-02
 
 ## Implemented in this update
 
@@ -21,12 +21,12 @@ Date: 2026-02-21
 ## Next recommended steps
 
 1. If social crawler compatibility issues are observed, provide a non-binary fallback strategy that fits repository constraints.
-2. Add one more static page focused on headline categories/prompts and include internal links to it.
+2. ✅ Added one more static page focused on headline categories/prompts (`prompts.html`) and linked it from primary navigation/content.
 3. Validate indexing and CTR in Search Console after deployment.
 
 ## Evidence checked
 
 - `index.html` metadata, structured data, navigation, and crawlable body content.
-- `about.html` and `examples.html` crawlable page content and canonical URLs.
+- `about.html`, `examples.html`, and `prompts.html` crawlable page content and canonical URLs.
 - `sitemap.xml` URL inventory.
 - `robots.txt` crawl permissions.

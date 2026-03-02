@@ -122,6 +122,12 @@
         if (filters.source !== 'auto') {
             parts.push(`Source: ${formatFilterLabel(filters.source)}`);
         }
+        if (filters.panel !== 'recent') {
+            parts.push(`Panel: ${formatFilterLabel(filters.panel)}`);
+        }
+        if (filters.layout !== 'standard') {
+            parts.push(`Layout: ${formatFilterLabel(filters.layout)}`);
+        }
 
         const hasFilters = hasActiveFilters(filters);
 

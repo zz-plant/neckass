@@ -4,8 +4,8 @@
     async function exportMockFront({ mode, elements, reportStatus, setButtonLoading }) {
         if (!elements.mockFrame || !window.htmlToImage) {
             const fallbackMessage = mode === 'copy'
-                ? 'Export unavailable. Try Download mock front page.'
-                : 'Export unavailable.';
+                ? 'Export unavailable. Reload, then try Download mock front page.'
+                : 'Export unavailable. Reload and try again.';
             reportStatus(fallbackMessage, true);
             return;
         }
