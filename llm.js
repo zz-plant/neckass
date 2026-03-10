@@ -204,7 +204,10 @@ const tinyLlmClient = (() => {
             `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}; ${payload.impact}`,
             `${payload.subject} ${payload.verb} ${payload.object} while ${payload.marker} watchers refresh dashboards; ${payload.impact}`,
             `Breaking: ${payload.subject} ${payload.verb} ${payload.object}, because ${payload.twist}; ${payload.impact}`,
-            `${payload.desk} ${payload.subject} frames ${payload.marker} as the real story and ${payload.verb} ${payload.object}; ${payload.impact}`
+            `${payload.desk} ${payload.subject} frames ${payload.marker} as the real story and ${payload.verb} ${payload.object}; ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}, then called it "community outreach"; ${payload.impact}`,
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`,
+            `Neckass bulletin: ${payload.subject} ${payload.verb} ${payload.object} while everyone agreed this was elite neckass behavior; ${payload.impact}`
         ];
 
         return clampHeadlineLength(formatSentenceCase(pick(patterns, rng)));
