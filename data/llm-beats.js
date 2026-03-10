@@ -28,8 +28,8 @@
         { text: 'the office snack oracle', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'a meme-savvy meteorologist', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'the unpaid social media intern', pronouns: { possessive: 'their', object: 'them' } },
-        { text: 'the neighborhood neckass laureate', pronouns: { possessive: 'their', object: 'them' } },
-        { text: 'that one cousin everybody calls neckass with love', pronouns: { possessive: 'their', object: 'them' } }
+        { text: 'the neighborhood vibe laureate', pronouns: { possessive: 'their', object: 'them' } },
+        { text: 'that one cousin everyone trusts for chaotic advice', pronouns: { possessive: 'their', object: 'them' } }
     ],
     verbs: [
         'liveblogs',
@@ -78,9 +78,9 @@
         'an accidental typo as a quarterly strategy keynote',
         'a passive-aggressive sticky note like it is a leaked manifesto',
         '{possessive} lunch order into a bipartisan negotiation summit',
-        'a regular Tuesday into certified neckass behavior',
-        '{possessive} outfit check into a full neckass summit agenda',
-        'a harmless debate into front-row neckass theatrics'
+        'a regular Tuesday into certified main-character behavior',
+        '{possessive} outfit check into a full trend summit agenda',
+        'a harmless debate into front-row theatrical chaos'
     ],
     connectors: [
         'after',
@@ -109,9 +109,9 @@
         'a ring light flickered like a prophecy',
         'someone yelled "we can monetize this" from the hallway',
         '{possessive} cat stepped on the keyboard and approved it anyway',
-        'the aunties in the comments said "that is pure neckass"',
-        'somebody whispered "neckass levels are peaking" into the mic',
-        '{possessive} homegirl texted "you are in neckass mode again"'
+        'the aunties in the comments said "that is pure chaos"',
+        'somebody whispered "the chaos levels are peaking" into the mic',
+        '{possessive} homegirl texted "you are in chaos mode again"'
     ],
     impacts: [
         'sources say the backlog of screenshots is heroic.',
@@ -134,9 +134,9 @@
         'public reaction ranged from "iconic" to "please log off."',
         'officials confirmed the plan was 20% strategy and 80% dramatic pointing.',
         'critics called it unserious; followers called it a masterclass in chaos.',
-        'the timeline agreed this was neckass, but in a technically iconic way.',
-        'community elders diagnosed the moment as advanced neckass energy.',
-        'witnesses say the neckass meter redlined before lunch.'
+        'the timeline agreed this was chaotic, but technically iconic.',
+        'community elders diagnosed the moment as advanced chaos energy.',
+        'witnesses say the chaos meter redlined before lunch.'
     ],
     tags: [
         'Developing story.',
