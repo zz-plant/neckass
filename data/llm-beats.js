@@ -15,6 +15,7 @@
     ],
     subjects: [
         { text: 'Neckass', pronouns: { possessive: 'his', object: 'him' } },
+        { text: 'the mayor of a suspiciously confident group chat', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'a sleep-deprived influencer', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'the neighborhood network sleuth', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'a snack-fueled podcaster', pronouns: { possessive: 'their', object: 'them' } },
@@ -26,7 +27,9 @@
         { text: 'the group chat historian', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'the office snack oracle', pronouns: { possessive: 'their', object: 'them' } },
         { text: 'a meme-savvy meteorologist', pronouns: { possessive: 'their', object: 'them' } },
-        { text: 'the unpaid social media intern', pronouns: { possessive: 'their', object: 'them' } }
+        { text: 'the unpaid social media intern', pronouns: { possessive: 'their', object: 'them' } },
+        { text: 'the neighborhood neckass laureate', pronouns: { possessive: 'their', object: 'them' } },
+        { text: 'that one cousin everybody calls neckass with love', pronouns: { possessive: 'their', object: 'them' } }
     ],
     verbs: [
         'liveblogs',
@@ -71,7 +74,13 @@
         'a three-tab panic into a five-year strategy',
         'office leftovers as a Michelin audition',
         '{possessive} unread emails into a cinematic multiverse',
-        'a calendar invite as a legally binding vibe check'
+        'a calendar invite as a legally binding vibe check',
+        'an accidental typo as a quarterly strategy keynote',
+        'a passive-aggressive sticky note like it is a leaked manifesto',
+        '{possessive} lunch order into a bipartisan negotiation summit',
+        'a regular Tuesday into certified neckass behavior',
+        '{possessive} outfit check into a full neckass summit agenda',
+        'a harmless debate into front-row neckass theatrics'
     ],
     connectors: [
         'after',
@@ -96,7 +105,13 @@
         'a voice note arrived with legally risky confidence',
         'the office Slack used seventeen clown emojis',
         'the family group chat asked for a pilot episode',
-        'an intern whispered "this is cursed"'
+        'an intern whispered "this is cursed"',
+        'a ring light flickered like a prophecy',
+        'someone yelled "we can monetize this" from the hallway',
+        '{possessive} cat stepped on the keyboard and approved it anyway',
+        'the aunties in the comments said "that is pure neckass"',
+        'somebody whispered "neckass levels are peaking" into the mic',
+        '{possessive} homegirl texted "you are in neckass mode again"'
     ],
     impacts: [
         'sources say the backlog of screenshots is heroic.',
@@ -115,7 +130,13 @@
         'sources confirm two ring lights and one ego were injured.',
         'a panel of tired moderators rated the chaos "award-eligible."',
         'finance called it a rounding error; culture called it performance art.',
-        'witnesses say the vibe check passed and then filed an appeal.'
+        'witnesses say the vibe check passed and then filed an appeal.',
+        'public reaction ranged from "iconic" to "please log off."',
+        'officials confirmed the plan was 20% strategy and 80% dramatic pointing.',
+        'critics called it unserious; followers called it a masterclass in chaos.',
+        'the timeline agreed this was neckass, but in a technically iconic way.',
+        'community elders diagnosed the moment as advanced neckass energy.',
+        'witnesses say the neckass meter redlined before lunch.'
     ],
     tags: [
         'Developing story.',
