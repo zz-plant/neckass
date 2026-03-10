@@ -13,6 +13,8 @@ const TARGET_MAX_LENGTH = 110;
 const HARD_MAX_LENGTH = 140;
 const CANDIDATE_MIN = 12;
 const CANDIDATE_MAX = 24;
+const BRAND_TOKEN = 'neckass';
+const BRAND_TOKEN_SOFT_LIMIT = 1;
 
 const SECTION_HINTS = {
     latest: ['breaking', 'local', 'headline', 'update', 'report'],
@@ -179,6 +181,10 @@ const tinyLlmClient = (() => {
         return intersection / Math.max(a.size, b.size);
     }
 
+    function countToken(tokens, target) {
+        return tokens.reduce((count, token) => (token === target ? count + 1 : count), 0);
+    }
+
     function buildPayload(section, rng) {
         const subject = pick(BEATS.subjects, rng);
         const normalizedSubject = typeof subject === 'object' ? subject.text : subject;
@@ -206,8 +212,7 @@ const tinyLlmClient = (() => {
             `Breaking: ${payload.subject} ${payload.verb} ${payload.object}, because ${payload.twist}; ${payload.impact}`,
             `${payload.desk} ${payload.subject} frames ${payload.marker} as the real story and ${payload.verb} ${payload.object}; ${payload.impact}`,
             `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}, then called it "community outreach"; ${payload.impact}`,
-            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`,
-            `Neckass bulletin: ${payload.subject} ${payload.verb} ${payload.object} while everyone agreed this was elite neckass behavior; ${payload.impact}`
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`
         ];
 
         return clampHeadlineLength(formatSentenceCase(pick(patterns, rng)));
@@ -253,6 +258,16 @@ const tinyLlmClient = (() => {
             reasonCodes.push('target-length');
         } else if (length <= HARD_MAX_LENGTH) {
             score += 0.07;
+        }
+
+        const brandMentions = countToken(tokens, BRAND_TOKEN);
+        if (brandMentions <= BRAND_TOKEN_SOFT_LIMIT) {
+            score += 0.08;
+            reasonCodes.push('brand-balanced');
+        } else {
+            const penalty = Math.min(0.16, (brandMentions - BRAND_TOKEN_SOFT_LIMIT) * 0.08);
+            score -= penalty;
+            reasonCodes.push('brand-overused');
         }
 
         if (looksSafeTone(candidate.headline)) {
