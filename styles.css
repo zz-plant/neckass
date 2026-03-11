@@ -135,6 +135,7 @@ a,
 .top-nav a {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     min-height: 36px;
     padding: 6px 12px;
     border-radius: 999px;
@@ -144,11 +145,13 @@ a,
     font-size: 0.9rem;
     font-weight: 600;
     background: rgba(255, 255, 255, 0.72);
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .top-nav a:hover {
     border-color: rgba(34, 26, 20, 0.32);
     background: rgba(38, 32, 24, 0.08);
+    transform: translateY(-1px);
 }
 
 .hero {
@@ -243,6 +246,7 @@ a,
     box-shadow: var(--shadow-soft);
     min-width: 0;
     position: relative;
+    overflow: clip;
 }
 
 .headline-label {
@@ -509,6 +513,13 @@ button.accent .button-icon {
     box-shadow: 0 8px 14px rgba(38, 32, 24, 0.08);
 }
 
+.interaction-guide {
+    margin: -2px 0 0;
+    font-size: 0.87rem;
+    color: #53473a;
+    line-height: 1.45;
+}
+
 #prev-btn {
     border-color: rgba(34, 26, 20, 0.14);
     background: rgba(255, 255, 255, 0.56);
@@ -526,6 +537,7 @@ button {
     cursor: pointer;
     touch-action: manipulation;
     transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    text-wrap: balance;
 }
 
 button:hover {
@@ -764,6 +776,7 @@ button.ghost {
     color: var(--text);
     text-decoration: none;
     transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    min-height: 44px;
 }
 
 .share-link img {
@@ -793,6 +806,7 @@ button.ghost {
     box-shadow: 0 14px 26px -22px rgba(24, 18, 10, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     min-height: 290px;
     align-content: start;
+    isolation: isolate;
 }
 
 .mock-front::before {
@@ -1192,5 +1206,23 @@ button.ghost {
 
     .mock-actions button {
         width: 100%;
+    }
+}
+
+
+.rail-card,
+.headline-section,
+.history-card {
+    scroll-margin-top: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
