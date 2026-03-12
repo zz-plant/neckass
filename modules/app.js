@@ -23,13 +23,13 @@
         selectReadableColor,
         slugifyHeadline,
         runViewTransition,
+        scheduleBackgroundTask,
         triggerHapticFeedback,
         updateDocumentMetadata: updateHeadMetadata,
         updateHistoryList: renderHistoryList
     } = Neckass;
     const renderFilterStatus = Neckass.updateFilterStatus;
 
-    const ANIMATION_DELAY_MS = 60;
     const STREAK_MILESTONES = [3, 5, 8, 12];
     const SHUFFLE_BADGE_LABELS = {
         3: 'Starter',
@@ -70,6 +70,10 @@
     }
 
     init() {
+        if (!this.validateRequiredElements()) {
+            return;
+        }
+
         this.bindEvents();
         this.applyUrlState();
         this.syncGeneratorControls();
@@ -90,6 +94,27 @@
         this.renderInitialHeadline();
     }
 
+
+    validateRequiredElements() {
+        const required = [
+            ['nextButton', 'next action button'],
+            ['previousButton', 'previous action button'],
+            ['copyButton', 'copy action button'],
+            ['headline', 'headline container'],
+            ['counter', 'headline counter']
+        ];
+
+        const missing = required
+            .filter(([key]) => !this.elements[key])
+            .map(([,label]) => label);
+
+        if (missing.length === 0) {
+            return true;
+        }
+
+        console.error(`Missing required UI elements: ${missing.join(', ')}. Aborting app initialization.`);
+        return false;
+    }
     bindEvents() {
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
         this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
@@ -340,7 +365,7 @@
         this.toggleLoader(true, loaderMessage);
         this.elements.headline.classList.remove('show');
 
-        setTimeout(() => {
+        scheduleBackgroundTask(() => {
             const headlineText = this.headlines[index];
             runViewTransition(() => {
                 this.elements.headline.textContent = headlineText;
@@ -366,7 +391,7 @@
             this.persistState();
             this.pushHistoryState(index, { replace: options.replaceState });
             this.updateHistoryList();
-        }, ANIMATION_DELAY_MS);
+        });
     }
 
     renderInitialHeadline() {

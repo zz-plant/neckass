@@ -1,24 +1,41 @@
 (() => {
     const Neckass = window.Neckass = window.Neckass || {};
 
-    function setMetaTag(attribute, name, content) {
+    const metaTagCache = new Map();
+    let canonicalLinkCache = null;
+
+    function getMetaTag(attribute, name) {
+        const cacheKey = `${attribute}:${name}`;
+        if (metaTagCache.has(cacheKey)) {
+            return metaTagCache.get(cacheKey);
+        }
+
         let tag = document.querySelector(`meta[${attribute}="${name}"]`);
         if (!tag) {
             tag = document.createElement('meta');
             tag.setAttribute(attribute, name);
             document.head.appendChild(tag);
         }
+
+        metaTagCache.set(cacheKey, tag);
+        return tag;
+    }
+
+    function setMetaTag(attribute, name, content) {
+        const tag = getMetaTag(attribute, name);
         tag.setAttribute('content', content);
     }
 
     function setCanonicalLink(url) {
-        let link = document.querySelector('link[rel="canonical"]');
-        if (!link) {
-            link = document.createElement('link');
-            link.setAttribute('rel', 'canonical');
-            document.head.appendChild(link);
+        if (!canonicalLinkCache) {
+            canonicalLinkCache = document.querySelector('link[rel="canonical"]');
+            if (!canonicalLinkCache) {
+                canonicalLinkCache = document.createElement('link');
+                canonicalLinkCache.setAttribute('rel', 'canonical');
+                document.head.appendChild(canonicalLinkCache);
+            }
         }
-        link.setAttribute('href', url);
+        canonicalLinkCache.setAttribute('href', url);
     }
 
     function updateDocumentMetadata({ headline, index, headlinesLength, isValidHeadlineIndex, getCanonicalUrl }) {
