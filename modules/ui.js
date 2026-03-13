@@ -32,7 +32,9 @@
             shuffleStreak: 'shuffle-streak',
             streakBadges: 'streak-badges',
             historyCount: 'history-count',
-            headlineList: 'headline-list'
+            headlineList: 'headline-list',
+            filterStatus: 'filter-status',
+            clearFiltersButton: 'clear-filters'
         };
         const elements = Object.fromEntries(
             Object.entries(idMap).map(([key, id]) => [key, getById(id)])
