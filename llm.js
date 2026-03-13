@@ -304,27 +304,32 @@ const tinyLlmClient = (() => {
 
     function pickBestCandidate(candidates, options, threshold) {
         const recent = recentEntries.map((entry) => entry.headline);
+        const recentDuplicateSet = new Set(recent.slice(0, DUPLICATE_WINDOW));
         const excluded = new Set((options.exclude || []).map((value) => normalizeText(value).toLowerCase()));
 
-        const scored = candidates
-            .filter((candidate) => {
-                const normalized = normalizeText(candidate.headline).toLowerCase();
-                if (!normalized || normalized.length > HARD_MAX_LENGTH) return false;
-                if (excluded.has(normalized)) return false;
-                if (recent.slice(0, DUPLICATE_WINDOW).includes(candidate.headline)) return false;
-                return true;
-            })
-            .map((candidate) => {
-                const result = scoreCandidate(candidate, options, recent);
-                return {
+        let bestCandidate = null;
+        let bestScore = -1;
+
+        candidates.forEach((candidate) => {
+            const normalized = normalizeText(candidate.headline).toLowerCase();
+            if (!normalized || normalized.length > HARD_MAX_LENGTH) return;
+            if (excluded.has(normalized)) return;
+            if (recentDuplicateSet.has(candidate.headline)) return;
+
+            const result = scoreCandidate(candidate, options, recent);
+            if (result.score > bestScore) {
+                bestScore = result.score;
+                bestCandidate = {
                     ...candidate,
                     confidence: result.score,
                     reasonCodes: result.reasonCodes
                 };
-            })
-            .sort((a, b) => b.confidence - a.confidence);
+            }
+        });
 
-        return scored.find((candidate) => candidate.confidence >= threshold) || null;
+        return bestCandidate && bestCandidate.confidence >= threshold
+            ? bestCandidate
+            : null;
     }
 
     function resolveAfterDelay(task, rng) {
@@ -384,8 +389,9 @@ const tinyLlmClient = (() => {
         };
 
         const generation = resolveAfterDelay(runGeneration, rng);
+        let timeoutId = null;
         const timeout = new Promise((_, reject) => {
-            setTimeout(() => {
+            timeoutId = setTimeout(() => {
                 const error = new Error('Generation timed out');
                 error.code = 'GENERATION_TIMEOUT';
                 reject(error);
@@ -403,6 +409,10 @@ const tinyLlmClient = (() => {
                 reasonCodes: []
             };
             throw error;
+        } finally {
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId);
+            }
         }
     }
 
