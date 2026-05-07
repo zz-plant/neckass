@@ -67,6 +67,8 @@
         this.metrics = typeof Neckass.createMetricsTracker === 'function'
             ? Neckass.createMetricsTracker()
             : null;
+        this.headlineController = new Neckass.HeadlineController({ app: this, dependencies: { runViewTransition, scheduleBackgroundTask, selectReadableColor, updateHeadMetadata, updateSocialShareLinks, hasActiveFilters, isValidHeadlineIndex } });
+        this.actionController = new Neckass.ActionController({ app: this, dependencies: { copyTextWithFeedback, exportMockFront, setButtonLoading } });
     }
 
     init() {
@@ -91,7 +93,7 @@
             hasGenerator: this.isGeneratorAvailable(),
             sourceFilter: this.filters.source
         });
-        this.renderInitialHeadline();
+        this._renderInitialHeadlineCore();
     }
 
 
@@ -117,7 +119,7 @@
     }
     bindEvents() {
         this.elements.nextButton.addEventListener('click', () => this.handleNext());
-        this.elements.previousButton.addEventListener('click', () => this.handlePrevious());
+        this.elements.previousButton.addEventListener('click', () => this._handlePreviousCore());
         this.elements.copyButton.addEventListener('click', () => this.copyHeadline(this.elements.copyButton));
         this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.nativeShareButton));
         this.elements.jumpCopyButton?.addEventListener('click', () => this.copyHeadline(this.elements.jumpCopyButton));
@@ -175,19 +177,19 @@
             const index = Number.parseInt(target.dataset.index, 10);
             if (Number.isInteger(index)) {
                 this.activeButton = target;
-                this.selectHeadline(index);
+                this._selectHeadlineCore(index);
             }
         });
-        window.addEventListener('popstate', (event) => this.handlePopState(event));
+        window.addEventListener('popstate', (event) => this._handlePopStateCore(event));
         document.addEventListener('keydown', this.handleDirectionalNavigation);
     }
 
-    async handleNext() {
+    async _handleNextCore() {
         if (this.state.isLoading) {
             return;
         }
         if (this.headlines.length === 0) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             return;
         }
 
@@ -213,7 +215,7 @@
         }
 
         if (nextIndex === null) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             return;
         }
 
@@ -225,7 +227,7 @@
         this.renderHeadline(nextIndex);
     }
 
-    handlePrevious() {
+    _handlePreviousCore() {
         if (this.state.isLoading) {
             return;
         }
@@ -267,7 +269,7 @@
             this.toggleLoader(true, 'Falling back to stored headlines...');
             const fallbackIndex = this.getRandomIndex();
             if (fallbackIndex === null) {
-                this.renderEmptyState();
+                this._renderEmptyStateCore();
                 return;
             }
             this.trackGrowthEvent('generate_fallback', { reason: 'generation-unavailable' });
@@ -278,7 +280,7 @@
         if (!this.isIndexEligible(generatedIndex)) {
             const fallbackIndex = this.getRandomIndex();
             if (fallbackIndex === null) {
-                this.renderEmptyState();
+                this._renderEmptyStateCore();
                 return;
             }
             this.trackGrowthEvent('generate_fallback', { reason: 'generated-ineligible' });
@@ -349,9 +351,9 @@
         return newIndex;
     }
 
-    renderHeadline(index, options = { pushToStack: true, replaceState: false }) {
+    _renderHeadlineCore(index, options = { pushToStack: true, replaceState: false }) {
         if (!isValidHeadlineIndex(index, this.headlines.length)) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             return;
         }
 
@@ -394,7 +396,7 @@
         });
     }
 
-    renderInitialHeadline() {
+    _renderInitialHeadlineCore() {
         if (this.state.navigationStack.length > 0
             && isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
             && this.isIndexEligible(this.state.currentIndex)) {
@@ -410,10 +412,10 @@
             return;
         }
 
-        this.renderEmptyState();
+        this._renderEmptyStateCore();
     }
 
-    renderEmptyState() {
+    _renderEmptyStateCore() {
         const hasFilters = hasActiveFilters(this.filters);
         this.elements.headline.textContent = hasFilters
             ? 'No headlines match your current filters.'
@@ -778,7 +780,7 @@
 
     ensureHeadlineMatchesFilters() {
         if (this.filteredIndexes.length === 0) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             this.pushHistoryState(-1, { replace: false });
             return;
         }
@@ -816,7 +818,7 @@
         });
     }
 
-    selectHeadline(index) {
+    _selectHeadlineCore(index) {
         if (!this.isIndexEligible(index)) return;
         this.state.currentIndex = index;
         this.shouldIncrementStreak = false;
@@ -922,7 +924,7 @@
         this.applyMockLayoutClass();
 
         if (this.filteredIndexes.length === 0) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             this.pushHistoryState(-1, { replace: true });
             return;
         }
@@ -981,7 +983,7 @@
     }
 
 
-    async shareHeadline(triggerButton = this.elements.nativeShareButton) {
+    async _shareHeadlineCore(triggerButton = this.elements.nativeShareButton) {
         const headline = this.headlines[this.state.currentIndex];
         const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
 
@@ -1030,7 +1032,7 @@
         }
     }
 
-    async copyHeadlineLink() {
+    async _copyHeadlineLinkCore() {
         const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
         if (!canonicalUrl) {
             this.reportCopyStatus('No headline link available.', true);
@@ -1050,7 +1052,7 @@
         });
     }
 
-    async handleQuickShare() {
+    async _handleQuickShareCore() {
         const canUseNativeShare = navigator.share && typeof navigator.share === 'function';
         if (!canUseNativeShare) {
             this.jumpToCard('share');
@@ -1061,7 +1063,7 @@
         await this.shareHeadline(this.elements.jumpShareButton || this.elements.nativeShareButton);
     }
 
-    async handleQuickExport() {
+    async _handleQuickExportCore() {
         if (!window.htmlToImage) {
             this.jumpToCard('export');
             this.reportExportStatus('Export unavailable. Reload, then try Download mock front page.', true);
@@ -1071,7 +1073,7 @@
         await this.handleMockExport('download');
     }
 
-    handleDirectionalNavigation(event) {
+    _handleDirectionalNavigationCore(event) {
         if (event.defaultPrevented) return;
 
         const target = event.target;
@@ -1093,7 +1095,7 @@
             });
         } else if (backwardKeys.includes(event.key)) {
             event.preventDefault();
-            this.handlePrevious();
+            this._handlePreviousCore();
         }
     }
 
@@ -1127,7 +1129,7 @@
         }
     }
 
-    handlePopState(event) {
+    _handlePopStateCore(event) {
         const state = event.state || {};
         const urlState = getUrlState();
         const urlIndex = this.identifierToIndex(urlState.headline);
@@ -1153,7 +1155,7 @@
             : [];
 
         if (eligibleTarget === null) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             return;
         }
 
@@ -1274,7 +1276,7 @@
         this.elements.feedbackStatus.classList.remove('error');
     }
 
-    async copyHeadline(triggerButton = this.elements.copyButton) {
+    async _copyHeadlineCore(triggerButton = this.elements.copyButton) {
         const headlineText = this.elements.headline.innerText;
 
         if (!headlineText) {
@@ -1514,7 +1516,7 @@
         }
     }
 
-    async handleMockExport(mode) {
+    async _handleMockExportCore(mode) {
         await exportMockFront({
             mode,
             elements: this.elements,
@@ -1674,6 +1676,24 @@
         }
     }
 
+
+
+    async handleNext() { return this.headlineController.handleNext(); }
+    handlePrevious() { return this.headlineController.handlePrevious(); }
+    renderHeadline(index, options = { pushToStack: true, replaceState: false }) { return this.headlineController.renderHeadline(index, options); }
+    renderInitialHeadline() { return this.headlineController.renderInitialHeadline(); }
+    renderEmptyState() { return this.headlineController.renderEmptyState(); }
+    selectHeadline(index) { return this.headlineController.selectHeadline(index); }
+    handleDirectionalNavigation(event) { return this.headlineController.handleDirectionalNavigation(event); }
+    handlePopState(event) { return this.headlineController.handlePopState(event); }
+
+    async shareHeadline(triggerButton = this.elements.nativeShareButton) { return this.actionController.shareHeadline(triggerButton); }
+    async copyHeadlineLink() { return this.actionController.copyHeadlineLink(); }
+    async handleQuickShare() { return this.actionController.handleQuickShare(); }
+    async handleQuickExport() { return this.actionController.handleQuickExport(); }
+    async handleMockExport(mode) { return this.actionController.handleMockExport(mode); }
+    async copyHeadline(triggerButton = this.elements.copyButton) { return this.actionController.copyHeadline(triggerButton); }
+
     identifierToIndex(identifier) {
         if (identifier === null || identifier === undefined) return null;
         const parsed = Number.parseInt(identifier, 10);
@@ -1764,7 +1784,7 @@
         this.applyMockLayoutClass();
 
         if (this.filteredIndexes.length === 0) {
-            this.renderEmptyState();
+            this._renderEmptyStateCore();
             this.pushHistoryState(-1, { replace: true });
             return this.getAgentSnapshot();
         }
@@ -1783,7 +1803,7 @@
         if (!this.isIndexEligible(index)) {
             return null;
         }
-        this.selectHeadline(index);
+        this._selectHeadlineCore(index);
         return this.getAgentSnapshot();
     }
 
