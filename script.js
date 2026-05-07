@@ -1,3 +1,16 @@
+(() => {
+    const storageKey = 'neckass-theme';
+    const root = document.documentElement;
+    try {
+        const savedTheme = localStorage.getItem(storageKey);
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+            root.setAttribute('data-theme', savedTheme);
+        }
+    } catch (_) {
+        // no-op: fallback to prefers-color-scheme in CSS
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     const neckass = window.Neckass || {};
     const { data, HeadlineApp, createStorageAdapter, mapElements, createAgentInterface } = neckass;
