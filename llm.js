@@ -25,6 +25,7 @@ const SECTION_HINTS = {
 };
 
 const HARASSMENT_TERMS = ['idiot', 'moron', 'stupid', 'hate', 'loser'];
+const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'or', 'for', 'to', 'of', 'in', 'on', 'with', 'at', 'by', 'from']);
 
 const tinyLlmClient = (() => {
     let lastDiagnostics = {
@@ -154,6 +155,15 @@ const tinyLlmClient = (() => {
         return safe.trim();
     }
 
+    function uniqueTokens(tokens) {
+        return Array.from(new Set(tokens.filter((token) => token && !STOPWORDS.has(token))));
+    }
+
+    function normalizeSection(section) {
+        const normalized = normalizeText(section || '').toLowerCase();
+        return SECTION_HINTS[normalized] ? normalized : 'latest';
+    }
+
     function inferSectionFromText(text) {
         const tokens = new Set(tokenize(text));
         let bestSection = 'latest';
@@ -185,7 +195,7 @@ const tinyLlmClient = (() => {
         return tokens.reduce((count, token) => (token === target ? count + 1 : count), 0);
     }
 
-    function buildPayload(section, rng) {
+    function buildPayload(section, rng, queryHints = []) {
         const subject = pick(BEATS.subjects, rng);
         const normalizedSubject = typeof subject === 'object' ? subject.text : subject;
         const possessive = typeof subject === 'object' ? subject?.pronouns?.possessive || 'their' : 'their';
@@ -201,7 +211,8 @@ const tinyLlmClient = (() => {
             twist,
             impact: pick(BEATS.impacts, rng),
             section,
-            marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng)
+            marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng),
+            queryHint: queryHints.length ? pick(queryHints, rng) : ''
         };
     }
 
@@ -212,10 +223,18 @@ const tinyLlmClient = (() => {
             `Breaking: ${payload.subject} ${payload.verb} ${payload.object}, because ${payload.twist}; ${payload.impact}`,
             `${payload.desk} ${payload.subject} frames ${payload.marker} as the real story and ${payload.verb} ${payload.object}; ${payload.impact}`,
             `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}, then called it "community outreach"; ${payload.impact}`,
-            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`,
+            `${payload.marker} desk memo: ${payload.subject} ${payload.verb} ${payload.object} after ${payload.twist}; ${payload.impact}`,
+            `${payload.subject} called ${payload.queryHint || payload.marker} a growth strategy, then ${payload.verb} ${payload.object}; ${payload.impact}`
         ];
 
-        return clampHeadlineLength(formatSentenceCase(pick(patterns, rng)));
+        const drafted = formatSentenceCase(pick(patterns, rng));
+        return drafted
+            .replace(/\s+,/g, ',')
+            .replace(/\s+;/g, ';')
+            .replace(/\s{2,}/g, ' ')
+            .replace(/;+$/, '')
+            .trim();
     }
 
     function looksSafeTone(headline) {
@@ -283,17 +302,18 @@ const tinyLlmClient = (() => {
 
     function buildCandidates(options, rng) {
         const total = CANDIDATE_MIN + Math.floor(getRandom(rng) * (CANDIDATE_MAX - CANDIDATE_MIN + 1));
-        const section = options.section && SECTION_HINTS[options.section] ? options.section : 'latest';
+        const section = normalizeSection(options.section);
+        const queryTokens = uniqueTokens(tokenize(options.query || ''));
 
         return Array.from({ length: total }).map(() => {
             const weightedSection = section === 'latest' && getRandom(rng) < 0.35
                 ? pick(['world', 'culture', 'tech', 'oddities'], rng)
                 : section;
-            const payload = buildPayload(weightedSection, rng);
-            const queryToken = tokenize(options.query || '')[0];
+            const payload = buildPayload(weightedSection, rng, queryTokens);
             const generated = synthesizeCandidate(payload, rng);
-            const headline = queryToken && getRandom(rng) < 0.55 && !generated.toLowerCase().includes(queryToken)
-                ? clampHeadlineLength(`${generated} as ${queryToken} chatter keeps climbing`)
+            const chosenQueryToken = queryTokens.length ? pick(queryTokens, rng) : '';
+            const headline = chosenQueryToken && getRandom(rng) < 0.68 && !generated.toLowerCase().includes(chosenQueryToken)
+                ? clampHeadlineLength(`${generated} as ${chosenQueryToken} chatter keeps climbing`)
                 : generated;
             return {
                 headline,
