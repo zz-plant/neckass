@@ -1,0 +1,4 @@
+{
+  "*.{js,ts,jsx,tsx,mjs,cjs}": ["npx biome check --write"],
+  "*.{json,md,yaml,yml}": ["npx biome check --write"]
+}
