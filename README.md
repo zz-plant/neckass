@@ -1,8 +1,12 @@
 # Neckass Headlines
 
+<p align="center">
+  <img src="neckass-demo.gif" alt="Neckass headline generator in action" width="600" style="border-radius: 8px;">
+</p>
+
 A privacy-first, static headline generator with curated prompts, optional on-device tiny-model generation, and built-in share/export tools.
 
-No build system. No backend. Open `index.html` and you are running.
+**Live at [neckass.com](https://neckass.com)** · No build system. No backend. Open `index.html` and you are running.
 
 ## What this project is
 - **Static-first**: works from local files or any static host.
@@ -91,3 +95,14 @@ npm run test:smoke
 
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.
+
+---
+
+## Ecosystem
+
+More open-source projects from [zz-plant](https://github.com/zz-plant):
+
+- [**Stims**](https://github.com/zz-plant/stims) — Browser music visualizer inspired by MilkDrop
+- [**sabnzbd-mcp**](https://github.com/zz-plant/sabnzbd-mcp) — MCP server for SABnzbd (zero deps)
+- [**Refract**](https://github.com/refract-org/refract) — Open infrastructure for agent-readable knowledge change
+- [**ethotechnics.org**](https://github.com/zz-plant/ethotechnics.org) — Essays on ethical technology
