@@ -1,3 +1,19 @@
 node_modules/
 playwright-report/
 test-results/
+
+# Tooling
+.cmux/
+.opencode/
+.sisyphus/
+.codex/
+.agent/
+.wrangler/
+
+# Tooling
+.cmux/
+.opencode/
+.sisyphus/
+.codex/
+.agent/
+.wrangler/
