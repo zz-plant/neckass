@@ -9,11 +9,4 @@ test-results/
 .codex/
 .agent/
 .wrangler/
-
-# Tooling
-.cmux/
-.opencode/
-.sisyphus/
-.codex/
-.agent/
-.wrangler/
+opencode.json
