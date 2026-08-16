@@ -67,8 +67,8 @@ An optional Playwright smoke suite validates key flows (shuffle, URL restore,
 share links, export controls) without changing the no-build runtime model.
 
 ```bash
-npm install
-npm run test:smoke
+bun install
+bun run test:smoke
 ```
 
 ## Documentation map
