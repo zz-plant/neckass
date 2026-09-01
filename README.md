@@ -134,6 +134,16 @@ minimum byte size per scene, and fails on any PNG that is not a known scene —
 that last rule is what stops hand-added files rotting in the directory
 unnoticed. Both scripts read their scene list from `scripts/asset-specs.ts`.
 
+### Social preview cards
+
+`og-image.png`, `og-about.png`, `og-examples.png` and `og-prompts.png` live at
+the repo root, are 1200x630, and are rendered by `bun run og:generate` from
+`scripts/generate-og.ts`. `assets:check` covers them too, so one command checks
+every generated image.
+
+They are PNG deliberately. They used to be SVG, which no major platform renders
+as a link preview, so shared neckass.com links showed no image at all.
+
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.
 

@@ -2,6 +2,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { SCENES } from './asset-specs.ts';
+import { OG_CARDS, OG_HEIGHT, OG_MIN_BYTES, OG_WIDTH } from './generate-og.ts';
 
 const ASSETS_DIR = join(
     import.meta.dirname ?? __dirname,
@@ -120,6 +121,34 @@ function main() {
         errors.push('source.svg: missing — design source file required');
     }
 
+    // Social preview cards live at the repo root because the platforms fetch
+    // them by URL. They are checked here so one command covers every image the
+    // project generates.
+    for (const card of OG_CARDS) {
+        const cardPath = join(ASSETS_DIR, '..', '..', card.file);
+        try {
+            const info = readPngInfo(cardPath);
+            const size = statSync(cardPath).size;
+            if (info.width !== OG_WIDTH || info.height !== OG_HEIGHT) {
+                errors.push(
+                    `${card.file}: expected ${OG_WIDTH}×${OG_HEIGHT}, got ${info.width}×${info.height}`,
+                );
+            } else if (size < OG_MIN_BYTES) {
+                errors.push(
+                    `${card.file}: ${size}B < ${OG_MIN_BYTES}B min — artwork probably did not render`,
+                );
+            } else {
+                console.log(
+                    `  ✅ ${card.file}  ${info.width}×${info.height}  ${size.toLocaleString()}B  social card`,
+                );
+            }
+        } catch (e: unknown) {
+            errors.push(
+                `${card.file}: ${(e as Error).message} — run \`bun run og:generate\``,
+            );
+        }
+    }
+
     const missing = Object.keys(SCENES).filter((s) => !seen.has(s));
     if (missing.length > 0) {
         errors.push(
@@ -128,7 +157,7 @@ function main() {
     }
 
     console.log(
-        `\n${errors.length === 0 ? '✅ All assets valid' : '❌ FAILURES:'}  (${files.length} PNGs, 1 SVG checked)\n`,
+        `\n${errors.length === 0 ? '✅ All assets valid' : '❌ FAILURES:'}  (${files.length} scene PNGs, ${OG_CARDS.length} social cards, 1 SVG checked)\n`,
     );
 
     if (errors.length > 0) {
