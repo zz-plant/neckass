@@ -5,11 +5,8 @@
         copyTextWithFeedback,
         DEFAULT_FILTERS,
         classifyHeadline,
-        getEligibleIndexes,
         hasActiveFilters,
-        isIndexEligible,
         sanitizeFilters,
-        buildHeadlineUrl,
         getUrlState,
         updateHistoryState,
         exportMockFront,
@@ -17,26 +14,14 @@
         appendGeneratedHeadlines,
         createHeadlineCache,
         setButtonLoading,
-        updateLayoutButtons,
-        updateToggleButtons,
         isValidHeadlineIndex,
         normalizeHeadlineText,
-        slugifyHeadline,
         runViewTransition,
         scheduleBackgroundTask,
         triggerHapticFeedback,
         updateDocumentMetadata: updateHeadMetadata,
         updateHistoryList: renderHistoryList,
     } = Neckass;
-    const renderFilterStatus = Neckass.updateFilterStatus;
-
-    const STREAK_MILESTONES = [3, 5, 8, 12];
-    const SHUFFLE_BADGE_LABELS = {
-        3: 'Starter',
-        5: 'Momentum',
-        8: 'Surge',
-        12: 'All-star',
-    };
 
     class HeadlineApp {
         constructor({ headlines: allHeadlines, elements, storage }) {
@@ -628,247 +613,6 @@
             this.elements.counter.textContent = this.state.uniqueHeadlines.size;
         }
 
-        normalizeDailyEngagement(rawEngagement) {
-            const parsed =
-                rawEngagement && typeof rawEngagement === 'object'
-                    ? rawEngagement
-                    : {};
-            const streakDays =
-                Number.isInteger(parsed.streakDays) && parsed.streakDays > 0
-                    ? parsed.streakDays
-                    : 0;
-            const visitsThisDate =
-                Number.isInteger(parsed.visitsThisDate) &&
-                parsed.visitsThisDate > 0
-                    ? parsed.visitsThisDate
-                    : 0;
-            const maxStreakDays =
-                Number.isInteger(parsed.maxStreakDays) &&
-                parsed.maxStreakDays > 0
-                    ? parsed.maxStreakDays
-                    : streakDays;
-
-            return {
-                lastVisitDate:
-                    typeof parsed.lastVisitDate === 'string'
-                        ? parsed.lastVisitDate
-                        : '',
-                streakDays,
-                visitsThisDate,
-                maxStreakDays,
-            };
-        }
-
-        getDateKey(date = new Date()) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        getDayDifference(previousDateKey, currentDateKey) {
-            const toDate = (key) => {
-                const [year, month, day] = key.split('-').map(Number);
-                return new Date(year, (month || 1) - 1, day || 1);
-            };
-
-            const previous = toDate(previousDateKey);
-            const current = toDate(currentDateKey);
-            if (
-                Number.isNaN(previous.getTime()) ||
-                Number.isNaN(current.getTime())
-            ) {
-                return Number.NaN;
-            }
-
-            const msPerDay = 24 * 60 * 60 * 1000;
-            return Math.round((current - previous) / msPerDay);
-        }
-
-        refreshDailyEngagement() {
-            const todayKey = this.getDateKey();
-            const engagement = this.normalizeDailyEngagement(
-                this.dailyEngagement,
-            );
-            const previousKey = engagement.lastVisitDate;
-
-            this.dailyVisitMeta = {
-                isReturnVisitToday: previousKey === todayKey,
-                advancedStreakToday: false,
-            };
-
-            if (!previousKey) {
-                engagement.streakDays = 1;
-                engagement.visitsThisDate = 1;
-            } else if (previousKey === todayKey) {
-                engagement.visitsThisDate += 1;
-            } else {
-                const dayDifference = this.getDayDifference(
-                    previousKey,
-                    todayKey,
-                );
-                engagement.streakDays =
-                    dayDifference === 1 ? engagement.streakDays + 1 : 1;
-                engagement.visitsThisDate = 1;
-                this.dailyVisitMeta.advancedStreakToday = dayDifference === 1;
-            }
-
-            engagement.lastVisitDate = todayKey;
-            engagement.maxStreakDays = Math.max(
-                engagement.maxStreakDays || 0,
-                engagement.streakDays,
-            );
-
-            this.dailyEngagement = engagement;
-            this.state.dailyEngagement = engagement;
-            this.persistState();
-            this.maybeCelebrateDailyMilestone();
-        }
-
-        renderDailyStreak() {
-            if (!this.elements.dailyStreak) return;
-
-            const streakDays = this.dailyEngagement.streakDays || 1;
-            const visitsToday = this.dailyEngagement.visitsThisDate || 1;
-            const dayLabel = streakDays === 1 ? 'day' : 'days';
-            let suffix = 'Back tomorrow.';
-
-            if (this.dailyVisitMeta.advancedStreakToday && streakDays >= 2) {
-                suffix =
-                    streakDays >= 7
-                        ? 'Week streak active.'
-                        : 'Streak extended.';
-            } else if (
-                this.dailyVisitMeta.isReturnVisitToday &&
-                visitsToday > 1
-            ) {
-                suffix = `Visit ${visitsToday} today.`;
-            }
-
-            this.elements.dailyStreak.textContent = `Daily streak: ${streakDays} ${dayLabel} · ${suffix}`;
-        }
-
-        maybeCelebrateDailyMilestone() {
-            if (!this.dailyVisitMeta.advancedStreakToday) {
-                return;
-            }
-
-            const milestoneMessages = {
-                3: 'Daily streak 3: habit formed.',
-                7: 'Daily streak 7: full week.',
-                14: 'Daily streak 14: streak pro.',
-            };
-
-            const message = milestoneMessages[this.dailyEngagement.streakDays];
-            if (message) {
-                this.showToast(message);
-            }
-        }
-
-        renderShuffleStreak() {
-            if (!this.elements.shuffleStreak) return;
-            if (this.shuffleStreak <= 0) {
-                this.elements.shuffleStreak.textContent =
-                    'Shuffle streak: 0 · Shuffle to begin.';
-                this.renderShuffleBadges();
-                return;
-            }
-
-            const nextMilestone =
-                STREAK_MILESTONES.find(
-                    (milestone) => milestone > this.shuffleStreak,
-                ) || null;
-            const suffix =
-                this.shuffleStreak >= 8
-                    ? 'Headline mode.'
-                    : this.shuffleStreak >= 5
-                      ? 'Strong run.'
-                      : 'Nice pace.';
-            const nextMilestoneText = nextMilestone
-                ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
-                : 'Top badge unlocked.';
-            this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
-            this.renderShuffleBadges(nextMilestone);
-        }
-
-        renderShuffleBadges(nextMilestone = STREAK_MILESTONES[0]) {
-            if (!this.elements.streakBadges) {
-                return;
-            }
-
-            const badgeItems = Array.from(
-                this.elements.streakBadges.querySelectorAll('[data-milestone]'),
-            );
-            badgeItems.forEach((badge) => {
-                const milestone = Number.parseInt(
-                    badge.dataset.milestone || '',
-                    10,
-                );
-                if (!Number.isFinite(milestone)) {
-                    return;
-                }
-
-                const isEarned = this.shuffleStreak >= milestone;
-                const isNext = !isEarned && milestone === nextMilestone;
-                const remaining = Math.max(milestone - this.shuffleStreak, 0);
-                const label =
-                    SHUFFLE_BADGE_LABELS[milestone] || `Badge ${milestone}`;
-                const statusText = isEarned
-                    ? `${label} badge unlocked at ${milestone} shuffles.`
-                    : `${remaining} shuffles to unlock ${label} badge at ${milestone}.`;
-
-                badge.classList.toggle('is-earned', isEarned);
-                badge.classList.toggle('is-next', isNext);
-                badge.setAttribute('aria-label', statusText);
-                badge.setAttribute('title', statusText);
-            });
-        }
-
-        updateShuffleStreak(shouldIncrement) {
-            this.shuffleStreak = shouldIncrement ? this.shuffleStreak + 1 : 0;
-            this.renderShuffleStreak();
-            this.updateNextButtonLabel();
-            if (shouldIncrement) {
-                this.handleShuffleMilestone();
-            } else {
-                this.clearCelebration();
-            }
-        }
-
-        handleShuffleMilestone() {
-            const messages = {
-                3: 'Shuffle streak 3: smooth run.',
-                5: 'Shuffle streak 5: momentum unlocked.',
-                8: 'Shuffle streak 8: headline mode.',
-            };
-            const message = messages[this.shuffleStreak];
-            if (!message) {
-                return;
-            }
-
-            this.showToast(message);
-            this.triggerCelebration();
-        }
-
-        clearCelebration() {
-            if (this.celebrationTimer) {
-                window.clearTimeout(this.celebrationTimer);
-                this.celebrationTimer = null;
-            }
-            this.elements.headlineSection?.classList.remove('is-celebrating');
-        }
-
-        triggerCelebration() {
-            this.clearCelebration();
-            this.elements.headlineSection?.classList.add('is-celebrating');
-            this.celebrationTimer = window.setTimeout(() => {
-                this.elements.headlineSection?.classList.remove(
-                    'is-celebrating',
-                );
-                this.celebrationTimer = null;
-            }, 900);
-        }
-
         updateNavigationAvailability() {
             const hasEligible =
                 this.filteredIndexes.length > 0 ||
@@ -907,149 +651,6 @@
             );
         }
 
-        setSectionFilter(section) {
-            this.updateFilterValue('section', section || 'latest', {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true,
-            });
-        }
-
-        setSourceFilter(source) {
-            if (source === 'generated' && !this.isGeneratorAvailable()) {
-                this.reportCopyStatus(
-                    'Tiny model unavailable. Source set to auto.',
-                    true,
-                );
-                this.updateFilterValue('source', 'auto', {
-                    resetNavigation: true,
-                    refreshIndexes: true,
-                    ensureHeadline: true,
-                    syncControls: true,
-                });
-                return;
-            }
-            this.updateFilterValue('source', source || 'auto', {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true,
-            });
-        }
-
-        setActivePanel(panel) {
-            this.updateFilterValue('panel', panel || 'recent', {
-                syncControls: true,
-                updateHistoryList: true,
-                updateHistoryState: true,
-            });
-        }
-
-        setMockLayout(layout) {
-            this.updateFilterValue('layout', layout || 'standard', {
-                applyLayout: true,
-                syncControls: true,
-                updateHistoryState: true,
-            });
-        }
-
-        applyMockLayoutClass() {
-            if (!this.elements.mockFrame) return;
-            this.elements.mockFrame.classList.remove(
-                'mock-front--square',
-                'mock-front--story',
-            );
-            if (this.filters.layout === 'square') {
-                this.elements.mockFrame.classList.add('mock-front--square');
-            }
-            if (this.filters.layout === 'story') {
-                this.elements.mockFrame.classList.add('mock-front--story');
-            }
-            updateLayoutButtons(
-                this.elements.layoutButtons,
-                this.filters.layout,
-            );
-        }
-
-        applySearch() {
-            const query = this.elements.searchInput?.value ?? '';
-            this.updateFilterValue('query', query.trim(), {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true,
-                updateStatusOnNoChange: true,
-            });
-        }
-
-        clearSearch() {
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = '';
-            }
-            this.updateFilterValue('query', '', {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true,
-                updateStatusOnNoChange: true,
-            });
-        }
-
-        resetNavigationForFilters() {
-            const currentIndex = isValidHeadlineIndex(
-                this.state.currentIndex,
-                this.headlines.length,
-            )
-                ? this.state.currentIndex
-                : null;
-            this.state.navigationStack =
-                currentIndex !== null ? [currentIndex] : [];
-        }
-
-        ensureHeadlineMatchesFilters() {
-            if (this.filteredIndexes.length === 0) {
-                this._renderEmptyStateCore();
-                this.pushHistoryState(-1, { replace: false });
-                return;
-            }
-
-            if (!this.isIndexEligible(this.state.currentIndex)) {
-                const nextIndex = this.filteredIndexes[0];
-                this.state.navigationStack = [nextIndex];
-                this.state.currentIndex = nextIndex;
-                this.renderHeadline(nextIndex, {
-                    pushToStack: false,
-                    replaceState: true,
-                });
-                return;
-            }
-
-            this.pushHistoryState(this.state.currentIndex, { replace: false });
-            this.updateHistoryList();
-        }
-
-        refreshFilteredIndexes() {
-            this.filteredIndexes = getEligibleIndexes({
-                headlines: this.headlines,
-                baseHeadlineCount: this.baseHeadlineCount,
-                filters: this.filters,
-                isValidHeadlineIndex,
-            });
-            this.updateFilterStatus();
-            this.updateNavigationAvailability();
-            this.updateHistoryList();
-        }
-
-        isIndexEligible(index) {
-            return isIndexEligible(index, {
-                headlines: this.headlines,
-                baseHeadlineCount: this.baseHeadlineCount,
-                filters: this.filters,
-                isValidHeadlineIndex,
-            });
-        }
-
         _selectHeadlineCore(index) {
             if (!this.isIndexEligible(index)) return;
             this.state.currentIndex = index;
@@ -1086,14 +687,6 @@
                         : `Section: ${classifyHeadline(this.headlines[index])}`;
                 this.elements.headlineSectionBadge.textContent = label;
             }
-        }
-
-        updateFilterStatus() {
-            renderFilterStatus({
-                elements: this.elements,
-                filters: this.filters,
-                hasActiveFilters,
-            });
         }
 
         updateFavoriteButton() {
@@ -1141,119 +734,6 @@
                 navigationStack: this.state.navigationStack,
                 currentIndex: this.state.currentIndex,
             });
-        }
-
-        syncFilterControls() {
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = this.filters.query;
-            }
-            updateToggleButtons(
-                this.elements.sectionButtons,
-                this.filters.section,
-                'section',
-            );
-            updateToggleButtons(
-                this.elements.sourceButtons,
-                this.filters.source,
-                'source',
-            );
-            updateToggleButtons(
-                this.elements.panelButtons,
-                this.filters.panel,
-                'panel',
-            );
-            updateLayoutButtons(
-                this.elements.layoutButtons,
-                this.filters.layout,
-            );
-            this.syncGeneratorControls();
-            this.updateFilterStatus();
-        }
-
-        clearAllFilters() {
-            const nextFilters = { ...DEFAULT_FILTERS };
-            const shouldReset = Object.keys(nextFilters).some(
-                (key) => nextFilters[key] !== this.filters[key],
-            );
-            if (!shouldReset) {
-                this.updateFilterStatus();
-                this.pushHistoryState(this.state.currentIndex, {
-                    replace: true,
-                });
-                this.showToast('Filters already clear.');
-                return;
-            }
-
-            this.filters = nextFilters;
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = '';
-            }
-            this.persistState();
-            this.syncFilterControls();
-            this.refreshFilteredIndexes();
-            this.applyMockLayoutClass();
-
-            if (this.filteredIndexes.length === 0) {
-                this._renderEmptyStateCore();
-                this.pushHistoryState(-1, { replace: true });
-                return;
-            }
-
-            const nextIndex = this.filteredIndexes[0];
-            this.state.navigationStack = [nextIndex];
-            this.state.currentIndex = nextIndex;
-            triggerHapticFeedback('light');
-            this.renderHeadline(nextIndex, {
-                pushToStack: false,
-                replaceState: true,
-            });
-            this.showToast('Filters cleared.');
-        }
-
-        updateFilterValue(filterKey, value, options = {}) {
-            const {
-                resetNavigation = false,
-                refreshIndexes = false,
-                ensureHeadline = false,
-                syncControls = false,
-                updateHistoryList: shouldUpdateHistoryList = false,
-                updateHistoryState: shouldUpdateHistoryState = false,
-                applyLayout = false,
-                updateStatusOnNoChange = false,
-            } = options;
-
-            if (this.filters[filterKey] === value) {
-                if (updateStatusOnNoChange) {
-                    this.updateFilterStatus();
-                }
-                return;
-            }
-
-            this.filters[filterKey] = value;
-            if (resetNavigation) {
-                this.resetNavigationForFilters();
-            }
-            this.persistState();
-            if (syncControls) {
-                this.syncFilterControls();
-            }
-            if (refreshIndexes) {
-                this.refreshFilteredIndexes();
-            }
-            if (applyLayout) {
-                this.applyMockLayoutClass();
-            }
-            if (ensureHeadline) {
-                this.ensureHeadlineMatchesFilters();
-            }
-            if (shouldUpdateHistoryList) {
-                this.updateHistoryList();
-            }
-            if (shouldUpdateHistoryState) {
-                this.pushHistoryState(this.state.currentIndex, {
-                    replace: false,
-                });
-            }
         }
 
         async _shareHeadlineCore(
@@ -1515,122 +995,6 @@
             });
         }
 
-        normalizeFeedbackLog(feedbackLog) {
-            if (!Array.isArray(feedbackLog)) return [];
-
-            return feedbackLog
-                .filter((entry) => entry && typeof entry === 'object')
-                .map((entry) => ({
-                    headline:
-                        typeof entry.headline === 'string'
-                            ? entry.headline.trim()
-                            : '',
-                    preference: entry.preference === 'up' ? 'up' : 'down',
-                    source:
-                        entry.source === 'generated' ? 'generated' : 'curated',
-                    timestamp:
-                        typeof entry.timestamp === 'string'
-                            ? entry.timestamp
-                            : new Date().toISOString(),
-                }))
-                .filter((entry) => entry.headline);
-        }
-
-        captureHeadlineFeedback(preference) {
-            const index = this.state.currentIndex;
-            if (!isValidHeadlineIndex(index, this.headlines.length)) {
-                this.reportFeedbackStatus(
-                    'No headline available to rate.',
-                    true,
-                );
-                return;
-            }
-
-            const headline = this.headlines[index];
-            const source =
-                index >= this.baseHeadlineCount ? 'generated' : 'curated';
-            const existingEntryIndex = this.feedbackLog.findIndex(
-                (entry) => entry.headline === headline,
-            );
-            const nextEntry = {
-                headline,
-                preference: preference === 'up' ? 'up' : 'down',
-                source,
-                timestamp: new Date().toISOString(),
-            };
-
-            if (existingEntryIndex >= 0) {
-                this.feedbackLog[existingEntryIndex] = nextEntry;
-                this.reportFeedbackStatus(
-                    'Updated your rating for this headline.',
-                );
-            } else {
-                this.feedbackLog.push(nextEntry);
-                this.reportFeedbackStatus(
-                    'Saved your rating for this headline.',
-                );
-            }
-            triggerHapticFeedback('light');
-
-            this.feedbackLog = this.feedbackLog.slice(-300);
-            this.state.feedbackLog = this.feedbackLog;
-            this.updateFeedbackCount();
-            this.persistState();
-        }
-
-        async copyFeedbackLog() {
-            if (!this.feedbackLog.length) {
-                this.reportFeedbackStatus(
-                    'Rate a few headlines first, then copy your feedback history.',
-                    true,
-                );
-                return;
-            }
-
-            const payload = this.feedbackLog
-                .map((entry) =>
-                    JSON.stringify({
-                        prompt: 'Generate a satirical, absurd news-style headline.',
-                        completion: entry.headline,
-                        preference: entry.preference,
-                        source: entry.source,
-                        timestamp: entry.timestamp,
-                    }),
-                )
-                .join('\n');
-
-            await copyTextWithFeedback({
-                text: payload,
-                button: this.elements.feedbackExportButton,
-                successMessage: 'Feedback history copied to clipboard.',
-                onStatus: (message, isError) =>
-                    this.reportFeedbackStatus(message, isError),
-                setButtonLoading,
-            });
-        }
-
-        updateFeedbackCount() {
-            if (!this.elements.feedbackCount) return;
-            this.elements.feedbackCount.textContent = String(
-                this.feedbackLog.length,
-            );
-        }
-
-        reportFeedbackStatus(message, isError = false) {
-            if (!this.elements.feedbackStatus) return;
-            this.elements.feedbackStatus.textContent = message;
-            this.elements.feedbackStatus.classList.toggle('error', isError);
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        }
-
-        clearFeedbackStatus() {
-            if (!this.elements.feedbackStatus) return;
-            this.elements.feedbackStatus.textContent = '';
-            this.elements.feedbackStatus.classList.remove('error');
-        }
-
         async _copyHeadlineCore(triggerButton = this.elements.copyButton) {
             const headlineText = this.elements.headline.innerText;
 
@@ -1715,24 +1079,6 @@
             });
         }
 
-        reportAutomationStatus(message, isError = false) {
-            if (!this.elements.automationStatus) return;
-            this.elements.automationStatus.textContent = message;
-            this.elements.automationStatus.classList.toggle('error', isError);
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        }
-
-        reportMetricsStatus(message, isError = false) {
-            if (!this.elements.metricsStatus) return;
-            this.elements.metricsStatus.textContent = message;
-            this.elements.metricsStatus.classList.toggle('error', isError);
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        }
-
         trackGrowthEvent(eventName, details = {}) {
             if (!this.metrics) return;
             this.metrics.track(eventName, details);
@@ -1743,69 +1089,6 @@
             if (!this.metrics || !this.elements.metricsSummary) return;
             const summary = this.metrics.getSummary();
             this.elements.metricsSummary.textContent = `Sessions: ${summary.sessions} · Shuffles: ${summary.shuffles} · Share actions: ${summary.shares}`;
-        }
-
-        reportCopyStatus(message, isError = false) {
-            if (!this.elements.copyStatus) return;
-            this.elements.copyStatus.textContent = message;
-            this.elements.copyStatus.classList.toggle('error', isError);
-            if (isError && message) {
-                triggerHapticFeedback('error');
-            }
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        }
-
-        flashCopiedButtonLabel(button) {
-            if (!button || button.dataset.copyLabelTimeout === 'active') return;
-
-            const label =
-                button.querySelector('span:last-child') ||
-                button.querySelector('span');
-            const originalLabel = label
-                ? label.textContent
-                : button.textContent;
-            button.dataset.copyLabelTimeout = 'active';
-
-            if (label) {
-                label.textContent = 'Copied';
-            } else {
-                button.textContent = 'Copied';
-            }
-
-            window.setTimeout(() => {
-                if (label) {
-                    label.textContent = originalLabel;
-                } else {
-                    button.textContent = originalLabel;
-                }
-                delete button.dataset.copyLabelTimeout;
-            }, 1400);
-        }
-
-        clearCopyStatus() {
-            if (!this.elements.copyStatus) return;
-            this.elements.copyStatus.textContent = '';
-            this.elements.copyStatus.classList.remove('error');
-        }
-
-        reportShareStatus(message, isError = false) {
-            if (!this.elements.shareStatus) return;
-            this.elements.shareStatus.textContent = message;
-            this.elements.shareStatus.classList.toggle('error', isError);
-            if (isError && message) {
-                triggerHapticFeedback('error');
-            }
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        }
-
-        clearShareStatus() {
-            if (!this.elements.shareStatus) return;
-            this.elements.shareStatus.textContent = '';
-            this.elements.shareStatus.classList.remove('error');
         }
 
         toggleLoader(shouldShow, message = null) {
@@ -1917,25 +1200,6 @@
             });
         }
 
-        reportExportStatus(message, isError = false) {
-            if (!this.elements.exportStatus) return;
-            this.elements.exportStatus.textContent = message;
-            this.elements.exportStatus.classList.toggle('error', isError);
-            if (isError && message) {
-                triggerHapticFeedback('error');
-            }
-            if (!isError && message) {
-                this.showToast(message);
-                if (
-                    message.includes('Downloaded') ||
-                    message.includes('Copied front page')
-                ) {
-                    triggerHapticFeedback('success');
-                    this.trackGrowthEvent('export_success', { message });
-                }
-            }
-        }
-
         jumpToCard(type) {
             const cardMap = {
                 copy: {
@@ -1964,21 +1228,6 @@
                     target.focus.focus({ preventScroll: true });
                 }, 220);
             }
-        }
-
-        showToast(message) {
-            if (!this.elements.globalToast || !message) return;
-            if (this.toastTimer) {
-                window.clearTimeout(this.toastTimer);
-            }
-            this.elements.globalToast.textContent = message;
-            this.elements.globalToast.classList.add('is-visible');
-            this.elements.globalToast.setAttribute('aria-hidden', 'false');
-
-            this.toastTimer = window.setTimeout(() => {
-                this.elements.globalToast.classList.remove('is-visible');
-                this.elements.globalToast.setAttribute('aria-hidden', 'true');
-            }, 1800);
         }
 
         getRandomIndex() {
@@ -2140,173 +1389,6 @@
             return this.actionController.copyHeadline(triggerButton);
         }
 
-        identifierToIndex(identifier) {
-            if (identifier === null || identifier === undefined) return null;
-            const parsed = Number.parseInt(identifier, 10);
-            if (
-                Number.isInteger(parsed) &&
-                String(parsed) === String(identifier)
-            ) {
-                return parsed;
-            }
-
-            const slugMatch = String(identifier).match(
-                /^(\d+)(?:-[a-z0-9-]+)?$/i,
-            );
-            if (slugMatch) {
-                return Number.parseInt(slugMatch[1], 10);
-            }
-
-            const normalized = normalizeHeadlineText(identifier);
-            if (!normalized) return null;
-            const cachedIndex = this.headlineCache.get(normalized);
-            if (Number.isInteger(cachedIndex)) {
-                return cachedIndex;
-            }
-
-            return this.registerSharedHeadline(normalized);
-        }
-
-        identifierFromIndex(index) {
-            const headlineText = isValidHeadlineIndex(
-                index,
-                this.headlines.length,
-            )
-                ? this.headlines[index]
-                : '';
-            const slug = slugifyHeadline(headlineText);
-            return slug ? `${index}-${slug}` : String(index);
-        }
-
-        buildHeadlineUrl(index) {
-            return buildHeadlineUrl({
-                index,
-                headlines: this.headlines,
-                filters: this.filters,
-                identifierFromIndex: (idx) => this.identifierFromIndex(idx),
-                isValidHeadlineIndex,
-            });
-        }
-
-        getCanonicalUrl(index) {
-            return this.buildHeadlineUrl(index);
-        }
-
-        getCurrentHeadlineText() {
-            if (
-                !isValidHeadlineIndex(
-                    this.state.currentIndex,
-                    this.headlines.length,
-                )
-            ) {
-                return '';
-            }
-            return this.headlines[this.state.currentIndex] || '';
-        }
-
-        getAgentSnapshot() {
-            const currentIndex = isValidHeadlineIndex(
-                this.state.currentIndex,
-                this.headlines.length,
-            )
-                ? this.state.currentIndex
-                : null;
-            return {
-                index: currentIndex,
-                identifier:
-                    currentIndex === null
-                        ? null
-                        : this.identifierFromIndex(currentIndex),
-                headline: this.getCurrentHeadlineText(),
-                url:
-                    currentIndex === null
-                        ? null
-                        : this.getCanonicalUrl(currentIndex),
-                filters: { ...this.filters },
-                poolSize: this.filteredIndexes.length,
-                totalHeadlines: this.headlines.length,
-                generatorAvailable: this.isGeneratorAvailable(),
-            };
-        }
-
-        setFiltersForAgent(partialFilters = {}) {
-            const incoming =
-                partialFilters && typeof partialFilters === 'object'
-                    ? partialFilters
-                    : {};
-            const nextFilters = sanitizeFilters({
-                ...DEFAULT_FILTERS,
-                ...this.filters,
-                ...incoming,
-            });
-
-            const changed = Object.keys(nextFilters).some(
-                (key) => nextFilters[key] !== this.filters[key],
-            );
-            if (!changed) {
-                return this.getAgentSnapshot();
-            }
-
-            this.filters = nextFilters;
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = this.filters.query;
-            }
-            this.persistState();
-            this.syncFilterControls();
-            this.refreshFilteredIndexes();
-            this.applyMockLayoutClass();
-
-            if (this.filteredIndexes.length === 0) {
-                this._renderEmptyStateCore();
-                this.pushHistoryState(-1, { replace: true });
-                return this.getAgentSnapshot();
-            }
-
-            const nextIndex = this.isIndexEligible(this.state.currentIndex)
-                ? this.state.currentIndex
-                : this.filteredIndexes[0];
-            this.state.navigationStack = [nextIndex];
-            this.state.currentIndex = nextIndex;
-            this.renderHeadline(nextIndex, {
-                pushToStack: false,
-                replaceState: true,
-            });
-            return this.getAgentSnapshot();
-        }
-
-        selectHeadlineByIdentifier(identifier) {
-            const index = this.identifierToIndex(identifier);
-            if (!this.isIndexEligible(index)) {
-                return null;
-            }
-            this._selectHeadlineCore(index);
-            return this.getAgentSnapshot();
-        }
-
-        listHeadlinesForAgent({
-            offset = 0,
-            limit = 25,
-            scope = 'eligible',
-        } = {}) {
-            const pool =
-                scope === 'all'
-                    ? this.headlines.map((_, index) => index)
-                    : [...this.filteredIndexes];
-            const start = Math.max(0, Number.parseInt(offset, 10) || 0);
-            const max = Math.min(
-                100,
-                Math.max(1, Number.parseInt(limit, 10) || 25),
-            );
-
-            return pool.slice(start, start + max).map((index) => ({
-                index,
-                identifier: this.identifierFromIndex(index),
-                headline: this.headlines[index],
-                source:
-                    index >= this.baseHeadlineCount ? 'generated' : 'curated',
-            }));
-        }
-
         pushHistoryState(index, { replace = false } = {}) {
             updateHistoryState({
                 index,
@@ -2320,6 +1402,17 @@
             });
         }
     }
+
+    // Method groups that live in their own modules; they are plain objects of
+    // shorthand methods, so `this` behaves exactly as it did in the class body.
+    Object.assign(
+        HeadlineApp.prototype,
+        Neckass.streakMethods,
+        Neckass.filterMethods,
+        Neckass.agentApiMethods,
+        Neckass.feedbackMethods,
+        Neckass.statusMethods,
+    );
 
     Neckass.HeadlineApp = HeadlineApp;
 })();

@@ -13,6 +13,7 @@ Maintain a static, browser-first headline generator with strong UX/accessibility
 - `styles.css` — all visual/layout styling.
 - `llm.js` — tiny local/mock headline generation client.
 - `modules/*.js` — modular app logic (state, UI, history, filters, share, clipboard, export).
+- `modules/{filter-controls,streaks,agent-api,feedback,status}.js` — `HeadlineApp` method groups mixed onto the prototype by `app.js`; they must load before it.
 - `script.js` — DOMContentLoaded bootstrap that wires modules into a running app.
 - `data/` — curated headline and generator phrase data.
 - `icons/` — SVG assets.

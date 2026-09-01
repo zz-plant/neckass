@@ -22,7 +22,23 @@ Then open `http://127.0.0.1:8001/`.
 - `llm.js` — tiny on-device/mock generation client loaded before bootstrap.
 
 ### Runtime modules
-- `modules/app.js` — `HeadlineApp` class and orchestration logic used by `script.js`.
+- `modules/app.js` — the `HeadlineApp` class and orchestration logic used by `script.js`.
+
+#### HeadlineApp method groups
+`HeadlineApp` is one class, but roughly a third of its methods live in
+separate files and are mixed onto the prototype by `app.js`. They are plain
+objects of shorthand methods, so `this` is the app instance exactly as it
+would be inside the class body. Each must load *before* `app.js`.
+
+- `modules/filter-controls.js` — section/source/panel/layout filters and search.
+- `modules/streaks.js` — daily-return and shuffle streaks, badges, celebrations.
+- `modules/agent-api.js` — the surface `window.Neckass.agent` is built on.
+- `modules/feedback.js` — per-headline thumbs up/down and its exportable log.
+- `modules/status.js` — status lines, the copied-button flash, and the toast.
+
+Note that `modules/controllers/*.js` are *not* this pattern: they are
+pass-through indirection that delegates straight back to `app._xxxCore()`
+without holding logic.
 - `modules/state.js` — session/navigation state model.
 - `modules/history.js` — browser history and URL-sync behavior.
 - `modules/storage.js` — `localStorage` persistence helpers.
