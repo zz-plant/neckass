@@ -93,15 +93,38 @@ bun run test:smoke
 ## Deployment
 [neckass.com](https://neckass.com) is served by Cloudflare Pages (project `neckass`).
 
-The repository root *is* the deploy artifact: there is no build command and no
-output directory, so Pages publishes the tree exactly as committed. Pushing to
-`main` triggers a production deploy; other branches get preview deployments.
+The repository root *is* the deploy artifact: there is no output directory, so
+Pages publishes the tree exactly as committed. Pushing to `main` triggers a
+production deploy; other branches get preview deployments.
 
 To deploy from a working copy instead of a push:
 
 ```bash
 bunx wrangler pages deploy . --project-name=neckass --branch=main
 ```
+
+## Verification
+
+`.github/workflows/ci.yml` runs `bun run lint` and the Playwright suite on
+every push to `main` and every pull request.
+
+Pages runs `bun install --frozen-lockfile && bun run lint` as its build
+command, so a lint failure fails the build and nothing is published — the site
+keeps serving the last good deployment.
+
+**The smoke tests do not gate the deploy.** Pages builds on push regardless of
+what GitHub Actions concluded, and running Playwright inside the Pages build
+would mean downloading a browser on every deploy. Two ways to close that gap:
+
+1. Require the `verify` check on `main` with a repository ruleset. Changes to
+   `main` then have to arrive by pull request, and a red suite blocks the merge.
+2. Turn off automatic production deployments in the Pages dashboard and publish
+   from CI with `wrangler pages deploy` after the suite passes. Needs a
+   Cloudflare API token stored as a GitHub secret.
+
+`bun run assets:check` is not part of CI. It currently fails on 11 undersized
+PNGs in `docs/assets/` and a touch icon that is 360x144 rather than 360x360;
+those need regenerating before the check can be enforced.
 
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.
