@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     function createAgentInterface(app) {
         if (!app) {
@@ -30,18 +31,22 @@
                 return app.getAgentSnapshot();
             },
             async select_headline(args = {}) {
-                const snapshot = app.selectHeadlineByIdentifier(args.identifier);
+                const snapshot = app.selectHeadlineByIdentifier(
+                    args.identifier,
+                );
                 if (!snapshot) {
-                    throw new Error('Headline was not found or did not match active filters.');
+                    throw new Error(
+                        'Headline was not found or did not match active filters.',
+                    );
                 }
                 return snapshot;
             },
             async list_headlines(args = {}) {
                 return {
                     items: app.listHeadlinesForAgent(args),
-                    snapshot: app.getAgentSnapshot()
+                    snapshot: app.getAgentSnapshot(),
                 };
-            }
+            },
         };
 
         return {
@@ -58,7 +63,7 @@
                     app.trackGrowthEvent('agent_call', { tool: toolName });
                 }
                 return tool(args);
-            }
+            },
         };
     }
 

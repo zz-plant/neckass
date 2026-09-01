@@ -92,8 +92,8 @@ An optional Playwright smoke suite is included for critical flows:
 Run:
 
 ```bash
-npm install
-npm run test:smoke
+bun install
+bun run test:smoke
 ```
 
 This does not change runtime architecture: `index.html` remains the default startup path.

@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     const metaTagCache = new Map();
     let canonicalLinkCache = null;
@@ -28,7 +29,9 @@
 
     function setCanonicalLink(url) {
         if (!canonicalLinkCache) {
-            canonicalLinkCache = document.querySelector('link[rel="canonical"]');
+            canonicalLinkCache = document.querySelector(
+                'link[rel="canonical"]',
+            );
             if (!canonicalLinkCache) {
                 canonicalLinkCache = document.createElement('link');
                 canonicalLinkCache.setAttribute('rel', 'canonical');
@@ -38,11 +41,18 @@
         canonicalLinkCache.setAttribute('href', url);
     }
 
-    function updateDocumentMetadata({ headline, index, headlinesLength, isValidHeadlineIndex, getCanonicalUrl }) {
+    function updateDocumentMetadata({
+        headline,
+        index,
+        headlinesLength,
+        isValidHeadlineIndex,
+        getCanonicalUrl,
+    }) {
         const baseTitle = 'Neckass Headlines';
-        const hasHeadline = typeof headline === 'string'
-            && headline.trim().length > 0
-            && isValidHeadlineIndex(index, headlinesLength);
+        const hasHeadline =
+            typeof headline === 'string' &&
+            headline.trim().length > 0 &&
+            isValidHeadlineIndex(index, headlinesLength);
         const title = hasHeadline ? `${headline} | ${baseTitle}` : baseTitle;
         const description = hasHeadline
             ? headline

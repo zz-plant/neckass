@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     function createHeadlineCache(headlines) {
         const cache = new Map();
@@ -13,8 +14,14 @@
         return cache;
     }
 
-    function appendGeneratedHeadlines({ headlines, headlineCache, generatedHeadlines }) {
-        const additions = Array.isArray(generatedHeadlines) ? generatedHeadlines : [];
+    function appendGeneratedHeadlines({
+        headlines,
+        headlineCache,
+        generatedHeadlines,
+    }) {
+        const additions = Array.isArray(generatedHeadlines)
+            ? generatedHeadlines
+            : [];
         additions.forEach((headlineText) => {
             if (!headlineText || typeof headlineText !== 'string') return;
             const normalized = headlineText.trim();

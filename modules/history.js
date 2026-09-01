@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     function getUrlState() {
         const params = new URLSearchParams(window.location.search);
@@ -15,11 +16,17 @@
             query: params.get('q'),
             source: params.get('source'),
             panel: params.get('panel'),
-            layout: params.get('layout')
+            layout: params.get('layout'),
         };
     }
 
-    function buildHeadlineUrl({ index, headlines, filters, identifierFromIndex, isValidHeadlineIndex }) {
+    function buildHeadlineUrl({
+        index,
+        headlines,
+        filters,
+        identifierFromIndex,
+        isValidHeadlineIndex,
+    }) {
         const url = new URL(window.location.href);
         url.hash = '';
         const headlineIdentifier = isValidHeadlineIndex(index, headlines.length)
@@ -68,14 +75,22 @@
         uniqueHeadlines,
         identifierFromIndex,
         isValidHeadlineIndex,
-        replace = false
+        replace = false,
     }) {
-        const url = buildHeadlineUrl({ index, headlines, filters, identifierFromIndex, isValidHeadlineIndex });
+        const url = buildHeadlineUrl({
+            index,
+            headlines,
+            filters,
+            identifierFromIndex,
+            isValidHeadlineIndex,
+        });
         const state = {
-            headlineIndex: isValidHeadlineIndex(index, headlines.length) ? index : null,
+            headlineIndex: isValidHeadlineIndex(index, headlines.length)
+                ? index
+                : null,
             navigationStack: [...navigationStack],
             uniqueHeadlines: Array.from(uniqueHeadlines),
-            filters: { ...filters }
+            filters: { ...filters },
         };
 
         if (replace) {

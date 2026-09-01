@@ -21,7 +21,7 @@ A privacy-first, static headline generator with curated prompts, optional on-dev
 
 ## Requirements
 - **Runtime:** any modern browser (no build pipeline required).
-- **Optional smoke tests:** Node.js + npm (Playwright is a dev dependency installed via `npm install`).
+- **Optional smoke tests:** [Bun](https://bun.sh) (Playwright is a dev dependency installed via `bun install`).
 
 If tooling blocks `file://` URLs, run:
 
@@ -89,9 +89,19 @@ bun run test:smoke
 ### Agent-facing
 - `AGENTS.md` — repository-specific instructions for coding agents.
 
-### Research / forward-looking
-- `TECH_STACK_CAPABILITIES_2026.md` — optional modernization opportunities.
 
+## Deployment
+[neckass.com](https://neckass.com) is served by Cloudflare Pages (project `neckass`).
+
+The repository root *is* the deploy artifact: there is no build command and no
+output directory, so Pages publishes the tree exactly as committed. Pushing to
+`main` triggers a production deploy; other branches get preview deployments.
+
+To deploy from a working copy instead of a push:
+
+```bash
+bunx wrangler pages deploy . --project-name=neckass --branch=main
+```
 
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.

@@ -1,10 +1,13 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     function updateSocialShareLinks(elements, headline, canonicalUrl) {
         const encodedHeadline = encodeURIComponent(headline);
         const encodedUrl = encodeURIComponent(canonicalUrl);
-        const combinedText = encodeURIComponent(`${headline} ${canonicalUrl}`.trim());
+        const combinedText = encodeURIComponent(
+            `${headline} ${canonicalUrl}`.trim(),
+        );
 
         if (elements.twitterShareLink) {
             elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;

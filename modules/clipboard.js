@@ -1,15 +1,22 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     function canUseClipboardApi() {
         return Boolean(
-            window.isSecureContext
-            && navigator.clipboard
-            && typeof navigator.clipboard.writeText === 'function'
+            window.isSecureContext &&
+                navigator.clipboard &&
+                typeof navigator.clipboard.writeText === 'function',
         );
     }
 
-    async function copyTextWithFeedback({ text, button, successMessage, onStatus, setButtonLoading }) {
+    async function copyTextWithFeedback({
+        text,
+        button,
+        successMessage,
+        onStatus,
+        setButtonLoading,
+    }) {
         setButtonLoading(button, true);
         try {
             if (canUseClipboardApi()) {
@@ -24,7 +31,7 @@
             } else {
                 onStatus('Copy failed. Please try again.', true);
             }
-        } catch (error) {
+        } catch {
             try {
                 const success = copyWithFallback(text);
                 if (success) {
@@ -32,7 +39,7 @@
                 } else {
                     onStatus('Clipboard unavailable in this browser.', true);
                 }
-            } catch (fallbackError) {
+            } catch {
                 onStatus('Clipboard unavailable in this browser.', true);
             }
         } finally {
@@ -49,7 +56,10 @@
         document.body.appendChild(textarea);
 
         const selection = document.getSelection();
-        const selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+        const selectedRange =
+            selection && selection.rangeCount > 0
+                ? selection.getRangeAt(0)
+                : null;
 
         textarea.select();
         const successful = document.execCommand('copy');

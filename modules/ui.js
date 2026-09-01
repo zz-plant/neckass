@@ -1,8 +1,10 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     const getById = (id) => document.getElementById(id);
-    const getAll = (selector) => Array.from(document.querySelectorAll(selector));
+    const getAll = (selector) =>
+        Array.from(document.querySelectorAll(selector));
 
     function mapElements() {
         const idMap = {
@@ -34,10 +36,10 @@
             historyCount: 'history-count',
             headlineList: 'headline-list',
             filterStatus: 'filter-status',
-            clearFiltersButton: 'clear-filters'
+            clearFiltersButton: 'clear-filters',
         };
         const elements = Object.fromEntries(
-            Object.entries(idMap).map(([key, id]) => [key, getById(id)])
+            Object.entries(idMap).map(([key, id]) => [key, getById(id)]),
         );
 
         return {
@@ -51,7 +53,7 @@
             controls: document.querySelector('.controls'),
             socialShare: document.querySelector('.social-share'),
             copySection: document.querySelector('.copy-headline'),
-            exportSection: document.querySelector('#export-card')
+            exportSection: document.querySelector('#export-card'),
         };
     }
 
@@ -81,7 +83,9 @@
     }
 
     function formatFilterLabel(value) {
-        return value ? `${value.charAt(0).toUpperCase()}${value.slice(1)}` : value;
+        return value
+            ? `${value.charAt(0).toUpperCase()}${value.slice(1)}`
+            : value;
     }
 
     function updateFilterStatus({ elements, filters, hasActiveFilters }) {

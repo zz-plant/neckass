@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     const STORAGE_KEYS = {
         viewedCount: 'headlinesViewed',
@@ -11,7 +12,7 @@
         favorites: 'favoriteHeadlines',
         filters: 'headlineFilters',
         dailyEngagement: 'dailyEngagement',
-        feedbackLog: 'headlineFeedbackLog'
+        feedbackLog: 'headlineFeedbackLog',
     };
 
     function createStorageAdapter() {
@@ -25,66 +26,137 @@
             const snapshot = queuedState;
             queuedState = null;
 
-            safeSetItem(STORAGE_KEYS.viewedCount, snapshot.uniqueHeadlines.size);
-            safeSetItem(STORAGE_KEYS.viewedList, JSON.stringify(snapshot.navigationStack));
-            safeSetItem(STORAGE_KEYS.navigationStack, JSON.stringify(snapshot.navigationStack));
-            safeSetItem(STORAGE_KEYS.navigationStackLegacy, JSON.stringify(snapshot.navigationStack));
-            safeSetItem(STORAGE_KEYS.uniqueHeadlines, JSON.stringify(Array.from(snapshot.uniqueHeadlines)));
+            safeSetItem(
+                STORAGE_KEYS.viewedCount,
+                snapshot.uniqueHeadlines.size,
+            );
+            safeSetItem(
+                STORAGE_KEYS.viewedList,
+                JSON.stringify(snapshot.navigationStack),
+            );
+            safeSetItem(
+                STORAGE_KEYS.navigationStack,
+                JSON.stringify(snapshot.navigationStack),
+            );
+            safeSetItem(
+                STORAGE_KEYS.navigationStackLegacy,
+                JSON.stringify(snapshot.navigationStack),
+            );
+            safeSetItem(
+                STORAGE_KEYS.uniqueHeadlines,
+                JSON.stringify(Array.from(snapshot.uniqueHeadlines)),
+            );
             safeSetItem(
                 STORAGE_KEYS.generatedHeadlines,
-                JSON.stringify(Array.isArray(snapshot.generatedHeadlines) ? snapshot.generatedHeadlines : [])
+                JSON.stringify(
+                    Array.isArray(snapshot.generatedHeadlines)
+                        ? snapshot.generatedHeadlines
+                        : [],
+                ),
             );
             safeSetItem(
                 STORAGE_KEYS.favorites,
-                JSON.stringify(Array.isArray(snapshot.favorites) ? snapshot.favorites : [])
+                JSON.stringify(
+                    Array.isArray(snapshot.favorites) ? snapshot.favorites : [],
+                ),
             );
             safeSetItem(
                 STORAGE_KEYS.filters,
-                JSON.stringify(snapshot.filters || Neckass.DEFAULT_FILTERS)
+                JSON.stringify(snapshot.filters || Neckass.DEFAULT_FILTERS),
             );
             safeSetItem(
                 STORAGE_KEYS.dailyEngagement,
-                JSON.stringify(snapshot.dailyEngagement || {})
+                JSON.stringify(snapshot.dailyEngagement || {}),
             );
             safeSetItem(
                 STORAGE_KEYS.feedbackLog,
-                JSON.stringify(Array.isArray(snapshot.feedbackLog) ? snapshot.feedbackLog : [])
+                JSON.stringify(
+                    Array.isArray(snapshot.feedbackLog)
+                        ? snapshot.feedbackLog
+                        : [],
+                ),
             );
         };
 
         return {
             restore(baseHeadlineCount) {
-                const generatedHeadlines = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.generatedHeadlines), []);
-                const totalHeadlines = baseHeadlineCount + (Array.isArray(generatedHeadlines) ? generatedHeadlines.length : 0);
-                const storedStack = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.navigationStack), null);
-                const legacyNavigationStack = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.navigationStackLegacy), null);
-                const viewedListLegacy = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.viewedList), []);
-                const uniqueHeadlinesLegacy = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.uniqueHeadlines), null);
-                const favorites = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.favorites), []);
-                const filters = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.filters), {});
-                const rawStack = resolveNavigationStack(storedStack, legacyNavigationStack, viewedListLegacy);
-
-                const sanitizedStack = rawStack.filter((index) => Neckass.isValidHeadlineIndex(index, totalHeadlines));
-                const uniqueHeadlines = new Set(
-                    Array.isArray(uniqueHeadlinesLegacy) && uniqueHeadlinesLegacy.length > 0
-                        ? uniqueHeadlinesLegacy.filter((index) => Neckass.isValidHeadlineIndex(index, totalHeadlines))
-                        : sanitizedStack
+                const generatedHeadlines = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.generatedHeadlines),
+                    [],
+                );
+                const totalHeadlines =
+                    baseHeadlineCount +
+                    (Array.isArray(generatedHeadlines)
+                        ? generatedHeadlines.length
+                        : 0);
+                const storedStack = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.navigationStack),
+                    null,
+                );
+                const legacyNavigationStack = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.navigationStackLegacy),
+                    null,
+                );
+                const viewedListLegacy = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.viewedList),
+                    [],
+                );
+                const uniqueHeadlinesLegacy = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.uniqueHeadlines),
+                    null,
+                );
+                const favorites = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.favorites),
+                    [],
+                );
+                const filters = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.filters),
+                    {},
+                );
+                const rawStack = resolveNavigationStack(
+                    storedStack,
+                    legacyNavigationStack,
+                    viewedListLegacy,
                 );
 
-                const dailyEngagement = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.dailyEngagement), {});
-                const feedbackLog = Neckass.safeJsonParse(safeGetItem(STORAGE_KEYS.feedbackLog), []);
+                const sanitizedStack = rawStack.filter((index) =>
+                    Neckass.isValidHeadlineIndex(index, totalHeadlines),
+                );
+                const uniqueHeadlines = new Set(
+                    Array.isArray(uniqueHeadlinesLegacy) &&
+                        uniqueHeadlinesLegacy.length > 0
+                        ? uniqueHeadlinesLegacy.filter((index) =>
+                              Neckass.isValidHeadlineIndex(
+                                  index,
+                                  totalHeadlines,
+                              ),
+                          )
+                        : sanitizedStack,
+                );
+
+                const dailyEngagement = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.dailyEngagement),
+                    {},
+                );
+                const feedbackLog = Neckass.safeJsonParse(
+                    safeGetItem(STORAGE_KEYS.feedbackLog),
+                    [],
+                );
 
                 return {
                     navigationStack: sanitizedStack,
                     uniqueHeadlines,
-                    currentIndex: sanitizedStack[sanitizedStack.length - 1] ?? -1,
+                    currentIndex:
+                        sanitizedStack[sanitizedStack.length - 1] ?? -1,
                     generatedHeadlines: Array.isArray(generatedHeadlines)
                         ? generatedHeadlines.filter(Boolean)
                         : [],
-                    favorites: Array.isArray(favorites) ? favorites.filter(Boolean) : [],
+                    favorites: Array.isArray(favorites)
+                        ? favorites.filter(Boolean)
+                        : [],
                     filters: Neckass.sanitizeFilters(filters),
                     dailyEngagement,
-                    feedbackLog: Array.isArray(feedbackLog) ? feedbackLog : []
+                    feedbackLog: Array.isArray(feedbackLog) ? feedbackLog : [],
                 };
             },
 
@@ -94,14 +166,14 @@
                 if (persistScheduled) return;
                 persistScheduled = true;
                 Neckass.scheduleBackgroundTask(flushPersist);
-            }
+            },
         };
     }
 
     function safeGetItem(key) {
         try {
             return localStorage.getItem(key);
-        } catch (error) {
+        } catch {
             return null;
         }
     }
@@ -109,7 +181,7 @@
     function safeSetItem(key, value) {
         try {
             localStorage.setItem(key, value);
-        } catch (error) {
+        } catch {
             return;
         }
     }

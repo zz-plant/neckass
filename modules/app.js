@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
     const {
         copyTextWithFeedback,
         DEFAULT_FILTERS,
@@ -26,7 +27,7 @@
         scheduleBackgroundTask,
         triggerHapticFeedback,
         updateDocumentMetadata: updateHeadMetadata,
-        updateHistoryList: renderHistoryList
+        updateHistoryList: renderHistoryList,
     } = Neckass;
     const renderFilterStatus = Neckass.updateFilterStatus;
 
@@ -35,1806 +36,2293 @@
         3: 'Starter',
         5: 'Momentum',
         8: 'Surge',
-        12: 'All-star'
+        12: 'All-star',
     };
 
     class HeadlineApp {
-    constructor({ headlines: allHeadlines, elements, storage }) {
-        this.headlines = Array.isArray(allHeadlines) ? [...allHeadlines] : [];
-        this.baseHeadlineCount = this.headlines.length;
-        this.elements = elements;
-        this.storage = storage;
-        this.state = storage.restore(this.headlines.length);
-        this.state.isLoading = false;
-        this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
-        this.filters = sanitizeFilters(this.state.filters);
-        this.favoriteHeadlines = new Set(Array.isArray(this.state.favorites) ? this.state.favorites : []);
-        this.filteredIndexes = [];
-        this.headlineCache = createHeadlineCache(this.headlines);
-        appendGeneratedHeadlines({
-            headlines: this.headlines,
-            headlineCache: this.headlineCache,
-            generatedHeadlines: this.state.generatedHeadlines || []
-        });
-        this.handleDirectionalNavigation = this.handleDirectionalNavigation.bind(this);
-        this.activeButton = null;
-        this.shuffleStreak = 0;
-        this.shouldIncrementStreak = false;
-        this.celebrationTimer = null;
-        this.dailyEngagement = this.normalizeDailyEngagement(this.state.dailyEngagement);
-        this.feedbackLog = this.normalizeFeedbackLog(this.state.feedbackLog);
-        this.dailyVisitMeta = { isReturnVisitToday: false, advancedStreakToday: false };
-        this.metrics = typeof Neckass.createMetricsTracker === 'function'
-            ? Neckass.createMetricsTracker()
-            : null;
-        this.headlineController = new Neckass.HeadlineController({ app: this, dependencies: { runViewTransition, scheduleBackgroundTask, selectReadableColor, updateHeadMetadata, updateSocialShareLinks, hasActiveFilters, isValidHeadlineIndex } });
-        this.actionController = new Neckass.ActionController({ app: this, dependencies: { copyTextWithFeedback, exportMockFront, setButtonLoading } });
-    }
-
-    init() {
-        if (!this.validateRequiredElements()) {
-            return;
-        }
-
-        this.bindEvents();
-        this.applyUrlState();
-        this.syncGeneratorControls();
-        this.updateHeadlineCounter();
-        this.updateNavigationAvailability();
-        this.updateMockDate();
-        this.refreshDailyEngagement();
-        this.renderDailyStreak();
-        this.preflightExportAvailability();
-        this.renderShuffleStreak();
-        this.updateNextButtonLabel();
-        this.updateFeedbackCount();
-        this.updateMetricsSummary();
-        this.trackGrowthEvent('session_start', {
-            hasGenerator: this.isGeneratorAvailable(),
-            sourceFilter: this.filters.source
-        });
-        this._renderInitialHeadlineCore();
-    }
-
-
-    validateRequiredElements() {
-        const required = [
-            ['nextButton', 'next action button'],
-            ['previousButton', 'previous action button'],
-            ['copyButton', 'copy action button'],
-            ['headline', 'headline container'],
-            ['counter', 'headline counter']
-        ];
-
-        const missing = required
-            .filter(([key]) => !this.elements[key])
-            .map(([,label]) => label);
-
-        if (missing.length === 0) {
-            return true;
-        }
-
-        console.error(`Missing required UI elements: ${missing.join(', ')}. Aborting app initialization.`);
-        return false;
-    }
-    bindEvents() {
-        this.elements.nextButton.addEventListener('click', () => this.handleNext());
-        this.elements.previousButton.addEventListener('click', () => this._handlePreviousCore());
-        this.elements.copyButton.addEventListener('click', () => this.copyHeadline(this.elements.copyButton));
-        this.elements.nativeShareButton?.addEventListener('click', () => this.shareHeadline(this.elements.nativeShareButton));
-        this.elements.jumpCopyButton?.addEventListener('click', () => this.copyHeadline(this.elements.jumpCopyButton));
-        this.elements.jumpShareButton?.addEventListener('click', () => this.handleQuickShare());
-        this.elements.jumpExportButton?.addEventListener('click', () => this.handleQuickExport());
-        this.elements.copyLinkButton?.addEventListener('click', () => this.copyHeadlineLink());
-        this.elements.generateButton?.addEventListener('click', () => this.handleGenerate());
-        this.elements.favoriteButton?.addEventListener('click', () => this.toggleFavorite());
-        this.elements.downloadMockButton?.addEventListener('click', () => this.handleMockExport('download'));
-        this.elements.copyMockButton?.addEventListener('click', () => this.handleMockExport('copy'));
-        this.elements.applySearchButton?.addEventListener('click', () => this.applySearch());
-        this.elements.clearSearchButton?.addEventListener('click', () => this.clearSearch());
-        this.elements.searchForm?.addEventListener('submit', (event) => {
-            event.preventDefault();
-            this.applySearch();
-        });
-        this.elements.sectionButtons?.forEach((button) => {
-            button.addEventListener('click', () => this.setSectionFilter(button.dataset.section || 'latest'));
-        });
-        this.elements.sourceButtons?.forEach((button) => {
-            button.addEventListener('click', () => this.setSourceFilter(button.dataset.source || 'auto'));
-        });
-        this.elements.panelButtons?.forEach((button) => {
-            button.addEventListener('click', () => this.setActivePanel(button.dataset.panel || 'recent'));
-        });
-        this.elements.layoutButtons?.forEach((button) => {
-            button.addEventListener('click', () => this.setMockLayout(button.dataset.layout || 'standard'));
-        });
-        this.elements.clearFiltersButton?.addEventListener('click', () => this.clearAllFilters());
-        this.elements.feedbackGoodButton?.addEventListener('click', () => this.captureHeadlineFeedback('up'));
-        this.elements.feedbackBadButton?.addEventListener('click', () => this.captureHeadlineFeedback('down'));
-        this.elements.feedbackExportButton?.addEventListener('click', () => this.copyFeedbackLog());
-        this.elements.copyAgentSnippetButton?.addEventListener('click', () => this.copyAgentSnippet());
-        this.elements.exportMetricsButton?.addEventListener('click', () => this.copyMetricsSnapshot());
-        this.elements.apiWaitlistLink?.addEventListener('click', () => {
-            this.trackGrowthEvent('api_waitlist_click', { source: 'automation_card' });
-            this.reportAutomationStatus('Opening waitlist email draft.');
-        });
-        [
-            this.elements.twitterShareLink,
-            this.elements.facebookShareLink,
-            this.elements.redditShareLink,
-            this.elements.linkedinShareLink,
-            this.elements.threadsShareLink,
-            this.elements.blueskyShareLink
-        ].filter(Boolean).forEach((link) => {
-            link.addEventListener('click', () => {
-                this.reportShareStatus('Share window opened.');
-                this.trackGrowthEvent('share_link_opened', { channel: link.id || 'social' });
+        constructor({ headlines: allHeadlines, elements, storage }) {
+            this.headlines = Array.isArray(allHeadlines)
+                ? [...allHeadlines]
+                : [];
+            this.baseHeadlineCount = this.headlines.length;
+            this.elements = elements;
+            this.storage = storage;
+            this.state = storage.restore(this.headlines.length);
+            this.state.isLoading = false;
+            this.state.generatedHeadlines = Array.isArray(
+                this.state.generatedHeadlines,
+            )
+                ? this.state.generatedHeadlines
+                : [];
+            this.filters = sanitizeFilters(this.state.filters);
+            this.favoriteHeadlines = new Set(
+                Array.isArray(this.state.favorites) ? this.state.favorites : [],
+            );
+            this.filteredIndexes = [];
+            this.headlineCache = createHeadlineCache(this.headlines);
+            appendGeneratedHeadlines({
+                headlines: this.headlines,
+                headlineCache: this.headlineCache,
+                generatedHeadlines: this.state.generatedHeadlines || [],
             });
-        });
-        this.elements.headlineList?.addEventListener('click', (event) => {
-            const target = event.target.closest('button[data-index]');
-            if (!target) return;
-            const index = Number.parseInt(target.dataset.index, 10);
-            if (Number.isInteger(index)) {
-                this.activeButton = target;
-                this._selectHeadlineCore(index);
-            }
-        });
-        window.addEventListener('popstate', (event) => this._handlePopStateCore(event));
-        document.addEventListener('keydown', this.handleDirectionalNavigation);
-    }
-
-    async _handleNextCore() {
-        if (this.state.isLoading) {
-            return;
-        }
-        if (this.headlines.length === 0) {
-            this._renderEmptyStateCore();
-            return;
-        }
-
-        const generatorAvailable = this.isGeneratorAvailable();
-        const wantsGenerated = this.filters.source === 'generated'
-            || (this.filters.source === 'auto' && generatorAvailable);
-        let nextIndex = null;
-        this.activeButton = this.elements.nextButton;
-        this.shouldIncrementStreak = true;
-
-        if (wantsGenerated && generatorAvailable) {
-            this.toggleLoader(true, 'Generating headline with the tiny model...');
-            nextIndex = await this.generateHeadlineWithFallback();
-        }
-
-        if (this.filters.source === 'generated' && !generatorAvailable) {
-            this.toggleLoader(true, 'Tiny model unavailable, using curated headlines.');
-        }
-
-        if (nextIndex === null) {
-            this.toggleLoader(true, 'Shuffling stored headlines...');
-            nextIndex = this.getRandomIndex();
+            this.handleDirectionalNavigation =
+                this.handleDirectionalNavigation.bind(this);
+            this.activeButton = null;
+            this.shuffleStreak = 0;
+            this.shouldIncrementStreak = false;
+            this.celebrationTimer = null;
+            this.dailyEngagement = this.normalizeDailyEngagement(
+                this.state.dailyEngagement,
+            );
+            this.feedbackLog = this.normalizeFeedbackLog(
+                this.state.feedbackLog,
+            );
+            this.dailyVisitMeta = {
+                isReturnVisitToday: false,
+                advancedStreakToday: false,
+            };
+            this.metrics =
+                typeof Neckass.createMetricsTracker === 'function'
+                    ? Neckass.createMetricsTracker()
+                    : null;
+            this.headlineController = new Neckass.HeadlineController({
+                app: this,
+                dependencies: {
+                    runViewTransition,
+                    scheduleBackgroundTask,
+                    selectReadableColor,
+                    updateHeadMetadata,
+                    updateSocialShareLinks,
+                    hasActiveFilters,
+                    isValidHeadlineIndex,
+                },
+            });
+            this.actionController = new Neckass.ActionController({
+                app: this,
+                dependencies: {
+                    copyTextWithFeedback,
+                    exportMockFront,
+                    setButtonLoading,
+                },
+            });
         }
 
-        if (nextIndex === null) {
-            this._renderEmptyStateCore();
-            return;
-        }
-
-        this.trackGrowthEvent('shuffle', {
-            source: wantsGenerated && generatorAvailable ? 'generated' : 'curated',
-            hasActiveFilters: hasActiveFilters(this.filters)
-        });
-        triggerHapticFeedback('selection');
-        this.renderHeadline(nextIndex);
-    }
-
-    _handlePreviousCore() {
-        if (this.state.isLoading) {
-            return;
-        }
-        if (this.state.navigationStack.length <= 1) {
-            return;
-        }
-        this.activeButton = this.elements.previousButton;
-        this.shouldIncrementStreak = false;
-
-        const removedIndex = this.state.navigationStack.pop();
-        if (!this.state.navigationStack.includes(removedIndex)) {
-            this.state.uniqueHeadlines.delete(removedIndex);
-        }
-
-        const previousIndex = this.state.navigationStack[this.state.navigationStack.length - 1];
-        this.state.currentIndex = previousIndex;
-        this.persistState();
-        this.updateHeadlineCounter();
-        this.updateNavigationAvailability();
-        this.trackGrowthEvent('previous', { stackDepth: this.state.navigationStack.length });
-        triggerHapticFeedback('selection');
-        this.renderHeadline(previousIndex, { pushToStack: false, replaceState: false });
-    }
-
-    async handleGenerate() {
-        const generatorAvailable = this.isGeneratorAvailable();
-        this.activeButton = this.elements.generateButton;
-        this.shouldIncrementStreak = false;
-
-        if (!generatorAvailable) {
-            this.reportCopyStatus('Tiny model is unavailable in this session.', true);
-            return;
-        }
-
-        this.toggleLoader(true, 'Generating headline with the tiny model...');
-        const generatedIndex = await this.generateHeadlineWithFallback();
-
-        if (generatedIndex === null) {
-            this.toggleLoader(true, 'Falling back to stored headlines...');
-            const fallbackIndex = this.getRandomIndex();
-            if (fallbackIndex === null) {
-                this._renderEmptyStateCore();
+        init() {
+            if (!this.validateRequiredElements()) {
                 return;
             }
-            this.trackGrowthEvent('generate_fallback', { reason: 'generation-unavailable' });
-            this.renderHeadline(fallbackIndex);
-            return;
-        }
 
-        if (!this.isIndexEligible(generatedIndex)) {
-            const fallbackIndex = this.getRandomIndex();
-            if (fallbackIndex === null) {
-                this._renderEmptyStateCore();
-                return;
-            }
-            this.trackGrowthEvent('generate_fallback', { reason: 'generated-ineligible' });
-            this.renderHeadline(fallbackIndex);
-            return;
-        }
-
-        this.trackGrowthEvent('generate_success', { source: 'tiny-llm' });
-        this.renderHeadline(generatedIndex);
-    }
-
-    async generateHeadlineWithFallback() {
-        try {
-            const result = await window.tinyLlmClient.generateHeadline({
-                section: this.filters.section,
-                source: this.filters.source === 'curated' ? 'any' : this.filters.source,
-                query: this.filters.query,
-                exclude: this.state.navigationStack
-                    .map((index) => this.headlines[index])
-                    .filter(Boolean)
-                    .slice(-10)
-            });
-            const diagnostics = typeof window.tinyLlmClient?.getLastDiagnostics === 'function'
-                ? window.tinyLlmClient.getLastDiagnostics()
-                : null;
-            if (diagnostics?.backend) {
-                this.trackGrowthEvent('generate_backend', {
-                    backend: diagnostics.backend,
-                    timeoutMs: diagnostics.timeoutMs || 0,
-                    warm: diagnostics.warm === true
-                });
-            }
-            const headlineText = typeof result === 'string' ? result : result?.headline;
-            return this.registerGeneratedHeadline(headlineText);
-        } catch (error) {
-            const diagnostics = typeof window.tinyLlmClient?.getLastDiagnostics === 'function'
-                ? window.tinyLlmClient.getLastDiagnostics()
-                : null;
-            if (diagnostics?.backend) {
-                this.trackGrowthEvent('generate_backend_fallback', {
-                    backend: diagnostics.backend,
-                    timeoutMs: diagnostics.timeoutMs || 0,
-                    reason: diagnostics.fallback || 'generation-error'
-                });
-            }
-            this.updateLoaderMessage('Generation unavailable, using saved headlines.');
-            return null;
-        }
-    }
-
-    registerGeneratedHeadline(headlineText) {
-        const normalized = this.normalizeGeneratedHeadline(headlineText);
-        if (!normalized) {
-            throw new Error('No headline text returned');
-        }
-
-        if (this.headlineCache.has(normalized)) {
-            return this.headlineCache.get(normalized);
-        }
-
-        const newIndex = this.headlines.length;
-        this.headlines.push(normalized);
-        this.headlineCache.set(normalized, newIndex);
-        this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
-        this.state.generatedHeadlines.push(normalized);
-        this.persistState();
-        this.refreshFilteredIndexes();
-        return newIndex;
-    }
-
-    _renderHeadlineCore(index, options = { pushToStack: true, replaceState: false }) {
-        if (!isValidHeadlineIndex(index, this.headlines.length)) {
-            this._renderEmptyStateCore();
-            return;
-        }
-
-        this.clearCopyStatus();
-        this.clearShareStatus();
-        this.clearFeedbackStatus();
-        const loaderMessage = this.elements.loaderText?.textContent || this.elements.loader.textContent || 'Loading headline...';
-        const previousIndex = this.state.currentIndex;
-        const shouldIncrementStreak = this.shouldIncrementStreak;
-        this.shouldIncrementStreak = false;
-        this.toggleLoader(true, loaderMessage);
-        this.elements.headline.classList.remove('show');
-
-        scheduleBackgroundTask(() => {
-            const headlineText = this.headlines[index];
-            runViewTransition(() => {
-                this.elements.headline.textContent = headlineText;
-                this.elements.headline.style.color = selectReadableColor();
-                this.elements.headline.classList.add('show');
-            });
-            this.toggleLoader(false);
+            this.bindEvents();
+            this.applyUrlState();
+            this.syncGeneratorControls();
+            this.updateHeadlineCounter();
+            this.updateNavigationAvailability();
             this.updateMockDate();
-
-            this.updateViewedState(index, options);
-            this.updateShuffleStreak(shouldIncrementStreak && previousIndex !== index);
-            this.updateHeadlineBadges(index);
-            this.updateFavoriteButton();
-            updateHeadMetadata({
-                headline: headlineText,
-                index,
-                headlinesLength: this.headlines.length,
-                isValidHeadlineIndex,
-                getCanonicalUrl: (targetIndex) => this.getCanonicalUrl(targetIndex)
+            this.refreshDailyEngagement();
+            this.renderDailyStreak();
+            this.preflightExportAvailability();
+            this.renderShuffleStreak();
+            this.updateNextButtonLabel();
+            this.updateFeedbackCount();
+            this.updateMetricsSummary();
+            this.trackGrowthEvent('session_start', {
+                hasGenerator: this.isGeneratorAvailable(),
+                sourceFilter: this.filters.source,
             });
-            updateSocialShareLinks(this.elements, headlineText, this.getCanonicalUrl(index));
-            this.updateMockHeadline(headlineText);
-            this.persistState();
-            this.pushHistoryState(index, { replace: options.replaceState });
-            this.updateHistoryList();
-        });
-    }
-
-    _renderInitialHeadlineCore() {
-        if (this.state.navigationStack.length > 0
-            && isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
-            && this.isIndexEligible(this.state.currentIndex)) {
-            this.renderHeadline(this.state.currentIndex, { pushToStack: false, replaceState: true });
-            return;
+            this._renderInitialHeadlineCore();
         }
 
-        if (this.filteredIndexes.length > 0) {
-            const nextIndex = this.filteredIndexes[0];
-            this.state.navigationStack = [nextIndex];
-            this.state.currentIndex = nextIndex;
-            this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
-            return;
-        }
+        validateRequiredElements() {
+            const required = [
+                ['nextButton', 'next action button'],
+                ['previousButton', 'previous action button'],
+                ['copyButton', 'copy action button'],
+                ['headline', 'headline container'],
+                ['counter', 'headline counter'],
+            ];
 
-        this._renderEmptyStateCore();
-    }
+            const missing = required
+                .filter(([key]) => !this.elements[key])
+                .map(([, label]) => label);
 
-    _renderEmptyStateCore() {
-        const hasFilters = hasActiveFilters(this.filters);
-        this.elements.headline.textContent = hasFilters
-            ? 'No headlines match your current filters.'
-            : 'No headlines available.';
-        this.elements.headline.style.color = '';
-        this.clearCopyStatus();
-        updateHeadMetadata({
-            headline: '',
-            index: -1,
-            headlinesLength: this.headlines.length,
-            isValidHeadlineIndex,
-            getCanonicalUrl: (targetIndex) => this.getCanonicalUrl(targetIndex)
-        });
-        updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
-        this.updateMockHeadline('No headlines available.');
-        this.updateHeadlineBadges(null);
-        this.updateFavoriteButton();
-        this.updateHistoryList();
-        this.toggleLoader(false, 'No headlines available.');
-        this.state.isLoading = false;
-        this.state.navigationStack = [];
-        this.state.currentIndex = -1;
-        this.elements.nextButton.disabled = true;
-        this.setNextButtonLabel(hasFilters ? 'Try a different filter' : 'Shuffle');
-        this.updateShuffleStreak(false);
-        if (this.elements.clearFiltersButton) {
-            this.elements.clearFiltersButton.hidden = !hasFilters;
-            this.elements.clearFiltersButton.disabled = !hasFilters;
-        }
-        this.updateNavigationAvailability();
-    }
-
-    updateViewedState(index, options = { pushToStack: true }) {
-        if (options.pushToStack && index !== this.state.currentIndex) {
-            this.state.navigationStack.push(index);
-        }
-
-        this.state.uniqueHeadlines.add(index);
-        this.state.currentIndex = index;
-
-        this.persistState();
-        this.updateHeadlineCounter();
-        this.updateNavigationAvailability();
-    }
-
-    updateHeadlineCounter() {
-        this.elements.counter.textContent = this.state.uniqueHeadlines.size;
-    }
-
-    normalizeDailyEngagement(rawEngagement) {
-        const parsed = rawEngagement && typeof rawEngagement === 'object' ? rawEngagement : {};
-        const streakDays = Number.isInteger(parsed.streakDays) && parsed.streakDays > 0 ? parsed.streakDays : 0;
-        const visitsThisDate = Number.isInteger(parsed.visitsThisDate) && parsed.visitsThisDate > 0 ? parsed.visitsThisDate : 0;
-        const maxStreakDays = Number.isInteger(parsed.maxStreakDays) && parsed.maxStreakDays > 0
-            ? parsed.maxStreakDays
-            : streakDays;
-
-        return {
-            lastVisitDate: typeof parsed.lastVisitDate === 'string' ? parsed.lastVisitDate : '',
-            streakDays,
-            visitsThisDate,
-            maxStreakDays
-        };
-    }
-
-    getDateKey(date = new Date()) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    getDayDifference(previousDateKey, currentDateKey) {
-        const toDate = (key) => {
-            const [year, month, day] = key.split('-').map(Number);
-            return new Date(year, (month || 1) - 1, day || 1);
-        };
-
-        const previous = toDate(previousDateKey);
-        const current = toDate(currentDateKey);
-        if (Number.isNaN(previous.getTime()) || Number.isNaN(current.getTime())) {
-            return Number.NaN;
-        }
-
-        const msPerDay = 24 * 60 * 60 * 1000;
-        return Math.round((current - previous) / msPerDay);
-    }
-
-    refreshDailyEngagement() {
-        const todayKey = this.getDateKey();
-        const engagement = this.normalizeDailyEngagement(this.dailyEngagement);
-        const previousKey = engagement.lastVisitDate;
-
-        this.dailyVisitMeta = {
-            isReturnVisitToday: previousKey === todayKey,
-            advancedStreakToday: false
-        };
-
-        if (!previousKey) {
-            engagement.streakDays = 1;
-            engagement.visitsThisDate = 1;
-        } else if (previousKey === todayKey) {
-            engagement.visitsThisDate += 1;
-        } else {
-            const dayDifference = this.getDayDifference(previousKey, todayKey);
-            engagement.streakDays = dayDifference === 1 ? engagement.streakDays + 1 : 1;
-            engagement.visitsThisDate = 1;
-            this.dailyVisitMeta.advancedStreakToday = dayDifference === 1;
-        }
-
-        engagement.lastVisitDate = todayKey;
-        engagement.maxStreakDays = Math.max(engagement.maxStreakDays || 0, engagement.streakDays);
-
-        this.dailyEngagement = engagement;
-        this.state.dailyEngagement = engagement;
-        this.persistState();
-        this.maybeCelebrateDailyMilestone();
-    }
-
-    renderDailyStreak() {
-        if (!this.elements.dailyStreak) return;
-
-        const streakDays = this.dailyEngagement.streakDays || 1;
-        const visitsToday = this.dailyEngagement.visitsThisDate || 1;
-        const dayLabel = streakDays === 1 ? 'day' : 'days';
-        let suffix = 'Back tomorrow.';
-
-        if (this.dailyVisitMeta.advancedStreakToday && streakDays >= 2) {
-            suffix = streakDays >= 7 ? 'Week streak active.' : 'Streak extended.';
-        } else if (this.dailyVisitMeta.isReturnVisitToday && visitsToday > 1) {
-            suffix = `Visit ${visitsToday} today.`;
-        }
-
-        this.elements.dailyStreak.textContent = `Daily streak: ${streakDays} ${dayLabel} · ${suffix}`;
-    }
-
-    maybeCelebrateDailyMilestone() {
-        if (!this.dailyVisitMeta.advancedStreakToday) {
-            return;
-        }
-
-        const milestoneMessages = {
-            3: 'Daily streak 3: habit formed.',
-            7: 'Daily streak 7: full week.',
-            14: 'Daily streak 14: streak pro.'
-        };
-
-        const message = milestoneMessages[this.dailyEngagement.streakDays];
-        if (message) {
-            this.showToast(message);
-        }
-    }
-
-    renderShuffleStreak() {
-        if (!this.elements.shuffleStreak) return;
-        if (this.shuffleStreak <= 0) {
-            this.elements.shuffleStreak.textContent = 'Shuffle streak: 0 · Shuffle to begin.';
-            this.renderShuffleBadges();
-            return;
-        }
-
-        const nextMilestone = STREAK_MILESTONES.find((milestone) => milestone > this.shuffleStreak) || null;
-        const suffix = this.shuffleStreak >= 8
-            ? 'Headline mode.'
-            : this.shuffleStreak >= 5
-                ? 'Strong run.'
-                : 'Nice pace.';
-        const nextMilestoneText = nextMilestone
-            ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
-            : 'Top badge unlocked.';
-        this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
-        this.renderShuffleBadges(nextMilestone);
-    }
-
-    renderShuffleBadges(nextMilestone = STREAK_MILESTONES[0]) {
-        if (!this.elements.streakBadges) {
-            return;
-        }
-
-        const badgeItems = Array.from(this.elements.streakBadges.querySelectorAll('[data-milestone]'));
-        badgeItems.forEach((badge) => {
-            const milestone = Number.parseInt(badge.dataset.milestone || '', 10);
-            if (!Number.isFinite(milestone)) {
-                return;
+            if (missing.length === 0) {
+                return true;
             }
 
-            const isEarned = this.shuffleStreak >= milestone;
-            const isNext = !isEarned && milestone === nextMilestone;
-            const remaining = Math.max(milestone - this.shuffleStreak, 0);
-            const label = SHUFFLE_BADGE_LABELS[milestone] || `Badge ${milestone}`;
-            const statusText = isEarned
-                ? `${label} badge unlocked at ${milestone} shuffles.`
-                : `${remaining} shuffles to unlock ${label} badge at ${milestone}.`;
-
-            badge.classList.toggle('is-earned', isEarned);
-            badge.classList.toggle('is-next', isNext);
-            badge.setAttribute('aria-label', statusText);
-            badge.setAttribute('title', statusText);
-        });
-    }
-
-    updateShuffleStreak(shouldIncrement) {
-        this.shuffleStreak = shouldIncrement ? this.shuffleStreak + 1 : 0;
-        this.renderShuffleStreak();
-        this.updateNextButtonLabel();
-        if (shouldIncrement) {
-            this.handleShuffleMilestone();
-        } else {
-            this.clearCelebration();
+            console.error(
+                `Missing required UI elements: ${missing.join(', ')}. Aborting app initialization.`,
+            );
+            return false;
         }
-    }
-
-    handleShuffleMilestone() {
-        const messages = {
-            3: 'Shuffle streak 3: smooth run.',
-            5: 'Shuffle streak 5: momentum unlocked.',
-            8: 'Shuffle streak 8: headline mode.'
-        };
-        const message = messages[this.shuffleStreak];
-        if (!message) {
-            return;
-        }
-
-        this.showToast(message);
-        this.triggerCelebration();
-    }
-
-    clearCelebration() {
-        if (this.celebrationTimer) {
-            window.clearTimeout(this.celebrationTimer);
-            this.celebrationTimer = null;
-        }
-        this.elements.headlineSection?.classList.remove('is-celebrating');
-    }
-
-    triggerCelebration() {
-        this.clearCelebration();
-        this.elements.headlineSection?.classList.add('is-celebrating');
-        this.celebrationTimer = window.setTimeout(() => {
-            this.elements.headlineSection?.classList.remove('is-celebrating');
-            this.celebrationTimer = null;
-        }, 900);
-    }
-
-    updateNavigationAvailability() {
-        const hasEligible = this.filteredIndexes.length > 0 || this.filters.source === 'generated';
-        this.elements.previousButton.disabled = this.state.isLoading || this.state.navigationStack.length <= 1;
-        this.elements.nextButton.disabled = this.state.isLoading || !hasEligible;
-        this.updateNextButtonLabel();
-    }
-
-    setNextButtonLabel(label) {
-        if (!this.elements.nextButton) {
-            return;
-        }
-
-        const labelElement = this.elements.nextButton.querySelector('.button-label')
-            || this.elements.nextButton.querySelector('span');
-        if (labelElement) {
-            labelElement.textContent = label;
-            return;
-        }
-
-        this.elements.nextButton.textContent = label;
-    }
-
-    updateNextButtonLabel() {
-        if (!this.elements.nextButton || this.state.isLoading) {
-            return;
-        }
-        this.setNextButtonLabel(this.shuffleStreak > 0
-            ? `Keep streak · ${this.shuffleStreak}`
-            : 'Shuffle');
-    }
-
-    setSectionFilter(section) {
-        this.updateFilterValue('section', section || 'latest', {
-            resetNavigation: true,
-            refreshIndexes: true,
-            ensureHeadline: true,
-            syncControls: true
-        });
-    }
-
-    setSourceFilter(source) {
-        if (source === 'generated' && !this.isGeneratorAvailable()) {
-            this.reportCopyStatus('Tiny model unavailable. Source set to auto.', true);
-            this.updateFilterValue('source', 'auto', {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true
+        bindEvents() {
+            this.elements.nextButton.addEventListener('click', () =>
+                this.handleNext(),
+            );
+            this.elements.previousButton.addEventListener('click', () =>
+                this._handlePreviousCore(),
+            );
+            this.elements.copyButton.addEventListener('click', () =>
+                this.copyHeadline(this.elements.copyButton),
+            );
+            this.elements.nativeShareButton?.addEventListener('click', () =>
+                this.shareHeadline(this.elements.nativeShareButton),
+            );
+            this.elements.jumpCopyButton?.addEventListener('click', () =>
+                this.copyHeadline(this.elements.jumpCopyButton),
+            );
+            this.elements.jumpShareButton?.addEventListener('click', () =>
+                this.handleQuickShare(),
+            );
+            this.elements.jumpExportButton?.addEventListener('click', () =>
+                this.handleQuickExport(),
+            );
+            this.elements.copyLinkButton?.addEventListener('click', () =>
+                this.copyHeadlineLink(),
+            );
+            this.elements.generateButton?.addEventListener('click', () =>
+                this.handleGenerate(),
+            );
+            this.elements.favoriteButton?.addEventListener('click', () =>
+                this.toggleFavorite(),
+            );
+            this.elements.downloadMockButton?.addEventListener('click', () =>
+                this.handleMockExport('download'),
+            );
+            this.elements.copyMockButton?.addEventListener('click', () =>
+                this.handleMockExport('copy'),
+            );
+            this.elements.applySearchButton?.addEventListener('click', () =>
+                this.applySearch(),
+            );
+            this.elements.clearSearchButton?.addEventListener('click', () =>
+                this.clearSearch(),
+            );
+            this.elements.searchForm?.addEventListener('submit', (event) => {
+                event.preventDefault();
+                this.applySearch();
             });
-            return;
-        }
-        this.updateFilterValue('source', source || 'auto', {
-            resetNavigation: true,
-            refreshIndexes: true,
-            ensureHeadline: true,
-            syncControls: true
-        });
-    }
-
-    setActivePanel(panel) {
-        this.updateFilterValue('panel', panel || 'recent', {
-            syncControls: true,
-            updateHistoryList: true,
-            updateHistoryState: true
-        });
-    }
-
-    setMockLayout(layout) {
-        this.updateFilterValue('layout', layout || 'standard', {
-            applyLayout: true,
-            syncControls: true,
-            updateHistoryState: true
-        });
-    }
-
-    applyMockLayoutClass() {
-        if (!this.elements.mockFrame) return;
-        this.elements.mockFrame.classList.remove('mock-front--square', 'mock-front--story');
-        if (this.filters.layout === 'square') {
-            this.elements.mockFrame.classList.add('mock-front--square');
-        }
-        if (this.filters.layout === 'story') {
-            this.elements.mockFrame.classList.add('mock-front--story');
-        }
-        updateLayoutButtons(this.elements.layoutButtons, this.filters.layout);
-    }
-
-    applySearch() {
-        const query = this.elements.searchInput?.value ?? '';
-        this.updateFilterValue('query', query.trim(), {
-            resetNavigation: true,
-            refreshIndexes: true,
-            ensureHeadline: true,
-            syncControls: true,
-            updateStatusOnNoChange: true
-        });
-    }
-
-    clearSearch() {
-        if (this.elements.searchInput) {
-            this.elements.searchInput.value = '';
-        }
-        this.updateFilterValue('query', '', {
-            resetNavigation: true,
-            refreshIndexes: true,
-            ensureHeadline: true,
-            syncControls: true,
-            updateStatusOnNoChange: true
-        });
-    }
-
-    resetNavigationForFilters() {
-        const currentIndex = isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
-            ? this.state.currentIndex
-            : null;
-        this.state.navigationStack = currentIndex !== null ? [currentIndex] : [];
-    }
-
-    ensureHeadlineMatchesFilters() {
-        if (this.filteredIndexes.length === 0) {
-            this._renderEmptyStateCore();
-            this.pushHistoryState(-1, { replace: false });
-            return;
-        }
-
-        if (!this.isIndexEligible(this.state.currentIndex)) {
-            const nextIndex = this.filteredIndexes[0];
-            this.state.navigationStack = [nextIndex];
-            this.state.currentIndex = nextIndex;
-            this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
-            return;
-        }
-
-        this.pushHistoryState(this.state.currentIndex, { replace: false });
-        this.updateHistoryList();
-    }
-
-    refreshFilteredIndexes() {
-        this.filteredIndexes = getEligibleIndexes({
-            headlines: this.headlines,
-            baseHeadlineCount: this.baseHeadlineCount,
-            filters: this.filters,
-            isValidHeadlineIndex
-        });
-        this.updateFilterStatus();
-        this.updateNavigationAvailability();
-        this.updateHistoryList();
-    }
-
-    isIndexEligible(index) {
-        return isIndexEligible(index, {
-            headlines: this.headlines,
-            baseHeadlineCount: this.baseHeadlineCount,
-            filters: this.filters,
-            isValidHeadlineIndex
-        });
-    }
-
-    _selectHeadlineCore(index) {
-        if (!this.isIndexEligible(index)) return;
-        this.state.currentIndex = index;
-        this.shouldIncrementStreak = false;
-        if (this.state.navigationStack[this.state.navigationStack.length - 1] !== index) {
-            this.state.navigationStack.push(index);
-        }
-        this.renderHeadline(index, { pushToStack: false, replaceState: false });
-    }
-
-    updateHeadlineBadges(index) {
-        if (this.elements.headlineSource) {
-            const label = index === null || !isValidHeadlineIndex(index, this.headlines.length)
-                ? 'Source: unavailable'
-                : (index >= this.baseHeadlineCount ? 'Source: generated' : 'Source: curated');
-            this.elements.headlineSource.textContent = label;
-        }
-        if (this.elements.headlineSectionBadge) {
-            const label = index === null || !isValidHeadlineIndex(index, this.headlines.length)
-                ? 'Section: latest'
-                : `Section: ${classifyHeadline(this.headlines[index])}`;
-            this.elements.headlineSectionBadge.textContent = label;
-        }
-    }
-
-    updateFilterStatus() {
-        renderFilterStatus({
-            elements: this.elements,
-            filters: this.filters,
-            hasActiveFilters
-        });
-    }
-
-    updateFavoriteButton() {
-        if (!this.elements.favoriteButton) return;
-        const headlineText = this.headlines[this.state.currentIndex];
-        const isFavorite = Boolean(headlineText && this.favoriteHeadlines.has(headlineText));
-        this.elements.favoriteButton.setAttribute('aria-pressed', String(isFavorite));
-        this.elements.favoriteButton.querySelector('.button-label').textContent = isFavorite
-            ? 'Saved to favorites'
-            : 'Save to favorites';
-    }
-
-    toggleFavorite() {
-        const headlineText = this.headlines[this.state.currentIndex];
-        if (!headlineText) return;
-        if (this.favoriteHeadlines.has(headlineText)) {
-            this.favoriteHeadlines.delete(headlineText);
-            this.reportCopyStatus('Removed from favorites.');
-        } else {
-            this.favoriteHeadlines.add(headlineText);
-            this.reportCopyStatus('Saved to favorites.');
-        }
-        triggerHapticFeedback('light');
-        this.persistState();
-        this.updateFavoriteButton();
-        this.updateHistoryList();
-    }
-
-    updateHistoryList() {
-        renderHistoryList({
-            elements: this.elements,
-            panel: this.filters.panel,
-            isIndexEligible: (index) => this.isIndexEligible(index),
-            favoriteHeadlines: this.favoriteHeadlines,
-            headlineCache: this.headlineCache,
-            headlines: this.headlines,
-            baseHeadlineCount: this.baseHeadlineCount,
-            navigationStack: this.state.navigationStack,
-            currentIndex: this.state.currentIndex
-        });
-    }
-
-    syncFilterControls() {
-
-        if (this.elements.searchInput) {
-            this.elements.searchInput.value = this.filters.query;
-        }
-        updateToggleButtons(this.elements.sectionButtons, this.filters.section, 'section');
-        updateToggleButtons(this.elements.sourceButtons, this.filters.source, 'source');
-        updateToggleButtons(this.elements.panelButtons, this.filters.panel, 'panel');
-        updateLayoutButtons(this.elements.layoutButtons, this.filters.layout);
-        this.syncGeneratorControls();
-        this.updateFilterStatus();
-    }
-
-    clearAllFilters() {
-        const nextFilters = { ...DEFAULT_FILTERS };
-        const shouldReset = Object.keys(nextFilters).some((key) => nextFilters[key] !== this.filters[key]);
-        if (!shouldReset) {
-            this.updateFilterStatus();
-            this.pushHistoryState(this.state.currentIndex, { replace: true });
-            this.showToast('Filters already clear.');
-            return;
-        }
-
-        this.filters = nextFilters;
-        if (this.elements.searchInput) {
-            this.elements.searchInput.value = '';
-        }
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.applyMockLayoutClass();
-
-        if (this.filteredIndexes.length === 0) {
-            this._renderEmptyStateCore();
-            this.pushHistoryState(-1, { replace: true });
-            return;
-        }
-
-        const nextIndex = this.filteredIndexes[0];
-        this.state.navigationStack = [nextIndex];
-        this.state.currentIndex = nextIndex;
-        triggerHapticFeedback('light');
-        this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
-        this.showToast('Filters cleared.');
-
-    }
-
-    updateFilterValue(filterKey, value, options = {}) {
-        const {
-            resetNavigation = false,
-            refreshIndexes = false,
-            ensureHeadline = false,
-            syncControls = false,
-            updateHistoryList: shouldUpdateHistoryList = false,
-            updateHistoryState: shouldUpdateHistoryState = false,
-            applyLayout = false,
-            updateStatusOnNoChange = false
-        } = options;
-
-        if (this.filters[filterKey] === value) {
-            if (updateStatusOnNoChange) {
-                this.updateFilterStatus();
-            }
-            return;
-        }
-
-        this.filters[filterKey] = value;
-        if (resetNavigation) {
-            this.resetNavigationForFilters();
-        }
-        this.persistState();
-        if (syncControls) {
-            this.syncFilterControls();
-        }
-        if (refreshIndexes) {
-            this.refreshFilteredIndexes();
-        }
-        if (applyLayout) {
-            this.applyMockLayoutClass();
-        }
-        if (ensureHeadline) {
-            this.ensureHeadlineMatchesFilters();
-        }
-        if (shouldUpdateHistoryList) {
-            this.updateHistoryList();
-        }
-        if (shouldUpdateHistoryState) {
-            this.pushHistoryState(this.state.currentIndex, { replace: false });
-        }
-    }
-
-
-    async _shareHeadlineCore(triggerButton = this.elements.nativeShareButton) {
-        const headline = this.headlines[this.state.currentIndex];
-        const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
-
-        if (!headline || !canonicalUrl) {
-            this.reportShareStatus('No headline available to share.', true);
-            return;
-        }
-
-        if (!navigator.share || typeof navigator.share !== 'function') {
-            this.reportShareStatus('Native sharing unavailable in this browser.', true);
-            return;
-        }
-
-        const payload = {
-            title: 'Neckass Headlines',
-            text: headline,
-            url: canonicalUrl
-        };
-
-        if (navigator.canShare && typeof navigator.canShare === 'function') {
-            try {
-                if (!navigator.canShare(payload)) {
-                    this.reportShareStatus('Native sharing unavailable in this browser.', true);
-                    return;
+            this.elements.sectionButtons?.forEach((button) => {
+                button.addEventListener('click', () =>
+                    this.setSectionFilter(button.dataset.section || 'latest'),
+                );
+            });
+            this.elements.sourceButtons?.forEach((button) => {
+                button.addEventListener('click', () =>
+                    this.setSourceFilter(button.dataset.source || 'auto'),
+                );
+            });
+            this.elements.panelButtons?.forEach((button) => {
+                button.addEventListener('click', () =>
+                    this.setActivePanel(button.dataset.panel || 'recent'),
+                );
+            });
+            this.elements.layoutButtons?.forEach((button) => {
+                button.addEventListener('click', () =>
+                    this.setMockLayout(button.dataset.layout || 'standard'),
+                );
+            });
+            this.elements.clearFiltersButton?.addEventListener('click', () =>
+                this.clearAllFilters(),
+            );
+            this.elements.feedbackGoodButton?.addEventListener('click', () =>
+                this.captureHeadlineFeedback('up'),
+            );
+            this.elements.feedbackBadButton?.addEventListener('click', () =>
+                this.captureHeadlineFeedback('down'),
+            );
+            this.elements.feedbackExportButton?.addEventListener('click', () =>
+                this.copyFeedbackLog(),
+            );
+            this.elements.copyAgentSnippetButton?.addEventListener(
+                'click',
+                () => this.copyAgentSnippet(),
+            );
+            this.elements.exportMetricsButton?.addEventListener('click', () =>
+                this.copyMetricsSnapshot(),
+            );
+            this.elements.apiWaitlistLink?.addEventListener('click', () => {
+                this.trackGrowthEvent('api_waitlist_click', {
+                    source: 'automation_card',
+                });
+                this.reportAutomationStatus('Opening waitlist email draft.');
+            });
+            [
+                this.elements.twitterShareLink,
+                this.elements.facebookShareLink,
+                this.elements.redditShareLink,
+                this.elements.linkedinShareLink,
+                this.elements.threadsShareLink,
+                this.elements.blueskyShareLink,
+            ]
+                .filter(Boolean)
+                .forEach((link) => {
+                    link.addEventListener('click', () => {
+                        this.reportShareStatus('Share window opened.');
+                        this.trackGrowthEvent('share_link_opened', {
+                            channel: link.id || 'social',
+                        });
+                    });
+                });
+            this.elements.headlineList?.addEventListener('click', (event) => {
+                const target = event.target.closest('button[data-index]');
+                if (!target) return;
+                const index = Number.parseInt(target.dataset.index, 10);
+                if (Number.isInteger(index)) {
+                    this.activeButton = target;
+                    this._selectHeadlineCore(index);
                 }
-            } catch (error) {
-                this.reportShareStatus('Native sharing unavailable in this browser.', true);
-                return;
-            }
-        }
-
-        setButtonLoading(triggerButton, true);
-        try {
-            await navigator.share(payload);
-            this.reportShareStatus('Shared successfully.', false);
-            triggerHapticFeedback('success');
-            this.trackGrowthEvent('share_success', { channel: 'native' });
-        } catch (error) {
-            if (error && error.name === 'AbortError') {
-                this.reportShareStatus('Share canceled.', false);
-            } else {
-                this.reportShareStatus('Share failed. Please try again.', true);
-            }
-        } finally {
-            setButtonLoading(triggerButton, false);
-        }
-    }
-
-    async _copyHeadlineLinkCore() {
-        const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
-        if (!canonicalUrl) {
-            this.reportCopyStatus('No headline link available.', true);
-            return;
-        }
-        await copyTextWithFeedback({
-            text: canonicalUrl,
-            button: this.elements.copyLinkButton,
-            successMessage: 'Headline link copied!',
-            onStatus: (message, isError) => {
-                this.reportCopyStatus(message, isError);
-                if (!isError) {
-                    this.trackGrowthEvent('copy_link_success', { source: 'copy-link' });
-                }
-            },
-            setButtonLoading
-        });
-    }
-
-    async _handleQuickShareCore() {
-        const canUseNativeShare = navigator.share && typeof navigator.share === 'function';
-        if (!canUseNativeShare) {
-            this.jumpToCard('share');
-            this.reportShareStatus('Native sharing unavailable in this browser.', true);
-            return;
-        }
-
-        await this.shareHeadline(this.elements.jumpShareButton || this.elements.nativeShareButton);
-    }
-
-    async _handleQuickExportCore() {
-        if (!window.htmlToImage) {
-            this.jumpToCard('export');
-            this.reportExportStatus('Export unavailable. Reload, then try Download mock front page.', true);
-            return;
-        }
-
-        await this.handleMockExport('download');
-    }
-
-    _handleDirectionalNavigationCore(event) {
-        if (event.defaultPrevented) return;
-
-        const target = event.target;
-        if (target) {
-            const tag = target.tagName?.toLowerCase();
-            const isEditable = target.isContentEditable;
-            if (isEditable || ['input', 'textarea', 'select', 'button'].includes(tag)) {
-                return;
-            }
-        }
-
-        const forwardKeys = ['ArrowRight', 'ArrowDown'];
-        const backwardKeys = ['ArrowLeft', 'ArrowUp'];
-
-        if (forwardKeys.includes(event.key)) {
-            event.preventDefault();
-            this.handleNext().catch(() => {
-                this.toggleLoader(false);
             });
-        } else if (backwardKeys.includes(event.key)) {
-            event.preventDefault();
-            this._handlePreviousCore();
+            window.addEventListener('popstate', (event) =>
+                this._handlePopStateCore(event),
+            );
+            document.addEventListener(
+                'keydown',
+                this.handleDirectionalNavigation,
+            );
         }
-    }
 
-    applyUrlState() {
-        const urlState = getUrlState();
-        this.filters = this.getFiltersFromUrl(urlState);
-        if (this.filters.source === 'generated' && !this.isGeneratorAvailable()) {
-            this.filters.source = 'auto';
+        async _handleNextCore() {
+            if (this.state.isLoading) {
+                return;
+            }
+            if (this.headlines.length === 0) {
+                this._renderEmptyStateCore();
+                return;
+            }
+
+            const generatorAvailable = this.isGeneratorAvailable();
+            const wantsGenerated =
+                this.filters.source === 'generated' ||
+                (this.filters.source === 'auto' && generatorAvailable);
+            let nextIndex = null;
+            this.activeButton = this.elements.nextButton;
+            this.shouldIncrementStreak = true;
+
+            if (wantsGenerated && generatorAvailable) {
+                this.toggleLoader(
+                    true,
+                    'Generating headline with the tiny model...',
+                );
+                nextIndex = await this.generateHeadlineWithFallback();
+            }
+
+            if (this.filters.source === 'generated' && !generatorAvailable) {
+                this.toggleLoader(
+                    true,
+                    'Tiny model unavailable, using curated headlines.',
+                );
+            }
+
+            if (nextIndex === null) {
+                this.toggleLoader(true, 'Shuffling stored headlines...');
+                nextIndex = this.getRandomIndex();
+            }
+
+            if (nextIndex === null) {
+                this._renderEmptyStateCore();
+                return;
+            }
+
+            this.trackGrowthEvent('shuffle', {
+                source:
+                    wantsGenerated && generatorAvailable
+                        ? 'generated'
+                        : 'curated',
+                hasActiveFilters: hasActiveFilters(this.filters),
+            });
+            triggerHapticFeedback('selection');
+            this.renderHeadline(nextIndex);
         }
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.applyMockLayoutClass();
 
-        const index = this.identifierToIndex(urlState.headline);
-        const eligibleIndex = isValidHeadlineIndex(index, this.headlines.length) && this.isIndexEligible(index)
-            ? index
-            : null;
-        const fallbackIndex = eligibleIndex ?? this.filteredIndexes[0] ?? null;
+        _handlePreviousCore() {
+            if (this.state.isLoading) {
+                return;
+            }
+            if (this.state.navigationStack.length <= 1) {
+                return;
+            }
+            this.activeButton = this.elements.previousButton;
+            this.shouldIncrementStreak = false;
 
-        if (fallbackIndex !== null) {
-            this.state.navigationStack = [fallbackIndex];
-            this.state.uniqueHeadlines.add(fallbackIndex);
-            this.state.currentIndex = fallbackIndex;
+            const removedIndex = this.state.navigationStack.pop();
+            if (!this.state.navigationStack.includes(removedIndex)) {
+                this.state.uniqueHeadlines.delete(removedIndex);
+            }
+
+            const previousIndex =
+                this.state.navigationStack[
+                    this.state.navigationStack.length - 1
+                ];
+            this.state.currentIndex = previousIndex;
             this.persistState();
             this.updateHeadlineCounter();
             this.updateNavigationAvailability();
-            this.pushHistoryState(fallbackIndex, { replace: true });
-        } else if (index !== null || urlState.hasHeadlineParam) {
-            this.pushHistoryState(-1, { replace: true });
-        }
-    }
-
-    _handlePopStateCore(event) {
-        const state = event.state || {};
-        const urlState = getUrlState();
-        const urlIndex = this.identifierToIndex(urlState.headline);
-        const stateIndex = this.identifierToIndex(state.headlineIndex);
-        this.filters = this.getFiltersFromUrl(urlState);
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.applyMockLayoutClass();
-
-        const targetIndex = isValidHeadlineIndex(stateIndex, this.headlines.length)
-            ? stateIndex
-            : (isValidHeadlineIndex(urlIndex, this.headlines.length) ? urlIndex : null);
-
-        const eligibleTarget = targetIndex !== null && this.isIndexEligible(targetIndex)
-            ? targetIndex
-            : this.filteredIndexes[0] ?? null;
-
-        const restoredStack = Array.isArray(state.navigationStack)
-            ? state.navigationStack.filter((idx) => isValidHeadlineIndex(idx, this.headlines.length))
-            : [];
-        const restoredUnique = Array.isArray(state.uniqueHeadlines)
-            ? state.uniqueHeadlines.filter((idx) => isValidHeadlineIndex(idx, this.headlines.length))
-            : [];
-
-        if (eligibleTarget === null) {
-            this._renderEmptyStateCore();
-            return;
+            this.trackGrowthEvent('previous', {
+                stackDepth: this.state.navigationStack.length,
+            });
+            triggerHapticFeedback('selection');
+            this.renderHeadline(previousIndex, {
+                pushToStack: false,
+                replaceState: false,
+            });
         }
 
-        const filteredStack = restoredStack.filter((idx) => this.isIndexEligible(idx));
-        this.state.navigationStack = filteredStack.length > 0 ? filteredStack : [eligibleTarget];
-        if (!this.state.navigationStack.includes(eligibleTarget)) {
-            this.state.navigationStack.push(eligibleTarget);
-        }
+        async handleGenerate() {
+            const generatorAvailable = this.isGeneratorAvailable();
+            this.activeButton = this.elements.generateButton;
+            this.shouldIncrementStreak = false;
 
-        this.state.uniqueHeadlines = new Set([...this.state.uniqueHeadlines, ...restoredUnique, eligibleTarget]);
-        this.state.currentIndex = eligibleTarget;
-        this.persistState();
-        this.updateHeadlineCounter();
-        this.updateNavigationAvailability();
-        this.renderHeadline(eligibleTarget, { pushToStack: false, replaceState: true });
-    }
-
-    getFiltersFromUrl(urlState) {
-        return sanitizeFilters({
-            ...DEFAULT_FILTERS,
-            section: urlState.section ?? DEFAULT_FILTERS.section,
-            query: urlState.query ?? DEFAULT_FILTERS.query,
-            source: urlState.source ?? DEFAULT_FILTERS.source,
-            panel: urlState.panel ?? DEFAULT_FILTERS.panel,
-            layout: urlState.layout ?? DEFAULT_FILTERS.layout
-        });
-    }
-
-
-    normalizeFeedbackLog(feedbackLog) {
-        if (!Array.isArray(feedbackLog)) return [];
-
-        return feedbackLog
-            .filter((entry) => entry && typeof entry === 'object')
-            .map((entry) => ({
-                headline: typeof entry.headline === 'string' ? entry.headline.trim() : '',
-                preference: entry.preference === 'up' ? 'up' : 'down',
-                source: entry.source === 'generated' ? 'generated' : 'curated',
-                timestamp: typeof entry.timestamp === 'string' ? entry.timestamp : new Date().toISOString()
-            }))
-            .filter((entry) => entry.headline);
-    }
-
-    captureHeadlineFeedback(preference) {
-        const index = this.state.currentIndex;
-        if (!isValidHeadlineIndex(index, this.headlines.length)) {
-            this.reportFeedbackStatus('No headline available to rate.', true);
-            return;
-        }
-
-        const headline = this.headlines[index];
-        const source = index >= this.baseHeadlineCount ? 'generated' : 'curated';
-        const existingEntryIndex = this.feedbackLog.findIndex((entry) => entry.headline === headline);
-        const nextEntry = {
-            headline,
-            preference: preference === 'up' ? 'up' : 'down',
-            source,
-            timestamp: new Date().toISOString()
-        };
-
-        if (existingEntryIndex >= 0) {
-            this.feedbackLog[existingEntryIndex] = nextEntry;
-            this.reportFeedbackStatus('Updated your rating for this headline.');
-        } else {
-            this.feedbackLog.push(nextEntry);
-            this.reportFeedbackStatus('Saved your rating for this headline.');
-        }
-        triggerHapticFeedback('light');
-
-        this.feedbackLog = this.feedbackLog.slice(-300);
-        this.state.feedbackLog = this.feedbackLog;
-        this.updateFeedbackCount();
-        this.persistState();
-    }
-
-    async copyFeedbackLog() {
-        if (!this.feedbackLog.length) {
-            this.reportFeedbackStatus('Rate a few headlines first, then copy your feedback history.', true);
-            return;
-        }
-
-        const payload = this.feedbackLog
-            .map((entry) => JSON.stringify({
-                prompt: 'Generate a satirical, absurd news-style headline.',
-                completion: entry.headline,
-                preference: entry.preference,
-                source: entry.source,
-                timestamp: entry.timestamp
-            }))
-            .join('\n');
-
-        await copyTextWithFeedback({
-            text: payload,
-            button: this.elements.feedbackExportButton,
-            successMessage: 'Feedback history copied to clipboard.',
-            onStatus: (message, isError) => this.reportFeedbackStatus(message, isError),
-            setButtonLoading
-        });
-    }
-
-    updateFeedbackCount() {
-        if (!this.elements.feedbackCount) return;
-        this.elements.feedbackCount.textContent = String(this.feedbackLog.length);
-    }
-
-    reportFeedbackStatus(message, isError = false) {
-        if (!this.elements.feedbackStatus) return;
-        this.elements.feedbackStatus.textContent = message;
-        this.elements.feedbackStatus.classList.toggle('error', isError);
-        if (!isError && message) {
-            this.showToast(message);
-        }
-    }
-
-    clearFeedbackStatus() {
-        if (!this.elements.feedbackStatus) return;
-        this.elements.feedbackStatus.textContent = '';
-        this.elements.feedbackStatus.classList.remove('error');
-    }
-
-    async _copyHeadlineCore(triggerButton = this.elements.copyButton) {
-        const headlineText = this.elements.headline.innerText;
-
-        if (!headlineText) {
-            this.reportCopyStatus('No headline available to copy.', true);
-            return;
-        }
-
-        await copyTextWithFeedback({
-            text: headlineText,
-            button: triggerButton,
-            successMessage: 'Headline copied to clipboard!',
-            onStatus: (message, isError) => {
-                this.reportCopyStatus(message, isError);
-                if (!isError) {
-                    triggerHapticFeedback('success');
-                    this.flashCopiedButtonLabel(triggerButton);
-                    this.trackGrowthEvent('copy_success', { source: triggerButton?.id || 'copy-button' });
-                }
-            },
-            setButtonLoading
-        });
-    }
-
-    async copyAgentSnippet() {
-        const snippet = [
-            "const state = await window.Neckass.agent.call('get_state');",
-            "const next = await window.Neckass.agent.call('shuffle');",
-            "const generated = await window.Neckass.agent.call('generate');"
-        ].join('\n');
-
-        await copyTextWithFeedback({
-            text: snippet,
-            button: this.elements.copyAgentSnippetButton,
-            successMessage: 'Agent snippet copied.',
-            onStatus: (message, isError) => {
-                this.reportAutomationStatus(message, isError);
-                if (!isError) {
-                    this.trackGrowthEvent('agent_snippet_copy', { source: 'automation_card' });
-                }
-            },
-            setButtonLoading
-        });
-    }
-
-    async copyMetricsSnapshot() {
-        if (!this.metrics) {
-            this.reportMetricsStatus('Metrics unavailable in this browser.', true);
-            return;
-        }
-
-        const payload = JSON.stringify(
-            this.metrics.exportSnapshot({
-                currentHeadline: this.headlines[this.state.currentIndex] || null,
-                viewedCount: this.state.uniqueHeadlines.size
-            }),
-            null,
-            2
-        );
-
-        await copyTextWithFeedback({
-            text: payload,
-            button: this.elements.exportMetricsButton,
-            successMessage: 'Metrics snapshot copied.',
-            onStatus: (message, isError) => {
-                this.reportMetricsStatus(message, isError);
-                if (!isError) {
-                    this.trackGrowthEvent('metrics_export', { source: 'metrics_card' });
-                }
-            },
-            setButtonLoading
-        });
-    }
-
-    reportAutomationStatus(message, isError = false) {
-        if (!this.elements.automationStatus) return;
-        this.elements.automationStatus.textContent = message;
-        this.elements.automationStatus.classList.toggle('error', isError);
-        if (!isError && message) {
-            this.showToast(message);
-        }
-    }
-
-    reportMetricsStatus(message, isError = false) {
-        if (!this.elements.metricsStatus) return;
-        this.elements.metricsStatus.textContent = message;
-        this.elements.metricsStatus.classList.toggle('error', isError);
-        if (!isError && message) {
-            this.showToast(message);
-        }
-    }
-
-    trackGrowthEvent(eventName, details = {}) {
-        if (!this.metrics) return;
-        this.metrics.track(eventName, details);
-        this.updateMetricsSummary();
-    }
-
-    updateMetricsSummary() {
-        if (!this.metrics || !this.elements.metricsSummary) return;
-        const summary = this.metrics.getSummary();
-        this.elements.metricsSummary.textContent = `Sessions: ${summary.sessions} · Shuffles: ${summary.shuffles} · Share actions: ${summary.shares}`;
-    }
-
-    reportCopyStatus(message, isError = false) {
-        if (!this.elements.copyStatus) return;
-        this.elements.copyStatus.textContent = message;
-        this.elements.copyStatus.classList.toggle('error', isError);
-        if (isError && message) {
-            triggerHapticFeedback('error');
-        }
-        if (!isError && message) {
-            this.showToast(message);
-        }
-    }
-
-    flashCopiedButtonLabel(button) {
-        if (!button || button.dataset.copyLabelTimeout === 'active') return;
-
-        const label = button.querySelector('span:last-child') || button.querySelector('span');
-        const originalLabel = label ? label.textContent : button.textContent;
-        button.dataset.copyLabelTimeout = 'active';
-
-        if (label) {
-            label.textContent = 'Copied';
-        } else {
-            button.textContent = 'Copied';
-        }
-
-        window.setTimeout(() => {
-            if (label) {
-                label.textContent = originalLabel;
-            } else {
-                button.textContent = originalLabel;
+            if (!generatorAvailable) {
+                this.reportCopyStatus(
+                    'Tiny model is unavailable in this session.',
+                    true,
+                );
+                return;
             }
-            delete button.dataset.copyLabelTimeout;
-        }, 1400);
-    }
 
-    clearCopyStatus() {
-        if (!this.elements.copyStatus) return;
-        this.elements.copyStatus.textContent = '';
-        this.elements.copyStatus.classList.remove('error');
-    }
+            this.toggleLoader(
+                true,
+                'Generating headline with the tiny model...',
+            );
+            const generatedIndex = await this.generateHeadlineWithFallback();
 
-    reportShareStatus(message, isError = false) {
-        if (!this.elements.shareStatus) return;
-        this.elements.shareStatus.textContent = message;
-        this.elements.shareStatus.classList.toggle('error', isError);
-        if (isError && message) {
-            triggerHapticFeedback('error');
+            if (generatedIndex === null) {
+                this.toggleLoader(true, 'Falling back to stored headlines...');
+                const fallbackIndex = this.getRandomIndex();
+                if (fallbackIndex === null) {
+                    this._renderEmptyStateCore();
+                    return;
+                }
+                this.trackGrowthEvent('generate_fallback', {
+                    reason: 'generation-unavailable',
+                });
+                this.renderHeadline(fallbackIndex);
+                return;
+            }
+
+            if (!this.isIndexEligible(generatedIndex)) {
+                const fallbackIndex = this.getRandomIndex();
+                if (fallbackIndex === null) {
+                    this._renderEmptyStateCore();
+                    return;
+                }
+                this.trackGrowthEvent('generate_fallback', {
+                    reason: 'generated-ineligible',
+                });
+                this.renderHeadline(fallbackIndex);
+                return;
+            }
+
+            this.trackGrowthEvent('generate_success', { source: 'tiny-llm' });
+            this.renderHeadline(generatedIndex);
         }
-        if (!isError && message) {
+
+        async generateHeadlineWithFallback() {
+            try {
+                const result = await window.tinyLlmClient.generateHeadline({
+                    section: this.filters.section,
+                    source:
+                        this.filters.source === 'curated'
+                            ? 'any'
+                            : this.filters.source,
+                    query: this.filters.query,
+                    exclude: this.state.navigationStack
+                        .map((index) => this.headlines[index])
+                        .filter(Boolean)
+                        .slice(-10),
+                });
+                const diagnostics =
+                    typeof window.tinyLlmClient?.getLastDiagnostics ===
+                    'function'
+                        ? window.tinyLlmClient.getLastDiagnostics()
+                        : null;
+                if (diagnostics?.backend) {
+                    this.trackGrowthEvent('generate_backend', {
+                        backend: diagnostics.backend,
+                        timeoutMs: diagnostics.timeoutMs || 0,
+                        warm: diagnostics.warm === true,
+                    });
+                }
+                const headlineText =
+                    typeof result === 'string' ? result : result?.headline;
+                return this.registerGeneratedHeadline(headlineText);
+            } catch {
+                const diagnostics =
+                    typeof window.tinyLlmClient?.getLastDiagnostics ===
+                    'function'
+                        ? window.tinyLlmClient.getLastDiagnostics()
+                        : null;
+                if (diagnostics?.backend) {
+                    this.trackGrowthEvent('generate_backend_fallback', {
+                        backend: diagnostics.backend,
+                        timeoutMs: diagnostics.timeoutMs || 0,
+                        reason: diagnostics.fallback || 'generation-error',
+                    });
+                }
+                this.updateLoaderMessage(
+                    'Generation unavailable, using saved headlines.',
+                );
+                return null;
+            }
+        }
+
+        registerGeneratedHeadline(headlineText) {
+            const normalized = this.normalizeGeneratedHeadline(headlineText);
+            if (!normalized) {
+                throw new Error('No headline text returned');
+            }
+
+            if (this.headlineCache.has(normalized)) {
+                return this.headlineCache.get(normalized);
+            }
+
+            const newIndex = this.headlines.length;
+            this.headlines.push(normalized);
+            this.headlineCache.set(normalized, newIndex);
+            this.state.generatedHeadlines = Array.isArray(
+                this.state.generatedHeadlines,
+            )
+                ? this.state.generatedHeadlines
+                : [];
+            this.state.generatedHeadlines.push(normalized);
+            this.persistState();
+            this.refreshFilteredIndexes();
+            return newIndex;
+        }
+
+        _renderHeadlineCore(
+            index,
+            options = { pushToStack: true, replaceState: false },
+        ) {
+            if (!isValidHeadlineIndex(index, this.headlines.length)) {
+                this._renderEmptyStateCore();
+                return;
+            }
+
+            this.clearCopyStatus();
+            this.clearShareStatus();
+            this.clearFeedbackStatus();
+            const loaderMessage =
+                this.elements.loaderText?.textContent ||
+                this.elements.loader.textContent ||
+                'Loading headline...';
+            const previousIndex = this.state.currentIndex;
+            const shouldIncrementStreak = this.shouldIncrementStreak;
+            this.shouldIncrementStreak = false;
+            this.toggleLoader(true, loaderMessage);
+            this.elements.headline.classList.remove('show');
+
+            scheduleBackgroundTask(() => {
+                const headlineText = this.headlines[index];
+                runViewTransition(() => {
+                    this.elements.headline.textContent = headlineText;
+                    this.elements.headline.style.color = selectReadableColor();
+                    this.elements.headline.classList.add('show');
+                });
+                this.toggleLoader(false);
+                this.updateMockDate();
+
+                this.updateViewedState(index, options);
+                this.updateShuffleStreak(
+                    shouldIncrementStreak && previousIndex !== index,
+                );
+                this.updateHeadlineBadges(index);
+                this.updateFavoriteButton();
+                updateHeadMetadata({
+                    headline: headlineText,
+                    index,
+                    headlinesLength: this.headlines.length,
+                    isValidHeadlineIndex,
+                    getCanonicalUrl: (targetIndex) =>
+                        this.getCanonicalUrl(targetIndex),
+                });
+                updateSocialShareLinks(
+                    this.elements,
+                    headlineText,
+                    this.getCanonicalUrl(index),
+                );
+                this.updateMockHeadline(headlineText);
+                this.persistState();
+                this.pushHistoryState(index, { replace: options.replaceState });
+                this.updateHistoryList();
+            });
+        }
+
+        _renderInitialHeadlineCore() {
+            if (
+                this.state.navigationStack.length > 0 &&
+                isValidHeadlineIndex(
+                    this.state.currentIndex,
+                    this.headlines.length,
+                ) &&
+                this.isIndexEligible(this.state.currentIndex)
+            ) {
+                this.renderHeadline(this.state.currentIndex, {
+                    pushToStack: false,
+                    replaceState: true,
+                });
+                return;
+            }
+
+            if (this.filteredIndexes.length > 0) {
+                const nextIndex = this.filteredIndexes[0];
+                this.state.navigationStack = [nextIndex];
+                this.state.currentIndex = nextIndex;
+                this.renderHeadline(nextIndex, {
+                    pushToStack: false,
+                    replaceState: true,
+                });
+                return;
+            }
+
+            this._renderEmptyStateCore();
+        }
+
+        _renderEmptyStateCore() {
+            const hasFilters = hasActiveFilters(this.filters);
+            this.elements.headline.textContent = hasFilters
+                ? 'No headlines match your current filters.'
+                : 'No headlines available.';
+            this.elements.headline.style.color = '';
+            this.clearCopyStatus();
+            updateHeadMetadata({
+                headline: '',
+                index: -1,
+                headlinesLength: this.headlines.length,
+                isValidHeadlineIndex,
+                getCanonicalUrl: (targetIndex) =>
+                    this.getCanonicalUrl(targetIndex),
+            });
+            updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
+            this.updateMockHeadline('No headlines available.');
+            this.updateHeadlineBadges(null);
+            this.updateFavoriteButton();
+            this.updateHistoryList();
+            this.toggleLoader(false, 'No headlines available.');
+            this.state.isLoading = false;
+            this.state.navigationStack = [];
+            this.state.currentIndex = -1;
+            this.elements.nextButton.disabled = true;
+            this.setNextButtonLabel(
+                hasFilters ? 'Try a different filter' : 'Shuffle',
+            );
+            this.updateShuffleStreak(false);
+            if (this.elements.clearFiltersButton) {
+                this.elements.clearFiltersButton.hidden = !hasFilters;
+                this.elements.clearFiltersButton.disabled = !hasFilters;
+            }
+            this.updateNavigationAvailability();
+        }
+
+        updateViewedState(index, options = { pushToStack: true }) {
+            if (options.pushToStack && index !== this.state.currentIndex) {
+                this.state.navigationStack.push(index);
+            }
+
+            this.state.uniqueHeadlines.add(index);
+            this.state.currentIndex = index;
+
+            this.persistState();
+            this.updateHeadlineCounter();
+            this.updateNavigationAvailability();
+        }
+
+        updateHeadlineCounter() {
+            this.elements.counter.textContent = this.state.uniqueHeadlines.size;
+        }
+
+        normalizeDailyEngagement(rawEngagement) {
+            const parsed =
+                rawEngagement && typeof rawEngagement === 'object'
+                    ? rawEngagement
+                    : {};
+            const streakDays =
+                Number.isInteger(parsed.streakDays) && parsed.streakDays > 0
+                    ? parsed.streakDays
+                    : 0;
+            const visitsThisDate =
+                Number.isInteger(parsed.visitsThisDate) &&
+                parsed.visitsThisDate > 0
+                    ? parsed.visitsThisDate
+                    : 0;
+            const maxStreakDays =
+                Number.isInteger(parsed.maxStreakDays) &&
+                parsed.maxStreakDays > 0
+                    ? parsed.maxStreakDays
+                    : streakDays;
+
+            return {
+                lastVisitDate:
+                    typeof parsed.lastVisitDate === 'string'
+                        ? parsed.lastVisitDate
+                        : '',
+                streakDays,
+                visitsThisDate,
+                maxStreakDays,
+            };
+        }
+
+        getDateKey(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        getDayDifference(previousDateKey, currentDateKey) {
+            const toDate = (key) => {
+                const [year, month, day] = key.split('-').map(Number);
+                return new Date(year, (month || 1) - 1, day || 1);
+            };
+
+            const previous = toDate(previousDateKey);
+            const current = toDate(currentDateKey);
+            if (
+                Number.isNaN(previous.getTime()) ||
+                Number.isNaN(current.getTime())
+            ) {
+                return Number.NaN;
+            }
+
+            const msPerDay = 24 * 60 * 60 * 1000;
+            return Math.round((current - previous) / msPerDay);
+        }
+
+        refreshDailyEngagement() {
+            const todayKey = this.getDateKey();
+            const engagement = this.normalizeDailyEngagement(
+                this.dailyEngagement,
+            );
+            const previousKey = engagement.lastVisitDate;
+
+            this.dailyVisitMeta = {
+                isReturnVisitToday: previousKey === todayKey,
+                advancedStreakToday: false,
+            };
+
+            if (!previousKey) {
+                engagement.streakDays = 1;
+                engagement.visitsThisDate = 1;
+            } else if (previousKey === todayKey) {
+                engagement.visitsThisDate += 1;
+            } else {
+                const dayDifference = this.getDayDifference(
+                    previousKey,
+                    todayKey,
+                );
+                engagement.streakDays =
+                    dayDifference === 1 ? engagement.streakDays + 1 : 1;
+                engagement.visitsThisDate = 1;
+                this.dailyVisitMeta.advancedStreakToday = dayDifference === 1;
+            }
+
+            engagement.lastVisitDate = todayKey;
+            engagement.maxStreakDays = Math.max(
+                engagement.maxStreakDays || 0,
+                engagement.streakDays,
+            );
+
+            this.dailyEngagement = engagement;
+            this.state.dailyEngagement = engagement;
+            this.persistState();
+            this.maybeCelebrateDailyMilestone();
+        }
+
+        renderDailyStreak() {
+            if (!this.elements.dailyStreak) return;
+
+            const streakDays = this.dailyEngagement.streakDays || 1;
+            const visitsToday = this.dailyEngagement.visitsThisDate || 1;
+            const dayLabel = streakDays === 1 ? 'day' : 'days';
+            let suffix = 'Back tomorrow.';
+
+            if (this.dailyVisitMeta.advancedStreakToday && streakDays >= 2) {
+                suffix =
+                    streakDays >= 7
+                        ? 'Week streak active.'
+                        : 'Streak extended.';
+            } else if (
+                this.dailyVisitMeta.isReturnVisitToday &&
+                visitsToday > 1
+            ) {
+                suffix = `Visit ${visitsToday} today.`;
+            }
+
+            this.elements.dailyStreak.textContent = `Daily streak: ${streakDays} ${dayLabel} · ${suffix}`;
+        }
+
+        maybeCelebrateDailyMilestone() {
+            if (!this.dailyVisitMeta.advancedStreakToday) {
+                return;
+            }
+
+            const milestoneMessages = {
+                3: 'Daily streak 3: habit formed.',
+                7: 'Daily streak 7: full week.',
+                14: 'Daily streak 14: streak pro.',
+            };
+
+            const message = milestoneMessages[this.dailyEngagement.streakDays];
+            if (message) {
+                this.showToast(message);
+            }
+        }
+
+        renderShuffleStreak() {
+            if (!this.elements.shuffleStreak) return;
+            if (this.shuffleStreak <= 0) {
+                this.elements.shuffleStreak.textContent =
+                    'Shuffle streak: 0 · Shuffle to begin.';
+                this.renderShuffleBadges();
+                return;
+            }
+
+            const nextMilestone =
+                STREAK_MILESTONES.find(
+                    (milestone) => milestone > this.shuffleStreak,
+                ) || null;
+            const suffix =
+                this.shuffleStreak >= 8
+                    ? 'Headline mode.'
+                    : this.shuffleStreak >= 5
+                      ? 'Strong run.'
+                      : 'Nice pace.';
+            const nextMilestoneText = nextMilestone
+                ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
+                : 'Top badge unlocked.';
+            this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
+            this.renderShuffleBadges(nextMilestone);
+        }
+
+        renderShuffleBadges(nextMilestone = STREAK_MILESTONES[0]) {
+            if (!this.elements.streakBadges) {
+                return;
+            }
+
+            const badgeItems = Array.from(
+                this.elements.streakBadges.querySelectorAll('[data-milestone]'),
+            );
+            badgeItems.forEach((badge) => {
+                const milestone = Number.parseInt(
+                    badge.dataset.milestone || '',
+                    10,
+                );
+                if (!Number.isFinite(milestone)) {
+                    return;
+                }
+
+                const isEarned = this.shuffleStreak >= milestone;
+                const isNext = !isEarned && milestone === nextMilestone;
+                const remaining = Math.max(milestone - this.shuffleStreak, 0);
+                const label =
+                    SHUFFLE_BADGE_LABELS[milestone] || `Badge ${milestone}`;
+                const statusText = isEarned
+                    ? `${label} badge unlocked at ${milestone} shuffles.`
+                    : `${remaining} shuffles to unlock ${label} badge at ${milestone}.`;
+
+                badge.classList.toggle('is-earned', isEarned);
+                badge.classList.toggle('is-next', isNext);
+                badge.setAttribute('aria-label', statusText);
+                badge.setAttribute('title', statusText);
+            });
+        }
+
+        updateShuffleStreak(shouldIncrement) {
+            this.shuffleStreak = shouldIncrement ? this.shuffleStreak + 1 : 0;
+            this.renderShuffleStreak();
+            this.updateNextButtonLabel();
+            if (shouldIncrement) {
+                this.handleShuffleMilestone();
+            } else {
+                this.clearCelebration();
+            }
+        }
+
+        handleShuffleMilestone() {
+            const messages = {
+                3: 'Shuffle streak 3: smooth run.',
+                5: 'Shuffle streak 5: momentum unlocked.',
+                8: 'Shuffle streak 8: headline mode.',
+            };
+            const message = messages[this.shuffleStreak];
+            if (!message) {
+                return;
+            }
+
             this.showToast(message);
+            this.triggerCelebration();
         }
-    }
 
-    clearShareStatus() {
-        if (!this.elements.shareStatus) return;
-        this.elements.shareStatus.textContent = '';
-        this.elements.shareStatus.classList.remove('error');
-    }
+        clearCelebration() {
+            if (this.celebrationTimer) {
+                window.clearTimeout(this.celebrationTimer);
+                this.celebrationTimer = null;
+            }
+            this.elements.headlineSection?.classList.remove('is-celebrating');
+        }
 
-    toggleLoader(shouldShow, message = null) {
-        if (message && this.elements.loaderText) {
-            this.elements.loaderText.textContent = message;
-        } else if (message && this.elements.loader) {
+        triggerCelebration() {
+            this.clearCelebration();
+            this.elements.headlineSection?.classList.add('is-celebrating');
+            this.celebrationTimer = window.setTimeout(() => {
+                this.elements.headlineSection?.classList.remove(
+                    'is-celebrating',
+                );
+                this.celebrationTimer = null;
+            }, 900);
+        }
+
+        updateNavigationAvailability() {
+            const hasEligible =
+                this.filteredIndexes.length > 0 ||
+                this.filters.source === 'generated';
+            this.elements.previousButton.disabled =
+                this.state.isLoading || this.state.navigationStack.length <= 1;
+            this.elements.nextButton.disabled =
+                this.state.isLoading || !hasEligible;
+            this.updateNextButtonLabel();
+        }
+
+        setNextButtonLabel(label) {
+            if (!this.elements.nextButton) {
+                return;
+            }
+
+            const labelElement =
+                this.elements.nextButton.querySelector('.button-label') ||
+                this.elements.nextButton.querySelector('span');
+            if (labelElement) {
+                labelElement.textContent = label;
+                return;
+            }
+
+            this.elements.nextButton.textContent = label;
+        }
+
+        updateNextButtonLabel() {
+            if (!this.elements.nextButton || this.state.isLoading) {
+                return;
+            }
+            this.setNextButtonLabel(
+                this.shuffleStreak > 0
+                    ? `Keep streak · ${this.shuffleStreak}`
+                    : 'Shuffle',
+            );
+        }
+
+        setSectionFilter(section) {
+            this.updateFilterValue('section', section || 'latest', {
+                resetNavigation: true,
+                refreshIndexes: true,
+                ensureHeadline: true,
+                syncControls: true,
+            });
+        }
+
+        setSourceFilter(source) {
+            if (source === 'generated' && !this.isGeneratorAvailable()) {
+                this.reportCopyStatus(
+                    'Tiny model unavailable. Source set to auto.',
+                    true,
+                );
+                this.updateFilterValue('source', 'auto', {
+                    resetNavigation: true,
+                    refreshIndexes: true,
+                    ensureHeadline: true,
+                    syncControls: true,
+                });
+                return;
+            }
+            this.updateFilterValue('source', source || 'auto', {
+                resetNavigation: true,
+                refreshIndexes: true,
+                ensureHeadline: true,
+                syncControls: true,
+            });
+        }
+
+        setActivePanel(panel) {
+            this.updateFilterValue('panel', panel || 'recent', {
+                syncControls: true,
+                updateHistoryList: true,
+                updateHistoryState: true,
+            });
+        }
+
+        setMockLayout(layout) {
+            this.updateFilterValue('layout', layout || 'standard', {
+                applyLayout: true,
+                syncControls: true,
+                updateHistoryState: true,
+            });
+        }
+
+        applyMockLayoutClass() {
+            if (!this.elements.mockFrame) return;
+            this.elements.mockFrame.classList.remove(
+                'mock-front--square',
+                'mock-front--story',
+            );
+            if (this.filters.layout === 'square') {
+                this.elements.mockFrame.classList.add('mock-front--square');
+            }
+            if (this.filters.layout === 'story') {
+                this.elements.mockFrame.classList.add('mock-front--story');
+            }
+            updateLayoutButtons(
+                this.elements.layoutButtons,
+                this.filters.layout,
+            );
+        }
+
+        applySearch() {
+            const query = this.elements.searchInput?.value ?? '';
+            this.updateFilterValue('query', query.trim(), {
+                resetNavigation: true,
+                refreshIndexes: true,
+                ensureHeadline: true,
+                syncControls: true,
+                updateStatusOnNoChange: true,
+            });
+        }
+
+        clearSearch() {
+            if (this.elements.searchInput) {
+                this.elements.searchInput.value = '';
+            }
+            this.updateFilterValue('query', '', {
+                resetNavigation: true,
+                refreshIndexes: true,
+                ensureHeadline: true,
+                syncControls: true,
+                updateStatusOnNoChange: true,
+            });
+        }
+
+        resetNavigationForFilters() {
+            const currentIndex = isValidHeadlineIndex(
+                this.state.currentIndex,
+                this.headlines.length,
+            )
+                ? this.state.currentIndex
+                : null;
+            this.state.navigationStack =
+                currentIndex !== null ? [currentIndex] : [];
+        }
+
+        ensureHeadlineMatchesFilters() {
+            if (this.filteredIndexes.length === 0) {
+                this._renderEmptyStateCore();
+                this.pushHistoryState(-1, { replace: false });
+                return;
+            }
+
+            if (!this.isIndexEligible(this.state.currentIndex)) {
+                const nextIndex = this.filteredIndexes[0];
+                this.state.navigationStack = [nextIndex];
+                this.state.currentIndex = nextIndex;
+                this.renderHeadline(nextIndex, {
+                    pushToStack: false,
+                    replaceState: true,
+                });
+                return;
+            }
+
+            this.pushHistoryState(this.state.currentIndex, { replace: false });
+            this.updateHistoryList();
+        }
+
+        refreshFilteredIndexes() {
+            this.filteredIndexes = getEligibleIndexes({
+                headlines: this.headlines,
+                baseHeadlineCount: this.baseHeadlineCount,
+                filters: this.filters,
+                isValidHeadlineIndex,
+            });
+            this.updateFilterStatus();
+            this.updateNavigationAvailability();
+            this.updateHistoryList();
+        }
+
+        isIndexEligible(index) {
+            return isIndexEligible(index, {
+                headlines: this.headlines,
+                baseHeadlineCount: this.baseHeadlineCount,
+                filters: this.filters,
+                isValidHeadlineIndex,
+            });
+        }
+
+        _selectHeadlineCore(index) {
+            if (!this.isIndexEligible(index)) return;
+            this.state.currentIndex = index;
+            this.shouldIncrementStreak = false;
+            if (
+                this.state.navigationStack[
+                    this.state.navigationStack.length - 1
+                ] !== index
+            ) {
+                this.state.navigationStack.push(index);
+            }
+            this.renderHeadline(index, {
+                pushToStack: false,
+                replaceState: false,
+            });
+        }
+
+        updateHeadlineBadges(index) {
+            if (this.elements.headlineSource) {
+                const label =
+                    index === null ||
+                    !isValidHeadlineIndex(index, this.headlines.length)
+                        ? 'Source: unavailable'
+                        : index >= this.baseHeadlineCount
+                          ? 'Source: generated'
+                          : 'Source: curated';
+                this.elements.headlineSource.textContent = label;
+            }
+            if (this.elements.headlineSectionBadge) {
+                const label =
+                    index === null ||
+                    !isValidHeadlineIndex(index, this.headlines.length)
+                        ? 'Section: latest'
+                        : `Section: ${classifyHeadline(this.headlines[index])}`;
+                this.elements.headlineSectionBadge.textContent = label;
+            }
+        }
+
+        updateFilterStatus() {
+            renderFilterStatus({
+                elements: this.elements,
+                filters: this.filters,
+                hasActiveFilters,
+            });
+        }
+
+        updateFavoriteButton() {
+            if (!this.elements.favoriteButton) return;
+            const headlineText = this.headlines[this.state.currentIndex];
+            const isFavorite = Boolean(
+                headlineText && this.favoriteHeadlines.has(headlineText),
+            );
+            this.elements.favoriteButton.setAttribute(
+                'aria-pressed',
+                String(isFavorite),
+            );
+            this.elements.favoriteButton.querySelector(
+                '.button-label',
+            ).textContent = isFavorite
+                ? 'Saved to favorites'
+                : 'Save to favorites';
+        }
+
+        toggleFavorite() {
+            const headlineText = this.headlines[this.state.currentIndex];
+            if (!headlineText) return;
+            if (this.favoriteHeadlines.has(headlineText)) {
+                this.favoriteHeadlines.delete(headlineText);
+                this.reportCopyStatus('Removed from favorites.');
+            } else {
+                this.favoriteHeadlines.add(headlineText);
+                this.reportCopyStatus('Saved to favorites.');
+            }
+            triggerHapticFeedback('light');
+            this.persistState();
+            this.updateFavoriteButton();
+            this.updateHistoryList();
+        }
+
+        updateHistoryList() {
+            renderHistoryList({
+                elements: this.elements,
+                panel: this.filters.panel,
+                isIndexEligible: (index) => this.isIndexEligible(index),
+                favoriteHeadlines: this.favoriteHeadlines,
+                headlineCache: this.headlineCache,
+                headlines: this.headlines,
+                baseHeadlineCount: this.baseHeadlineCount,
+                navigationStack: this.state.navigationStack,
+                currentIndex: this.state.currentIndex,
+            });
+        }
+
+        syncFilterControls() {
+            if (this.elements.searchInput) {
+                this.elements.searchInput.value = this.filters.query;
+            }
+            updateToggleButtons(
+                this.elements.sectionButtons,
+                this.filters.section,
+                'section',
+            );
+            updateToggleButtons(
+                this.elements.sourceButtons,
+                this.filters.source,
+                'source',
+            );
+            updateToggleButtons(
+                this.elements.panelButtons,
+                this.filters.panel,
+                'panel',
+            );
+            updateLayoutButtons(
+                this.elements.layoutButtons,
+                this.filters.layout,
+            );
+            this.syncGeneratorControls();
+            this.updateFilterStatus();
+        }
+
+        clearAllFilters() {
+            const nextFilters = { ...DEFAULT_FILTERS };
+            const shouldReset = Object.keys(nextFilters).some(
+                (key) => nextFilters[key] !== this.filters[key],
+            );
+            if (!shouldReset) {
+                this.updateFilterStatus();
+                this.pushHistoryState(this.state.currentIndex, {
+                    replace: true,
+                });
+                this.showToast('Filters already clear.');
+                return;
+            }
+
+            this.filters = nextFilters;
+            if (this.elements.searchInput) {
+                this.elements.searchInput.value = '';
+            }
+            this.persistState();
+            this.syncFilterControls();
+            this.refreshFilteredIndexes();
+            this.applyMockLayoutClass();
+
+            if (this.filteredIndexes.length === 0) {
+                this._renderEmptyStateCore();
+                this.pushHistoryState(-1, { replace: true });
+                return;
+            }
+
+            const nextIndex = this.filteredIndexes[0];
+            this.state.navigationStack = [nextIndex];
+            this.state.currentIndex = nextIndex;
+            triggerHapticFeedback('light');
+            this.renderHeadline(nextIndex, {
+                pushToStack: false,
+                replaceState: true,
+            });
+            this.showToast('Filters cleared.');
+        }
+
+        updateFilterValue(filterKey, value, options = {}) {
+            const {
+                resetNavigation = false,
+                refreshIndexes = false,
+                ensureHeadline = false,
+                syncControls = false,
+                updateHistoryList: shouldUpdateHistoryList = false,
+                updateHistoryState: shouldUpdateHistoryState = false,
+                applyLayout = false,
+                updateStatusOnNoChange = false,
+            } = options;
+
+            if (this.filters[filterKey] === value) {
+                if (updateStatusOnNoChange) {
+                    this.updateFilterStatus();
+                }
+                return;
+            }
+
+            this.filters[filterKey] = value;
+            if (resetNavigation) {
+                this.resetNavigationForFilters();
+            }
+            this.persistState();
+            if (syncControls) {
+                this.syncFilterControls();
+            }
+            if (refreshIndexes) {
+                this.refreshFilteredIndexes();
+            }
+            if (applyLayout) {
+                this.applyMockLayoutClass();
+            }
+            if (ensureHeadline) {
+                this.ensureHeadlineMatchesFilters();
+            }
+            if (shouldUpdateHistoryList) {
+                this.updateHistoryList();
+            }
+            if (shouldUpdateHistoryState) {
+                this.pushHistoryState(this.state.currentIndex, {
+                    replace: false,
+                });
+            }
+        }
+
+        async _shareHeadlineCore(
+            triggerButton = this.elements.nativeShareButton,
+        ) {
+            const headline = this.headlines[this.state.currentIndex];
+            const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
+
+            if (!headline || !canonicalUrl) {
+                this.reportShareStatus('No headline available to share.', true);
+                return;
+            }
+
+            if (!navigator.share || typeof navigator.share !== 'function') {
+                this.reportShareStatus(
+                    'Native sharing unavailable in this browser.',
+                    true,
+                );
+                return;
+            }
+
+            const payload = {
+                title: 'Neckass Headlines',
+                text: headline,
+                url: canonicalUrl,
+            };
+
+            if (
+                navigator.canShare &&
+                typeof navigator.canShare === 'function'
+            ) {
+                try {
+                    if (!navigator.canShare(payload)) {
+                        this.reportShareStatus(
+                            'Native sharing unavailable in this browser.',
+                            true,
+                        );
+                        return;
+                    }
+                } catch {
+                    this.reportShareStatus(
+                        'Native sharing unavailable in this browser.',
+                        true,
+                    );
+                    return;
+                }
+            }
+
+            setButtonLoading(triggerButton, true);
+            try {
+                await navigator.share(payload);
+                this.reportShareStatus('Shared successfully.', false);
+                triggerHapticFeedback('success');
+                this.trackGrowthEvent('share_success', { channel: 'native' });
+            } catch (error) {
+                if (error && error.name === 'AbortError') {
+                    this.reportShareStatus('Share canceled.', false);
+                } else {
+                    this.reportShareStatus(
+                        'Share failed. Please try again.',
+                        true,
+                    );
+                }
+            } finally {
+                setButtonLoading(triggerButton, false);
+            }
+        }
+
+        async _copyHeadlineLinkCore() {
+            const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
+            if (!canonicalUrl) {
+                this.reportCopyStatus('No headline link available.', true);
+                return;
+            }
+            await copyTextWithFeedback({
+                text: canonicalUrl,
+                button: this.elements.copyLinkButton,
+                successMessage: 'Headline link copied!',
+                onStatus: (message, isError) => {
+                    this.reportCopyStatus(message, isError);
+                    if (!isError) {
+                        this.trackGrowthEvent('copy_link_success', {
+                            source: 'copy-link',
+                        });
+                    }
+                },
+                setButtonLoading,
+            });
+        }
+
+        async _handleQuickShareCore() {
+            const canUseNativeShare =
+                navigator.share && typeof navigator.share === 'function';
+            if (!canUseNativeShare) {
+                this.jumpToCard('share');
+                this.reportShareStatus(
+                    'Native sharing unavailable in this browser.',
+                    true,
+                );
+                return;
+            }
+
+            await this.shareHeadline(
+                this.elements.jumpShareButton ||
+                    this.elements.nativeShareButton,
+            );
+        }
+
+        async _handleQuickExportCore() {
+            if (!window.htmlToImage) {
+                this.jumpToCard('export');
+                this.reportExportStatus(
+                    'Export unavailable. Reload, then try Download mock front page.',
+                    true,
+                );
+                return;
+            }
+
+            await this.handleMockExport('download');
+        }
+
+        _handleDirectionalNavigationCore(event) {
+            if (event.defaultPrevented) return;
+
+            const target = event.target;
+            if (target) {
+                const tag = target.tagName?.toLowerCase();
+                const isEditable = target.isContentEditable;
+                if (
+                    isEditable ||
+                    ['input', 'textarea', 'select', 'button'].includes(tag)
+                ) {
+                    return;
+                }
+            }
+
+            const forwardKeys = ['ArrowRight', 'ArrowDown'];
+            const backwardKeys = ['ArrowLeft', 'ArrowUp'];
+
+            if (forwardKeys.includes(event.key)) {
+                event.preventDefault();
+                this.handleNext().catch(() => {
+                    this.toggleLoader(false);
+                });
+            } else if (backwardKeys.includes(event.key)) {
+                event.preventDefault();
+                this._handlePreviousCore();
+            }
+        }
+
+        applyUrlState() {
+            const urlState = getUrlState();
+            this.filters = this.getFiltersFromUrl(urlState);
+            if (
+                this.filters.source === 'generated' &&
+                !this.isGeneratorAvailable()
+            ) {
+                this.filters.source = 'auto';
+            }
+            this.persistState();
+            this.syncFilterControls();
+            this.refreshFilteredIndexes();
+            this.applyMockLayoutClass();
+
+            const index = this.identifierToIndex(urlState.headline);
+            const eligibleIndex =
+                isValidHeadlineIndex(index, this.headlines.length) &&
+                this.isIndexEligible(index)
+                    ? index
+                    : null;
+            const fallbackIndex =
+                eligibleIndex ?? this.filteredIndexes[0] ?? null;
+
+            if (fallbackIndex !== null) {
+                this.state.navigationStack = [fallbackIndex];
+                this.state.uniqueHeadlines.add(fallbackIndex);
+                this.state.currentIndex = fallbackIndex;
+                this.persistState();
+                this.updateHeadlineCounter();
+                this.updateNavigationAvailability();
+                this.pushHistoryState(fallbackIndex, { replace: true });
+            } else if (index !== null || urlState.hasHeadlineParam) {
+                this.pushHistoryState(-1, { replace: true });
+            }
+        }
+
+        _handlePopStateCore(event) {
+            const state = event.state || {};
+            const urlState = getUrlState();
+            const urlIndex = this.identifierToIndex(urlState.headline);
+            const stateIndex = this.identifierToIndex(state.headlineIndex);
+            this.filters = this.getFiltersFromUrl(urlState);
+            this.syncFilterControls();
+            this.refreshFilteredIndexes();
+            this.applyMockLayoutClass();
+
+            const targetIndex = isValidHeadlineIndex(
+                stateIndex,
+                this.headlines.length,
+            )
+                ? stateIndex
+                : isValidHeadlineIndex(urlIndex, this.headlines.length)
+                  ? urlIndex
+                  : null;
+
+            const eligibleTarget =
+                targetIndex !== null && this.isIndexEligible(targetIndex)
+                    ? targetIndex
+                    : (this.filteredIndexes[0] ?? null);
+
+            const restoredStack = Array.isArray(state.navigationStack)
+                ? state.navigationStack.filter((idx) =>
+                      isValidHeadlineIndex(idx, this.headlines.length),
+                  )
+                : [];
+            const restoredUnique = Array.isArray(state.uniqueHeadlines)
+                ? state.uniqueHeadlines.filter((idx) =>
+                      isValidHeadlineIndex(idx, this.headlines.length),
+                  )
+                : [];
+
+            if (eligibleTarget === null) {
+                this._renderEmptyStateCore();
+                return;
+            }
+
+            const filteredStack = restoredStack.filter((idx) =>
+                this.isIndexEligible(idx),
+            );
+            this.state.navigationStack =
+                filteredStack.length > 0 ? filteredStack : [eligibleTarget];
+            if (!this.state.navigationStack.includes(eligibleTarget)) {
+                this.state.navigationStack.push(eligibleTarget);
+            }
+
+            this.state.uniqueHeadlines = new Set([
+                ...this.state.uniqueHeadlines,
+                ...restoredUnique,
+                eligibleTarget,
+            ]);
+            this.state.currentIndex = eligibleTarget;
+            this.persistState();
+            this.updateHeadlineCounter();
+            this.updateNavigationAvailability();
+            this.renderHeadline(eligibleTarget, {
+                pushToStack: false,
+                replaceState: true,
+            });
+        }
+
+        getFiltersFromUrl(urlState) {
+            return sanitizeFilters({
+                ...DEFAULT_FILTERS,
+                section: urlState.section ?? DEFAULT_FILTERS.section,
+                query: urlState.query ?? DEFAULT_FILTERS.query,
+                source: urlState.source ?? DEFAULT_FILTERS.source,
+                panel: urlState.panel ?? DEFAULT_FILTERS.panel,
+                layout: urlState.layout ?? DEFAULT_FILTERS.layout,
+            });
+        }
+
+        normalizeFeedbackLog(feedbackLog) {
+            if (!Array.isArray(feedbackLog)) return [];
+
+            return feedbackLog
+                .filter((entry) => entry && typeof entry === 'object')
+                .map((entry) => ({
+                    headline:
+                        typeof entry.headline === 'string'
+                            ? entry.headline.trim()
+                            : '',
+                    preference: entry.preference === 'up' ? 'up' : 'down',
+                    source:
+                        entry.source === 'generated' ? 'generated' : 'curated',
+                    timestamp:
+                        typeof entry.timestamp === 'string'
+                            ? entry.timestamp
+                            : new Date().toISOString(),
+                }))
+                .filter((entry) => entry.headline);
+        }
+
+        captureHeadlineFeedback(preference) {
+            const index = this.state.currentIndex;
+            if (!isValidHeadlineIndex(index, this.headlines.length)) {
+                this.reportFeedbackStatus(
+                    'No headline available to rate.',
+                    true,
+                );
+                return;
+            }
+
+            const headline = this.headlines[index];
+            const source =
+                index >= this.baseHeadlineCount ? 'generated' : 'curated';
+            const existingEntryIndex = this.feedbackLog.findIndex(
+                (entry) => entry.headline === headline,
+            );
+            const nextEntry = {
+                headline,
+                preference: preference === 'up' ? 'up' : 'down',
+                source,
+                timestamp: new Date().toISOString(),
+            };
+
+            if (existingEntryIndex >= 0) {
+                this.feedbackLog[existingEntryIndex] = nextEntry;
+                this.reportFeedbackStatus(
+                    'Updated your rating for this headline.',
+                );
+            } else {
+                this.feedbackLog.push(nextEntry);
+                this.reportFeedbackStatus(
+                    'Saved your rating for this headline.',
+                );
+            }
+            triggerHapticFeedback('light');
+
+            this.feedbackLog = this.feedbackLog.slice(-300);
+            this.state.feedbackLog = this.feedbackLog;
+            this.updateFeedbackCount();
+            this.persistState();
+        }
+
+        async copyFeedbackLog() {
+            if (!this.feedbackLog.length) {
+                this.reportFeedbackStatus(
+                    'Rate a few headlines first, then copy your feedback history.',
+                    true,
+                );
+                return;
+            }
+
+            const payload = this.feedbackLog
+                .map((entry) =>
+                    JSON.stringify({
+                        prompt: 'Generate a satirical, absurd news-style headline.',
+                        completion: entry.headline,
+                        preference: entry.preference,
+                        source: entry.source,
+                        timestamp: entry.timestamp,
+                    }),
+                )
+                .join('\n');
+
+            await copyTextWithFeedback({
+                text: payload,
+                button: this.elements.feedbackExportButton,
+                successMessage: 'Feedback history copied to clipboard.',
+                onStatus: (message, isError) =>
+                    this.reportFeedbackStatus(message, isError),
+                setButtonLoading,
+            });
+        }
+
+        updateFeedbackCount() {
+            if (!this.elements.feedbackCount) return;
+            this.elements.feedbackCount.textContent = String(
+                this.feedbackLog.length,
+            );
+        }
+
+        reportFeedbackStatus(message, isError = false) {
+            if (!this.elements.feedbackStatus) return;
+            this.elements.feedbackStatus.textContent = message;
+            this.elements.feedbackStatus.classList.toggle('error', isError);
+            if (!isError && message) {
+                this.showToast(message);
+            }
+        }
+
+        clearFeedbackStatus() {
+            if (!this.elements.feedbackStatus) return;
+            this.elements.feedbackStatus.textContent = '';
+            this.elements.feedbackStatus.classList.remove('error');
+        }
+
+        async _copyHeadlineCore(triggerButton = this.elements.copyButton) {
+            const headlineText = this.elements.headline.innerText;
+
+            if (!headlineText) {
+                this.reportCopyStatus('No headline available to copy.', true);
+                return;
+            }
+
+            await copyTextWithFeedback({
+                text: headlineText,
+                button: triggerButton,
+                successMessage: 'Headline copied to clipboard!',
+                onStatus: (message, isError) => {
+                    this.reportCopyStatus(message, isError);
+                    if (!isError) {
+                        triggerHapticFeedback('success');
+                        this.flashCopiedButtonLabel(triggerButton);
+                        this.trackGrowthEvent('copy_success', {
+                            source: triggerButton?.id || 'copy-button',
+                        });
+                    }
+                },
+                setButtonLoading,
+            });
+        }
+
+        async copyAgentSnippet() {
+            const snippet = [
+                "const state = await window.Neckass.agent.call('get_state');",
+                "const next = await window.Neckass.agent.call('shuffle');",
+                "const generated = await window.Neckass.agent.call('generate');",
+            ].join('\n');
+
+            await copyTextWithFeedback({
+                text: snippet,
+                button: this.elements.copyAgentSnippetButton,
+                successMessage: 'Agent snippet copied.',
+                onStatus: (message, isError) => {
+                    this.reportAutomationStatus(message, isError);
+                    if (!isError) {
+                        this.trackGrowthEvent('agent_snippet_copy', {
+                            source: 'automation_card',
+                        });
+                    }
+                },
+                setButtonLoading,
+            });
+        }
+
+        async copyMetricsSnapshot() {
+            if (!this.metrics) {
+                this.reportMetricsStatus(
+                    'Metrics unavailable in this browser.',
+                    true,
+                );
+                return;
+            }
+
+            const payload = JSON.stringify(
+                this.metrics.exportSnapshot({
+                    currentHeadline:
+                        this.headlines[this.state.currentIndex] || null,
+                    viewedCount: this.state.uniqueHeadlines.size,
+                }),
+                null,
+                2,
+            );
+
+            await copyTextWithFeedback({
+                text: payload,
+                button: this.elements.exportMetricsButton,
+                successMessage: 'Metrics snapshot copied.',
+                onStatus: (message, isError) => {
+                    this.reportMetricsStatus(message, isError);
+                    if (!isError) {
+                        this.trackGrowthEvent('metrics_export', {
+                            source: 'metrics_card',
+                        });
+                    }
+                },
+                setButtonLoading,
+            });
+        }
+
+        reportAutomationStatus(message, isError = false) {
+            if (!this.elements.automationStatus) return;
+            this.elements.automationStatus.textContent = message;
+            this.elements.automationStatus.classList.toggle('error', isError);
+            if (!isError && message) {
+                this.showToast(message);
+            }
+        }
+
+        reportMetricsStatus(message, isError = false) {
+            if (!this.elements.metricsStatus) return;
+            this.elements.metricsStatus.textContent = message;
+            this.elements.metricsStatus.classList.toggle('error', isError);
+            if (!isError && message) {
+                this.showToast(message);
+            }
+        }
+
+        trackGrowthEvent(eventName, details = {}) {
+            if (!this.metrics) return;
+            this.metrics.track(eventName, details);
+            this.updateMetricsSummary();
+        }
+
+        updateMetricsSummary() {
+            if (!this.metrics || !this.elements.metricsSummary) return;
+            const summary = this.metrics.getSummary();
+            this.elements.metricsSummary.textContent = `Sessions: ${summary.sessions} · Shuffles: ${summary.shuffles} · Share actions: ${summary.shares}`;
+        }
+
+        reportCopyStatus(message, isError = false) {
+            if (!this.elements.copyStatus) return;
+            this.elements.copyStatus.textContent = message;
+            this.elements.copyStatus.classList.toggle('error', isError);
+            if (isError && message) {
+                triggerHapticFeedback('error');
+            }
+            if (!isError && message) {
+                this.showToast(message);
+            }
+        }
+
+        flashCopiedButtonLabel(button) {
+            if (!button || button.dataset.copyLabelTimeout === 'active') return;
+
+            const label =
+                button.querySelector('span:last-child') ||
+                button.querySelector('span');
+            const originalLabel = label
+                ? label.textContent
+                : button.textContent;
+            button.dataset.copyLabelTimeout = 'active';
+
+            if (label) {
+                label.textContent = 'Copied';
+            } else {
+                button.textContent = 'Copied';
+            }
+
+            window.setTimeout(() => {
+                if (label) {
+                    label.textContent = originalLabel;
+                } else {
+                    button.textContent = originalLabel;
+                }
+                delete button.dataset.copyLabelTimeout;
+            }, 1400);
+        }
+
+        clearCopyStatus() {
+            if (!this.elements.copyStatus) return;
+            this.elements.copyStatus.textContent = '';
+            this.elements.copyStatus.classList.remove('error');
+        }
+
+        reportShareStatus(message, isError = false) {
+            if (!this.elements.shareStatus) return;
+            this.elements.shareStatus.textContent = message;
+            this.elements.shareStatus.classList.toggle('error', isError);
+            if (isError && message) {
+                triggerHapticFeedback('error');
+            }
+            if (!isError && message) {
+                this.showToast(message);
+            }
+        }
+
+        clearShareStatus() {
+            if (!this.elements.shareStatus) return;
+            this.elements.shareStatus.textContent = '';
+            this.elements.shareStatus.classList.remove('error');
+        }
+
+        toggleLoader(shouldShow, message = null) {
+            if (message && this.elements.loaderText) {
+                this.elements.loaderText.textContent = message;
+            } else if (message && this.elements.loader) {
+                this.elements.loader.textContent = message;
+            }
+            if (this.elements.loader) {
+                this.elements.loader.classList.toggle('is-visible', shouldShow);
+                this.elements.loader.setAttribute(
+                    'aria-hidden',
+                    shouldShow ? 'false' : 'true',
+                );
+            }
+            this.setNavigationLoading(shouldShow);
+        }
+
+        setNavigationLoading(shouldShow) {
+            this.state.isLoading = shouldShow;
+            this.updateNavigationAvailability();
+            if (this.activeButton) {
+                setButtonLoading(this.activeButton, shouldShow);
+            }
+            if (this.elements.headlineList) {
+                this.elements.headlineList.setAttribute(
+                    'aria-busy',
+                    shouldShow ? 'true' : 'false',
+                );
+                this.elements.headlineList
+                    .querySelectorAll('button[data-index]')
+                    .forEach((button) => {
+                        button.disabled = shouldShow;
+                    });
+            }
+        }
+
+        updateLoaderMessage(message) {
+            if (this.elements.loaderText) {
+                this.elements.loaderText.textContent = message;
+                return;
+            }
+            if (!this.elements.loader) return;
             this.elements.loader.textContent = message;
         }
-        if (this.elements.loader) {
-            this.elements.loader.classList.toggle('is-visible', shouldShow);
-            this.elements.loader.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
-        }
-        this.setNavigationLoading(shouldShow);
-    }
 
-    setNavigationLoading(shouldShow) {
-        this.state.isLoading = shouldShow;
-        this.updateNavigationAvailability();
-        if (this.activeButton) {
-            setButtonLoading(this.activeButton, shouldShow);
-        }
-        if (this.elements.headlineList) {
-            this.elements.headlineList.setAttribute('aria-busy', shouldShow ? 'true' : 'false');
-            this.elements.headlineList
-                .querySelectorAll('button[data-index]')
-                .forEach((button) => {
-                    button.disabled = shouldShow;
-                });
-        }
-    }
-
-    updateLoaderMessage(message) {
-        if (this.elements.loaderText) {
-            this.elements.loaderText.textContent = message;
-            return;
-        }
-        if (!this.elements.loader) return;
-        this.elements.loader.textContent = message;
-    }
-
-    updateMockHeadline(text) {
-        if (this.elements.mockHeadline) {
-            this.elements.mockHeadline.textContent = text;
-        }
-    }
-
-    preflightExportAvailability() {
-        if (!this.elements.exportStatus) return;
-        if (this.elements.downloadMockButton) {
-            this.elements.downloadMockButton.disabled = !window.htmlToImage;
-            this.elements.downloadMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
-        }
-        if (this.elements.copyMockButton) {
-            this.elements.copyMockButton.disabled = !window.htmlToImage;
-            this.elements.copyMockButton.setAttribute('aria-disabled', String(!window.htmlToImage));
-        }
-        if (!window.htmlToImage) {
-            this.reportExportStatus('Export unavailable. Reload, then try Download mock front page.', true);
-        }
-    }
-
-    updateMockDate() {
-        const now = new Date();
-        const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        const timeFormatter = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' });
-
-        if (this.elements.mockDate) {
-            this.elements.mockDate.textContent = dateFormatter.format(now);
-        }
-
-        if (this.elements.mastheadDate) {
-            this.elements.mastheadDate.textContent = `${dateFormatter.format(now)} · Digital edition`;
-        }
-
-        if (this.elements.featureDateline) {
-            this.elements.featureDateline.textContent = `Published ${timeFormatter.format(now)}`;
-        }
-    }
-
-    async _handleMockExportCore(mode) {
-        await exportMockFront({
-            mode,
-            elements: this.elements,
-            reportStatus: (message, isError) => this.reportExportStatus(message, isError),
-            setButtonLoading
-        });
-    }
-
-    reportExportStatus(message, isError = false) {
-        if (!this.elements.exportStatus) return;
-        this.elements.exportStatus.textContent = message;
-        this.elements.exportStatus.classList.toggle('error', isError);
-        if (isError && message) {
-            triggerHapticFeedback('error');
-        }
-        if (!isError && message) {
-            this.showToast(message);
-            if (message.includes('Downloaded') || message.includes('Copied front page')) {
-                triggerHapticFeedback('success');
-                this.trackGrowthEvent('export_success', { message });
+        updateMockHeadline(text) {
+            if (this.elements.mockHeadline) {
+                this.elements.mockHeadline.textContent = text;
             }
         }
-    }
 
-    jumpToCard(type) {
-        const cardMap = {
-            copy: {
-                section: this.elements.copySection,
-                focus: this.elements.copyButton
-            },
-            share: {
-                section: this.elements.socialShare,
-                focus: this.elements.nativeShareButton
-            },
-            export: {
-                section: this.elements.exportSection,
-                focus: this.elements.downloadMockButton
+        preflightExportAvailability() {
+            if (!this.elements.exportStatus) return;
+            if (this.elements.downloadMockButton) {
+                this.elements.downloadMockButton.disabled = !window.htmlToImage;
+                this.elements.downloadMockButton.setAttribute(
+                    'aria-disabled',
+                    String(!window.htmlToImage),
+                );
             }
-        };
-
-        const target = cardMap[type];
-        if (!target?.section) return;
-        target.section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        if (target.focus) {
-            window.setTimeout(() => {
-                target.focus.focus({ preventScroll: true });
-            }, 220);
-        }
-    }
-
-    showToast(message) {
-        if (!this.elements.globalToast || !message) return;
-        if (this.toastTimer) {
-            window.clearTimeout(this.toastTimer);
-        }
-        this.elements.globalToast.textContent = message;
-        this.elements.globalToast.classList.add('is-visible');
-        this.elements.globalToast.setAttribute('aria-hidden', 'false');
-
-        this.toastTimer = window.setTimeout(() => {
-            this.elements.globalToast.classList.remove('is-visible');
-            this.elements.globalToast.setAttribute('aria-hidden', 'true');
-        }, 1800);
-    }
-
-    getRandomIndex() {
-        const pool = this.filteredIndexes.length > 0
-            ? this.filteredIndexes
-            : [];
-
-        if (pool.length === 0) {
-            return null;
+            if (this.elements.copyMockButton) {
+                this.elements.copyMockButton.disabled = !window.htmlToImage;
+                this.elements.copyMockButton.setAttribute(
+                    'aria-disabled',
+                    String(!window.htmlToImage),
+                );
+            }
+            if (!window.htmlToImage) {
+                this.reportExportStatus(
+                    'Export unavailable. Reload, then try Download mock front page.',
+                    true,
+                );
+            }
         }
 
-        if (pool.length === 1) {
-            return pool[0];
+        updateMockDate() {
+            const now = new Date();
+            const dateFormatter = new Intl.DateTimeFormat('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+            });
+            const timeFormatter = new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+            });
+
+            if (this.elements.mockDate) {
+                this.elements.mockDate.textContent = dateFormatter.format(now);
+            }
+
+            if (this.elements.mastheadDate) {
+                this.elements.mastheadDate.textContent = `${dateFormatter.format(now)} · Digital edition`;
+            }
+
+            if (this.elements.featureDateline) {
+                this.elements.featureDateline.textContent = `Published ${timeFormatter.format(now)}`;
+            }
         }
 
-        const unvisitedPool = pool.filter((index) => !this.state.navigationStack.includes(index));
-        if (unvisitedPool.length > 0) {
-            return unvisitedPool[Math.floor(Math.random() * unvisitedPool.length)];
+        async _handleMockExportCore(mode) {
+            await exportMockFront({
+                mode,
+                elements: this.elements,
+                reportStatus: (message, isError) =>
+                    this.reportExportStatus(message, isError),
+                setButtonLoading,
+            });
         }
 
-        let randomIndex = pool[Math.floor(Math.random() * pool.length)];
-        while (randomIndex === this.state.currentIndex && pool.length > 1) {
-            randomIndex = pool[Math.floor(Math.random() * pool.length)];
-        }
-
-        return randomIndex;
-    }
-
-    normalizeGeneratedHeadline(headlineText) {
-        const normalized = normalizeHeadlineText(headlineText);
-        if (!normalized) {
-            return '';
-        }
-
-        const maxLength = 132;
-        if (normalized.length <= maxLength) {
-            return normalized;
-        }
-
-        const clipped = normalized.slice(0, maxLength);
-        const lastBreak = Math.max(clipped.lastIndexOf(' · '), clipped.lastIndexOf(' — '), clipped.lastIndexOf(', '), clipped.lastIndexOf(' '));
-        const safeClip = lastBreak > 90 ? clipped.slice(0, lastBreak) : clipped;
-        return `${safeClip.trim()}…`;
-    }
-
-    registerSharedHeadline(headlineText) {
-        const normalized = normalizeHeadlineText(headlineText);
-        if (!normalized) return null;
-        if (this.headlineCache.has(normalized)) {
-            return this.headlineCache.get(normalized);
-        }
-
-        const newIndex = this.headlines.length;
-        this.headlines.push(normalized);
-        this.headlineCache.set(normalized, newIndex);
-        this.state.generatedHeadlines = Array.isArray(this.state.generatedHeadlines) ? this.state.generatedHeadlines : [];
-        this.state.generatedHeadlines.push(normalized);
-        this.persistState();
-        this.refreshFilteredIndexes();
-        return newIndex;
-    }
-
-    persistState() {
-        this.storage.persist({
-            navigationStack: this.state.navigationStack,
-            uniqueHeadlines: this.state.uniqueHeadlines,
-            currentIndex: this.state.currentIndex,
-            generatedHeadlines: this.state.generatedHeadlines,
-            favorites: Array.from(this.favoriteHeadlines),
-            filters: this.filters,
-            dailyEngagement: this.dailyEngagement,
-            feedbackLog: this.feedbackLog
-        });
-    }
-
-    isGeneratorAvailable() {
-        return typeof window.tinyLlmClient?.generateHeadline === 'function';
-    }
-
-    syncGeneratorControls() {
-        const generatorAvailable = this.isGeneratorAvailable();
-        if (this.elements.generateButton) {
-            this.elements.generateButton.disabled = !generatorAvailable;
-            this.elements.generateButton.setAttribute('aria-disabled', String(!generatorAvailable));
-        }
-        if (this.elements.sourceButtons) {
-            this.elements.sourceButtons.forEach((button) => {
-                if (button.dataset.source === 'generated') {
-                    button.disabled = !generatorAvailable;
-                    button.setAttribute('aria-disabled', String(!generatorAvailable));
+        reportExportStatus(message, isError = false) {
+            if (!this.elements.exportStatus) return;
+            this.elements.exportStatus.textContent = message;
+            this.elements.exportStatus.classList.toggle('error', isError);
+            if (isError && message) {
+                triggerHapticFeedback('error');
+            }
+            if (!isError && message) {
+                this.showToast(message);
+                if (
+                    message.includes('Downloaded') ||
+                    message.includes('Copied front page')
+                ) {
+                    triggerHapticFeedback('success');
+                    this.trackGrowthEvent('export_success', { message });
                 }
+            }
+        }
+
+        jumpToCard(type) {
+            const cardMap = {
+                copy: {
+                    section: this.elements.copySection,
+                    focus: this.elements.copyButton,
+                },
+                share: {
+                    section: this.elements.socialShare,
+                    focus: this.elements.nativeShareButton,
+                },
+                export: {
+                    section: this.elements.exportSection,
+                    focus: this.elements.downloadMockButton,
+                },
+            };
+
+            const target = cardMap[type];
+            if (!target?.section) return;
+            target.section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+
+            if (target.focus) {
+                window.setTimeout(() => {
+                    target.focus.focus({ preventScroll: true });
+                }, 220);
+            }
+        }
+
+        showToast(message) {
+            if (!this.elements.globalToast || !message) return;
+            if (this.toastTimer) {
+                window.clearTimeout(this.toastTimer);
+            }
+            this.elements.globalToast.textContent = message;
+            this.elements.globalToast.classList.add('is-visible');
+            this.elements.globalToast.setAttribute('aria-hidden', 'false');
+
+            this.toastTimer = window.setTimeout(() => {
+                this.elements.globalToast.classList.remove('is-visible');
+                this.elements.globalToast.setAttribute('aria-hidden', 'true');
+            }, 1800);
+        }
+
+        getRandomIndex() {
+            const pool =
+                this.filteredIndexes.length > 0 ? this.filteredIndexes : [];
+
+            if (pool.length === 0) {
+                return null;
+            }
+
+            if (pool.length === 1) {
+                return pool[0];
+            }
+
+            const unvisitedPool = pool.filter(
+                (index) => !this.state.navigationStack.includes(index),
+            );
+            if (unvisitedPool.length > 0) {
+                return unvisitedPool[
+                    Math.floor(Math.random() * unvisitedPool.length)
+                ];
+            }
+
+            let randomIndex = pool[Math.floor(Math.random() * pool.length)];
+            while (randomIndex === this.state.currentIndex && pool.length > 1) {
+                randomIndex = pool[Math.floor(Math.random() * pool.length)];
+            }
+
+            return randomIndex;
+        }
+
+        normalizeGeneratedHeadline(headlineText) {
+            const normalized = normalizeHeadlineText(headlineText);
+            if (!normalized) {
+                return '';
+            }
+
+            const maxLength = 132;
+            if (normalized.length <= maxLength) {
+                return normalized;
+            }
+
+            const clipped = normalized.slice(0, maxLength);
+            const lastBreak = Math.max(
+                clipped.lastIndexOf(' · '),
+                clipped.lastIndexOf(' — '),
+                clipped.lastIndexOf(', '),
+                clipped.lastIndexOf(' '),
+            );
+            const safeClip =
+                lastBreak > 90 ? clipped.slice(0, lastBreak) : clipped;
+            return `${safeClip.trim()}…`;
+        }
+
+        registerSharedHeadline(headlineText) {
+            const normalized = normalizeHeadlineText(headlineText);
+            if (!normalized) return null;
+            if (this.headlineCache.has(normalized)) {
+                return this.headlineCache.get(normalized);
+            }
+
+            const newIndex = this.headlines.length;
+            this.headlines.push(normalized);
+            this.headlineCache.set(normalized, newIndex);
+            this.state.generatedHeadlines = Array.isArray(
+                this.state.generatedHeadlines,
+            )
+                ? this.state.generatedHeadlines
+                : [];
+            this.state.generatedHeadlines.push(normalized);
+            this.persistState();
+            this.refreshFilteredIndexes();
+            return newIndex;
+        }
+
+        persistState() {
+            this.storage.persist({
+                navigationStack: this.state.navigationStack,
+                uniqueHeadlines: this.state.uniqueHeadlines,
+                currentIndex: this.state.currentIndex,
+                generatedHeadlines: this.state.generatedHeadlines,
+                favorites: Array.from(this.favoriteHeadlines),
+                filters: this.filters,
+                dailyEngagement: this.dailyEngagement,
+                feedbackLog: this.feedbackLog,
+            });
+        }
+
+        isGeneratorAvailable() {
+            return typeof window.tinyLlmClient?.generateHeadline === 'function';
+        }
+
+        syncGeneratorControls() {
+            const generatorAvailable = this.isGeneratorAvailable();
+            if (this.elements.generateButton) {
+                this.elements.generateButton.disabled = !generatorAvailable;
+                this.elements.generateButton.setAttribute(
+                    'aria-disabled',
+                    String(!generatorAvailable),
+                );
+            }
+            if (this.elements.sourceButtons) {
+                this.elements.sourceButtons.forEach((button) => {
+                    if (button.dataset.source === 'generated') {
+                        button.disabled = !generatorAvailable;
+                        button.setAttribute(
+                            'aria-disabled',
+                            String(!generatorAvailable),
+                        );
+                    }
+                });
+            }
+        }
+
+        async handleNext() {
+            return this.headlineController.handleNext();
+        }
+        handlePrevious() {
+            return this.headlineController.handlePrevious();
+        }
+        renderHeadline(
+            index,
+            options = { pushToStack: true, replaceState: false },
+        ) {
+            return this.headlineController.renderHeadline(index, options);
+        }
+        renderInitialHeadline() {
+            return this.headlineController.renderInitialHeadline();
+        }
+        renderEmptyState() {
+            return this.headlineController.renderEmptyState();
+        }
+        selectHeadline(index) {
+            return this.headlineController.selectHeadline(index);
+        }
+        handleDirectionalNavigation(event) {
+            return this.headlineController.handleDirectionalNavigation(event);
+        }
+        handlePopState(event) {
+            return this.headlineController.handlePopState(event);
+        }
+
+        async shareHeadline(triggerButton = this.elements.nativeShareButton) {
+            return this.actionController.shareHeadline(triggerButton);
+        }
+        async copyHeadlineLink() {
+            return this.actionController.copyHeadlineLink();
+        }
+        async handleQuickShare() {
+            return this.actionController.handleQuickShare();
+        }
+        async handleQuickExport() {
+            return this.actionController.handleQuickExport();
+        }
+        async handleMockExport(mode) {
+            return this.actionController.handleMockExport(mode);
+        }
+        async copyHeadline(triggerButton = this.elements.copyButton) {
+            return this.actionController.copyHeadline(triggerButton);
+        }
+
+        identifierToIndex(identifier) {
+            if (identifier === null || identifier === undefined) return null;
+            const parsed = Number.parseInt(identifier, 10);
+            if (
+                Number.isInteger(parsed) &&
+                String(parsed) === String(identifier)
+            ) {
+                return parsed;
+            }
+
+            const slugMatch = String(identifier).match(
+                /^(\d+)(?:-[a-z0-9-]+)?$/i,
+            );
+            if (slugMatch) {
+                return Number.parseInt(slugMatch[1], 10);
+            }
+
+            const normalized = normalizeHeadlineText(identifier);
+            if (!normalized) return null;
+            const cachedIndex = this.headlineCache.get(normalized);
+            if (Number.isInteger(cachedIndex)) {
+                return cachedIndex;
+            }
+
+            return this.registerSharedHeadline(normalized);
+        }
+
+        identifierFromIndex(index) {
+            const headlineText = isValidHeadlineIndex(
+                index,
+                this.headlines.length,
+            )
+                ? this.headlines[index]
+                : '';
+            const slug = slugifyHeadline(headlineText);
+            return slug ? `${index}-${slug}` : String(index);
+        }
+
+        buildHeadlineUrl(index) {
+            return buildHeadlineUrl({
+                index,
+                headlines: this.headlines,
+                filters: this.filters,
+                identifierFromIndex: (idx) => this.identifierFromIndex(idx),
+                isValidHeadlineIndex,
+            });
+        }
+
+        getCanonicalUrl(index) {
+            return this.buildHeadlineUrl(index);
+        }
+
+        getCurrentHeadlineText() {
+            if (
+                !isValidHeadlineIndex(
+                    this.state.currentIndex,
+                    this.headlines.length,
+                )
+            ) {
+                return '';
+            }
+            return this.headlines[this.state.currentIndex] || '';
+        }
+
+        getAgentSnapshot() {
+            const currentIndex = isValidHeadlineIndex(
+                this.state.currentIndex,
+                this.headlines.length,
+            )
+                ? this.state.currentIndex
+                : null;
+            return {
+                index: currentIndex,
+                identifier:
+                    currentIndex === null
+                        ? null
+                        : this.identifierFromIndex(currentIndex),
+                headline: this.getCurrentHeadlineText(),
+                url:
+                    currentIndex === null
+                        ? null
+                        : this.getCanonicalUrl(currentIndex),
+                filters: { ...this.filters },
+                poolSize: this.filteredIndexes.length,
+                totalHeadlines: this.headlines.length,
+                generatorAvailable: this.isGeneratorAvailable(),
+            };
+        }
+
+        setFiltersForAgent(partialFilters = {}) {
+            const incoming =
+                partialFilters && typeof partialFilters === 'object'
+                    ? partialFilters
+                    : {};
+            const nextFilters = sanitizeFilters({
+                ...DEFAULT_FILTERS,
+                ...this.filters,
+                ...incoming,
+            });
+
+            const changed = Object.keys(nextFilters).some(
+                (key) => nextFilters[key] !== this.filters[key],
+            );
+            if (!changed) {
+                return this.getAgentSnapshot();
+            }
+
+            this.filters = nextFilters;
+            if (this.elements.searchInput) {
+                this.elements.searchInput.value = this.filters.query;
+            }
+            this.persistState();
+            this.syncFilterControls();
+            this.refreshFilteredIndexes();
+            this.applyMockLayoutClass();
+
+            if (this.filteredIndexes.length === 0) {
+                this._renderEmptyStateCore();
+                this.pushHistoryState(-1, { replace: true });
+                return this.getAgentSnapshot();
+            }
+
+            const nextIndex = this.isIndexEligible(this.state.currentIndex)
+                ? this.state.currentIndex
+                : this.filteredIndexes[0];
+            this.state.navigationStack = [nextIndex];
+            this.state.currentIndex = nextIndex;
+            this.renderHeadline(nextIndex, {
+                pushToStack: false,
+                replaceState: true,
+            });
+            return this.getAgentSnapshot();
+        }
+
+        selectHeadlineByIdentifier(identifier) {
+            const index = this.identifierToIndex(identifier);
+            if (!this.isIndexEligible(index)) {
+                return null;
+            }
+            this._selectHeadlineCore(index);
+            return this.getAgentSnapshot();
+        }
+
+        listHeadlinesForAgent({
+            offset = 0,
+            limit = 25,
+            scope = 'eligible',
+        } = {}) {
+            const pool =
+                scope === 'all'
+                    ? this.headlines.map((_, index) => index)
+                    : [...this.filteredIndexes];
+            const start = Math.max(0, Number.parseInt(offset, 10) || 0);
+            const max = Math.min(
+                100,
+                Math.max(1, Number.parseInt(limit, 10) || 25),
+            );
+
+            return pool.slice(start, start + max).map((index) => ({
+                index,
+                identifier: this.identifierFromIndex(index),
+                headline: this.headlines[index],
+                source:
+                    index >= this.baseHeadlineCount ? 'generated' : 'curated',
+            }));
+        }
+
+        pushHistoryState(index, { replace = false } = {}) {
+            updateHistoryState({
+                index,
+                headlines: this.headlines,
+                filters: this.filters,
+                navigationStack: this.state.navigationStack,
+                uniqueHeadlines: this.state.uniqueHeadlines,
+                identifierFromIndex: (idx) => this.identifierFromIndex(idx),
+                isValidHeadlineIndex,
+                replace,
             });
         }
     }
-
-
-
-    async handleNext() { return this.headlineController.handleNext(); }
-    handlePrevious() { return this.headlineController.handlePrevious(); }
-    renderHeadline(index, options = { pushToStack: true, replaceState: false }) { return this.headlineController.renderHeadline(index, options); }
-    renderInitialHeadline() { return this.headlineController.renderInitialHeadline(); }
-    renderEmptyState() { return this.headlineController.renderEmptyState(); }
-    selectHeadline(index) { return this.headlineController.selectHeadline(index); }
-    handleDirectionalNavigation(event) { return this.headlineController.handleDirectionalNavigation(event); }
-    handlePopState(event) { return this.headlineController.handlePopState(event); }
-
-    async shareHeadline(triggerButton = this.elements.nativeShareButton) { return this.actionController.shareHeadline(triggerButton); }
-    async copyHeadlineLink() { return this.actionController.copyHeadlineLink(); }
-    async handleQuickShare() { return this.actionController.handleQuickShare(); }
-    async handleQuickExport() { return this.actionController.handleQuickExport(); }
-    async handleMockExport(mode) { return this.actionController.handleMockExport(mode); }
-    async copyHeadline(triggerButton = this.elements.copyButton) { return this.actionController.copyHeadline(triggerButton); }
-
-    identifierToIndex(identifier) {
-        if (identifier === null || identifier === undefined) return null;
-        const parsed = Number.parseInt(identifier, 10);
-        if (Number.isInteger(parsed) && String(parsed) === String(identifier)) {
-            return parsed;
-        }
-
-        const slugMatch = String(identifier).match(/^(\d+)(?:-[a-z0-9-]+)?$/i);
-        if (slugMatch) {
-            return Number.parseInt(slugMatch[1], 10);
-        }
-
-        const normalized = normalizeHeadlineText(identifier);
-        if (!normalized) return null;
-        const cachedIndex = this.headlineCache.get(normalized);
-        if (Number.isInteger(cachedIndex)) {
-            return cachedIndex;
-        }
-
-        return this.registerSharedHeadline(normalized);
-    }
-
-    identifierFromIndex(index) {
-        const headlineText = isValidHeadlineIndex(index, this.headlines.length)
-            ? this.headlines[index]
-            : '';
-        const slug = slugifyHeadline(headlineText);
-        return slug ? `${index}-${slug}` : String(index);
-    }
-
-    buildHeadlineUrl(index) {
-        return buildHeadlineUrl({
-            index,
-            headlines: this.headlines,
-            filters: this.filters,
-            identifierFromIndex: (idx) => this.identifierFromIndex(idx),
-            isValidHeadlineIndex
-        });
-    }
-
-    getCanonicalUrl(index) {
-        return this.buildHeadlineUrl(index);
-    }
-
-    getCurrentHeadlineText() {
-        if (!isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)) {
-            return '';
-        }
-        return this.headlines[this.state.currentIndex] || '';
-    }
-
-    getAgentSnapshot() {
-        const currentIndex = isValidHeadlineIndex(this.state.currentIndex, this.headlines.length)
-            ? this.state.currentIndex
-            : null;
-        return {
-            index: currentIndex,
-            identifier: currentIndex === null ? null : this.identifierFromIndex(currentIndex),
-            headline: this.getCurrentHeadlineText(),
-            url: currentIndex === null ? null : this.getCanonicalUrl(currentIndex),
-            filters: { ...this.filters },
-            poolSize: this.filteredIndexes.length,
-            totalHeadlines: this.headlines.length,
-            generatorAvailable: this.isGeneratorAvailable()
-        };
-    }
-
-    setFiltersForAgent(partialFilters = {}) {
-        const incoming = partialFilters && typeof partialFilters === 'object' ? partialFilters : {};
-        const nextFilters = sanitizeFilters({
-            ...DEFAULT_FILTERS,
-            ...this.filters,
-            ...incoming
-        });
-
-        const changed = Object.keys(nextFilters).some((key) => nextFilters[key] !== this.filters[key]);
-        if (!changed) {
-            return this.getAgentSnapshot();
-        }
-
-        this.filters = nextFilters;
-        if (this.elements.searchInput) {
-            this.elements.searchInput.value = this.filters.query;
-        }
-        this.persistState();
-        this.syncFilterControls();
-        this.refreshFilteredIndexes();
-        this.applyMockLayoutClass();
-
-        if (this.filteredIndexes.length === 0) {
-            this._renderEmptyStateCore();
-            this.pushHistoryState(-1, { replace: true });
-            return this.getAgentSnapshot();
-        }
-
-        const nextIndex = this.isIndexEligible(this.state.currentIndex)
-            ? this.state.currentIndex
-            : this.filteredIndexes[0];
-        this.state.navigationStack = [nextIndex];
-        this.state.currentIndex = nextIndex;
-        this.renderHeadline(nextIndex, { pushToStack: false, replaceState: true });
-        return this.getAgentSnapshot();
-    }
-
-    selectHeadlineByIdentifier(identifier) {
-        const index = this.identifierToIndex(identifier);
-        if (!this.isIndexEligible(index)) {
-            return null;
-        }
-        this._selectHeadlineCore(index);
-        return this.getAgentSnapshot();
-    }
-
-    listHeadlinesForAgent({ offset = 0, limit = 25, scope = 'eligible' } = {}) {
-        const pool = scope === 'all'
-            ? this.headlines.map((_, index) => index)
-            : [...this.filteredIndexes];
-        const start = Math.max(0, Number.parseInt(offset, 10) || 0);
-        const max = Math.min(100, Math.max(1, Number.parseInt(limit, 10) || 25));
-
-        return pool.slice(start, start + max).map((index) => ({
-            index,
-            identifier: this.identifierFromIndex(index),
-            headline: this.headlines[index],
-            source: index >= this.baseHeadlineCount ? 'generated' : 'curated'
-        }));
-    }
-
-    pushHistoryState(index, { replace = false } = {}) {
-        updateHistoryState({
-            index,
-            headlines: this.headlines,
-            filters: this.filters,
-            navigationStack: this.state.navigationStack,
-            uniqueHeadlines: this.state.uniqueHeadlines,
-            identifierFromIndex: (idx) => this.identifierFromIndex(idx),
-            isValidHeadlineIndex,
-            replace
-        });
-    }
-}
 
     Neckass.HeadlineApp = HeadlineApp;
 })();

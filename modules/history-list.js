@@ -1,5 +1,6 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     function createHistoryListItem({ index, currentIndex, headlines }) {
         const item = document.createElement('li');
@@ -15,7 +16,14 @@
         return item;
     }
 
-    function getPanelIndexPool({ panel, favoriteHeadlines, headlineCache, headlines, baseHeadlineCount, navigationStack }) {
+    function getPanelIndexPool({
+        panel,
+        favoriteHeadlines,
+        headlineCache,
+        headlines,
+        baseHeadlineCount,
+        navigationStack,
+    }) {
         if (panel === 'favorites') {
             return Array.from(favoriteHeadlines)
                 .map((headline) => headlineCache.get(headline))
@@ -24,7 +32,11 @@
 
         if (panel === 'generated') {
             const generatedIndexes = [];
-            for (let index = baseHeadlineCount; index < headlines.length; index += 1) {
+            for (
+                let index = baseHeadlineCount;
+                index < headlines.length;
+                index += 1
+            ) {
                 generatedIndexes.push(index);
             }
             return generatedIndexes;
@@ -33,19 +45,37 @@
         return [...navigationStack].reverse();
     }
 
-    function getPanelIndexes({ panel, isIndexEligible, favoriteHeadlines, headlineCache, headlines, baseHeadlineCount, navigationStack }) {
+    function getPanelIndexes({
+        panel,
+        isIndexEligible,
+        favoriteHeadlines,
+        headlineCache,
+        headlines,
+        baseHeadlineCount,
+        navigationStack,
+    }) {
         const indexes = getPanelIndexPool({
             panel,
             favoriteHeadlines,
             headlineCache,
             headlines,
             baseHeadlineCount,
-            navigationStack
+            navigationStack,
         });
         return indexes.filter((index) => isIndexEligible(index));
     }
 
-    function updateHistoryList({ elements, panel, isIndexEligible, favoriteHeadlines, headlineCache, headlines, baseHeadlineCount, navigationStack, currentIndex }) {
+    function updateHistoryList({
+        elements,
+        panel,
+        isIndexEligible,
+        favoriteHeadlines,
+        headlineCache,
+        headlines,
+        baseHeadlineCount,
+        navigationStack,
+        currentIndex,
+    }) {
         if (!elements.headlineList) return;
 
         const indexes = getPanelIndexes({
@@ -55,7 +85,7 @@
             headlineCache,
             headlines,
             baseHeadlineCount,
-            navigationStack
+            navigationStack,
         });
 
         if (elements.historyCount) {
@@ -63,15 +93,21 @@
         }
 
         const currentChildren = Array.from(elements.headlineList.children);
-        const hasSameIndexes = currentChildren.length === indexes.length
-            && currentChildren.every((child, position) => {
+        const hasSameIndexes =
+            currentChildren.length === indexes.length &&
+            currentChildren.every((child, position) => {
                 const button = child.querySelector('button[data-index]');
-                return button && Number.parseInt(button.dataset.index, 10) === indexes[position];
+                return (
+                    button &&
+                    Number.parseInt(button.dataset.index, 10) ===
+                        indexes[position]
+                );
             });
 
         if (indexes.length === 0) {
-            const existingEmpty = currentChildren.length === 1
-                && currentChildren[0].classList.contains('headline-item--empty');
+            const existingEmpty =
+                currentChildren.length === 1 &&
+                currentChildren[0].classList.contains('headline-item--empty');
             if (!existingEmpty) {
                 elements.headlineList.innerHTML = '';
                 const item = document.createElement('li');
@@ -86,7 +122,9 @@
             elements.headlineList.innerHTML = '';
             const fragment = document.createDocumentFragment();
             indexes.forEach((index) => {
-                fragment.appendChild(createHistoryListItem({ index, currentIndex, headlines }));
+                fragment.appendChild(
+                    createHistoryListItem({ index, currentIndex, headlines }),
+                );
             });
             elements.headlineList.appendChild(fragment);
             return;

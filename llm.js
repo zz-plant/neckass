@@ -1,4 +1,5 @@
-const { data: neckassData, safeJsonParse: sharedSafeJsonParse } = window.Neckass || {};
+const { data: neckassData, safeJsonParse: sharedSafeJsonParse } =
+    window.Neckass || {};
 const BEATS = neckassData?.BEATS || {};
 
 const TINY_LLM_TIMEOUT_MS = 1800;
@@ -19,13 +20,53 @@ const BRAND_TOKEN_SOFT_LIMIT = 1;
 const SECTION_HINTS = {
     latest: ['breaking', 'local', 'headline', 'update', 'report'],
     world: ['global', 'federal', 'ambassador', 'treaty', 'space', 'climate'],
-    culture: ['podcast', 'club', 'newsletter', 'fashion', 'book', 'spotify', 'instagram'],
-    tech: ['ai', 'app', 'algorithm', 'wifi', 'discord', 'stream', 'cloud', 'bot'],
-    oddities: ['cursed', 'weird', 'ghost', 'zodiac', 'manifest', 'meme', 'chaos']
+    culture: [
+        'podcast',
+        'club',
+        'newsletter',
+        'fashion',
+        'book',
+        'spotify',
+        'instagram',
+    ],
+    tech: [
+        'ai',
+        'app',
+        'algorithm',
+        'wifi',
+        'discord',
+        'stream',
+        'cloud',
+        'bot',
+    ],
+    oddities: [
+        'cursed',
+        'weird',
+        'ghost',
+        'zodiac',
+        'manifest',
+        'meme',
+        'chaos',
+    ],
 };
 
 const HARASSMENT_TERMS = ['idiot', 'moron', 'stupid', 'hate', 'loser'];
-const STOPWORDS = new Set(['the', 'a', 'an', 'and', 'or', 'for', 'to', 'of', 'in', 'on', 'with', 'at', 'by', 'from']);
+const STOPWORDS = new Set([
+    'the',
+    'a',
+    'an',
+    'and',
+    'or',
+    'for',
+    'to',
+    'of',
+    'in',
+    'on',
+    'with',
+    'at',
+    'by',
+    'from',
+]);
 
 const tinyLlmClient = (() => {
     let lastDiagnostics = {
@@ -33,19 +74,20 @@ const tinyLlmClient = (() => {
         timeoutMs: TINY_LLM_TIMEOUT_MS,
         fallback: null,
         warm: true,
-        reasonCodes: []
+        reasonCodes: [],
     };
 
     function canUseLocalStorage() {
         return typeof localStorage !== 'undefined';
     }
 
-    const safeJsonParse = sharedSafeJsonParse
-        || ((raw, fallback) => {
+    const safeJsonParse =
+        sharedSafeJsonParse ||
+        ((raw, fallback) => {
             try {
                 const parsed = JSON.parse(raw);
                 return parsed ?? fallback;
-            } catch (error) {
+            } catch {
                 return fallback;
             }
         });
@@ -53,21 +95,37 @@ const tinyLlmClient = (() => {
     function loadRecentEntries() {
         if (!canUseLocalStorage()) return [];
 
-        const v2Stored = safeJsonParse(localStorage.getItem(RECENT_STORAGE_KEY), []);
+        const v2Stored = safeJsonParse(
+            localStorage.getItem(RECENT_STORAGE_KEY),
+            [],
+        );
         if (Array.isArray(v2Stored) && v2Stored.length > 0) {
             return v2Stored
-                .filter((entry) => entry && typeof entry.headline === 'string' && entry.headline.trim())
+                .filter(
+                    (entry) =>
+                        entry &&
+                        typeof entry.headline === 'string' &&
+                        entry.headline.trim(),
+                )
                 .slice(0, MAX_RECENT_STORAGE);
         }
 
-        const legacyStored = safeJsonParse(localStorage.getItem(LEGACY_RECENT_STORAGE_KEY), []);
-        if (!Array.isArray(legacyStored) || legacyStored.length === 0) return [];
+        const legacyStored = safeJsonParse(
+            localStorage.getItem(LEGACY_RECENT_STORAGE_KEY),
+            [],
+        );
+        if (!Array.isArray(legacyStored) || legacyStored.length === 0)
+            return [];
 
         const nowIso = new Date().toISOString();
         const migrated = legacyStored
             .filter(Boolean)
             .slice(0, MAX_RECENT_STORAGE)
-            .map((headline) => ({ headline, generatedAt: nowIso, section: 'latest' }));
+            .map((headline) => ({
+                headline,
+                generatedAt: nowIso,
+                section: 'latest',
+            }));
 
         persistRecentEntries(migrated);
         return migrated;
@@ -76,8 +134,11 @@ const tinyLlmClient = (() => {
     function persistRecentEntries(entries) {
         if (!canUseLocalStorage()) return;
         try {
-            localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(entries.slice(0, MAX_RECENT_STORAGE)));
-        } catch (error) {
+            localStorage.setItem(
+                RECENT_STORAGE_KEY,
+                JSON.stringify(entries.slice(0, MAX_RECENT_STORAGE)),
+            );
+        } catch {
             return;
         }
     }
@@ -88,7 +149,7 @@ const tinyLlmClient = (() => {
         recentEntries.unshift({
             headline: result.headline,
             generatedAt: result.generatedAt,
-            section: result.section
+            section: result.section,
         });
 
         if (recentEntries.length > MAX_RECENT_STORAGE) {
@@ -99,7 +160,7 @@ const tinyLlmClient = (() => {
     }
 
     function createSeededRng(seed) {
-        let state = (seed >>> 0) || 1;
+        let state = seed >>> 0 || 1;
         return () => {
             state = (1664525 * state + 1013904223) >>> 0;
             return state / 0x100000000;
@@ -108,7 +169,10 @@ const tinyLlmClient = (() => {
 
     function getRandom(rng) {
         if (typeof rng === 'function') return rng();
-        if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+        if (
+            typeof crypto !== 'undefined' &&
+            typeof crypto.getRandomValues === 'function'
+        ) {
             const buffer = new Uint32Array(1);
             crypto.getRandomValues(buffer);
             return buffer[0] / 0x100000000;
@@ -122,14 +186,19 @@ const tinyLlmClient = (() => {
     }
 
     function normalizeText(value) {
-        return String(value || '').replace(/\s+/g, ' ').trim();
+        return String(value || '')
+            .replace(/\s+/g, ' ')
+            .trim();
     }
 
     function tokenize(value) {
         const normalized = normalizeText(value).toLowerCase();
         if (!normalized) return [];
 
-        if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') {
+        if (
+            typeof Intl !== 'undefined' &&
+            typeof Intl.Segmenter === 'function'
+        ) {
             const segmenter = new Intl.Segmenter('en', { granularity: 'word' });
             return Array.from(segmenter.segment(normalized))
                 .map((entry) => entry.segment)
@@ -143,20 +212,32 @@ const tinyLlmClient = (() => {
         const normalized = normalizeText(text);
         if (!normalized) return '';
         const withoutTrailingPunctuation = normalized.replace(/[!?]+$/g, '');
-        return withoutTrailingPunctuation.charAt(0).toUpperCase() + withoutTrailingPunctuation.slice(1);
+        return (
+            withoutTrailingPunctuation.charAt(0).toUpperCase() +
+            withoutTrailingPunctuation.slice(1)
+        );
     }
 
     function clampHeadlineLength(text) {
         const normalized = normalizeText(text);
         if (normalized.length <= HARD_MAX_LENGTH) return normalized;
         const clipped = normalized.slice(0, HARD_MAX_LENGTH + 1);
-        const boundary = Math.max(clipped.lastIndexOf('; '), clipped.lastIndexOf(', '), clipped.lastIndexOf(' '));
-        const safe = boundary > 60 ? clipped.slice(0, boundary) : clipped.slice(0, HARD_MAX_LENGTH);
+        const boundary = Math.max(
+            clipped.lastIndexOf('; '),
+            clipped.lastIndexOf(', '),
+            clipped.lastIndexOf(' '),
+        );
+        const safe =
+            boundary > 60
+                ? clipped.slice(0, boundary)
+                : clipped.slice(0, HARD_MAX_LENGTH);
         return safe.trim();
     }
 
     function uniqueTokens(tokens) {
-        return Array.from(new Set(tokens.filter((token) => token && !STOPWORDS.has(token))));
+        return Array.from(
+            new Set(tokens.filter((token) => token && !STOPWORDS.has(token))),
+        );
     }
 
     function normalizeSection(section) {
@@ -170,7 +251,10 @@ const tinyLlmClient = (() => {
         let bestScore = 0;
 
         Object.entries(SECTION_HINTS).forEach(([section, hints]) => {
-            const score = hints.reduce((acc, hint) => acc + (tokens.has(hint) ? 1 : 0), 0);
+            const score = hints.reduce(
+                (acc, hint) => acc + (tokens.has(hint) ? 1 : 0),
+                0,
+            );
             if (score > bestScore) {
                 bestSection = section;
                 bestScore = score;
@@ -192,15 +276,28 @@ const tinyLlmClient = (() => {
     }
 
     function countToken(tokens, target) {
-        return tokens.reduce((count, token) => (token === target ? count + 1 : count), 0);
+        return tokens.reduce(
+            (count, token) => (token === target ? count + 1 : count),
+            0,
+        );
     }
 
     function buildPayload(section, rng, queryHints = []) {
         const subject = pick(BEATS.subjects, rng);
-        const normalizedSubject = typeof subject === 'object' ? subject.text : subject;
-        const possessive = typeof subject === 'object' ? subject?.pronouns?.possessive || 'their' : 'their';
-        const objectPhrase = String(pick(BEATS.objects, rng) || '').replace('{possessive}', possessive);
-        const twist = String(pick(BEATS.twists, rng) || '').replace('{possessive}', possessive);
+        const normalizedSubject =
+            typeof subject === 'object' ? subject.text : subject;
+        const possessive =
+            typeof subject === 'object'
+                ? subject?.pronouns?.possessive || 'their'
+                : 'their';
+        const objectPhrase = String(pick(BEATS.objects, rng) || '').replace(
+            '{possessive}',
+            possessive,
+        );
+        const twist = String(pick(BEATS.twists, rng) || '').replace(
+            '{possessive}',
+            possessive,
+        );
 
         return {
             desk: pick(BEATS.desks, rng),
@@ -212,7 +309,7 @@ const tinyLlmClient = (() => {
             impact: pick(BEATS.impacts, rng),
             section,
             marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng),
-            queryHint: queryHints.length ? pick(queryHints, rng) : ''
+            queryHint: queryHints.length ? pick(queryHints, rng) : '',
         };
     }
 
@@ -225,7 +322,7 @@ const tinyLlmClient = (() => {
             `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}, then called it "community outreach"; ${payload.impact}`,
             `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`,
             `${payload.marker} desk memo: ${payload.subject} ${payload.verb} ${payload.object} after ${payload.twist}; ${payload.impact}`,
-            `${payload.subject} called ${payload.queryHint || payload.marker} a growth strategy, then ${payload.verb} ${payload.object}; ${payload.impact}`
+            `${payload.subject} called ${payload.queryHint || payload.marker} a growth strategy, then ${payload.verb} ${payload.object}; ${payload.impact}`,
         ];
 
         const drafted = formatSentenceCase(pick(patterns, rng));
@@ -247,14 +344,19 @@ const tinyLlmClient = (() => {
         let score = 0;
         const tokens = tokenize(candidate.headline);
 
-        if (candidate.section === options.section || options.section === 'latest') {
+        if (
+            candidate.section === options.section ||
+            options.section === 'latest'
+        ) {
             score += 0.22;
             reasonCodes.push('section-match');
         }
 
         const queryTokens = tokenize(options.query);
         if (queryTokens.length) {
-            const overlap = queryTokens.filter((token) => tokens.includes(token)).length;
+            const overlap = queryTokens.filter((token) =>
+                tokens.includes(token),
+            ).length;
             const queryScore = overlap / queryTokens.length;
             score += queryScore * 0.35;
             if (queryScore > 0) reasonCodes.push('query-match');
@@ -267,7 +369,11 @@ const tinyLlmClient = (() => {
         }
 
         const nearWindow = recentHeadlines.slice(0, NEAR_DUPLICATE_WINDOW);
-        const maxOverlap = nearWindow.reduce((max, item) => Math.max(max, headlineTokenOverlap(candidate.headline, item)), 0);
+        const maxOverlap = nearWindow.reduce(
+            (max, item) =>
+                Math.max(max, headlineTokenOverlap(candidate.headline, item)),
+            0,
+        );
         score += (1 - maxOverlap) * 0.2;
         if (maxOverlap < 0.5) reasonCodes.push('novel-structure');
 
@@ -284,7 +390,10 @@ const tinyLlmClient = (() => {
             score += 0.08;
             reasonCodes.push('brand-balanced');
         } else {
-            const penalty = Math.min(0.16, (brandMentions - BRAND_TOKEN_SOFT_LIMIT) * 0.08);
+            const penalty = Math.min(
+                0.16,
+                (brandMentions - BRAND_TOKEN_SOFT_LIMIT) * 0.08,
+            );
             score -= penalty;
             reasonCodes.push('brand-overused');
         }
@@ -296,28 +405,38 @@ const tinyLlmClient = (() => {
 
         return {
             score: Math.max(0, Math.min(1, score)),
-            reasonCodes
+            reasonCodes,
         };
     }
 
     function buildCandidates(options, rng) {
-        const total = CANDIDATE_MIN + Math.floor(getRandom(rng) * (CANDIDATE_MAX - CANDIDATE_MIN + 1));
+        const total =
+            CANDIDATE_MIN +
+            Math.floor(getRandom(rng) * (CANDIDATE_MAX - CANDIDATE_MIN + 1));
         const section = normalizeSection(options.section);
         const queryTokens = uniqueTokens(tokenize(options.query || ''));
 
         return Array.from({ length: total }).map(() => {
-            const weightedSection = section === 'latest' && getRandom(rng) < 0.35
-                ? pick(['world', 'culture', 'tech', 'oddities'], rng)
-                : section;
+            const weightedSection =
+                section === 'latest' && getRandom(rng) < 0.35
+                    ? pick(['world', 'culture', 'tech', 'oddities'], rng)
+                    : section;
             const payload = buildPayload(weightedSection, rng, queryTokens);
             const generated = synthesizeCandidate(payload, rng);
-            const chosenQueryToken = queryTokens.length ? pick(queryTokens, rng) : '';
-            const headline = chosenQueryToken && getRandom(rng) < 0.68 && !generated.toLowerCase().includes(chosenQueryToken)
-                ? clampHeadlineLength(`${generated} as ${chosenQueryToken} chatter keeps climbing`)
-                : generated;
+            const chosenQueryToken = queryTokens.length
+                ? pick(queryTokens, rng)
+                : '';
+            const headline =
+                chosenQueryToken &&
+                getRandom(rng) < 0.68 &&
+                !generated.toLowerCase().includes(chosenQueryToken)
+                    ? clampHeadlineLength(
+                          `${generated} as ${chosenQueryToken} chatter keeps climbing`,
+                      )
+                    : generated;
             return {
                 headline,
-                section: weightedSection
+                section: weightedSection,
             };
         });
     }
@@ -325,7 +444,11 @@ const tinyLlmClient = (() => {
     function pickBestCandidate(candidates, options, threshold) {
         const recent = recentEntries.map((entry) => entry.headline);
         const recentDuplicateSet = new Set(recent.slice(0, DUPLICATE_WINDOW));
-        const excluded = new Set((options.exclude || []).map((value) => normalizeText(value).toLowerCase()));
+        const excluded = new Set(
+            (options.exclude || []).map((value) =>
+                normalizeText(value).toLowerCase(),
+            ),
+        );
 
         let bestCandidate = null;
         let bestScore = -1;
@@ -342,7 +465,7 @@ const tinyLlmClient = (() => {
                 bestCandidate = {
                     ...candidate,
                     confidence: result.score,
-                    reasonCodes: result.reasonCodes
+                    reasonCodes: result.reasonCodes,
                 };
             }
         });
@@ -372,10 +495,11 @@ const tinyLlmClient = (() => {
             source: options.source || 'any',
             query: normalizeText(options.query || ''),
             exclude: Array.isArray(options.exclude) ? options.exclude : [],
-            seed: Number.isInteger(options.seed) ? options.seed : null
+            seed: Number.isInteger(options.seed) ? options.seed : null,
         };
 
-        const rng = request.seed !== null ? createSeededRng(request.seed) : null;
+        const rng =
+            request.seed !== null ? createSeededRng(request.seed) : null;
         const runGeneration = () => {
             const candidates = buildCandidates(request, rng);
             let picked = pickBestCandidate(candidates, request, 0.52);
@@ -391,10 +515,13 @@ const tinyLlmClient = (() => {
 
             const result = {
                 headline: picked.headline,
-                section: inferSectionFromText(picked.headline) || picked.section || 'latest',
+                section:
+                    inferSectionFromText(picked.headline) ||
+                    picked.section ||
+                    'latest',
                 confidence: picked.confidence,
                 reasonCodes: picked.reasonCodes,
-                generatedAt: new Date().toISOString()
+                generatedAt: new Date().toISOString(),
             };
 
             addRecentEntry(result);
@@ -403,7 +530,7 @@ const tinyLlmClient = (() => {
                 timeoutMs: TINY_LLM_TIMEOUT_MS,
                 fallback: null,
                 warm: true,
-                reasonCodes: picked.reasonCodes
+                reasonCodes: picked.reasonCodes,
             };
             return result;
         };
@@ -426,7 +553,7 @@ const tinyLlmClient = (() => {
                 timeoutMs: TINY_LLM_TIMEOUT_MS,
                 fallback: error?.code || error?.message || 'generation-error',
                 warm: true,
-                reasonCodes: []
+                reasonCodes: [],
             };
             throw error;
         } finally {
@@ -440,7 +567,7 @@ const tinyLlmClient = (() => {
         generateHeadline,
         getLastDiagnostics() {
             return { ...lastDiagnostics };
-        }
+        },
     };
 })();
 

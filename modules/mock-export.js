@@ -1,30 +1,49 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
-    async function exportMockFront({ mode, elements, reportStatus, setButtonLoading }) {
+    async function exportMockFront({
+        mode,
+        elements,
+        reportStatus,
+        setButtonLoading,
+    }) {
         if (!elements.mockFrame || !window.htmlToImage) {
-            const fallbackMessage = mode === 'copy'
-                ? 'Export unavailable. Reload, then try Download mock front page.'
-                : 'Export unavailable. Reload and try again.';
+            const fallbackMessage =
+                mode === 'copy'
+                    ? 'Export unavailable. Reload, then try Download mock front page.'
+                    : 'Export unavailable. Reload and try again.';
             reportStatus(fallbackMessage, true);
             return;
         }
 
         reportStatus('Preparing export...');
-        const exportButton = mode === 'download' ? elements.downloadMockButton : elements.copyMockButton;
+        const exportButton =
+            mode === 'download'
+                ? elements.downloadMockButton
+                : elements.copyMockButton;
         setButtonLoading(exportButton, true);
 
         const bounds = elements.mockFrame.getBoundingClientRect();
         const options = {
-            pixelRatio: Math.min(3, Math.max(2, (window.devicePixelRatio || 1) * 1.25)),
-            backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')?.trim() || undefined,
+            pixelRatio: Math.min(
+                3,
+                Math.max(2, (window.devicePixelRatio || 1) * 1.25),
+            ),
+            backgroundColor:
+                getComputedStyle(document.body)
+                    .getPropertyValue('--bg')
+                    ?.trim() || undefined,
             cacheBust: true,
             width: Math.max(1, Math.round(bounds.width)),
-            height: Math.max(1, Math.round(bounds.height))
+            height: Math.max(1, Math.round(bounds.height)),
         };
 
         const downloadImage = async (message) => {
-            const dataUrl = await window.htmlToImage.toPng(elements.mockFrame, options);
+            const dataUrl = await window.htmlToImage.toPng(
+                elements.mockFrame,
+                options,
+            );
             const link = document.createElement('a');
             link.download = 'neckass-front-page.png';
             link.href = dataUrl;
@@ -38,12 +57,17 @@
                 return;
             }
 
-            if (!navigator.clipboard || !navigator.clipboard.write) {
-                await downloadImage('Clipboard unavailable. Downloaded front page.');
+            if (!navigator.clipboard?.write) {
+                await downloadImage(
+                    'Clipboard unavailable. Downloaded front page.',
+                );
                 return;
             }
 
-            const blob = await window.htmlToImage.toBlob(elements.mockFrame, options);
+            const blob = await window.htmlToImage.toBlob(
+                elements.mockFrame,
+                options,
+            );
             if (!blob) {
                 throw new Error('Failed to render image');
             }
@@ -51,14 +75,16 @@
             try {
                 await navigator.clipboard.write([
                     new ClipboardItem({
-                        [blob.type]: blob
-                    })
+                        [blob.type]: blob,
+                    }),
                 ]);
                 reportStatus('Copied front page to clipboard.');
-            } catch (error) {
-                await downloadImage('Clipboard unavailable. Downloaded front page.');
+            } catch {
+                await downloadImage(
+                    'Clipboard unavailable. Downloaded front page.',
+                );
             }
-        } catch (error) {
+        } catch {
             reportStatus('Export failed. Please try again.', true);
         } finally {
             setButtonLoading(exportButton, false);

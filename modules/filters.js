@@ -1,12 +1,13 @@
 (() => {
-    const Neckass = window.Neckass = window.Neckass || {};
+    window.Neckass = window.Neckass || {};
+    const Neckass = window.Neckass;
 
     const DEFAULT_FILTERS = Object.freeze({
         section: 'latest',
         query: '',
         source: 'auto',
         panel: 'recent',
-        layout: 'standard'
+        layout: 'standard',
     });
 
     const ALLOWED_SECTIONS = ['latest', 'world', 'culture', 'tech', 'oddities'];
@@ -38,11 +39,11 @@
 
     function hasActiveFilters(filters) {
         return Boolean(
-            filters.query
-            || filters.section !== DEFAULT_FILTERS.section
-            || filters.source !== DEFAULT_FILTERS.source
-            || filters.panel !== DEFAULT_FILTERS.panel
-            || filters.layout !== DEFAULT_FILTERS.layout
+            filters.query ||
+                filters.section !== DEFAULT_FILTERS.section ||
+                filters.source !== DEFAULT_FILTERS.source ||
+                filters.panel !== DEFAULT_FILTERS.panel ||
+                filters.layout !== DEFAULT_FILTERS.layout,
         );
     }
 
@@ -50,20 +51,80 @@
         if (!headlineText) return 'latest';
         const normalized = headlineText.toLowerCase();
         const patterns = {
-            world: ['canada', 'federal', 'global', 'climate', 'ambassador', 'space', 'metaverse', 'crypto', 'treaty'],
-            tech: ['app', 'wifi', 'ai', 'bot', 'algorithm', 'ios', 'android', 'tweet', 'stream', 'vr', 'podcast', 'discord', 'zoom'],
-            culture: ['tiktok', 'reels', 'instagram', 'spotify', 'etsy', 'book', 'substack', 'newsletter', 'podcast', 'fashion', 'club'],
-            oddities: ['unhinged', 'manifest', 'ghost', 'meme', 'weird', 'npc', 'pickleball', 'cursed', 'demon', 'zodiac']
+            world: [
+                'canada',
+                'federal',
+                'global',
+                'climate',
+                'ambassador',
+                'space',
+                'metaverse',
+                'crypto',
+                'treaty',
+            ],
+            tech: [
+                'app',
+                'wifi',
+                'ai',
+                'bot',
+                'algorithm',
+                'ios',
+                'android',
+                'tweet',
+                'stream',
+                'vr',
+                'podcast',
+                'discord',
+                'zoom',
+            ],
+            culture: [
+                'tiktok',
+                'reels',
+                'instagram',
+                'spotify',
+                'etsy',
+                'book',
+                'substack',
+                'newsletter',
+                'podcast',
+                'fashion',
+                'club',
+            ],
+            oddities: [
+                'unhinged',
+                'manifest',
+                'ghost',
+                'meme',
+                'weird',
+                'npc',
+                'pickleball',
+                'cursed',
+                'demon',
+                'zodiac',
+            ],
         };
 
-        if (patterns.tech.some((term) => normalized.includes(term))) return 'tech';
-        if (patterns.culture.some((term) => normalized.includes(term))) return 'culture';
-        if (patterns.world.some((term) => normalized.includes(term))) return 'world';
-        if (patterns.oddities.some((term) => normalized.includes(term))) return 'oddities';
+        if (patterns.tech.some((term) => normalized.includes(term)))
+            return 'tech';
+        if (patterns.culture.some((term) => normalized.includes(term)))
+            return 'culture';
+        if (patterns.world.some((term) => normalized.includes(term)))
+            return 'world';
+        if (patterns.oddities.some((term) => normalized.includes(term)))
+            return 'oddities';
         return 'latest';
     }
 
-    function isIndexEligible(index, { headlines, baseHeadlineCount, filters, normalizedQuery = null, isValidHeadlineIndex }) {
+    function isIndexEligible(
+        index,
+        {
+            headlines,
+            baseHeadlineCount,
+            filters,
+            normalizedQuery = null,
+            isValidHeadlineIndex,
+        },
+    ) {
         if (!isValidHeadlineIndex(index, headlines.length)) return false;
         const headlineText = headlines[index];
         const query = normalizedQuery ?? filters.query.trim().toLowerCase();
@@ -82,17 +143,24 @@
         return true;
     }
 
-    function getEligibleIndexes({ headlines, baseHeadlineCount, filters, isValidHeadlineIndex }) {
+    function getEligibleIndexes({
+        headlines,
+        baseHeadlineCount,
+        filters,
+        isValidHeadlineIndex,
+    }) {
         const query = filters.query.trim().toLowerCase();
         return headlines
             .map((_, index) => index)
-            .filter((index) => isIndexEligible(index, {
-                headlines,
-                baseHeadlineCount,
-                filters,
-                normalizedQuery: query,
-                isValidHeadlineIndex
-            }));
+            .filter((index) =>
+                isIndexEligible(index, {
+                    headlines,
+                    baseHeadlineCount,
+                    filters,
+                    normalizedQuery: query,
+                    isValidHeadlineIndex,
+                }),
+            );
     }
 
     Neckass.DEFAULT_FILTERS = DEFAULT_FILTERS;
