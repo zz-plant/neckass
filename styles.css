@@ -1,4 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap");
+/* Fraunces (OFL-1.1), latin subset, variable 400-700 — self-hosted so no
+   visitor request leaves the site. See fonts/README.md. */
+@font-face {
+    font-family: "Fraunces";
+    src: url("fonts/fraunces-latin-var.woff2") format("woff2-variations");
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
 
 * {
     margin: 0;
@@ -7,31 +15,37 @@
 }
 
 :root {
-    --surface-1: #f3f4f6;
-    --surface-2: #ffffff;
-    --surface-3: #f8fafc;
-    --surface-4: #ffffff;
-    --text-primary: #111827;
-    --text-muted: #4b5563;
-    --text-inverse: #ffffff;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --focus-ring: rgba(37, 99, 235, 0.45);
-    --border-subtle: rgba(38, 32, 24, 0.12);
-    --border-strong: rgba(34, 26, 20, 0.2);
-    --elevation-1: 0 12px 28px rgba(15, 23, 42, 0.08);
-    --elevation-2: 0 8px 18px rgba(15, 23, 42, 0.06);
-    --bg-highlight: rgba(255, 245, 235, 0.9);
-    --accent-soft: rgba(220, 107, 63, 0.16);
+    /* Newsprint: the page is the stock, the type is the ink. */
+    --surface-1: #e6e2d8;
+    --surface-2: #fbfaf6;
+    --surface-3: #f1ede4;
+    --surface-4: #fbfaf6;
+    --text-primary: #241c14;
+    --text-muted: #5a5044;
+    --text-inverse: #fbf9f5;
+    --ink-display: #462c14;
+    --accent: #b32b1c;
+    --accent-hover: #8e2115;
+    --focus-ring: rgba(179, 43, 28, 0.45);
+    --border-subtle: rgba(36, 28, 20, 0.14);
+    --border-strong: rgba(36, 28, 20, 0.26);
+    --elevation-1: 0 12px 28px rgba(46, 34, 20, 0.1);
+    --elevation-2: 0 8px 18px rgba(46, 34, 20, 0.07);
+    --bg-highlight: rgba(255, 245, 232, 0.9);
+    --accent-soft: rgba(179, 43, 28, 0.14);
     --status-error: #a52f2f;
     --status-success-bg: rgba(30, 28, 24, 0.94);
-    --status-success-text: #ffffff;
+    --status-success-text: #fbf9f5;
     --radius: 16px;
     --font:
-        "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
-    --headline-font: "Fraunces", "Times New Roman", Georgia, serif;
-    --tap-highlight: rgba(220, 107, 63, 0.2);
+    --headline-font: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --tap-highlight: rgba(179, 43, 28, 0.2);
+    --veil-soft: rgba(255, 255, 255, 0.5);
+    --veil: rgba(255, 255, 255, 0.68);
+    --veil-strong: rgba(255, 255, 255, 0.85);
+    --on-accent: #fbf9f5;
     --bg: var(--surface-1);
     --surface: var(--surface-2);
     --surface-soft: var(--surface-3);
@@ -55,6 +69,15 @@
     --text-primary: #f5eee6;
     --text-muted: #cebca9;
     --text-inverse: #0f0d0a;
+    --ink-display: #f2dfc6;
+    --veil-soft: rgba(250, 240, 228, 0.04);
+    --veil: rgba(250, 240, 228, 0.07);
+    --veil-strong: rgba(250, 240, 228, 0.1);
+    --accent: #c9432f;
+    --accent-hover: #dc5540;
+    --focus-ring: rgba(201, 67, 47, 0.5);
+    --accent-soft: rgba(201, 67, 47, 0.22);
+    --tap-highlight: rgba(201, 67, 47, 0.24);
     --border-subtle: rgba(243, 227, 211, 0.2);
     --border-strong: rgba(243, 227, 211, 0.32);
     --elevation-1: 0 16px 42px rgba(0, 0, 0, 0.45);
@@ -75,6 +98,15 @@
         --text-primary: #f5eee6;
         --text-muted: #cebca9;
         --text-inverse: #0f0d0a;
+        --ink-display: #f2dfc6;
+        --veil-soft: rgba(250, 240, 228, 0.04);
+        --veil: rgba(250, 240, 228, 0.07);
+        --veil-strong: rgba(250, 240, 228, 0.1);
+        --accent: #c9432f;
+        --accent-hover: #dc5540;
+        --focus-ring: rgba(201, 67, 47, 0.5);
+        --accent-soft: rgba(201, 67, 47, 0.22);
+        --tap-highlight: rgba(201, 67, 47, 0.24);
         --border-subtle: rgba(243, 227, 211, 0.2);
         --border-strong: rgba(243, 227, 211, 0.32);
         --elevation-1: 0 16px 42px rgba(0, 0, 0, 0.45);
@@ -104,7 +136,7 @@ body {
     left: 16px;
     top: 0;
     transform: translateY(-140%);
-    background: #ffffff;
+    background: var(--surface);
     color: var(--text);
     border: 1px solid rgba(34, 26, 20, 0.22);
     border-radius: 10px;
@@ -203,10 +235,10 @@ a,
     border-radius: 999px;
     border: 1px solid rgba(34, 26, 20, 0.2);
     text-decoration: none;
-    color: #3c352d;
+    color: var(--text);
     font-size: 0.9rem;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.72);
+    background: var(--veil);
     transition:
         border-color 0.2s ease,
         background 0.2s ease,
@@ -260,14 +292,14 @@ a,
     border: 1px solid rgba(220, 107, 63, 0.22);
     padding: 6px 14px;
     font-size: 0.85rem;
-    color: #5a2b15;
+    color: var(--accent);
     background: var(--surface-3);
     box-shadow: 0 8px 16px rgba(220, 107, 63, 0.08);
 }
 
 .meta {
     font-size: 0.94rem;
-    color: #544c43;
+    color: var(--muted);
 }
 
 .meta--secondary {
@@ -282,9 +314,9 @@ a,
     width: fit-content;
     max-width: 100%;
     border-radius: 999px;
-    border: 1px solid rgba(74, 125, 255, 0.18);
+    border: 1px solid var(--border-subtle);
     background: var(--surface-3);
-    color: #2c3245;
+    color: var(--muted);
     font-weight: 500;
     font-size: 0.8rem;
     padding: 5px 10px;
@@ -317,11 +349,11 @@ a,
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.88rem;
-    text-transform: none;
-    letter-spacing: 0.01em;
-    color: #50493f;
-    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    font-weight: 700;
 }
 
 .accent-dot {
@@ -343,7 +375,7 @@ a,
     font-size: clamp(2.05rem, 4vw, 2.7rem);
     line-height: 1.35;
     max-width: 24ch;
-    color: var(--text-primary);
+    color: var(--ink-display);
     letter-spacing: -0.01em;
     view-transition-name: featured-headline;
 }
@@ -368,12 +400,9 @@ a,
 .streak-text {
     margin: 2px 0 0;
     font-size: 0.86rem;
-    color: #473a2f;
-    border: 1px solid rgba(220, 107, 63, 0.16);
-    background: var(--surface-3);
-    border-radius: 10px;
-    padding: 6px 10px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    color: var(--muted);
+    border-left: 2px solid var(--accent-soft);
+    padding: 2px 0 2px 12px;
     min-height: 1.2em;
 }
 
@@ -396,7 +425,7 @@ a,
     border: 1px solid rgba(38, 32, 24, 0.13);
     border-radius: 999px;
     padding: 5px 9px;
-    background: rgba(255, 255, 255, 0.72);
+    background: var(--veil);
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -413,12 +442,12 @@ a,
     font-weight: 700;
     letter-spacing: 0.01em;
     text-transform: none;
-    color: #4f463f;
+    color: var(--text);
 }
 
 .streak-badge__goal {
     font-size: 0.78rem;
-    color: #554e47;
+    color: var(--muted);
 }
 
 .streak-badge.is-earned {
@@ -432,12 +461,12 @@ a,
 }
 
 .streak-badge.is-earned .streak-badge__title {
-    color: #57250f;
+    color: var(--accent);
 }
 
 .streak-badge.is-next {
-    border-color: rgba(74, 125, 255, 0.42);
-    box-shadow: 0 0 0 2px rgba(74, 125, 255, 0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 .history-card {
@@ -455,7 +484,7 @@ a,
 }
 
 .seo-copy p {
-    color: #453d34;
+    color: var(--text);
 }
 
 .faq-list {
@@ -465,12 +494,12 @@ a,
 
 .faq-list dt {
     font-weight: 600;
-    color: #2f2821;
+    color: var(--text);
 }
 
 .faq-list dd {
     margin-left: 0;
-    color: #534b42;
+    color: var(--muted);
 }
 
 .about-list {
@@ -529,7 +558,7 @@ a,
     font-size: 0.9rem;
     text-transform: none;
     letter-spacing: 0.01em;
-    color: #50493f;
+    color: var(--muted);
     font-weight: 600;
 }
 
@@ -574,8 +603,8 @@ button.accent .button-icon {
 
 .actions .ghost {
     border-color: rgba(34, 26, 20, 0.16);
-    background: rgba(255, 255, 255, 0.62);
-    color: #474038;
+    background: var(--veil);
+    color: var(--text);
 }
 
 .actions .ghost:hover {
@@ -587,14 +616,14 @@ button.accent .button-icon {
 .interaction-guide {
     margin: -2px 0 0;
     font-size: 0.87rem;
-    color: #53473a;
+    color: var(--muted);
     line-height: 1.45;
 }
 
 #prev-btn {
     border-color: rgba(34, 26, 20, 0.14);
-    background: rgba(255, 255, 255, 0.56);
-    color: #4a433b;
+    background: var(--veil-soft);
+    color: var(--text);
 }
 
 button {
@@ -646,10 +675,10 @@ a:focus-visible,
 
 button.accent {
     background: var(--accent);
-    border-color: rgba(220, 107, 63, 0.62);
-    color: var(--status-success-text);
+    border-color: var(--accent-hover);
+    color: var(--on-accent);
     font-weight: 700;
-    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.24);
+    box-shadow: 0 8px 16px rgba(46, 34, 20, 0.22);
 }
 
 button.accent:hover {
@@ -674,7 +703,7 @@ button.ghost {
     margin-top: 2px;
     padding: 10px 12px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.52);
+    background: var(--veil-soft);
     border: 1px solid rgba(45, 31, 16, 0.1);
 }
 
@@ -692,7 +721,7 @@ button.ghost {
 .headline-quick-actions__hint {
     display: none;
     font-size: 0.82rem;
-    color: #4f463f;
+    color: var(--muted);
 }
 
 .headline-quick-actions__grid {
@@ -711,7 +740,7 @@ button.ghost {
 
 .headline-quick-actions__grid .quick-action-secondary {
     border-color: rgba(34, 26, 20, 0.22);
-    background: rgba(255, 255, 255, 0.68);
+    background: var(--veil);
 }
 
 .status-text {
@@ -765,7 +794,7 @@ button.ghost {
     gap: 10px;
     padding: 10px 12px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--veil-soft);
 }
 
 .command-cluster + .command-cluster {
@@ -789,8 +818,8 @@ button.ghost {
     gap: 6px;
     padding: 4px 12px;
     border-radius: 999px;
-    background: rgba(74, 125, 255, 0.12);
-    color: #2d3f7e;
+    background: var(--accent-soft);
+    color: var(--accent);
     font-size: 0.75rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -804,7 +833,7 @@ button.ghost {
 
 #copy-btn {
     border-color: rgba(34, 26, 20, 0.24);
-    background: rgba(255, 255, 255, 0.75);
+    background: var(--veil-strong);
     font-weight: 600;
 }
 
@@ -859,7 +888,7 @@ button.ghost {
 
 .share-link:hover {
     background: rgba(38, 32, 24, 0.06);
-    color: #2b1c0a;
+    color: var(--text);
     border-color: rgba(34, 26, 20, 0.28);
 }
 
@@ -1007,7 +1036,7 @@ button.ghost {
 
 .counter {
     font-size: 0.96rem;
-    color: #544d44;
+    color: var(--muted);
 }
 
 .counter-inline {
@@ -1093,7 +1122,7 @@ button.ghost {
     text-align: left;
     border-radius: 10px;
     padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.85);
+    background: var(--veil-strong);
     border: 1px solid rgba(45, 31, 16, 0.12);
     color: var(--text);
     font-size: 0.95rem;
@@ -1102,9 +1131,9 @@ button.ghost {
 }
 
 .headline-item--active button {
-    border-color: rgba(220, 107, 63, 0.55);
-    background: rgba(255, 247, 240, 0.95);
-    box-shadow: 0 0 0 1px rgba(220, 107, 63, 0.15);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 1px var(--accent-soft);
 }
 
 .headline-item--empty {
@@ -1204,8 +1233,8 @@ button.ghost {
 
     #prev-btn {
         border-color: rgba(34, 26, 20, 0.16);
-        background: rgba(255, 255, 255, 0.5);
-        color: #453f38;
+        background: var(--veil-soft);
+        color: var(--text);
     }
 
     #next-btn {

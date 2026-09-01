@@ -21,7 +21,6 @@
         updateToggleButtons,
         isValidHeadlineIndex,
         normalizeHeadlineText,
-        selectReadableColor,
         slugifyHeadline,
         runViewTransition,
         scheduleBackgroundTask,
@@ -90,7 +89,6 @@
                 dependencies: {
                     runViewTransition,
                     scheduleBackgroundTask,
-                    selectReadableColor,
                     updateHeadMetadata,
                     updateSocialShareLinks,
                     hasActiveFilters,
@@ -516,7 +514,6 @@
                 const headlineText = this.headlines[index];
                 runViewTransition(() => {
                     this.elements.headline.textContent = headlineText;
-                    this.elements.headline.style.color = selectReadableColor();
                     this.elements.headline.classList.add('show');
                 });
                 this.toggleLoader(false);
