@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 ### Added
+- Added a real `404.html`. Cloudflare Pages was serving `index.html` with HTTP 200 for every unmatched path, which search engines read as soft-404 duplicate content across unlimited URLs.
+- Added `bun run og:generate` (`scripts/generate-og.ts`) and a CI workflow that runs lint, `assets:check` and the smoke suite on every push and pull request.
+- Added `scripts/serve.ts`, a Bun static server for local preview and the test suite, removing the repo's only dependency on Python.
 - Added an indexable `prompts.html` page with crawlable headline prompt categories and starter prompt ideas, then linked it from primary navigation and existing SEO content blocks.
 - Added a browser-callable agent interface (`window.Neckass.agent`) with tool-style actions (`get_state`, `shuffle`, `generate`, filter updates, and headline selection/listing) so agentic LLM runtimes can integrate without DOM-click scripting.
 - Added an optional Playwright smoke-test harness (`tests/smoke.spec.mjs`) for shuffle, URL restore, share-link, and export-availability checks.
@@ -14,7 +17,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added a root `sitemap.xml` with the canonical homepage URL.
 - Added an Automation beta command-rail card with a copyable agent snippet and API waitlist CTA, plus a local growth metrics snapshot card that tracks key actions and copies an investor-friendly metrics JSON payload.
 
+### Removed
+- Removed 279 unreferenced icons of 289; the ten the interface actually uses remain.
+- Removed `selectReadableColor()` and the colour subsystem only it reached (133 lines), including a `getComputedStyle` call that ran at module parse time.
+- Removed four hand-added PNGs in `docs/assets/` that were not generator output and were referenced by nothing, plus an unreferenced root `neckass-demo.png`.
+
 ### Changed
+- Social preview images are PNG rather than SVG. No major platform renders SVG link previews, so shared neckass.com links had shown no image at all; `prompts.html` was additionally serving the examples card.
+- Unified the palette on the warm gazette identity. Light mode had been generic cool grey while dark mode and the headline ink were warm, and the primary button was a cobalt that no other token agreed with.
+- The headline takes its colour from `--ink-display` instead of a random per-shuffle palette colour whose contrast was checked against a hardcoded background constant. Measured 12.3:1 on light, 13.1:1 on dark.
+- Fraunces is self-hosted; the render-blocking Google Fonts `@import` is gone, so the page makes no third-party request.
+- Fixed the asset generator, which scaled a 400x200 source in absolute units and so rendered a small logo in the corner of every large canvas. `assets:check` and `assets:generate` now share one scene list.
 - Expanded active-filter detection/status summaries to include panel/layout state so deep-linked context is clearer and clear-filters behavior remains semantically complete.
 - Improved mobile action discoverability and share clarity with a compact "More actions below" cue and a one-line share explainer in the command rail.
 - Refined export-unavailable messaging with a clearer recovery path (reload, then try download).

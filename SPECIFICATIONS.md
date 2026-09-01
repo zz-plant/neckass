@@ -47,7 +47,7 @@ This document captures the **current, in-repo feature set** for the Neckass Head
 ### Headline behavior
 - Headlines are randomly selected from the curated `headlines` array; additional generated headlines can be appended when the tiny LLM helper succeeds. Next/Shuffle prefers generated headlines if filters indicate so and the generator is available; otherwise it shuffles curated headlines. The next headline differs from the current headline whenever possible.【F:script.js†L31-L115】【F:script.js†L219-L269】【F:script.js†L1325-L1343】
 - Previous navigates back through the stored navigation stack and removes the last index if you go backward. It is disabled whenever the stack has fewer than two items or while loading.【F:script.js†L251-L273】【F:script.js†L445-L452】
-- On render, the headline text color is set using `selectReadableColor()`, which adjusts for brightness and enforces a minimum contrast ratio against the background color token. The update includes a short animation delay (60ms) to show the loader before revealing text.【F:script.js†L26-L30】【F:script.js†L342-L371】【F:script.js†L152-165】
+- The headline takes its colour from the `--ink-display` token, so it is one consistent ink in each theme (12.3:1 on light, 13.1:1 on dark). It was previously assigned a random palette colour per shuffle and contrast-checked against a hardcoded background constant, which never evaluated dark mode. The update includes a short animation delay (60ms) to show the loader before revealing text.
 
 ### Filter status row
 - The filter status text reflects active filters (section, query, source) when they exist and resets to **“All headlines”** when no filters are active.
@@ -207,7 +207,7 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 ## Error and edge cases
 - If no eligible headlines exist (because the list is empty or filters are too strict), the headline shows “No headlines available.” or “No headlines match your current filters.” The Shuffle button is disabled and loader is hidden.【F:script.js†L388-L416】
 - Metadata and social links are reverted to the base metadata and canonical URL (headline parameter removed) when there is no valid headline index.【F:script.js†L388-L407】
-- `selectReadableColor()` never returns undefined; it guarantees a return by either using the palette color, darkening it, or blending it for minimum contrast ratio (4.5).【F:script.js†L394-L407】【F:script.js†L1515-L1652】
+- Headline contrast is guaranteed by the theme tokens rather than computed at runtime; `selectReadableColor()` and its colour helpers were removed once the token took over.
 
 ## Responsive behavior checkpoints
 - **≥900px width**: two-column grid with sticky command rail at 24px from top.
