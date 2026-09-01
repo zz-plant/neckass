@@ -205,19 +205,17 @@
                         <div class="share-actions">
                             <button id="native-share" class="ghost button-with-icon" type="button" aria-label="Share headline with device share sheet"><img class="button-icon" src="icons/send.svg" alt="" aria-hidden="true"><span>Share from device</span></button>
                         </div>
+                        <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
                         <div class="share-links">
-                            <!-- biome-ignore lint/a11y/useValidAnchor: href is assigned by updateSocialShareLinks() on every headline change -->
-                            <a id="twitter-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
+                            <a id="twitter-share" class="share-link" href="https://twitter.com/intent/tweet?text=Neckass%20Headlines&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on Twitter">
                                 <img src="icons/twitter.svg" alt="Twitter icon">
                                 <span>Twitter</span>
                             </a>
-                            <!-- biome-ignore lint/a11y/useValidAnchor: href is assigned by updateSocialShareLinks() on every headline change -->
-                            <a id="facebook-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                            <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Headlines" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
                                 <img src="icons/facebook.svg" alt="Facebook icon">
                                 <span>Facebook</span>
                             </a>
-                            <!-- biome-ignore lint/a11y/useValidAnchor: href is assigned by updateSocialShareLinks() on every headline change -->
-                            <a id="reddit-share" class="share-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
+                            <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Headlines" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
                                 <img src="icons/reddit.svg" alt="Reddit icon">
                                 <span>Reddit</span>
                             </a>

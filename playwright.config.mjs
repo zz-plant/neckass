@@ -11,7 +11,7 @@ export default defineConfig({
         headless: true,
     },
     webServer: {
-        command: 'python -m http.server 8001 --directory .',
+        command: 'bun run scripts/serve.ts',
         url: 'http://127.0.0.1:8001/',
         reuseExistingServer: true,
         timeout: 10_000,

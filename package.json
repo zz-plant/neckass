@@ -5,6 +5,7 @@
   "scripts": {
     "test:smoke": "playwright test",
     "test:smoke:headed": "playwright test --headed",
+    "serve": "bun run scripts/serve.ts",
     "lint": "biome check .",
     "format": "biome format --write .",
     "prepare": "husky",
