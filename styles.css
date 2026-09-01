@@ -36,7 +36,7 @@
     --status-error: #a52f2f;
     --status-success-bg: rgba(30, 28, 24, 0.94);
     --status-success-text: #fbf9f5;
-    --radius: 16px;
+    --radius: 3px;
     --font:
         ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
@@ -172,13 +172,13 @@ a,
 
 .page-shell {
     position: relative;
-    max-width: 1100px;
+    max-width: 1180px;
     margin: 0 auto;
     background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid rgba(45, 31, 16, 0.1);
-    padding: 22px;
-    box-shadow: var(--shadow);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    padding: 30px 34px 34px;
+    box-shadow: 0 1px 3px rgba(46, 34, 20, 0.07);
     overflow: hidden;
 }
 
@@ -214,8 +214,9 @@ a,
 .brand-title {
     margin: 0;
     font-family: var(--headline-font);
-    font-size: 1.4rem;
-    letter-spacing: -0.01em;
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
 }
 
 .top-nav {
@@ -230,9 +231,9 @@ a,
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 36px;
-    padding: 6px 12px;
-    border-radius: 999px;
+    min-height: 34px;
+    padding: 6px 13px;
+    border-radius: 2px;
     border: 1px solid rgba(34, 26, 20, 0.2);
     text-decoration: none;
     color: var(--text);
@@ -288,7 +289,7 @@ a,
 }
 
 .pill {
-    border-radius: 999px;
+    border-radius: 2px;
     border: 1px solid rgba(220, 107, 63, 0.22);
     padding: 6px 14px;
     font-size: 0.85rem;
@@ -313,7 +314,7 @@ a,
     align-items: center;
     width: fit-content;
     max-width: 100%;
-    border-radius: 999px;
+    border-radius: 2px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-3);
     color: var(--muted);
@@ -335,11 +336,8 @@ a,
 .headline-section {
     display: grid;
     gap: 18px;
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 22px;
-    box-shadow: var(--shadow-soft);
+    padding: 4px 0 26px;
+    border-bottom: 2px solid var(--text);
     min-width: 0;
     position: relative;
     overflow: clip;
@@ -372,9 +370,9 @@ a,
 
 #headline {
     font-family: var(--headline-font);
-    font-size: clamp(2.05rem, 4vw, 2.7rem);
-    line-height: 1.35;
-    max-width: 24ch;
+    font-size: clamp(2.3rem, 5.2vw, 3.5rem);
+    line-height: 1.13;
+    max-width: 20ch;
     color: var(--ink-display);
     letter-spacing: -0.01em;
     view-transition-name: featured-headline;
@@ -472,11 +470,8 @@ a,
 .history-card {
     display: grid;
     gap: 12px;
-    background: var(--surface);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    padding: 18px;
-    box-shadow: var(--shadow-soft);
+    padding: 22px 0 4px;
+    border-top: 1px solid var(--border);
 }
 
 .seo-copy {
@@ -561,11 +556,11 @@ a,
 }
 
 .filter-label {
-    font-size: 0.9rem;
-    text-transform: none;
-    letter-spacing: 0.01em;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
     color: var(--muted);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .label-with-icon {
@@ -633,7 +628,7 @@ button.accent .button-icon {
 }
 
 button {
-    border-radius: 999px;
+    border-radius: 2px;
     border: 1px solid rgba(34, 26, 20, 0.18);
     background: transparent;
     color: var(--text);
@@ -684,7 +679,6 @@ button.accent {
     border-color: var(--accent-hover);
     color: var(--on-accent);
     font-weight: 700;
-    box-shadow: 0 8px 16px rgba(46, 34, 20, 0.22);
 }
 
 button.accent:hover {
@@ -765,12 +759,9 @@ button.ghost {
 
 .rail-card {
     display: grid;
-    gap: 16px;
-    padding: 22px;
-    border-radius: 10px;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-soft);
+    gap: 14px;
+    padding: 0 0 22px;
+    border-bottom: 1px solid var(--border);
 }
 
 .rail-card--hub {
@@ -778,8 +769,7 @@ button.ghost {
 }
 
 .rail-card--secondary {
-    opacity: 0.92;
-    box-shadow: 0 8px 18px rgba(46, 30, 17, 0.07);
+    opacity: 1;
 }
 
 .rail-intro {
@@ -792,9 +782,6 @@ button.ghost {
 .command-cluster {
     display: grid;
     gap: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: var(--veil-soft);
 }
 
 .command-cluster + .command-cluster {
@@ -817,7 +804,7 @@ button.ghost {
     align-items: center;
     gap: 6px;
     padding: 4px 12px;
-    border-radius: 999px;
+    border-radius: 2px;
     background: var(--accent-soft);
     color: var(--accent);
     font-size: 0.75rem;
@@ -869,9 +856,9 @@ button.ghost {
     align-items: center;
     gap: 10px;
     padding: 12px;
-    border-radius: 10px;
-    background: var(--surface-3);
-    border: 1px solid rgba(45, 31, 16, 0.14);
+    border-radius: 2px;
+    background: var(--veil);
+    border: 1px solid var(--border);
     color: var(--text);
     text-decoration: none;
     transition:
@@ -1082,14 +1069,16 @@ button.ghost {
 
 @media (min-width: 900px) {
     .page-grid {
-        grid-template-columns: minmax(0, 1fr) 330px;
+        grid-template-columns: minmax(0, 1fr) 372px;
         align-items: start;
-        gap: 16px;
+        gap: 34px;
     }
 
     .command-rail {
         position: sticky;
         top: 24px;
+        border-left: 1px solid var(--border);
+        padding-left: 32px;
     }
 
     .page-shell {
@@ -1131,9 +1120,9 @@ button.ghost {
 }
 
 .headline-item--active button {
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    box-shadow: 0 0 0 1px var(--accent-soft);
+    border-color: var(--border);
+    border-left: 3px solid var(--accent);
+    background: var(--veil);
 }
 
 .headline-item--empty {
@@ -1326,4 +1315,29 @@ button.ghost {
 .headline-section,
 .history-card {
     scroll-margin-top: 18px;
+}
+
+/* Below the two-column breakpoint the rail carries copy/share/export, so it has
+   to come before the explainer rather than after it. `display: contents` lifts
+   the stack's children into the page grid so they can be ordered against it. */
+@media (max-width: 899px) {
+    .feature-stack {
+        display: contents;
+    }
+
+    .headline-section {
+        order: 1;
+    }
+
+    .history-card:not(.seo-copy) {
+        order: 2;
+    }
+
+    .command-rail {
+        order: 3;
+    }
+
+    .seo-copy {
+        order: 4;
+    }
 }
