@@ -29,6 +29,11 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      # Reads PNG headers only, so it needs no rendering toolchain on the
+      # runner. Regenerating (assets:generate) does need rsvg-convert.
+      - name: Check generated assets
+        run: bun run assets:check
+
       # Playwright pins its browser build, so key the cache on the lockfile.
       - name: Cache Playwright browsers
         id: playwright-cache

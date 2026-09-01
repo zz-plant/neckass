@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
+import { SCENES } from './asset-specs.ts';
 
 const ASSETS_DIR = join(
     import.meta.dirname ?? __dirname,
@@ -8,28 +9,9 @@ const ASSETS_DIR = join(
     'docs',
     'assets',
 );
+const PROJECT = basename(join(import.meta.dirname ?? __dirname, '..'));
 
 const PNG_SIGNATURE = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
-
-type Spec = { width: number; height: number; minBytes: number };
-
-const SPECS: Record<string, Spec> = {
-    badge: { width: 240, height: 96, minBytes: 5_000 },
-    blur: { width: 50, height: 28, minBytes: 500 },
-    card: { width: 400, height: 300, minBytes: 25_000 },
-    circle: { width: 540, height: 540, minBytes: 15_000 },
-    dark: { width: 960, height: 540, minBytes: 25_000 },
-    demo: { width: 720, height: 405, minBytes: 25_000 },
-    email: { width: 600, height: 200, minBytes: 20_000 },
-    favicon: { width: 64, height: 64, minBytes: 1_000 },
-    github: { width: 1280, height: 640, minBytes: 50_000 },
-    header: { width: 1920, height: 400, minBytes: 25_000 },
-    mastodon: { width: 1200, height: 600, minBytes: 50_000 },
-    og: { width: 1200, height: 675, minBytes: 50_000 },
-    square: { width: 1080, height: 1080, minBytes: 50_000 },
-    touch: { width: 360, height: 360, minBytes: 20_000 },
-    unfurl: { width: 1200, height: 628, minBytes: 50_000 },
-};
 
 const COLOR_TYPE_LABELS: Record<number, string> = {
     0: 'grayscale',
@@ -44,7 +26,6 @@ type PngInfo = {
     height: number;
     colorType: number;
     bitDepth: number;
-    byteLength: number;
 };
 
 function readPngInfo(filePath: string): PngInfo {
@@ -55,58 +36,44 @@ function readPngInfo(filePath: string): PngInfo {
     return {
         width: buf.readUInt32BE(16),
         height: buf.readUInt32BE(20),
-        colorType: buf.readUInt8(25),
         bitDepth: buf.readUInt8(24),
-        byteLength: buf.length,
+        colorType: buf.readUInt8(25),
     };
 }
 
 function main() {
-    const files = readdirSync(ASSETS_DIR)
-        .filter((f) => f.endsWith('.png'))
-        .sort();
+    const files = readdirSync(ASSETS_DIR).filter((f) => f.endsWith('.png'));
     if (files.length === 0) {
         console.error(`FAIL: no PNGs found in ${ASSETS_DIR}`);
         process.exit(1);
     }
 
     const errors: string[] = [];
-    const found = new Set<string>();
-    const filesWithSizes = files.map((f) => ({
-        name: f,
-        size: statSync(join(ASSETS_DIR, f)).size,
-    }));
+    const seen = new Set<string>();
 
-    const prefix = (files[0] ?? 'unknown').split('-')[0] ?? '';
-    console.log(`\n🔍 Checking assets for «${prefix}» in ${ASSETS_DIR}\n`);
+    console.log(`\n🔍 Checking «${PROJECT}» assets in ${ASSETS_DIR}\n`);
 
-    for (const { name, size } of filesWithSizes) {
+    for (const name of files.sort()) {
         const filePath = join(ASSETS_DIR, name);
-        let typeKey = name
+        const scene = name
             .replace(/\.png$/, '')
-            .replace(new RegExp(`^${prefix}-`), '');
+            .replace(new RegExp(`^${PROJECT}-`), '');
+        const spec = SCENES[scene];
 
-        if (typeKey.startsWith('dark-og')) typeKey = 'dark';
-        else if (typeKey.startsWith('touch')) typeKey = 'touch';
-        else if (typeKey.startsWith('github-preview')) typeKey = 'github';
-
-        const spec = SPECS[typeKey];
+        // The directory is meant to be exactly `bun run assets:generate`
+        // output. Anything else drifted in by hand and will not survive a
+        // regenerate, so treat it as a failure rather than silently skipping.
         if (!spec) {
-            try {
-                const info = readPngInfo(filePath);
-                found.add(typeKey);
-                console.log(
-                    `  ⚠  ${name}  (${info.width}×${info.height}) — no spec, skipped`,
-                );
-            } catch (e: unknown) {
-                errors.push(`${name}: invalid PNG — ${(e as Error).message}`);
-            }
+            errors.push(
+                `${name}: not a known scene — run \`bun run assets:generate\` or delete it`,
+            );
             continue;
         }
 
-        found.add(typeKey);
+        seen.add(scene);
         try {
             const info = readPngInfo(filePath);
+            const size = statSync(filePath).size;
 
             if (info.width !== spec.width || info.height !== spec.height) {
                 errors.push(
@@ -115,7 +82,7 @@ function main() {
                 continue;
             }
             if (info.colorType === 3) {
-                errors.push(`${name}: indexed color (type 3) — posterized`);
+                errors.push(`${name}: indexed colour (type 3) — posterized`);
                 continue;
             }
             if (info.bitDepth < 8) {
@@ -124,7 +91,7 @@ function main() {
             }
             if (size < spec.minBytes) {
                 errors.push(
-                    `${name}: ${size}B < ${spec.minBytes}B min — possible posterization or truncation`,
+                    `${name}: ${size}B < ${spec.minBytes}B min — artwork probably did not render`,
                 );
                 continue;
             }
@@ -144,7 +111,7 @@ function main() {
         const svg = readFileSync(svgPath, 'utf8').trim();
         if (svg.startsWith('<svg') || svg.startsWith('<?xml')) {
             console.log(
-                `  ✅ source.svg  (${(statSync(svgPath).size).toLocaleString()}B)  design reference`,
+                `  ✅ source.svg  (${statSync(svgPath).size.toLocaleString()}B)  design reference`,
             );
         } else {
             errors.push('source.svg: invalid SVG (missing <svg> root)');
@@ -153,10 +120,11 @@ function main() {
         errors.push('source.svg: missing — design source file required');
     }
 
-    const expectedTypes = Object.keys(SPECS);
-    const missing = expectedTypes.filter((t) => !found.has(t));
+    const missing = Object.keys(SCENES).filter((s) => !seen.has(s));
     if (missing.length > 0) {
-        console.log(`\n  ⚠  Missing types: ${missing.join(', ')}`);
+        errors.push(
+            `missing scenes: ${missing.join(', ')} — run \`bun run assets:generate\``,
+        );
     }
 
     console.log(

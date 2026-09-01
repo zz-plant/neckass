@@ -105,8 +105,8 @@ bunx wrangler pages deploy . --project-name=neckass --branch=main
 
 ## Verification
 
-`.github/workflows/ci.yml` runs `bun run lint` and the Playwright suite on
-every push to `main` and every pull request.
+`.github/workflows/ci.yml` runs `bun run lint`, `bun run assets:check` and the
+Playwright suite on every push to `main` and every pull request.
 
 Pages runs `bun install --frozen-lockfile && bun run lint` as its build
 command, so a lint failure fails the build and nothing is published — the site
@@ -122,9 +122,17 @@ would mean downloading a browser on every deploy. Two ways to close that gap:
    from CI with `wrangler pages deploy` after the suite passes. Needs a
    Cloudflare API token stored as a GitHub secret.
 
-`bun run assets:check` is not part of CI. It currently fails on 11 undersized
-PNGs in `docs/assets/` and a touch icon that is 360x144 rather than 360x360;
-those need regenerating before the check can be enforced.
+### Generated assets
+
+`docs/assets/` is build output, not hand-edited artwork. Every PNG is rendered
+from `docs/assets/source.svg` by `bun run assets:generate`, which needs
+`rsvg-convert` locally; generation is deterministic, so regenerating an
+unchanged source produces byte-identical files.
+
+`bun run assets:check` verifies dimensions, colour type, bit depth and a
+minimum byte size per scene, and fails on any PNG that is not a known scene —
+that last rule is what stops hand-added files rotting in the directory
+unnoticed. Both scripts read their scene list from `scripts/asset-specs.ts`.
 
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.

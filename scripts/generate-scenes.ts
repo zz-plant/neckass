@@ -15,119 +15,16 @@ import {
     writeFileSync,
 } from 'node:fs';
 import { basename, join } from 'node:path';
+import {
+    SCENES,
+    type SceneSpec,
+    SOURCE_HEIGHT,
+    SOURCE_WIDTH,
+} from './asset-specs.ts';
 
 const ASSETS_DIR = join(process.cwd(), 'docs', 'assets');
 const SVG_PATH = join(ASSETS_DIR, 'source.svg');
 const PROJECT = basename(process.cwd());
-
-type SceneSpec = {
-    width: number;
-    height: number;
-    minBytes: number;
-    bg: string;
-    gradient?: boolean;
-    center?: boolean;
-    scale?: number;
-};
-
-const SCENES: Record<string, SceneSpec> = {
-    badge: {
-        width: 240,
-        height: 96,
-        minBytes: 2_000,
-        bg: '#1a1a2e',
-        scale: 0.8,
-    },
-    blur: { width: 50, height: 28, minBytes: 300, bg: '#1a1a2e', scale: 0.5 },
-    card: {
-        width: 400,
-        height: 300,
-        minBytes: 8_000,
-        bg: '#16213e',
-        center: true,
-        scale: 0.7,
-    },
-    circle: {
-        width: 540,
-        height: 540,
-        minBytes: 8_000,
-        bg: '#0f3460',
-        center: true,
-        gradient: true,
-    },
-    dark: {
-        width: 960,
-        height: 540,
-        minBytes: 10_000,
-        bg: '#0a0a0a',
-        gradient: true,
-    },
-    demo: {
-        width: 720,
-        height: 405,
-        minBytes: 12_000,
-        bg: '#1a1a2e',
-        gradient: true,
-    },
-    email: { width: 600, height: 200, minBytes: 5_000, bg: '#16213e' },
-    favicon: {
-        width: 64,
-        height: 64,
-        minBytes: 600,
-        bg: '#e94560',
-        scale: 0.95,
-    },
-    github: {
-        width: 1280,
-        height: 640,
-        minBytes: 15_000,
-        bg: '#1a1a2e',
-        gradient: true,
-    },
-    header: {
-        width: 1920,
-        height: 400,
-        minBytes: 12_000,
-        bg: '#1a1a2e',
-        gradient: true,
-    },
-    mastodon: {
-        width: 1200,
-        height: 600,
-        minBytes: 15_000,
-        bg: '#16213e',
-        gradient: true,
-    },
-    og: {
-        width: 1200,
-        height: 675,
-        minBytes: 15_000,
-        bg: '#1a1a2e',
-        gradient: true,
-    },
-    square: {
-        width: 1080,
-        height: 1080,
-        minBytes: 15_000,
-        bg: '#0f3460',
-        center: true,
-        gradient: true,
-    },
-    touch: {
-        width: 360,
-        height: 360,
-        minBytes: 8_000,
-        bg: '#16213e',
-        center: true,
-    },
-    unfurl: {
-        width: 1200,
-        height: 628,
-        minBytes: 15_000,
-        bg: '#1a1a2e',
-        gradient: true,
-    },
-};
 
 function hueFromProject(name: string): number {
     let hash = 0;
@@ -204,21 +101,24 @@ function main() {
             const overlay = buildOverlay(spec, hue);
             writeFileSync(overlayPath, overlay);
 
-            // 2. Build composed SVG: overlay background + scaled source.svg content
-            const scale = spec.scale ?? 0.8;
-            const sw = Math.round(spec.width * scale);
-            const sh = Math.round(spec.height * scale);
+            // 2. Compose: overlay background + source.svg fitted to the canvas.
+            //    scale is a fraction of the canvas, converted to a factor on
+            //    the source viewBox so the artwork fills the frame at every size.
+            const fraction = spec.scale;
+            const k = Math.min(
+                (spec.width * fraction) / SOURCE_WIDTH,
+                (spec.height * fraction) / SOURCE_HEIGHT,
+            );
+            const sw = SOURCE_WIDTH * k;
+            const sh = SOURCE_HEIGHT * k;
             const sx = spec.center
-                ? Math.round((spec.width - sw) / 2)
+                ? (spec.width - sw) / 2
                 : Math.round(spec.width * 0.05);
-            const sy = spec.center
-                ? Math.round((spec.height - sh) / 2)
-                : Math.round(spec.height * 0.05);
+            const sy = (spec.height - sh) / 2;
 
-            // Render source content ON TOP of overlay
             const composed = overlay.replace(
                 '</svg>',
-                `\n  <g transform="translate(${sx},${sy}) scale(${scale})">${innerSvg}</g>\n</svg>`,
+                `\n  <g transform="translate(${sx.toFixed(2)},${sy.toFixed(2)}) scale(${k.toFixed(5)})">${innerSvg}</g>\n</svg>`,
             );
             // Also add a subtle pattern for depth
             writeFileSync(compPath, composed);
@@ -231,7 +131,7 @@ function main() {
 
             // 4. Verify
             const sz = statSync(outPath).size;
-            if (sz < spec.minBytes / 2) {
+            if (sz < spec.minBytes) {
                 console.log(`  ⚠️  ${scene}: ${sz}B (below ${spec.minBytes}B)`);
                 warn++;
             } else {
