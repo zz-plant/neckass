@@ -30,9 +30,8 @@
             // clone at the device ratio, so the old fractional value
             // (dpr * 1.25) drew the artwork at ~0.8 scale inside a full-size
             // canvas, leaving the right edge short. A whole number fixes that.
-            // A blank band along the bottom remains: the clone also loses the
-            // card's padding and grid row-gap, which neither explicit
-            // width/height nor a `style` override restores.
+            // The matching blank band along the bottom was a separate fault in
+            // vendor/html-to-image.js, fixed there.
             pixelRatio: Math.min(
                 3,
                 Math.max(2, Math.round(window.devicePixelRatio || 1)),

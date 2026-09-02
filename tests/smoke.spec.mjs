@@ -79,6 +79,75 @@ test.describe('Neckass smoke flows', () => {
         await expect(page.locator('#copy-mock')).toBeEnabled();
     });
 
+    test('exported front page fills its canvas', async ({ page }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.app));
+
+        // The export clones the card and copies computed styles onto the
+        // clone. A regression there silently drops the card's own padding and
+        // grid row-gap, so the artwork bunches into a corner and the PNG comes
+        // out mostly blank — while every button still looks fine. Compare the
+        // rendered pixels against the card actually on screen.
+        const result = await page.evaluate(async () => {
+            const card = document.getElementById('mock-front');
+            const rect = card.getBoundingClientRect();
+            const dataUrl = await window.htmlToImage.toPng(card, {
+                pixelRatio: 2,
+                width: Math.round(rect.width),
+                height: Math.round(rect.height),
+            });
+
+            const image = new Image();
+            await new Promise((resolve, reject) => {
+                image.onload = resolve;
+                image.onerror = reject;
+                image.src = dataUrl;
+            });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0);
+            const { data } = ctx.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height,
+            );
+
+            // Find the lowest row holding ink, i.e. anything clearly darker
+            // than the newsprint ground.
+            let lastInkRow = 0;
+            for (let y = 0; y < canvas.height; y += 1) {
+                for (let x = 0; x < canvas.width; x += 1) {
+                    const i = (y * canvas.width + x) * 4;
+                    // Alpha matters: untouched canvas is transparent black,
+                    // which would otherwise read as ink everywhere and make
+                    // this assertion unfalsifiable.
+                    if (
+                        data[i + 3] > 200 &&
+                        data[i] < 140 &&
+                        data[i + 1] < 140 &&
+                        data[i + 2] < 140
+                    ) {
+                        lastInkRow = y;
+                        break;
+                    }
+                }
+            }
+
+            return {
+                height: canvas.height,
+                inkReaches: lastInkRow / canvas.height,
+            };
+        });
+
+        // The footer rule sits near the bottom of the card, so ink should run
+        // most of the way down. The old bug left this around 0.6.
+        expect(result.inkReaches).toBeGreaterThan(0.8);
+    });
+
     test('agent interface exposes callable tools', async ({ page }) => {
         await page.goto(BASE_URL);
         await page.waitForFunction(() => Boolean(window.Neckass?.agent));

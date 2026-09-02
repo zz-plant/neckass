@@ -1,19 +1,58 @@
 (function () {
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
+    function copyComputedStyle(source, target) {
+        const computed = window.getComputedStyle(source);
+        target.style.cssText = computed.cssText || Array.from(computed)
+            .map((property) => `${property}:${computed.getPropertyValue(property)};`)
+            .join('');
+    }
+
+    // cloneNode() cannot copy ::before / ::after, so any decorative rule drawn
+    // that way is missing from the export. Re-create them as real absolutely
+    // positioned elements carrying the pseudo-element's computed style.
+    function inlinePseudoElements(source, target) {
+        ['::before', '::after'].forEach((pseudo) => {
+            const computed = window.getComputedStyle(source, pseudo);
+            const content = computed.getPropertyValue('content');
+            if (!content || content === 'none' || content === 'normal') return;
+
+            const element = document.createElement('span');
+            element.style.cssText = Array.from(computed)
+                .map((property) => `${property}:${computed.getPropertyValue(property)};`)
+                .join('');
+            // `content` is inert on a real element; render its text instead.
+            element.style.removeProperty('content');
+            const text = content.replace(/^["'](.*)["']$/, '$1');
+            if (text) element.textContent = text;
+
+            if (pseudo === '::before') target.insertBefore(element, target.firstChild);
+            else target.appendChild(element);
+        });
+    }
+
     function cloneWithStyles(node) {
         const clone = node.cloneNode(true);
+
+        // A TreeWalker starts with currentNode at the root, so the first
+        // nextNode() call returns the root's first child and the root itself
+        // is never visited. That left the cloned element with none of its own
+        // computed style — no padding, no display:grid, no row-gap — so
+        // exported cards rendered with their content bunched into the top-left
+        // corner of an otherwise blank canvas. Copy the root explicitly.
+        copyComputedStyle(node, clone);
+
         const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
         const cloneWalker = document.createTreeWalker(clone, NodeFilter.SHOW_ELEMENT);
 
+        const pairs = [[node, clone]];
         while (walker.nextNode() && cloneWalker.nextNode()) {
-            const source = walker.currentNode;
-            const target = cloneWalker.currentNode;
-            const computed = window.getComputedStyle(source);
-            target.style.cssText = computed.cssText || Array.from(computed)
-                .map((property) => `${property}:${computed.getPropertyValue(property)};`)
-                .join('');
+            copyComputedStyle(walker.currentNode, cloneWalker.currentNode);
+            pairs.push([walker.currentNode, cloneWalker.currentNode]);
         }
+
+        // Done after the walk so the injected spans are not themselves walked.
+        pairs.forEach(([source, target]) => inlinePseudoElements(source, target));
 
         return clone;
     }
