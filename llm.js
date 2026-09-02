@@ -294,19 +294,35 @@ const tinyLlmClient = (() => {
             '{possessive}',
             possessive,
         );
+        const claim = String(pick(BEATS.claims, rng) || '').replace(
+            '{possessive}',
+            possessive,
+        );
         const twist = String(pick(BEATS.twists, rng) || '').replace(
             '{possessive}',
             possessive,
         );
+        // Mid-sentence the subject loses its capital unless it starts with
+        // the name.
+        const subjectMid = /^Neckass/.test(normalizedSubject || '')
+            ? normalizedSubject
+            : `${(normalizedSubject || '').charAt(0).toLowerCase()}${(normalizedSubject || '').slice(1)}`;
+        const subjectGenitive =
+            (typeof subject === 'object' && subject.genitive) ||
+            `${normalizedSubject || 'The party'}'s`;
 
         return {
             desk: pick(BEATS.desks, rng),
-            subject: normalizedSubject || 'someone online',
+            subject: normalizedSubject || 'an unnamed party',
+            subjectGenitive,
+            subjectMid: subjectMid || 'an unnamed party',
             verb: pick(BEATS.verbs, rng),
             object: objectPhrase,
             connector: pick(BEATS.connectors, rng),
             twist,
             impact: pick(BEATS.impacts, rng),
+            ruling: pick(BEATS.rulings, rng),
+            claim,
             section,
             marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng),
             queryHint: queryHints.length ? pick(queryHints, rng) : '',
@@ -314,23 +330,27 @@ const tinyLlmClient = (() => {
     }
 
     function synthesizeCandidate(payload, rng) {
+        // Every pattern ends the first sentence with a full stop and lets the
+        // impact land as its own flat sentence. A semicolon would set up a
+        // turn; the register does not turn.
         const patterns = [
-            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}; ${payload.impact}`,
-            `${payload.subject} ${payload.verb} ${payload.object} while ${payload.marker} watchers refresh dashboards; ${payload.impact}`,
-            `Breaking: ${payload.subject} ${payload.verb} ${payload.object}, because ${payload.twist}; ${payload.impact}`,
-            `${payload.desk} ${payload.subject} frames ${payload.marker} as the real story and ${payload.verb} ${payload.object}; ${payload.impact}`,
-            `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}, then called it "community outreach"; ${payload.impact}`,
-            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} and promised this was "for morale"; ${payload.impact}`,
-            `${payload.marker} desk memo: ${payload.subject} ${payload.verb} ${payload.object} after ${payload.twist}; ${payload.impact}`,
-            `${payload.subject} called ${payload.queryHint || payload.marker} a growth strategy, then ${payload.verb} ${payload.object}; ${payload.impact}`,
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}. ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object}. ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}. ${payload.impact}`,
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object}. ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object} and has described the outcome as "fine". ${payload.impact}`,
+            `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object}, ${payload.connector} ${payload.twist}. ${payload.impact}`,
+            `${payload.subjectGenitive} appeal concerning ${payload.claim} ${payload.ruling}. ${payload.impact}`,
+            `${payload.desk} ${payload.claim}, submitted by ${payload.subjectMid}, ${payload.ruling}`,
+            `${payload.claim} ${payload.ruling} ${payload.connector} ${payload.twist}. ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object}. ${payload.claim} ${payload.ruling}.`,
         ];
 
         const drafted = formatSentenceCase(pick(patterns, rng));
         return drafted
             .replace(/\s+,/g, ',')
-            .replace(/\s+;/g, ';')
+            .replace(/\s+\./g, '.')
             .replace(/\s{2,}/g, ' ')
-            .replace(/;+$/, '')
             .trim();
     }
 
@@ -431,7 +451,7 @@ const tinyLlmClient = (() => {
                 getRandom(rng) < 0.68 &&
                 !generated.toLowerCase().includes(chosenQueryToken)
                     ? clampHeadlineLength(
-                          `${generated} as ${chosenQueryToken} chatter keeps climbing`,
+                          `${generated} No record relating to ${chosenQueryToken} has been located.`,
                       )
                     : generated;
             return {

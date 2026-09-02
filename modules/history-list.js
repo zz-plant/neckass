@@ -117,7 +117,7 @@
                 elements.headlineList.innerHTML = '';
                 const item = document.createElement('li');
                 item.className = 'headline-item headline-item--empty';
-                item.textContent = 'No headlines available in this view.';
+                item.textContent = 'Nothing on file for this view.';
                 elements.headlineList.appendChild(item);
             }
             return;

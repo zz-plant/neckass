@@ -190,22 +190,19 @@
             this.activeButton = this.elements.nextButton;
 
             if (wantsGenerated && generatorAvailable) {
-                this.toggleLoader(
-                    true,
-                    'Generating headline with the tiny model...',
-                );
+                this.toggleLoader(true, 'The desk is writing.');
                 nextIndex = await this.generateHeadlineWithFallback();
             }
 
             if (this.filters.source === 'generated' && !generatorAvailable) {
                 this.toggleLoader(
                     true,
-                    'Tiny model unavailable, using curated headlines.',
+                    'The desk is unavailable. The archive has been opened.',
                 );
             }
 
             if (nextIndex === null) {
-                this.toggleLoader(true, 'Shuffling stored headlines...');
+                this.toggleLoader(true, 'Consulting the archive.');
                 nextIndex = this.getRandomIndex();
             }
 
@@ -258,14 +255,14 @@
                 return;
             }
 
-            this.toggleLoader(
-                true,
-                'Generating headline with the tiny model...',
-            );
+            this.toggleLoader(true, 'The desk is writing.');
             const generatedIndex = await this.generateHeadlineWithFallback();
 
             if (generatedIndex === null) {
-                this.toggleLoader(true, 'Falling back to stored headlines...');
+                this.toggleLoader(
+                    true,
+                    'The wire is quiet. Consulting the archive.',
+                );
                 const fallbackIndex = this.getRandomIndex();
                 if (fallbackIndex === null) {
                     this._renderEmptyStateCore();
@@ -321,7 +318,7 @@
                 if (diagnostics?.backend) {
                 }
                 this.updateLoaderMessage(
-                    'Generation unavailable, using saved headlines.',
+                    'The desk did not file. The archive was used instead.',
                 );
                 return null;
             }
@@ -365,7 +362,7 @@
             const loaderMessage =
                 this.elements.loaderText?.textContent ||
                 this.elements.loader.textContent ||
-                'Loading headline...';
+                'Going to press.';
             this.toggleLoader(true, loaderMessage);
             this.elements.headline.classList.remove('show');
 
@@ -433,8 +430,8 @@
         _renderEmptyStateCore() {
             const hasFilters = hasActiveFilters(this.filters);
             this.elements.headline.textContent = hasFilters
-                ? 'No headlines match your current filters.'
-                : 'No headlines available.';
+                ? 'No item on file matches these filters.'
+                : 'No items on file.';
             this.elements.headline.style.color = '';
             this.clearCopyStatus();
             updateHeadMetadata({
@@ -446,10 +443,10 @@
                     this.getCanonicalUrl(targetIndex),
             });
             updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
-            this.updateMockHeadline('No headlines available.');
+            this.updateMockHeadline('No items on file.');
             this.updateHeadlineBadges(null);
             this.updateHistoryList();
-            this.toggleLoader(false, 'No headlines available.');
+            this.toggleLoader(false, 'No items on file.');
             this.state.isLoading = false;
             this.state.navigationStack = [];
             this.state.currentIndex = -1;

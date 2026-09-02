@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createAgentInterface,
     } = neckass;
 
-    const fallbackHeadline = data?.HEADLINES?.[0] || 'No headlines available.';
+    const fallbackHeadline = data?.HEADLINES?.[0] || 'No items on file.';
     const headlineEl = document.getElementById('headline');
     const mockHeadlineEl = document.getElementById('mock-headline');
     const loaderEl = document.getElementById('loader');

@@ -77,5 +77,18 @@
         'Linguists confirm the neck in Neckass does not refer to anything',
         "Neckass's conduct has been classified as neckass-adjacent pending review",
         'A dictionary defined Neckass as "foolish or ridiculous." This was considered inadequate.',
+        'Neckass began a sentence with "long story short." The story was not short.',
+        "Neckass's out-of-office reply has been active for eleven weeks. Neckass is at his desk.",
+        'Neckass described the leftovers as "still good." No second opinion was sought.',
+        'Neckass has stood in the open refrigerator for six minutes. No decision has been reached.',
+        'Neckass told a story he has told before. The audience confirmed this during the story.',
+        'Neckass\'s "I\'ll just have a bite of yours" has been recorded as a full order',
+        'Neckass advised the group to leave at seven. Neckass was ready at 7:40.',
+        'Neckass\'s apology contained the word "if." A revision has been requested.',
+        'Neckass has explained a joke to the person who told it',
+        'Neckass closed 47 tabs and reopened 46. No cause has been identified.',
+        "Neckass's statement that he does not really use social media was posted",
+        'A text Neckass sent at 1 a.m. was withdrawn at 1:01 a.m. The recipient has been notified of both.',
+        'Neckass asked whether anyone else was hot. The thermostat was consulted and disagreed.',
     ];
 })();
