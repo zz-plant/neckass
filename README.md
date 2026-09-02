@@ -4,7 +4,7 @@
   <img src="neckass-demo.gif" alt="Neckass headline generator in action" width="600" style="border-radius: 8px;">
 </p>
 
-A privacy-first, static headline generator with curated prompts, optional on-device tiny-model generation, and built-in share/export tools.
+A privacy-first, static daily newspaper about a fictional Neckass: one deterministic issue per day, a wire feed with optional on-device generation, and share/export tools. No build system, no backend.
 
 **Live at [neckass.com](https://neckass.com)** · No build system. No backend. Open `index.html` and you are running.
 
@@ -32,15 +32,28 @@ python -m http.server 8001 --directory .
 Then open `http://127.0.0.1:8001/`.
 
 ## App pages
-- `index.html` — main generator experience.
-- `about.html` — product overview and feature summary.
-- `examples.html` — sample headlines and tone reference.
+- `index.html` — today's front page, with the wire feed beneath it.
+- `archive.html` — back issues, derived from the calendar rather than stored.
+- `about.html` — the encyclopedia entry for the word, which cites the paper.
+- `prompts.html` — the Gazette's filing standards.
+
+## How an issue is built
+The front page is one issue, composed deterministically from its own date
+(`modules/issue.js`): the issue number is days since the first edition on
+2024-09-29, and that number seeds the selection of lead, briefs, corrections,
+weather, classifieds, and letters from `data/formats.js`. Two readers opening
+the site on the same day get the same paper, and any past date renders its own
+issue at `/?issue=YYYY-MM-DD` — so the archive costs no storage.
+
+A complete standing issue ships in `index.html` itself, so the paper reads with
+JavaScript disabled and crawlers see copy rather than an empty shell.
 
 ## Using the app
-1. Click **Shuffle** to cycle featured headlines.
-2. Use **Previous** to move backward through your local session history.
-3. Use copy/share controls to publish a headline quickly.
-4. Use export controls to create a mock front-page image.
+1. The front page is today's issue. It changes once a day, not per visit.
+2. Beneath it, **The wire** files items one at a time — from the catalogue or
+   from the on-device generator.
+3. Use **Next item** and **Previous** to move through the wire.
+4. Copy, share, or export any wire item as a clipping.
 
 ## Agentic interface
 A lightweight browser-side tool interface is exposed at `window.Neckass.agent` after app initialization, so browser automation and agentic LLM runtimes can call headline actions without clicking UI controls directly.
@@ -136,7 +149,7 @@ unnoticed. Both scripts read their scene list from `scripts/asset-specs.ts`.
 
 ### Social preview cards
 
-`og-image.png`, `og-about.png`, `og-examples.png` and `og-prompts.png` live at
+`og-image.png`, `og-about.png`, `og-archive.png` and `og-prompts.png` live at
 the repo root, are 1200x630, and are rendered by `bun run og:generate` from
 `scripts/generate-og.ts`. `assets:check` covers them too, so one command checks
 every generated image.

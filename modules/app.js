@@ -384,6 +384,7 @@
                     isValidHeadlineIndex,
                     getCanonicalUrl: (targetIndex) =>
                         this.getCanonicalUrl(targetIndex),
+                    claimsIdentity: options.claimUrl !== false,
                 });
                 updateSocialShareLinks(
                     this.elements,
@@ -392,12 +393,24 @@
                 );
                 this.updateMockHeadline(headlineText);
                 this.persistState();
-                this.pushHistoryState(index, { replace: options.replaceState });
+                // The initial render does not claim the address bar; see
+                // _renderInitialHeadlineCore.
+                if (options.claimUrl !== false) {
+                    this.pushHistoryState(index, {
+                        replace: options.replaceState,
+                    });
+                }
                 this.updateHistoryList();
             });
         }
 
         _renderInitialHeadlineCore() {
+            // A bare visit is a visit to the paper. The wire item showing on
+            // arrival was not chosen by the reader, so it does not get to
+            // rewrite the address, the title, or what a shared link resolves
+            // to. Shuffling or arriving with ?headline= claims the URL; boot
+            // does not.
+            const claimUrl = getUrlState().hasHeadlineParam;
             if (
                 this.state.navigationStack.length > 0 &&
                 isValidHeadlineIndex(
@@ -409,6 +422,7 @@
                 this.renderHeadline(this.state.currentIndex, {
                     pushToStack: false,
                     replaceState: true,
+                    claimUrl,
                 });
                 return;
             }
@@ -420,6 +434,7 @@
                 this.renderHeadline(nextIndex, {
                     pushToStack: false,
                     replaceState: true,
+                    claimUrl,
                 });
                 return;
             }
@@ -728,7 +743,13 @@
                 this.state.currentIndex = fallbackIndex;
                 this.persistState();
                 this.updateNavigationAvailability();
-                this.pushHistoryState(fallbackIndex, { replace: true });
+                // Only claim the URL when the reader arrived pointed at an
+                // item. A bare visit is a visit to the paper, and rewriting
+                // the address to a wire item nobody picked would make sharing
+                // the homepage share that item instead of the issue.
+                if (urlState.hasHeadlineParam) {
+                    this.pushHistoryState(fallbackIndex, { replace: true });
+                }
             } else if (index !== null || urlState.hasHeadlineParam) {
                 this.pushHistoryState(-1, { replace: true });
             }
@@ -915,19 +936,9 @@
                 this.elements.mockDate.textContent = dateFormatter.format(now);
             }
 
-            if (this.elements.mastheadDate) {
-                // Issue number: days since the Gazette first published
-                // (2024-09-29). Deterministic per calendar day, so two
-                // visitors on the same day see the same edition.
-                const firstEdition = Date.UTC(2024, 8, 29);
-                const today = Date.UTC(
-                    now.getFullYear(),
-                    now.getMonth(),
-                    now.getDate(),
-                );
-                const issue = Math.floor((today - firstEdition) / 86400000) + 1;
-                this.elements.mastheadDate.textContent = `${dateFormatter.format(now)} · No. ${issue}`;
-            }
+            // The masthead belongs to the issue: modules/issue.js derives the
+            // date and number, including for back issues, so nothing here
+            // second-guesses it.
         }
 
         async _handleMockExportCore(mode) {

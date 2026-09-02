@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Neckass | Digital Gazette</title>
     <link rel="stylesheet" href="styles.css">
-    <meta name="description" content="The Digital Gazette reports on the activities of a Neckass. Each item may be copied, shared, or exported as a front page.">
+    <meta name="description" content="A daily paper reporting on the activities of a Neckass. New issue every day, with corrections, weather, classifieds, and letters.">
     <meta name="color-scheme" content="light dark">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="theme-color" content="#0b1117">
     <link rel="canonical" href="https://neckass.com/">
 
     <meta property="og:title" content="Neckass | Digital Gazette">
-    <meta property="og:description" content="The Digital Gazette reports on the activities of a Neckass. Each item may be copied, shared, or exported as a front page.">
+    <meta property="og:description" content="A daily paper reporting on the activities of a Neckass. New issue every day, with corrections, weather, classifieds, and letters.">
     <meta property="og:image" content="https://neckass.com/og-image.png">
     <meta property="og:image:secure_url" content="https://neckass.com/og-image.png">
     <meta property="og:image:alt" content="The front page of the Digital Gazette">
@@ -20,13 +20,13 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://neckass.com/">
-    <meta property="og:site_name" content="Neckass Headlines">
+    <meta property="og:site_name" content="Neckass Digital Gazette">
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Neckass | Digital Gazette">
-    <meta name="twitter:description" content="The Digital Gazette reports on the activities of a Neckass. Each item may be copied, shared, or exported as a front page.">
+    <meta name="twitter:description" content="A daily paper reporting on the activities of a Neckass. New issue every day, with corrections, weather, classifieds, and letters.">
     <meta name="twitter:image" content="https://neckass.com/og-image.png">
     <meta name="twitter:image:alt" content="The front page of the Digital Gazette">
     <meta name="twitter:url" content="https://neckass.com/">
@@ -37,24 +37,10 @@
             "@type": "WebSite",
             "name": "Neckass Digital Gazette",
             "url": "https://neckass.com/",
-            "description": "The Digital Gazette reports on the activities of a Neckass. Each item may be copied, shared, or exported as a front page.",
+            "description": "A daily paper reporting on the activities of a Neckass.",
             "publisher": {
                 "@type": "Organization",
-                "name": "Neckass"
-            }
-        }
-    </script>
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Neckass Digital Gazette",
-            "url": "https://neckass.com/",
-            "description": "The Digital Gazette reports on the activities of a Neckass. Each item may be copied, shared, or exported as a front page.",
-            "isPartOf": {
-                "@type": "WebSite",
-                "name": "Neckass Digital Gazette",
-                "url": "https://neckass.com/"
+                "name": "Neckass Digital Gazette"
             }
         }
     </script>
@@ -66,8 +52,8 @@
             "url": "https://neckass.com/",
             "applicationCategory": "EntertainmentApplication",
             "operatingSystem": "Any",
-            "browserRequirements": "Requires JavaScript. Works in modern desktop and mobile browsers.",
-            "description": "The Digital Gazette reports on the activities of a Neckass. Each item may be copied, shared, or exported as a front page.",
+            "browserRequirements": "Works in modern desktop and mobile browsers. The daily issue reads without JavaScript.",
+            "description": "A daily paper reporting on the activities of a Neckass.",
             "offers": {
                 "@type": "Offer",
                 "price": "0",
@@ -77,7 +63,7 @@
     </script>
 </head>
 <body>
-    <a class="skip-link" href="#headline">Skip to featured headline</a>
+    <a class="skip-link" href="#lead-headline">Skip to the lead item</a>
     <h1 class="sr-only">Neckass Digital Gazette</h1>
     <div class="page-shell">
         <div class="page-topbar">
@@ -86,132 +72,217 @@
                 <span class="brand-title">Neckass</span>
             </div>
             <nav class="top-nav" aria-label="Site">
-                <a href="/about.html">About</a>
-                <a href="/examples.html">Examples</a>
-                <a href="/prompts.html">Prompts</a>
+                <a href="/archive.html">Back issues</a>
+                <a href="/about.html">The entry</a>
+                <a href="/prompts.html">Filing standards</a>
             </nav>
         </div>
+
         <header class="hero">
             <div class="container hero__content">
-                <p class="meta" id="masthead-date"></p>
+                <!-- Replaced with the active issue's date and number on load.
+                     The standing values below are the paper's first edition, so
+                     the page reads correctly with no JavaScript. -->
+                <p class="meta" id="masthead-date">Published daily · Department of neckassery</p>
+                <p class="back-issue-notice" id="back-issue-notice" hidden>
+                    <span id="back-issue-text"></span>
+                    <a href="/">Return to today's issue.</a>
+                </p>
             </div>
         </header>
 
-        <main class="container page-grid">
-            <section class="feature-stack">
-                <section class="headline-section">
-                    <div class="headline-frame">
-                        <h2 id="headline" tabindex="-1" aria-label="Headline">Loading...</h2>
-                    </div>
+        <main class="container">
+            <!-- The standing issue. modules/front-page.js swaps in the one for
+                 today's date; everything here is real copy so the paper is
+                 legible before, and without, that. -->
+            <section class="front-page" aria-labelledby="front-page-title">
+                <h2 class="sr-only" id="front-page-title">Today's issue</h2>
 
-                    <div class="filter-reset" aria-live="polite">
-                        <p id="filter-status" class="status-text" hidden></p>
-                        <button id="clear-filters" class="ghost" type="button">Clear filters</button>
-                    </div>
+                <article class="lead">
+                    <h3 class="lead__headline" id="lead-headline">Neckass has been "five minutes away" since 2019. The claim has not been verified.</h3>
+                    <p class="lead__deck" id="lead-deck">The Gazette has maintained a standing file. It contains only the claim.</p>
+                    <p class="lead__byline" id="lead-byline">By the wire desk</p>
+                </article>
 
-                    <div class="actions">
-                        <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost"><span>Previous</span></button>
-                        <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Shuffle</span></button>
-                    </div>
+                <div class="front-page__columns">
+                    <section class="column column--briefs" aria-labelledby="briefs-title">
+                        <h3 class="section-label" id="briefs-title">In brief</h3>
+                        <ul class="briefs" id="briefs-list">
+                            <li>Neckass's statement that he "read the room" was not corroborated by the room</li>
+                            <li>The two-minute task has been allocated its own calendar</li>
+                            <li>Neckass has indicated he will circle back. No timeline was given.</li>
+                            <li>Neckass's standing desk has been used exclusively for standing</li>
+                            <li>Neckass tipped with a compliment. A receipt was issued.</li>
+                            <li>Neckass's houseplant has outlived three of his hobbies</li>
+                            <li>Neckass has responded "maybe" to his own birthday</li>
+                        </ul>
+                    </section>
 
-                    <div class="headline-quick-actions" id="headline-quick-actions" hidden>
-                        <p class="headline-quick-actions__title">Quick actions</p>
-                        <div class="headline-quick-actions__grid">
-                            <button id="jump-copy" class="ghost" type="button"><span>Copy</span></button>
-                            <button id="jump-share" class="ghost" type="button"><span>Share</span></button>
-                            <button id="jump-export" class="ghost quick-action-secondary" type="button"><span>Export</span></button>
-                        </div>
-                    </div>
+                    <div class="column column--side">
+                        <section class="box box--corrections" aria-labelledby="corrections-title">
+                            <h3 class="section-label" id="corrections-title">Corrections</h3>
+                            <ul class="corrections" id="corrections-list">
+                                <li>An earlier edition described Neckass's plan as a plan. The Gazette regrets the characterization.</li>
+                                <li>The Gazette stated that Neckass had finished. He had stopped.</li>
+                                <li>We described Neckass's apology as an apology.</li>
+                            </ul>
+                        </section>
 
-                    <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
-                </section>
-
-                <section class="history-card" aria-labelledby="recent-headlines-title">
-                    <div class="history-header">
-                        <h2 class="filter-label" id="recent-headlines-title">Recent headlines</h2>
-                        <p class="counter counter-inline" id="history-count">0 items</p>
+                        <section class="box box--weather" aria-labelledby="weather-title">
+                            <h3 class="section-label" id="weather-title">Weather</h3>
+                            <p class="weather" id="weather-line">Neckass-adjacent. Highs unclear. Conditions described by Neckass, who has not been outside.</p>
+                        </section>
                     </div>
-                    <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
-                </section>
-                <section class="history-card seo-copy" aria-labelledby="how-it-works-title">
-                    <h2 class="filter-label" id="how-it-works-title">About this publication</h2>
-                    <p>The Digital Gazette reports on the activities of a Neckass. Tap <strong>Shuffle</strong> to be issued a new item. Each may be copied, shared, or exported as a front page.</p>
-                    <p>The Gazette operates entirely within the browser. Recent items are kept in local storage. No account is required, and none has proved useful.</p>
-                    <p>Specific varieties are catalogued under <a href="/prompts.html">neckassery</a>.</p>
-                </section>
+                </div>
+
+                <div class="front-page__columns front-page__columns--lower">
+                    <section class="box box--classifieds" aria-labelledby="classifieds-title">
+                        <h3 class="section-label" id="classifieds-title">Classifieds</h3>
+                        <ul class="classifieds" id="classifieds-list">
+                            <li>FOUND: gym membership, 2013. The gym has not been located.</li>
+                            <li>FOR SALE: standing desk. Stood at. $200 obo.</li>
+                            <li>WANTED: definition of "quick." Will accept a range.</li>
+                            <li>LOST: one puzzle piece. The cat has not been charged.</li>
+                            <li>SERVICES: will circle back. No timeline.</li>
+                        </ul>
+                    </section>
+
+                    <section class="box box--letters" aria-labelledby="letters-title">
+                        <h3 class="section-label" id="letters-title">Letters</h3>
+                        <ul class="letters" id="letters-list">
+                            <li>
+                                <p class="letter-body">Sir — I am the printer. I am not a neckass.</p>
+                                <p class="letter-signature">— The Printer, unincorporated</p>
+                            </li>
+                            <li>
+                                <p class="letter-body">Sir — Regarding your item of Tuesday: it was Wednesday.</p>
+                                <p class="letter-signature">— A reader who was present</p>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <footer class="colophon">
+                    <p id="colophon-staff">Editor-in-chief: vacant. Wire desk: unattended. Corrections: ongoing.</p>
+                    <p id="colophon-note">The Gazette does not know what a neckass is and continues to report on one.</p>
+                    <p><a href="/archive.html">Back issues</a> are available. The term itself is covered in <a href="/about.html">the entry</a>.</p>
+                </footer>
             </section>
 
-            <aside class="command-rail" aria-label="Quick actions rail">
-                <section class="rail-card rail-card--hub" aria-label="Headline actions">
-                    <section class="command-cluster command-cluster--paired copy-headline" id="copy-card" aria-label="Copy">
-                        <div class="copy-row">
-                            <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy headline</span></button>
+            <!-- The wire: the interactive half. Items arrive one at a time,
+                 from the catalogue or the desk, and can be taken away. -->
+            <section class="wire page-grid" aria-labelledby="wire-title">
+                <div class="feature-stack">
+                    <div class="wire-intro">
+                        <h2 class="section-label" id="wire-title">The wire</h2>
+                        <p class="wire-note">Items as they are filed, between editions.</p>
+                    </div>
+
+                    <section class="headline-section">
+                        <div class="headline-frame">
+                            <h3 id="headline" tabindex="-1" aria-label="Headline">Loading...</h3>
                         </div>
-                        <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
+
+                        <div class="filter-reset" aria-live="polite">
+                            <p id="filter-status" class="status-text" hidden></p>
+                            <button id="clear-filters" class="ghost" type="button">Clear filters</button>
+                        </div>
+
+                        <div class="actions">
+                            <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost"><span>Previous</span></button>
+                            <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Next item</span></button>
+                        </div>
+
+                        <div class="headline-quick-actions" id="headline-quick-actions" hidden>
+                            <p class="headline-quick-actions__title">Quick actions</p>
+                            <div class="headline-quick-actions__grid">
+                                <button id="jump-copy" class="ghost" type="button"><span>Copy</span></button>
+                                <button id="jump-share" class="ghost" type="button"><span>Share</span></button>
+                                <button id="jump-export" class="ghost quick-action-secondary" type="button"><span>Export</span></button>
+                            </div>
+                        </div>
+
+                        <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
                     </section>
 
-                    <section class="command-cluster command-cluster--paired social-share" id="share-card" aria-labelledby="share-card-title">
+                    <section class="history-card" aria-labelledby="recent-headlines-title">
+                        <div class="history-header">
+                            <h3 class="filter-label" id="recent-headlines-title">Recently filed</h3>
+                            <p class="counter counter-inline" id="history-count">0 items</p>
+                        </div>
+                        <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
+                    </section>
+                </div>
+
+                <aside class="command-rail" aria-label="Item actions">
+                    <section class="rail-card rail-card--hub" aria-label="Item actions">
+                        <section class="command-cluster command-cluster--paired copy-headline" id="copy-card" aria-label="Copy">
+                            <div class="copy-row">
+                                <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy item</span></button>
+                            </div>
+                            <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
+                        </section>
+
+                        <section class="command-cluster command-cluster--paired social-share" id="share-card" aria-labelledby="share-card-title">
+                            <div>
+                                <h3 class="filter-label" id="share-card-title">Share</h3>
+                            </div>
+                            <div class="share-actions">
+                                <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share from device</span></button>
+                            </div>
+                            <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
+                            <div class="share-links">
+                                <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+                                    <span>X</span>
+                                </a>
+                                <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                                    <span>Facebook</span>
+                                </a>
+                                <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
+                                    <span>Reddit</span>
+                                </a>
+                            </div>
+                            <p id="share-status" class="status-text" role="status" aria-live="polite"></p>
+                        </section>
+                    </section>
+
+                    <section class="rail-card rail-card--secondary" id="export-card" aria-labelledby="export-card-title">
                         <div>
-                            <h3 class="filter-label" id="share-card-title">Share</h3>
-
+                            <h3 class="filter-label" id="export-card-title"><span>Clipping</span></h3>
                         </div>
-                        <div class="share-actions">
-                            <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share from device</span></button>
+                        <div id="mock-front" class="mock-front">
+                            <div class="mock-masthead">
+                                <span class="mock-title">Digital Gazette</span>
+                                <span id="mock-date" class="mock-date">Loading...</span>
+                            </div>
+                            <p class="mock-kicker">Bulletin</p>
+                            <div class="mock-rule" aria-hidden="true"></div>
+                            <h4 id="mock-headline" class="mock-headline">Loading...</h4>
+                            <p class="mock-deck">This account has not been independently verified.</p>
+                            <p class="mock-footer">neckass.com · department of neckassery</p>
                         </div>
-                        <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
-                        <div class="share-links">
-                            <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
-                                <span>X</span>
-                            </a>
-                            <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-                                <span>Facebook</span>
-                            </a>
-                            <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
-                                <span>Reddit</span>
-                            </a>
+                        <div class="mock-actions">
+                            <button id="download-mock" class="ghost" type="button">
+                                <span class="button-main-label"><span>Download clipping</span></span>
+                            </button>
+                            <button id="copy-mock" class="ghost" type="button">
+                                <span class="button-main-label"><span>Copy clipping</span></span>
+                            </button>
                         </div>
-                        <p id="share-status" class="status-text" role="status" aria-live="polite"></p>
+                        <p id="export-status" class="status-text" role="status" aria-live="polite"></p>
                     </section>
-
-                </section>
-
-                <section class="rail-card rail-card--secondary" id="export-card" aria-labelledby="export-card-title">
-                    <div>
-                        <h2 class="filter-label" id="export-card-title"><span>Front page</span></h2>
-
-                    </div>
-                    <div id="mock-front" class="mock-front">
-                        <div class="mock-masthead">
-                            <span class="mock-title">Digital Gazette</span>
-                            <span id="mock-date" class="mock-date">Loading...</span>
-                        </div>
-                        <p class="mock-kicker">Bulletin</p>
-                        <div class="mock-rule" aria-hidden="true"></div>
-                        <h3 id="mock-headline" class="mock-headline">Loading...</h3>
-                        <p class="mock-deck">This account has not been independently verified.</p>
-                        <p class="mock-footer">neckass.com · department of neckassery</p>
-                    </div>
-                    <div class="mock-actions">
-                        <button id="download-mock" class="ghost" type="button">
-                            <span class="button-main-label"><span>Download front page</span></span>
-
-                        </button>
-                        <button id="copy-mock" class="ghost" type="button">
-                            <span class="button-main-label"><span>Copy front page</span></span>
-
-                        </button>
-                    </div>
-                    <p id="export-status" class="status-text" role="status" aria-live="polite"></p>
-                </section>
-
-            </aside>
+                </aside>
+            </section>
         </main>
     </div>
 
     <script defer src="vendor/html-to-image.js"></script>
     <script defer src="data/headlines.js"></script>
+    <script defer src="data/formats.js"></script>
     <script defer src="data/llm-beats.js"></script>
     <script defer src="modules/utils.js"></script>
+    <script defer src="modules/issue.js"></script>
+    <script defer src="modules/front-page.js"></script>
     <script defer src="modules/filters.js"></script>
     <script defer src="modules/state.js"></script>
     <script defer src="modules/storage.js"></script>

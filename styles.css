@@ -956,6 +956,231 @@ button.ghost {
     }
 }
 
+/* ---- The front page -------------------------------------------------
+   A newspaper reads by accumulation: the lead carries the day, the briefs
+   column supports it, and the short forms at the foot do the rest. Rules
+   and small-caps labels do the separating, so the sections need no boxes
+   or cards to be legible as distinct departments. */
+
+.front-page {
+    padding-bottom: 30px;
+    border-bottom: 3px double var(--text);
+    margin-bottom: 34px;
+}
+
+.back-issue-notice {
+    flex-basis: 100%;
+    font-size: 0.82rem;
+    color: var(--muted);
+    padding: 8px 0 0;
+}
+
+.back-issue-notice a {
+    color: var(--link);
+}
+
+.section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    font-weight: 700;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.lead {
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--border-strong);
+    margin-bottom: 24px;
+}
+
+.lead__headline {
+    font-family: var(--headline-font);
+    font-size: clamp(1.9rem, 4.4vw, 3rem);
+    line-height: 1.11;
+    letter-spacing: -0.015em;
+    color: var(--ink-display);
+    max-width: 24ch;
+    text-wrap: balance;
+}
+
+.lead__deck {
+    margin-top: 12px;
+    font-size: clamp(1rem, 1.5vw, 1.16rem);
+    line-height: 1.45;
+    color: var(--text);
+    max-width: 54ch;
+}
+
+.lead__byline {
+    margin-top: 14px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+}
+
+.front-page__columns {
+    display: grid;
+    gap: 26px;
+    padding-bottom: 24px;
+}
+
+.front-page__columns--lower {
+    border-top: 1px solid var(--border-strong);
+    padding-top: 24px;
+}
+
+.column {
+    min-width: 0;
+}
+
+.column--side {
+    display: grid;
+    gap: 22px;
+    align-content: start;
+}
+
+.briefs,
+.corrections,
+.classifieds,
+.letters {
+    list-style: none;
+    display: grid;
+}
+
+.briefs {
+    gap: 12px;
+}
+
+.briefs li {
+    font-family: var(--headline-font);
+    font-size: 1.06rem;
+    line-height: 1.32;
+    color: var(--text);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.briefs li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.corrections {
+    gap: 10px;
+}
+
+.corrections li {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--muted);
+    padding-left: 14px;
+    text-indent: -14px;
+}
+
+.corrections li::before {
+    content: "\2014\00a0";
+}
+
+.weather {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.classifieds {
+    gap: 9px;
+}
+
+.classifieds li {
+    font-size: 0.84rem;
+    line-height: 1.4;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.letters {
+    gap: 16px;
+}
+
+.letters li {
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.letters li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.letter-body {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.letter-signature {
+    margin-top: 5px;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--muted);
+}
+
+.colophon {
+    border-top: 1px solid var(--border-strong);
+    padding-top: 18px;
+    display: grid;
+    gap: 7px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.colophon a {
+    color: var(--link);
+}
+
+.entry-note {
+    border-left: 2px solid var(--border-strong);
+    padding-left: 14px;
+    font-size: 0.88rem;
+    color: var(--muted);
+}
+
+.wire-intro {
+    display: grid;
+    gap: 5px;
+    padding-bottom: 4px;
+}
+
+.wire-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+@media (min-width: 760px) {
+    .front-page__columns {
+        grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+        gap: 34px;
+    }
+
+    .column--briefs {
+        border-right: 1px solid var(--border);
+        padding-right: 34px;
+    }
+
+    .front-page__columns--lower {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .box--classifieds {
+        border-right: 1px solid var(--border);
+        padding-right: 34px;
+    }
+}
+
 .headline-list {
     list-style: none;
     display: grid;

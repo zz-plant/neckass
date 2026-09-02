@@ -1,10 +1,26 @@
-# Neckass Headlines — Current Feature Specifications
+# Neckass Digital Gazette — Feature Specifications
 
-This document captures the **current, in-repo feature set** for the Neckass Headlines page, based on `index.html`, `styles.css`, `script.js`, and `llm.js`. It doubles as a specification checklist for validating the live experience as it is built today.
+This document describes the current in-repo feature set. It was last reconciled
+with the source when the site moved from a single-headline generator to a daily
+paper; sections below that predate that change and still describe the hero,
+pill list, and filter UI have been removed rather than left to mislead.
 
-## Feature audit summary
-- **Rendered UI in `index.html`**: topbar masthead, hero block, featured headline card with shuffle/previous controls, filter status row with a clear-filters button, command rail cards (command intro, clipboard copy, social share links, mock front page export).【F:index.html†L9-L150】
-- **Script-only capabilities not currently rendered in `index.html`**: optional controls for generator-only actions, headline history list, favorites, search, section/source/panel/layout toggle buttons, copy headline link, and additional social links (LinkedIn/Threads/Bluesky). These hooks exist in `script.js` and become active only if the related elements are added to the DOM later.【F:script.js†L169-L221】【F:script.js†L1388-L1440】
+## Shape of the site
+- **The front page (`index.html`)** is one issue: lead item with deck and
+  byline, a briefs column, corrections, weather, classifieds, letters, and a
+  colophon. A complete standing issue is present in the markup, so the page
+  reads without JavaScript.
+- **Issue composition (`modules/issue.js`)** is deterministic. The issue number
+  is days elapsed since the first edition (2024-09-29); that number seeds
+  selection from `data/formats.js`. `/?issue=YYYY-MM-DD` renders any past
+  issue, and `archive.html` lists recent ones.
+- **The wire** is the interactive section beneath the front page: one item at a
+  time from the curated catalogue (`data/headlines.js`) or the on-device
+  generator (`llm.js`, `data/llm-beats.js`), with copy, share, and clipping
+  export.
+- **URL ownership.** A bare visit does not write `?headline=`. The wire item
+  claims the address, title, and share metadata only when the reader shuffles
+  or arrives with that parameter, so sharing the homepage shares the issue.
 
 ## Page-wide expectations
 ### Document metadata

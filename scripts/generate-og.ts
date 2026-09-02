@@ -58,18 +58,18 @@ export const OG_CARDS: OgCard[] = [
         footer: 'NECKASS.COM · ABOUT',
     },
     {
-        file: 'og-examples.png',
-        kicker: 'EXAMPLES',
-        headline: ['Printer described as neckass;', 'linguists urge caution'],
-        deck: 'Representative cases. Tone is the primary criterion.',
-        footer: 'NECKASS.COM · HEADLINE EXAMPLES',
+        file: 'og-archive.png',
+        kicker: 'BACK ISSUES',
+        headline: ['Every edition since', '29 September 2024'],
+        deck: 'None withdrawn. Several corrected. One corrected twice.',
+        footer: 'NECKASS.COM · BACK ISSUES',
     },
     {
         file: 'og-prompts.png',
-        kicker: 'PROMPTS',
+        kicker: 'FILING STANDARDS',
         headline: ['Routine, administrative,', 'and unprecedented neckassery'],
-        deck: 'Pick a variety, then shuffle.',
-        footer: 'NECKASS.COM · VARIETIES OF NECKASSERY',
+        deck: 'An adjective is not used where a document will do.',
+        footer: 'NECKASS.COM · FILING STANDARDS',
     },
 ];
 
