@@ -26,9 +26,16 @@
 
         const bounds = elements.mockFrame.getBoundingClientRect();
         const options = {
+            // html-to-image sizes the canvas by pixelRatio but rasterises the
+            // clone at the device ratio, so the old fractional value
+            // (dpr * 1.25) drew the artwork at ~0.8 scale inside a full-size
+            // canvas, leaving the right edge short. A whole number fixes that.
+            // A blank band along the bottom remains: the clone also loses the
+            // card's padding and grid row-gap, which neither explicit
+            // width/height nor a `style` override restores.
             pixelRatio: Math.min(
                 3,
-                Math.max(2, (window.devicePixelRatio || 1) * 1.25),
+                Math.max(2, Math.round(window.devicePixelRatio || 1)),
             ),
             backgroundColor:
                 getComputedStyle(document.body)

@@ -259,8 +259,10 @@ a,
 }
 
 .hero__content {
-    display: grid;
-    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
 }
 
 .eyebrow {
@@ -305,7 +307,6 @@ a,
 
 .meta--secondary {
     font-size: 0.88rem;
-    margin-top: -4px;
     opacity: 0.95;
 }
 
@@ -772,13 +773,6 @@ button.ghost {
     opacity: 1;
 }
 
-.rail-intro {
-    display: grid;
-    gap: 8px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(45, 31, 16, 0.12);
-}
-
 .command-cluster {
     display: grid;
     gap: 10px;
@@ -889,12 +883,10 @@ button.ghost {
     display: grid;
     gap: 9px;
     padding: 20px 18px 16px;
-    border-radius: 10px;
+    border-radius: 2px;
     background: linear-gradient(180deg, #fffef9 0%, #f6efe3 100%);
-    border: 1px solid rgba(45, 31, 16, 0.22);
-    box-shadow:
-        0 14px 26px -22px rgba(24, 18, 10, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(45, 31, 16, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     min-height: 290px;
     align-content: start;
     isolation: isolate;
@@ -1022,7 +1014,7 @@ button.ghost {
 }
 
 .counter {
-    font-size: 0.96rem;
+    font-size: 0.88rem;
     color: var(--muted);
 }
 
