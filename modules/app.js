@@ -152,32 +152,9 @@
             this.elements.copyMockButton?.addEventListener('click', () =>
                 this.handleMockExport('copy'),
             );
-            this.elements.sectionButtons?.forEach((button) => {
-                button.addEventListener('click', () =>
-                    this.setSectionFilter(button.dataset.section || 'latest'),
-                );
-            });
-            this.elements.sourceButtons?.forEach((button) => {
-                button.addEventListener('click', () =>
-                    this.setSourceFilter(button.dataset.source || 'auto'),
-                );
-            });
-            this.elements.panelButtons?.forEach((button) => {
-                button.addEventListener('click', () =>
-                    this.setActivePanel(button.dataset.panel || 'recent'),
-                );
-            });
-            this.elements.layoutButtons?.forEach((button) => {
-                button.addEventListener('click', () =>
-                    this.setMockLayout(button.dataset.layout || 'standard'),
-                );
-            });
             this.elements.clearFiltersButton?.addEventListener('click', () =>
                 this.clearAllFilters(),
             );
-            this.elements.apiWaitlistLink?.addEventListener('click', () => {
-                this.reportAutomationStatus('Opening waitlist email draft.');
-            });
             [
                 this.elements.twitterShareLink,
                 this.elements.facebookShareLink,
@@ -763,11 +740,28 @@
                 this.isIndexEligible(index)
                     ? index
                     : null;
+            // With no headline in the URL, resume where the restored session
+            // left off rather than jumping to the first eligible entry.
+            const restoredIndex = this.state.currentIndex;
+            const restoredEligible =
+                isValidHeadlineIndex(restoredIndex, this.headlines.length) &&
+                this.isIndexEligible(restoredIndex);
             const fallbackIndex =
-                eligibleIndex ?? this.filteredIndexes[0] ?? null;
+                eligibleIndex ??
+                (restoredEligible ? restoredIndex : null) ??
+                this.filteredIndexes[0] ??
+                null;
 
             if (fallbackIndex !== null) {
-                this.state.navigationStack = [fallbackIndex];
+                // Storage has just restored navigationStack. Replacing it here
+                // discarded the whole session history on every boot; keep it,
+                // and only extend it when the URL names a different headline.
+                const stack = this.state.navigationStack;
+                if (stack.length === 0) {
+                    this.state.navigationStack = [fallbackIndex];
+                } else if (stack[stack.length - 1] !== fallbackIndex) {
+                    stack.push(fallbackIndex);
+                }
                 this.state.uniqueHeadlines.add(fallbackIndex);
                 this.state.currentIndex = fallbackIndex;
                 this.persistState();
