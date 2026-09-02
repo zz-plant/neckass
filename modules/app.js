@@ -858,7 +858,7 @@
             await copyTextWithFeedback({
                 text: headlineText,
                 button: triggerButton,
-                successMessage: 'Headline copied to clipboard!',
+                successMessage: 'Headline copied to clipboard.',
                 onStatus: (message, isError) => {
                     this.reportCopyStatus(message, isError);
                     if (!isError) {

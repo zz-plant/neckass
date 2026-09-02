@@ -48,7 +48,7 @@
         isValidHeadlineIndex,
         getCanonicalUrl,
     }) {
-        const baseTitle = 'Neckass Headlines';
+        const baseTitle = 'Neckass Digital Gazette';
         const hasHeadline =
             typeof headline === 'string' &&
             headline.trim().length > 0 &&

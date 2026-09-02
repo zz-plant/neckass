@@ -47,8 +47,8 @@ export const OG_CARDS: OgCard[] = [
             'Neckass has been "five minutes',
             'away" since 2019, sources confirm',
         ],
-        deck: 'Shuffle fresh headlines, then copy and share in seconds.',
-        footer: 'NECKASS.COM · SATIRE HEADLINE GENERATOR',
+        deck: 'Sources familiar with the matter declined to elaborate.',
+        footer: 'NECKASS.COM · DIGITAL GAZETTE',
     },
     {
         file: 'og-about.png',
