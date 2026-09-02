@@ -33,6 +33,8 @@
     --elevation-2: 0 8px 18px rgba(46, 34, 20, 0.07);
     --bg-highlight: rgba(255, 245, 232, 0.9);
     --accent-soft: rgba(179, 43, 28, 0.14);
+    --link: #b32b1c;
+    --link-hover: #8e2115;
     --status-error: #a52f2f;
     --status-success-bg: rgba(30, 28, 24, 0.94);
     --status-success-text: #fbf9f5;
@@ -77,6 +79,8 @@
     --accent-hover: #dc5540;
     --focus-ring: rgba(201, 67, 47, 0.5);
     --accent-soft: rgba(201, 67, 47, 0.22);
+    --link: #f09076;
+    --link-hover: #f7b5a2;
     --tap-highlight: rgba(201, 67, 47, 0.24);
     --border-subtle: rgba(243, 227, 211, 0.2);
     --border-strong: rgba(243, 227, 211, 0.32);
@@ -106,6 +110,8 @@
         --accent-hover: #dc5540;
         --focus-ring: rgba(201, 67, 47, 0.5);
         --accent-soft: rgba(201, 67, 47, 0.22);
+        --link: #f09076;
+        --link-hover: #f7b5a2;
         --tap-highlight: rgba(201, 67, 47, 0.24);
         --border-subtle: rgba(243, 227, 211, 0.2);
         --border-strong: rgba(243, 227, 211, 0.32);
@@ -168,6 +174,20 @@ button,
 a,
 .share-link {
     -webkit-tap-highlight-color: var(--tap-highlight);
+}
+
+/* Prose links previously fell through to the browser default, which put
+   #0000EE next to a warm newsprint palette. Anything that is already styled
+   as a control opts out. */
+a:not(.share-link):not(.top-nav a) {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+a:not(.share-link):not(.top-nav a):hover {
+    color: var(--link-hover);
 }
 
 .page-shell {

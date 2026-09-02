@@ -156,8 +156,10 @@
         renderShuffleStreak() {
             if (!this.elements.shuffleStreak) return;
             if (this.shuffleStreak <= 0) {
-                this.elements.shuffleStreak.textContent =
-                    'Shuffle streak: 0 · Shuffle to begin.';
+                // Nothing to report yet; an explicit zero just reads as noise
+                // under the headline.
+                this.elements.shuffleStreak.hidden = true;
+                this.elements.shuffleStreak.textContent = '';
                 this.renderShuffleBadges();
                 return;
             }
@@ -175,6 +177,7 @@
             const nextMilestoneText = nextMilestone
                 ? `${nextMilestone - this.shuffleStreak} to badge ${nextMilestone}.`
                 : 'Top badge unlocked.';
+            this.elements.shuffleStreak.hidden = false;
             this.elements.shuffleStreak.textContent = `Shuffle streak: ${this.shuffleStreak} · ${suffix} ${nextMilestoneText}`;
             this.renderShuffleBadges(nextMilestone);
         },

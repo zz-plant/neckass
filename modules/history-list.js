@@ -89,7 +89,8 @@
         });
 
         if (elements.historyCount) {
-            elements.historyCount.textContent = `${indexes.length} items`;
+            elements.historyCount.textContent =
+                indexes.length === 1 ? '1 item' : `${indexes.length} items`;
         }
 
         const currentChildren = Array.from(elements.headlineList.children);

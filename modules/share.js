@@ -10,7 +10,7 @@
         );
 
         if (elements.twitterShareLink) {
-            elements.twitterShareLink.href = `https://twitter.com/intent/tweet?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;
+            elements.twitterShareLink.href = `https://x.com/intent/post?text=${encodedHeadline}&url=${encodedUrl}&hashtags=Neckass`;
         }
         if (elements.facebookShareLink) {
             elements.facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedHeadline}`;
