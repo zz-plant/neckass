@@ -4,185 +4,182 @@
     Neckass.data = Neckass.data || {};
     const data = Neckass.data;
 
-    // The paper's other forms. Each one is its own joke engine: the lead
-    // applies wire gravity to a domestic nothing, the corrections retract
-    // things nobody asserted, the classifieds are loss in eight words, and
-    // the letters are the rest of the world writing in about a man it cannot
-    // name. Same register throughout — nothing here knows it is funny.
+    // The paper's other forms. Each is its own joke engine — the corrections
+    // retract things the paper got wrong about a man who was wrong first, the
+    // classifieds are the town's ads, the letters are the people he has
+    // annoyed writing in — and all of them say what happened. Numbers, times,
+    // and who was there, not "the matter has been noted."
 
-    // Leads carry a deck: a second, flatter sentence that arrives to help and
-    // does not.
+    // A lead carries a deck: a second sentence with the detail the headline
+    // did not have room for.
     data.LEADS = [
         {
             headline:
-                'Neckass has been "five minutes away" since 2019. The claim has not been verified.',
-            deck: 'The Gazette has maintained a standing file. It contains only the claim.',
+                'Neckass has been "five minutes away" since 2019. He is at home.',
+            deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
             byline: 'By the wire desk',
         },
         {
             headline:
                 'A review of Neckass\'s ten-year plan found it consists of the words "ten-year plan"',
-            deck: 'Reviewers requested a second page. None was produced.',
+            deck: 'The plan is one page. The page says "ten-year plan." There is nothing else on it.',
             byline: 'Staff report',
         },
         {
             headline:
                 'Neckass has agreed to be best man in an email he has not read',
-            deck: 'The wedding is Saturday. Neckass has confirmed his availability, unprompted, for a different Saturday.',
+            deck: 'The wedding is Saturday. He has told the groom he is free a different Saturday.',
             byline: 'By our correspondent, who was present',
         },
         {
             headline:
-                "The smart fridge's filing against Neckass has been accepted for review",
-            deck: 'The fridge is represented. Neckass is not.',
-            byline: 'By the legal affairs desk',
+                "Neckass's fridge has reported him for opening it 41 times and taking nothing",
+            deck: 'The fridge logs door openings. He was looking, not eating. It has told the manufacturer.',
+            byline: 'By the technology desk',
         },
         {
             headline:
                 "Neckass's noise complaint against his own alarm clock was upheld on appeal",
-            deck: 'The alarm was not present at the hearing. It had gone off.',
+            deck: 'He set it, it rang, and he reported it. He was told he had set it. He appealed. He was told again.',
             byline: 'Staff report',
         },
         {
             headline:
                 'Neckass muted the group chat and has checked it at ninety-second intervals since',
-            deck: 'The chat has not been informed. The intervals have.',
-            byline: 'By a reporter who has asked not to be involved',
+            deck: 'Muting stopped the notifications. It did not stop him. He has opened the chat 400 times today.',
+            byline: 'By a reporter who was in the group chat',
         },
         {
             headline:
-                'Neckass has declared inbox zero. A second inbox is not in dispute.',
-            deck: 'The second inbox declined to comment, at length, in a folder.',
+                'Neckass has declared inbox zero. He has a second inbox with 2,000 in it.',
+            deck: 'He moved the emails to a folder called "Later." Later has 2,000 emails.',
             byline: 'By the wire desk',
         },
         {
             headline:
                 'Neckass told his doctor he "basically never drinks" using a sommelier\'s vocabulary',
-            deck: 'The doctor recorded both statements.',
+            deck: 'He said "basically never," then described a "grippy, mineral" red he had "on a Tuesday, as one does."',
             byline: 'By the health desk',
         },
         {
             headline:
-                'A gym membership held by Neckass since 2013 has been located. Use of the gym has not.',
-            deck: 'The membership was found in good standing, which is the only standing available to it.',
+                'Neckass has paid for a gym membership since 2013 and has been to the gym twice',
+            deck: 'That is $4,100 for two visits. One of them was to ask about cancelling.',
             byline: 'Staff report',
         },
         {
             headline:
                 "Neckass's out-of-office reply has been active for eleven weeks. Neckass is at his desk.",
-            deck: 'Correspondents have adjusted. Neckass has not been told.',
+            deck: 'He set it for a long weekend in June. Everyone has stopped emailing him. He has noticed and is pleased.',
             byline: 'By the wire desk',
         },
         {
             headline:
-                'Neckass has read the terms and conditions. The findings have not proved useful.',
-            deck: 'He is unable to say what he agreed to, and has agreed to it.',
+                'Neckass read the terms and conditions in full, understood none of them, and agreed',
+            deck: 'It took forty minutes. Asked what he had agreed to, he said "the usual."',
             byline: 'By the technology desk',
         },
         {
             headline:
-                "Neckass's explanation of what a neckass is was found to be circular",
-            deck: 'A second explanation was requested. It was the first explanation, delivered more slowly.',
+                'Asked what a neckass is, Neckass said "you know, a neckass"',
+            deck: 'Asked again, he said it more slowly.',
             byline: 'By the language desk',
         },
     ];
 
-    // The Gazette retracts, with full institutional weight, things no one
-    // had disputed.
+    // The paper got it wrong. It says how.
     data.CORRECTIONS = [
-        "An earlier edition described Neckass's plan as a plan. The Gazette regrets the characterization.",
-        'The Gazette reported that Neckass arrived at eight. He arrived at eight, left, and arrived again.',
-        'A previous item referred to "Neckass\'s book." The book is a library book. It is overdue.',
+        "An earlier edition called Neckass's plan a plan. It is three words on a page. The Gazette regrets the error.",
+        'The Gazette reported that Neckass arrived at eight. He arrived at eight, realized he had forgotten his keys, and arrived again at 8:50.',
+        'A previous item referred to "Neckass\'s book." It is a library book, due in March. It is now September.',
         'The Gazette stated that Neckass had finished. He had stopped.',
-        "An item on Tuesday gave Neckass's position on Tuesdays. The position was given on a Wednesday.",
-        'The Gazette described a conversation as brief. Both parties dispute this, separately, at length.',
-        'We reported that Neckass owns a bicycle. Neckass owns a bicycle-shaped object in a hallway.',
+        "An item gave Neckass's position on Tuesdays. He gave it on a Wednesday, having lost track of the day.",
+        'The Gazette described a conversation as brief. It was two hours. Both parties have written in to say so.',
+        'We reported that Neckass owns a bicycle. He owns a bicycle he has not ridden since buying it in 2022. It is in the hallway.',
         'An earlier edition quoted Neckass as saying "no worries." There were worries.',
-        'The Gazette identified the printer as a printer. The printer has requested a fuller account.',
-        'A photograph in Monday\'s edition was captioned "Neckass, thinking." The caption has not been substantiated.',
+        'The Gazette reported that Neckass fixed the printer. He turned it off and on. It is still broken.',
+        'A photograph on Monday was captioned "Neckass, thinking." He was looking at his phone.',
         'The Gazette wrote that Neckass "woke early." He woke, and did not get up, for one hour and ten minutes.',
-        "We described Neckass's apology as an apology.",
+        'We described Neckass\'s apology as an apology. It was the sentence "well, sorry you feel that way."',
         'An earlier edition placed Neckass at the gym. It was the parking lot of the gym.',
-        'The Gazette reported one listener. There were two, briefly, by accident.',
+        "The Gazette reported that Neckass's podcast has one listener. It briefly had two. The second was a misclick.",
     ];
 
-    // A forecast for a temperament.
+    // A forecast, and what he will do about it.
     data.WEATHER = [
-        'Neckass-adjacent. Highs unclear. Conditions described by Neckass, who has not been outside.',
-        'Overcast. Neckass has a view on this and will share it in the group chat before noon.',
-        'Mild. Neckass has dressed for a different forecast and will not revisit the decision.',
-        'Rain expected. Neckass has been notified twice and will be surprised.',
-        'Warm. Neckass has asked whether anyone else is hot. The thermostat disagrees.',
-        'Clear. Neckass has described the day as "basically nice," the highest rating available to him.',
-        'Cold. Neckass is fine. This has not been independently verified.',
-        'Wind. A plan has been made outdoors and will be moved indoors at the last possible moment.',
-        'Fog. Visibility poor. Neckass has set out confidently in one direction.',
+        'Sunny, according to Neckass, who has not been outside and is going by the window.',
+        'Overcast. Neckass will post "ugh, this weather" in the group chat before noon.',
+        "Mild. Neckass is wearing a coat because he checked yesterday's forecast, and will keep it on.",
+        'Rain. Neckass was told twice and will not bring a jacket.',
+        'Warm. Neckass is hot, has asked if anyone else is, and has been told no.',
+        'Clear. Neckass says it is "basically nice," which is the best he has said about anything.',
+        'Cold. Neckass says he is fine. He is wearing shorts and is not fine.',
+        'Wind. Neckass has planned a picnic and will move it indoors when the food blows away.',
+        'Fog. Neckass has set off confidently in the wrong direction.',
         'Unsettled. Neckass has checked four forecasts and selected the one he preferred.',
     ];
 
-    // Loss, in eight words, at the back of the paper. These are the town's
-    // ads, not the subject's — the paper's headlines are already his. Written
-    // so that nothing here restates an item running elsewhere in the issue,
-    // which reads as a repeat rather than a callback.
+    // The town's ads. Not his — his are the headlines — but he is in most of
+    // them. Nothing here restates an item running elsewhere in the issue.
     data.CLASSIFIEDS = [
         'FOUND: set of keys, outside the gym. Owner has never been inside.',
-        'FOR SALE: bicycle, hallway-kept, unridden. Would suit a similar owner.',
-        'WANTED: quiet neighbor. Applications close when the alarm does.',
+        'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
+        'WANTED: neighbor whose alarm does not go off at 5 and get ignored until 6.',
         'LOST: forty minutes, to a documentary about octopuses.',
-        'FREE TO GOOD HOME: houseplant. Has read the receipts. Bears no ill will.',
-        'NOTICE: the printer is not accepting further characterizations.',
-        'SERVICES: I will tell you the thing you have already decided.',
-        'WANTED: someone to end a conversation. Prior experience essential.',
-        'FOR SALE: spare Tuesday. Buyer collects. No refunds.',
-        'SEEKING: whoever agreed to the terms on my behalf.',
-        'LOST: one hour, between the alarm and the getting up. Reward offered.',
-        'FOUND: a plan. Ten years, one page. Owner may collect and explain.',
+        'FREE TO GOOD HOME: houseplant. Current owner talks to it and it would like that to stop.',
+        'NOTICE: the printer is not broken. It is out of paper. Stop calling it names.',
+        'SERVICES: will agree with whatever you have already decided. Neckass is a regular.',
+        'WANTED: someone who can end a conversation with Neckass. Nobody has yet.',
+        'FOR SALE: one Tuesday. Neckass says they are a scam and will not use his.',
+        'SEEKING: anyone who knows what I agreed to. I read all of it. — N.',
+        'LOST: one hour, every morning, between the alarm and getting up.',
+        'FOUND: a ten-year plan. One page, three words. Owner may collect.',
         'PERSONAL: to the man who was five minutes away — we have gone home.',
-        'NOTICE: this column does not accept submissions from the subject of this paper.',
-        'WANTED: second opinion on some leftovers. Urgent.',
-        'FOR SALE: read receipts, unused, still in packaging.',
+        'NOTICE: this column no longer accepts ads from Neckass. He placed nine last week, all "WANTED: motivation."',
+        'WANTED: someone to smell some leftovers. They are nine days old. Urgent.',
+        'FOR SALE: standing desk, barely used, as the owner sat at it.',
     ];
 
-    // The world writes in. It cannot name the problem either.
+    // The people he has annoyed, writing in.
     data.LETTERS = [
         {
-            body: 'I am the printer. I am not a neckass.',
-            signature: 'The Printer, unincorporated',
+            body: 'I am the printer. I am out of paper. That is all that is wrong with me.',
+            signature: 'The Printer',
         },
         {
-            body: 'Regarding your item of Tuesday: it was Wednesday.',
+            body: 'Your item said Tuesday. It was Wednesday. Neckass told you Tuesday because he did not know what day it was.',
             signature: 'A reader who was present',
         },
         {
-            body: 'My alarm clock has been reported to you. It was doing its job.',
-            signature: 'A neighbor, uninvolved',
+            body: 'Neckass reported my alarm to you. It was his alarm. He set it. It was in his room.',
+            signature: 'A neighbor',
         },
         {
             body: 'You describe Neckass as "doing too much." He is doing one thing, slowly.',
             signature: 'A colleague',
         },
         {
-            body: 'I was the second listener of the podcast. I would like this on the record.',
+            body: 'I was the second listener of the podcast. It was a misclick. Please stop counting me.',
             signature: 'Name withheld',
         },
         {
-            body: "Your correction of Monday required a correction. I await Tuesday's.",
+            body: "Monday's correction was wrong. Tuesday's correction of it was also wrong. I no longer read the news, only the corrections.",
             signature: 'A subscriber of long standing',
         },
         {
-            body: 'I have been asked to be best man. I have not been asked.',
+            body: 'Neckass has told everyone he is my best man. I have not asked him. I have not set a date. I am not engaged.',
             signature: 'The groom',
         },
         {
-            body: 'Kindly stop covering my refrigerator.',
+            body: "Please stop reporting on my company's refrigerator. It logs door openings. It logged 41 in one evening. That is not a story.",
             signature: "A manufacturer's representative",
         },
         {
-            body: 'You have never defined the term. Neither have I. I write only to say that I noticed.',
+            body: 'In forty years I never managed to define "neckass." Your paper has not either, in seven hundred issues. I find that reassuring.',
             signature: 'A retired lexicographer',
         },
         {
-            body: 'The octopus documentary was mine. He watched forty minutes of it.',
+            body: 'The octopus documentary was on my account. He watched forty minutes of it and now corrects me about octopuses. I have a degree in this.',
             signature: 'A former friend',
         },
     ];
@@ -190,6 +187,6 @@
     // The colophon. Static, because the staff situation is stable.
     data.COLOPHON = {
         staff: 'Editor-in-chief: vacant. Wire desk: unattended. Corrections: ongoing.',
-        note: 'The Gazette does not know what a neckass is and continues to report on one.',
+        note: 'The Gazette does not know what a neckass is and reports on one every day.',
     };
 })();

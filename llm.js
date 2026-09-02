@@ -338,10 +338,10 @@ const tinyLlmClient = (() => {
             `${payload.subject} ${payload.verb} ${payload.object}. ${payload.impact}`,
             `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}. ${payload.impact}`,
             `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object}. ${payload.impact}`,
-            `${payload.subject} ${payload.verb} ${payload.object} and has described the outcome as "fine". ${payload.impact}`,
+            `${payload.subject} ${payload.verb} ${payload.object} and called it "fine." ${payload.impact}`,
             `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object}, ${payload.connector} ${payload.twist}. ${payload.impact}`,
-            `${payload.subjectGenitive} appeal concerning ${payload.claim} ${payload.ruling}. ${payload.impact}`,
-            `${payload.desk} ${payload.claim}, submitted by ${payload.subjectMid}, ${payload.ruling}`,
+            `${payload.subjectGenitive} complaint about ${payload.claim} ${payload.ruling}. ${payload.impact}`,
+            `${payload.desk} ${payload.claim} ${payload.ruling}. ${payload.impact}`,
             `${payload.claim} ${payload.ruling} ${payload.connector} ${payload.twist}. ${payload.impact}`,
             `${payload.subject} ${payload.verb} ${payload.object}. ${payload.claim} ${payload.ruling}.`,
         ];
@@ -451,7 +451,7 @@ const tinyLlmClient = (() => {
                 getRandom(rng) < 0.68 &&
                 !generated.toLowerCase().includes(chosenQueryToken)
                     ? clampHeadlineLength(
-                          `${generated} No record relating to ${chosenQueryToken} has been located.`,
+                          `${generated} He has also mentioned ${chosenQueryToken}.`,
                       )
                     : generated;
             return {

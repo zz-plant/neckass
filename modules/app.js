@@ -190,19 +190,19 @@
             this.activeButton = this.elements.nextButton;
 
             if (wantsGenerated && generatorAvailable) {
-                this.toggleLoader(true, 'The desk is writing.');
+                this.toggleLoader(true, 'Writing a new item.');
                 nextIndex = await this.generateHeadlineWithFallback();
             }
 
             if (this.filters.source === 'generated' && !generatorAvailable) {
                 this.toggleLoader(
                     true,
-                    'The desk is unavailable. The archive has been opened.',
+                    'Cannot write new items here. Showing one from the file.',
                 );
             }
 
             if (nextIndex === null) {
-                this.toggleLoader(true, 'Consulting the archive.');
+                this.toggleLoader(true, 'Showing an item from the file.');
                 nextIndex = this.getRandomIndex();
             }
 
@@ -255,13 +255,13 @@
                 return;
             }
 
-            this.toggleLoader(true, 'The desk is writing.');
+            this.toggleLoader(true, 'Writing a new item.');
             const generatedIndex = await this.generateHeadlineWithFallback();
 
             if (generatedIndex === null) {
                 this.toggleLoader(
                     true,
-                    'The wire is quiet. Consulting the archive.',
+                    'Nothing new. Showing an item from the file.',
                 );
                 const fallbackIndex = this.getRandomIndex();
                 if (fallbackIndex === null) {
@@ -318,7 +318,7 @@
                 if (diagnostics?.backend) {
                 }
                 this.updateLoaderMessage(
-                    'The desk did not file. The archive was used instead.',
+                    'Could not write a new item. Showing one from the file.',
                 );
                 return null;
             }
@@ -362,7 +362,7 @@
             const loaderMessage =
                 this.elements.loaderText?.textContent ||
                 this.elements.loader.textContent ||
-                'Going to press.';
+                'Loading.';
             this.toggleLoader(true, loaderMessage);
             this.elements.headline.classList.remove('show');
 
@@ -445,7 +445,7 @@
         _renderEmptyStateCore() {
             const hasFilters = hasActiveFilters(this.filters);
             this.elements.headline.textContent = hasFilters
-                ? 'No item on file matches these filters.'
+                ? 'No items match these filters.'
                 : 'No items on file.';
             this.elements.headline.style.color = '';
             this.clearCopyStatus();
