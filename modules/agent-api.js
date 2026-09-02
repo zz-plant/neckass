@@ -131,7 +131,6 @@
                 this.elements.searchInput.value = this.filters.query;
             }
             this.persistState();
-            this.syncFilterControls();
             this.refreshFilteredIndexes();
             this.applyMockLayoutClass();
 

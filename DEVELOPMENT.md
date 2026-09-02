@@ -30,10 +30,9 @@ separate files and are mixed onto the prototype by `app.js`. They are plain
 objects of shorthand methods, so `this` is the app instance exactly as it
 would be inside the class body. Each must load *before* `app.js`.
 
-- `modules/filter-controls.js` — section/source/panel/layout filters and search.
+- `modules/filter-controls.js` — section/source/panel/layout filter state.
 - `modules/streaks.js` — daily-return and shuffle streaks, badges, celebrations.
 - `modules/agent-api.js` — the surface `window.Neckass.agent` is built on.
-- `modules/feedback.js` — per-headline thumbs up/down and its exportable log.
 - `modules/status.js` — status lines, the copied-button flash, and the toast.
 
 Note that `modules/controllers/*.js` are *not* this pattern: they are

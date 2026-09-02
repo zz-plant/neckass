@@ -106,7 +106,6 @@
                     message.includes('Copied front page')
                 ) {
                     triggerHapticFeedback('success');
-                    this.trackGrowthEvent('export_success', { message });
                 }
             }
         },

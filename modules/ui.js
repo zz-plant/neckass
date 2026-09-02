@@ -37,6 +37,9 @@
             headlineList: 'headline-list',
             filterStatus: 'filter-status',
             clearFiltersButton: 'clear-filters',
+            jumpCopyButton: 'jump-copy',
+            jumpShareButton: 'jump-share',
+            jumpExportButton: 'jump-export',
         };
         const elements = Object.fromEntries(
             Object.entries(idMap).map(([key, id]) => [key, getById(id)]),

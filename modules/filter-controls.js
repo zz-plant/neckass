@@ -87,30 +87,6 @@
             );
         },
 
-        applySearch() {
-            const query = this.elements.searchInput?.value ?? '';
-            this.updateFilterValue('query', query.trim(), {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true,
-                updateStatusOnNoChange: true,
-            });
-        },
-
-        clearSearch() {
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = '';
-            }
-            this.updateFilterValue('query', '', {
-                resetNavigation: true,
-                refreshIndexes: true,
-                ensureHeadline: true,
-                syncControls: true,
-                updateStatusOnNoChange: true,
-            });
-        },
-
         resetNavigationForFilters() {
             const currentIndex = isValidHeadlineIndex(
                 this.state.currentIndex,
@@ -173,33 +149,6 @@
             });
         },
 
-        syncFilterControls() {
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = this.filters.query;
-            }
-            updateToggleButtons(
-                this.elements.sectionButtons,
-                this.filters.section,
-                'section',
-            );
-            updateToggleButtons(
-                this.elements.sourceButtons,
-                this.filters.source,
-                'source',
-            );
-            updateToggleButtons(
-                this.elements.panelButtons,
-                this.filters.panel,
-                'panel',
-            );
-            updateLayoutButtons(
-                this.elements.layoutButtons,
-                this.filters.layout,
-            );
-            this.syncGeneratorControls();
-            this.updateFilterStatus();
-        },
-
         clearAllFilters() {
             const nextFilters = { ...DEFAULT_FILTERS };
             const shouldReset = Object.keys(nextFilters).some(
@@ -219,7 +168,6 @@
                 this.elements.searchInput.value = '';
             }
             this.persistState();
-            this.syncFilterControls();
             this.refreshFilteredIndexes();
             this.applyMockLayoutClass();
 
@@ -264,9 +212,6 @@
                 this.resetNavigationForFilters();
             }
             this.persistState();
-            if (syncControls) {
-                this.syncFilterControls();
-            }
             if (refreshIndexes) {
                 this.refreshFilteredIndexes();
             }

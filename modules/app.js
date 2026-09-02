@@ -58,17 +58,10 @@
             this.dailyEngagement = this.normalizeDailyEngagement(
                 this.state.dailyEngagement,
             );
-            this.feedbackLog = this.normalizeFeedbackLog(
-                this.state.feedbackLog,
-            );
             this.dailyVisitMeta = {
                 isReturnVisitToday: false,
                 advancedStreakToday: false,
             };
-            this.metrics =
-                typeof Neckass.createMetricsTracker === 'function'
-                    ? Neckass.createMetricsTracker()
-                    : null;
             this.headlineController = new Neckass.HeadlineController({
                 app: this,
                 dependencies: {
@@ -106,12 +99,6 @@
             this.preflightExportAvailability();
             this.renderShuffleStreak();
             this.updateNextButtonLabel();
-            this.updateFeedbackCount();
-            this.updateMetricsSummary();
-            this.trackGrowthEvent('session_start', {
-                hasGenerator: this.isGeneratorAvailable(),
-                sourceFilter: this.filters.source,
-            });
             this._renderInitialHeadlineCore();
         }
 
@@ -159,31 +146,12 @@
             this.elements.jumpExportButton?.addEventListener('click', () =>
                 this.handleQuickExport(),
             );
-            this.elements.copyLinkButton?.addEventListener('click', () =>
-                this.copyHeadlineLink(),
-            );
-            this.elements.generateButton?.addEventListener('click', () =>
-                this.handleGenerate(),
-            );
-            this.elements.favoriteButton?.addEventListener('click', () =>
-                this.toggleFavorite(),
-            );
             this.elements.downloadMockButton?.addEventListener('click', () =>
                 this.handleMockExport('download'),
             );
             this.elements.copyMockButton?.addEventListener('click', () =>
                 this.handleMockExport('copy'),
             );
-            this.elements.applySearchButton?.addEventListener('click', () =>
-                this.applySearch(),
-            );
-            this.elements.clearSearchButton?.addEventListener('click', () =>
-                this.clearSearch(),
-            );
-            this.elements.searchForm?.addEventListener('submit', (event) => {
-                event.preventDefault();
-                this.applySearch();
-            });
             this.elements.sectionButtons?.forEach((button) => {
                 button.addEventListener('click', () =>
                     this.setSectionFilter(button.dataset.section || 'latest'),
@@ -207,26 +175,7 @@
             this.elements.clearFiltersButton?.addEventListener('click', () =>
                 this.clearAllFilters(),
             );
-            this.elements.feedbackGoodButton?.addEventListener('click', () =>
-                this.captureHeadlineFeedback('up'),
-            );
-            this.elements.feedbackBadButton?.addEventListener('click', () =>
-                this.captureHeadlineFeedback('down'),
-            );
-            this.elements.feedbackExportButton?.addEventListener('click', () =>
-                this.copyFeedbackLog(),
-            );
-            this.elements.copyAgentSnippetButton?.addEventListener(
-                'click',
-                () => this.copyAgentSnippet(),
-            );
-            this.elements.exportMetricsButton?.addEventListener('click', () =>
-                this.copyMetricsSnapshot(),
-            );
             this.elements.apiWaitlistLink?.addEventListener('click', () => {
-                this.trackGrowthEvent('api_waitlist_click', {
-                    source: 'automation_card',
-                });
                 this.reportAutomationStatus('Opening waitlist email draft.');
             });
             [
@@ -241,9 +190,6 @@
                 .forEach((link) => {
                     link.addEventListener('click', () => {
                         this.reportShareStatus('Share window opened.');
-                        this.trackGrowthEvent('share_link_opened', {
-                            channel: link.id || 'social',
-                        });
                     });
                 });
             this.elements.headlineList?.addEventListener('click', (event) => {
@@ -306,13 +252,6 @@
                 return;
             }
 
-            this.trackGrowthEvent('shuffle', {
-                source:
-                    wantsGenerated && generatorAvailable
-                        ? 'generated'
-                        : 'curated',
-                hasActiveFilters: hasActiveFilters(this.filters),
-            });
             triggerHapticFeedback('selection');
             this.renderHeadline(nextIndex);
         }
@@ -340,9 +279,6 @@
             this.persistState();
             this.updateHeadlineCounter();
             this.updateNavigationAvailability();
-            this.trackGrowthEvent('previous', {
-                stackDepth: this.state.navigationStack.length,
-            });
             triggerHapticFeedback('selection');
             this.renderHeadline(previousIndex, {
                 pushToStack: false,
@@ -376,9 +312,6 @@
                     this._renderEmptyStateCore();
                     return;
                 }
-                this.trackGrowthEvent('generate_fallback', {
-                    reason: 'generation-unavailable',
-                });
                 this.renderHeadline(fallbackIndex);
                 return;
             }
@@ -389,14 +322,10 @@
                     this._renderEmptyStateCore();
                     return;
                 }
-                this.trackGrowthEvent('generate_fallback', {
-                    reason: 'generated-ineligible',
-                });
                 this.renderHeadline(fallbackIndex);
                 return;
             }
 
-            this.trackGrowthEvent('generate_success', { source: 'tiny-llm' });
             this.renderHeadline(generatedIndex);
         }
 
@@ -420,11 +349,6 @@
                         ? window.tinyLlmClient.getLastDiagnostics()
                         : null;
                 if (diagnostics?.backend) {
-                    this.trackGrowthEvent('generate_backend', {
-                        backend: diagnostics.backend,
-                        timeoutMs: diagnostics.timeoutMs || 0,
-                        warm: diagnostics.warm === true,
-                    });
                 }
                 const headlineText =
                     typeof result === 'string' ? result : result?.headline;
@@ -436,11 +360,6 @@
                         ? window.tinyLlmClient.getLastDiagnostics()
                         : null;
                 if (diagnostics?.backend) {
-                    this.trackGrowthEvent('generate_backend_fallback', {
-                        backend: diagnostics.backend,
-                        timeoutMs: diagnostics.timeoutMs || 0,
-                        reason: diagnostics.fallback || 'generation-error',
-                    });
                 }
                 this.updateLoaderMessage(
                     'Generation unavailable, using saved headlines.',
@@ -484,7 +403,6 @@
 
             this.clearCopyStatus();
             this.clearShareStatus();
-            this.clearFeedbackStatus();
             const loaderMessage =
                 this.elements.loaderText?.textContent ||
                 this.elements.loader.textContent ||
@@ -509,7 +427,6 @@
                     shouldIncrementStreak && previousIndex !== index,
                 );
                 this.updateHeadlineBadges(index);
-                this.updateFavoriteButton();
                 updateHeadMetadata({
                     headline: headlineText,
                     index,
@@ -578,7 +495,6 @@
             updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
             this.updateMockHeadline('No headlines available.');
             this.updateHeadlineBadges(null);
-            this.updateFavoriteButton();
             this.updateHistoryList();
             this.toggleLoader(false, 'No headlines available.');
             this.state.isLoading = false;
@@ -689,39 +605,6 @@
             }
         }
 
-        updateFavoriteButton() {
-            if (!this.elements.favoriteButton) return;
-            const headlineText = this.headlines[this.state.currentIndex];
-            const isFavorite = Boolean(
-                headlineText && this.favoriteHeadlines.has(headlineText),
-            );
-            this.elements.favoriteButton.setAttribute(
-                'aria-pressed',
-                String(isFavorite),
-            );
-            this.elements.favoriteButton.querySelector(
-                '.button-label',
-            ).textContent = isFavorite
-                ? 'Saved to favorites'
-                : 'Save to favorites';
-        }
-
-        toggleFavorite() {
-            const headlineText = this.headlines[this.state.currentIndex];
-            if (!headlineText) return;
-            if (this.favoriteHeadlines.has(headlineText)) {
-                this.favoriteHeadlines.delete(headlineText);
-                this.reportCopyStatus('Removed from favorites.');
-            } else {
-                this.favoriteHeadlines.add(headlineText);
-                this.reportCopyStatus('Saved to favorites.');
-            }
-            triggerHapticFeedback('light');
-            this.persistState();
-            this.updateFavoriteButton();
-            this.updateHistoryList();
-        }
-
         updateHistoryList() {
             renderHistoryList({
                 elements: this.elements,
@@ -787,7 +670,6 @@
                 await navigator.share(payload);
                 this.reportShareStatus('Shared successfully.', false);
                 triggerHapticFeedback('success');
-                this.trackGrowthEvent('share_success', { channel: 'native' });
             } catch (error) {
                 if (error && error.name === 'AbortError') {
                     this.reportShareStatus('Share canceled.', false);
@@ -800,28 +682,6 @@
             } finally {
                 setButtonLoading(triggerButton, false);
             }
-        }
-
-        async _copyHeadlineLinkCore() {
-            const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
-            if (!canonicalUrl) {
-                this.reportCopyStatus('No headline link available.', true);
-                return;
-            }
-            await copyTextWithFeedback({
-                text: canonicalUrl,
-                button: this.elements.copyLinkButton,
-                successMessage: 'Headline link copied!',
-                onStatus: (message, isError) => {
-                    this.reportCopyStatus(message, isError);
-                    if (!isError) {
-                        this.trackGrowthEvent('copy_link_success', {
-                            source: 'copy-link',
-                        });
-                    }
-                },
-                setButtonLoading,
-            });
         }
 
         async _handleQuickShareCore() {
@@ -894,7 +754,6 @@
                 this.filters.source = 'auto';
             }
             this.persistState();
-            this.syncFilterControls();
             this.refreshFilteredIndexes();
             this.applyMockLayoutClass();
 
@@ -926,7 +785,6 @@
             const urlIndex = this.identifierToIndex(urlState.headline);
             const stateIndex = this.identifierToIndex(state.headlineIndex);
             this.filters = this.getFiltersFromUrl(urlState);
-            this.syncFilterControls();
             this.refreshFilteredIndexes();
             this.applyMockLayoutClass();
 
@@ -1012,83 +870,10 @@
                     if (!isError) {
                         triggerHapticFeedback('success');
                         this.flashCopiedButtonLabel(triggerButton);
-                        this.trackGrowthEvent('copy_success', {
-                            source: triggerButton?.id || 'copy-button',
-                        });
                     }
                 },
                 setButtonLoading,
             });
-        }
-
-        async copyAgentSnippet() {
-            const snippet = [
-                "const state = await window.Neckass.agent.call('get_state');",
-                "const next = await window.Neckass.agent.call('shuffle');",
-                "const generated = await window.Neckass.agent.call('generate');",
-            ].join('\n');
-
-            await copyTextWithFeedback({
-                text: snippet,
-                button: this.elements.copyAgentSnippetButton,
-                successMessage: 'Agent snippet copied.',
-                onStatus: (message, isError) => {
-                    this.reportAutomationStatus(message, isError);
-                    if (!isError) {
-                        this.trackGrowthEvent('agent_snippet_copy', {
-                            source: 'automation_card',
-                        });
-                    }
-                },
-                setButtonLoading,
-            });
-        }
-
-        async copyMetricsSnapshot() {
-            if (!this.metrics) {
-                this.reportMetricsStatus(
-                    'Metrics unavailable in this browser.',
-                    true,
-                );
-                return;
-            }
-
-            const payload = JSON.stringify(
-                this.metrics.exportSnapshot({
-                    currentHeadline:
-                        this.headlines[this.state.currentIndex] || null,
-                    viewedCount: this.state.uniqueHeadlines.size,
-                }),
-                null,
-                2,
-            );
-
-            await copyTextWithFeedback({
-                text: payload,
-                button: this.elements.exportMetricsButton,
-                successMessage: 'Metrics snapshot copied.',
-                onStatus: (message, isError) => {
-                    this.reportMetricsStatus(message, isError);
-                    if (!isError) {
-                        this.trackGrowthEvent('metrics_export', {
-                            source: 'metrics_card',
-                        });
-                    }
-                },
-                setButtonLoading,
-            });
-        }
-
-        trackGrowthEvent(eventName, details = {}) {
-            if (!this.metrics) return;
-            this.metrics.track(eventName, details);
-            this.updateMetricsSummary();
-        }
-
-        updateMetricsSummary() {
-            if (!this.metrics || !this.elements.metricsSummary) return;
-            const summary = this.metrics.getSummary();
-            this.elements.metricsSummary.textContent = `Sessions: ${summary.sessions} · Shuffles: ${summary.shuffles} · Share actions: ${summary.shares}`;
         }
 
         toggleLoader(shouldShow, message = null) {
@@ -1312,7 +1097,6 @@
                 favorites: Array.from(this.favoriteHeadlines),
                 filters: this.filters,
                 dailyEngagement: this.dailyEngagement,
-                feedbackLog: this.feedbackLog,
             });
         }
 
@@ -1372,9 +1156,6 @@
 
         async shareHeadline(triggerButton = this.elements.nativeShareButton) {
             return this.actionController.shareHeadline(triggerButton);
-        }
-        async copyHeadlineLink() {
-            return this.actionController.copyHeadlineLink();
         }
         async handleQuickShare() {
             return this.actionController.handleQuickShare();
