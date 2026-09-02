@@ -43,7 +43,10 @@ export const OG_CARDS: OgCard[] = [
     {
         file: 'og-image.png',
         kicker: 'BREAKING',
-        headline: ['Local man opens 19 tabs', 'to compare cereal prices'],
+        headline: [
+            'Neckass has been "five minutes',
+            'away" since 2019, sources confirm',
+        ],
         deck: 'Shuffle fresh headlines, then copy and share in seconds.',
         footer: 'NECKASS.COM · SATIRE HEADLINE GENERATOR',
     },
