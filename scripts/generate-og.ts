@@ -52,24 +52,24 @@ export const OG_CARDS: OgCard[] = [
     },
     {
         file: 'og-about.png',
-        kicker: 'ABOUT',
-        headline: ['How Neckass writes', 'a headline'],
-        deck: 'Runs in the browser, on your device, with no account.',
+        kicker: 'ENTRY',
+        headline: ['Neckass (slang)'],
+        deck: 'The neck almost certainly does not refer to anything.',
         footer: 'NECKASS.COM · ABOUT',
     },
     {
         file: 'og-examples.png',
         kicker: 'EXAMPLES',
-        headline: ['Startup pivots to handwritten', 'push notifications'],
-        deck: 'See the tone before you generate your own.',
+        headline: ['Printer described as neckass;', 'linguists urge caution'],
+        deck: 'Representative cases. Tone is the primary criterion.',
         footer: 'NECKASS.COM · HEADLINE EXAMPLES',
     },
     {
         file: 'og-prompts.png',
         kicker: 'PROMPTS',
-        headline: ['Starter ideas for world,', 'culture, tech and oddity'],
-        deck: 'Pick a category, then shuffle.',
-        footer: 'NECKASS.COM · PROMPT CATEGORIES',
+        headline: ['Routine, administrative,', 'and unprecedented neckassery'],
+        deck: 'Pick a variety, then shuffle.',
+        footer: 'NECKASS.COM · VARIETIES OF NECKASSERY',
     },
 ];
 
@@ -85,6 +85,9 @@ function escapeXml(value: string): string {
 
 export function buildCard(card: OgCard): string {
     const kickerWidth = 26 + card.kicker.length * 13;
+    // The deck sits a fixed distance below the last headline line, so a
+    // one-line card closes up instead of leaving a band of empty newsprint.
+    const deckY = 330 + (card.headline.length - 1) * 66 + 78;
     const headline = card.headline
         .map(
             (line, i) =>
@@ -107,7 +110,7 @@ export function buildCard(card: OgCard): string {
 
   ${headline}
 
-  <text x="104" y="474" font-family="${SANS}" font-size="25" fill="#5a5044">${escapeXml(card.deck)}</text>
+  <text x="104" y="${deckY}" font-family="${SANS}" font-size="25" fill="#5a5044">${escapeXml(card.deck)}</text>
 
   <line x1="104" y1="520" x2="${OG_WIDTH - 104}" y2="520" stroke="#241c14" stroke-opacity="0.28" stroke-width="1.4"/>
   <text x="104" y="552" font-family="${SANS}" font-size="18" fill="#5a5044" letter-spacing="1.6">${escapeXml(card.footer)}</text>
