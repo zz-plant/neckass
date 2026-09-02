@@ -330,20 +330,6 @@ a:not(.share-link):not(.top-nav a):hover {
     opacity: 0.95;
 }
 
-.streak-pill {
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    max-width: 100%;
-    border-radius: 2px;
-    border: 1px solid var(--border-subtle);
-    background: var(--surface-3);
-    color: var(--muted);
-    font-weight: 500;
-    font-size: 0.8rem;
-    padding: 5px 10px;
-}
-
 .page-grid {
     display: grid;
     gap: 16px;
@@ -411,76 +397,9 @@ a:not(.share-link):not(.top-nav a):hover {
     color: var(--muted);
 }
 
-.streak-text {
-    margin: 2px 0 0;
-    font-size: 0.86rem;
-    color: var(--muted);
-    border-left: 2px solid var(--accent-soft);
-    padding: 2px 0 2px 12px;
-    min-height: 1.2em;
-}
-
-.streak-badges {
-    margin-top: -4px;
-    list-style: none;
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    scrollbar-width: thin;
-}
-
-.streak-badges[hidden] {
+/* The grid display below would otherwise outrank the UA's [hidden] rule. */
+.history-card[hidden] {
     display: none;
-}
-
-.streak-badge {
-    border: 1px solid rgba(38, 32, 24, 0.13);
-    border-radius: 999px;
-    padding: 5px 9px;
-    background: var(--veil);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    flex: 0 0 auto;
-    transition:
-        transform 140ms ease,
-        box-shadow 140ms ease,
-        border-color 140ms ease;
-}
-
-.streak-badge__title {
-    font-size: 0.74rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    text-transform: none;
-    color: var(--text);
-}
-
-.streak-badge__goal {
-    font-size: 0.78rem;
-    color: var(--muted);
-}
-
-.streak-badge.is-earned {
-    background: linear-gradient(
-        140deg,
-        rgba(220, 107, 63, 0.14),
-        rgba(244, 162, 97, 0.2)
-    );
-    border-color: rgba(220, 107, 63, 0.45);
-    box-shadow: 0 6px 12px rgba(220, 107, 63, 0.14);
-}
-
-.streak-badge.is-earned .streak-badge__title {
-    color: var(--accent);
-}
-
-.streak-badge.is-next {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 .history-card {
@@ -504,21 +423,6 @@ a:not(.share-link):not(.top-nav a):hover {
 .seo-copy dd,
 .seo-copy li {
     max-width: 68ch;
-}
-
-.faq-list {
-    display: grid;
-    gap: 6px;
-}
-
-.faq-list dt {
-    font-weight: 600;
-    color: var(--text);
-}
-
-.faq-list dd {
-    margin-left: 0;
-    color: var(--muted);
 }
 
 .about-list {
@@ -587,34 +491,6 @@ a:not(.share-link):not(.top-nav a):hover {
     font-weight: 700;
 }
 
-.label-with-icon {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.label-icon {
-    width: 14px;
-    height: 14px;
-    opacity: 0.75;
-}
-
-.button-with-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.button-icon {
-    width: 16px;
-    height: 16px;
-}
-
-button.accent .button-icon {
-    filter: brightness(0) invert(1);
-}
-
 .button-main-label {
     display: inline-flex;
     align-items: center;
@@ -622,11 +498,14 @@ button.accent .button-icon {
 }
 .actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* Shuffle is the action; Previous is a way back. */
+    grid-template-columns: auto 1fr;
     gap: 12px;
 }
 
 .actions .ghost {
+    padding-inline: 18px;
+    font-weight: 500;
     border-color: rgba(34, 26, 20, 0.16);
     background: var(--veil);
     color: var(--text);
@@ -833,11 +712,6 @@ button.ghost {
     border-color: rgba(34, 26, 20, 0.34);
 }
 
-.share-help {
-    margin: 0;
-    color: var(--text-muted);
-}
-
 .share-actions {
     display: grid;
     gap: 8px;
@@ -987,12 +861,6 @@ button.ghost {
     );
 }
 
-.mock-dateline {
-    margin: 0;
-    font-size: 0.84rem;
-    color: #645647;
-}
-
 .mock-footer {
     margin: auto 0 0;
     padding-top: 8px;
@@ -1015,20 +883,6 @@ button.ghost {
     gap: 2px;
     border-radius: 16px;
     text-align: left;
-}
-
-.mock-actions button small {
-    font-size: 0.78rem;
-    color: var(--muted);
-}
-
-.counter {
-    font-size: 0.88rem;
-    color: var(--muted);
-}
-
-.counter-inline {
-    margin-top: -2px;
 }
 
 .global-toast {
@@ -1208,22 +1062,22 @@ button.ghost {
         min-height: 104px;
     }
 
-    .streak-text {
-        font-size: 0.84rem;
-        padding: 6px 9px;
-    }
-
-    .streak-badge {
-        padding: 4px 8px;
-    }
-
     .actions {
         grid-template-columns: 1fr;
     }
 
+    /* Thumb-reachable primary first; the way back is a quiet text button. */
+    #next-btn {
+        order: -1;
+    }
+
     #prev-btn {
-        border-color: rgba(34, 26, 20, 0.16);
-        background: var(--veil-soft);
+        justify-self: start;
+        min-height: 40px;
+        padding-inline: 4px;
+        border: 0;
+        background: transparent;
+        font-weight: 500;
         color: var(--text);
     }
 
@@ -1284,10 +1138,6 @@ button.ghost {
     #headline {
         font-size: clamp(2rem, 6.5vw, 2.4rem);
         max-width: 100%;
-    }
-
-    .counter {
-        font-size: 0.9rem;
     }
 
     .filter-label {

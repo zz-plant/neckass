@@ -9,7 +9,6 @@
     "ignoreUnknown": false,
     "includes": [
       "**",
-      "!icons/**",
       "!vendor/**",
       "!docs/assets/**",
       "!bun.lock",

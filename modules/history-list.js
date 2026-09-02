@@ -88,6 +88,10 @@
             navigationStack,
         });
 
+        // A history containing only the present is not a history.
+        const section = elements.headlineList.closest('section');
+        if (section) section.hidden = indexes.length < 2;
+
         if (elements.historyCount) {
             elements.historyCount.textContent =
                 indexes.length === 1 ? '1 item' : `${indexes.length} items`;

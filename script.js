@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const headlineEl = document.getElementById('headline');
     const mockHeadlineEl = document.getElementById('mock-headline');
     const loaderEl = document.getElementById('loader');
-    const streakBadgesEl = document.getElementById('streak-badges');
     const headlineQuickActionsEl = document.getElementById(
         'headline-quick-actions',
     );
@@ -44,10 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const revealSecondaryIntro = () => {
-        if (streakBadgesEl?.hasAttribute('hidden')) {
-            streakBadgesEl.removeAttribute('hidden');
-        }
-
         if (headlineQuickActionsEl?.hasAttribute('hidden')) {
             headlineQuickActionsEl.removeAttribute('hidden');
         }

@@ -20,11 +20,15 @@
 
     function slugifyHeadline(headlineText) {
         if (!headlineText) return '';
-        return headlineText
+        const slug = headlineText
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '')
-            .slice(0, 60);
+            .replace(/^-+|-+$/g, '');
+        if (slug.length <= 60) return slug;
+        // Cut at a word boundary rather than mid-word ("…sources-confir").
+        const cut = slug.slice(0, 60);
+        const boundary = cut.lastIndexOf('-');
+        return boundary > 20 ? cut.slice(0, boundary) : cut;
     }
 
     function safeJsonParse(raw, fallback) {

@@ -21,6 +21,17 @@
     Neckass.agentApiMethods = {
         identifierToIndex(identifier) {
             if (identifier === null || identifier === undefined) return null;
+
+            // Current form: the headline's own slug. Checked first so a slug
+            // that happens to start with a digit is never read as an index.
+            const asSlug = String(identifier);
+            if (/^[a-z0-9-]+$/.test(asSlug)) {
+                const bySlug = this.headlines.findIndex(
+                    (text) => slugifyHeadline(text) === asSlug,
+                );
+                if (bySlug !== -1) return bySlug;
+            }
+
             const parsed = Number.parseInt(identifier, 10);
             if (
                 Number.isInteger(parsed) &&
@@ -29,11 +40,19 @@
                 return parsed;
             }
 
+            // Legacy form "<index>-<slug>", so links shared before the change
+            // still resolve.
             const slugMatch = String(identifier).match(
                 /^(\d+)(?:-[a-z0-9-]+)?$/i,
             );
             if (slugMatch) {
                 return Number.parseInt(slugMatch[1], 10);
+            }
+
+            // A slug-shaped identifier that matched nothing is a stale link,
+            // not a headline someone typed; do not register it as one.
+            if (/^[a-z0-9-]+$/.test(asSlug) && asSlug.includes('-')) {
+                return null;
             }
 
             const normalized = normalizeHeadlineText(identifier);
@@ -54,7 +73,7 @@
                 ? this.headlines[index]
                 : '';
             const slug = slugifyHeadline(headlineText);
-            return slug ? `${index}-${slug}` : String(index);
+            return slug || String(index);
         },
 
         buildHeadlineUrl(index) {

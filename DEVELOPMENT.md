@@ -31,7 +31,6 @@ objects of shorthand methods, so `this` is the app instance exactly as it
 would be inside the class body. Each must load *before* `app.js`.
 
 - `modules/filter-controls.js` — section/source/panel/layout filter state.
-- `modules/streaks.js` — daily-return and shuffle streaks, badges, celebrations.
 - `modules/agent-api.js` — the surface `window.Neckass.agent` is built on.
 - `modules/status.js` — status lines, the copied-button flash, and the toast.
 

@@ -82,8 +82,8 @@
     <div class="page-shell">
         <div class="page-topbar">
             <div class="brand-mark">
-                <span class="brand-kicker">Neckass</span>
-                <span class="brand-title">Digital Gazette</span>
+                <span class="brand-kicker">Digital Gazette</span>
+                <span class="brand-title">Neckass</span>
             </div>
             <nav class="top-nav" aria-label="Site">
                 <a href="/about.html">About</a>
@@ -93,9 +93,7 @@
         </div>
         <header class="hero">
             <div class="container hero__content">
-                <p class="meta" id="masthead-date">Updated daily</p>
-                <p class="meta meta--secondary streak-pill" id="daily-streak" aria-live="polite" aria-atomic="true">Daily streak: 1 day · Come back tomorrow.</p>
-                <p class="counter">Headlines viewed: <span id="counter">0</span></p>
+                <p class="meta" id="masthead-date"></p>
             </div>
         </header>
 
@@ -105,25 +103,6 @@
                     <div class="headline-frame">
                         <h2 id="headline" tabindex="-1" aria-label="Headline">Loading...</h2>
                     </div>
-                    <p class="streak-text" id="shuffle-streak" aria-live="polite" aria-atomic="true" hidden></p>
-                    <ul class="streak-badges" id="streak-badges" aria-label="Shuffle streak badges" hidden>
-                        <li class="streak-badge" data-milestone="3">
-                            <span class="streak-badge__title">Starter</span>
-                            <span class="streak-badge__goal">3 shuffles</span>
-                        </li>
-                        <li class="streak-badge" data-milestone="5">
-                            <span class="streak-badge__title">Momentum</span>
-                            <span class="streak-badge__goal">5 shuffles</span>
-                        </li>
-                        <li class="streak-badge" data-milestone="8">
-                            <span class="streak-badge__title">Surge</span>
-                            <span class="streak-badge__goal">8 shuffles</span>
-                        </li>
-                        <li class="streak-badge" data-milestone="12">
-                            <span class="streak-badge__title">All-star</span>
-                            <span class="streak-badge__goal">12 shuffles</span>
-                        </li>
-                    </ul>
 
                     <div class="filter-reset" aria-live="polite">
                         <p id="filter-status" class="status-text" hidden></p>
@@ -131,16 +110,16 @@
                     </div>
 
                     <div class="actions">
-                        <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost button-with-icon"><img class="button-icon" src="icons/arrow-left.svg" alt="" aria-hidden="true"><span>Previous</span></button>
-                        <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent button-with-icon"><img class="button-icon" src="icons/shuffle.svg" alt="" aria-hidden="true"><span class="button-label">Shuffle</span></button>
+                        <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost"><span>Previous</span></button>
+                        <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Shuffle</span></button>
                     </div>
 
                     <div class="headline-quick-actions" id="headline-quick-actions" hidden>
                         <p class="headline-quick-actions__title">Quick actions</p>
                         <div class="headline-quick-actions__grid">
-                            <button id="jump-copy" class="ghost button-with-icon" type="button"><img class="button-icon" src="icons/copy.svg" alt="" aria-hidden="true"><span>Copy</span></button>
-                            <button id="jump-share" class="ghost button-with-icon" type="button"><img class="button-icon" src="icons/send.svg" alt="" aria-hidden="true"><span>Share</span></button>
-                            <button id="jump-export" class="ghost button-with-icon quick-action-secondary" type="button"><img class="button-icon" src="icons/layout.svg" alt="" aria-hidden="true"><span>Export</span></button>
+                            <button id="jump-copy" class="ghost" type="button"><span>Copy</span></button>
+                            <button id="jump-share" class="ghost" type="button"><span>Share</span></button>
+                            <button id="jump-export" class="ghost quick-action-secondary" type="button"><span>Export</span></button>
                         </div>
                     </div>
 
@@ -157,31 +136,16 @@
                 <section class="history-card seo-copy" aria-labelledby="how-it-works-title">
                     <h2 class="filter-label" id="how-it-works-title">About this publication</h2>
                     <p>The Digital Gazette reports on the activities of a Neckass. Tap <strong>Shuffle</strong> to be issued a new item. Each may be copied, shared, or exported as a front page.</p>
-                    <p>The Gazette operates entirely within the browser. Recent items and streaks are kept in local storage. No account is required, and none has proved useful.</p>
-                    <h3 class="filter-label">Frequently asked questions</h3>
-                    <dl class="faq-list">
-                        <dt>What is a Neckass?</dt>
-                        <dd>The distinction remains difficult to formalize. This has not prevented widespread agreement in individual cases. See the <a href="/about.html">entry</a>.</dd>
-                        <dt>Is this free to use?</dt>
-                        <dd>Yes. Several proposals to charge for it were made. None received significant support.</dd>
-                        <dt>Do I need an account?</dt>
-                        <dd>No. The site is unable to determine who you are, and has not found this to be a limitation.</dd>
-                        <dt>Can I share the headlines?</dt>
-                        <dd>Yes. Copy, share, or export the front page as a PNG. Reception has been mixed.</dd>
-                    </dl>
+                    <p>The Gazette operates entirely within the browser. Recent items are kept in local storage. No account is required, and none has proved useful.</p>
                     <p>Specific varieties are catalogued under <a href="/prompts.html">neckassery</a>.</p>
                 </section>
             </section>
 
             <aside class="command-rail" aria-label="Quick actions rail">
                 <section class="rail-card rail-card--hub" aria-label="Headline actions">
-                    <section class="command-cluster command-cluster--paired copy-headline" id="copy-card" aria-labelledby="copy-card-title">
-                        <div>
-                            <h3 class="filter-label" id="copy-card-title">Clipboard</h3>
-
-                        </div>
+                    <section class="command-cluster command-cluster--paired copy-headline" id="copy-card" aria-label="Copy">
                         <div class="copy-row">
-                            <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost button-with-icon"><img class="button-icon" src="icons/copy.svg" alt="" aria-hidden="true"><span>Copy headline</span></button>
+                            <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy headline</span></button>
                         </div>
                         <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
                     </section>
@@ -191,22 +155,18 @@
                             <h3 class="filter-label" id="share-card-title">Share</h3>
 
                         </div>
-                        <p class="status-text share-help">Use your device share sheet first, or pick a network below.</p>
                         <div class="share-actions">
-                            <button id="native-share" class="ghost button-with-icon" type="button" aria-label="Share headline with device share sheet"><img class="button-icon" src="icons/send.svg" alt="" aria-hidden="true"><span>Share from device</span></button>
+                            <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share from device</span></button>
                         </div>
                         <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
                         <div class="share-links">
                             <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
-                                <img src="icons/x.svg" alt="X icon">
                                 <span>X</span>
                             </a>
                             <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-                                <img src="icons/facebook.svg" alt="Facebook icon">
                                 <span>Facebook</span>
                             </a>
                             <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
-                                <img src="icons/reddit.svg" alt="Reddit icon">
                                 <span>Reddit</span>
                             </a>
                         </div>
@@ -217,7 +177,7 @@
 
                 <section class="rail-card rail-card--secondary" id="export-card" aria-labelledby="export-card-title">
                     <div>
-                        <h2 class="filter-label label-with-icon" id="export-card-title"><img class="label-icon" src="icons/layout.svg" alt="" aria-hidden="true"><span>Front page</span></h2>
+                        <h2 class="filter-label" id="export-card-title"><span>Front page</span></h2>
 
                     </div>
                     <div id="mock-front" class="mock-front">
@@ -229,18 +189,15 @@
                         <div class="mock-rule" aria-hidden="true"></div>
                         <h3 id="mock-headline" class="mock-headline">Loading...</h3>
                         <p class="mock-deck">Sources familiar with the matter declined to elaborate.</p>
-                        <p id="feature-date" class="mock-dateline">Published 8:45 AM</p>
                         <p class="mock-footer">neckass.com · department of neckassery</p>
                     </div>
                     <div class="mock-actions">
                         <button id="download-mock" class="ghost" type="button">
-                            <span class="button-main-label"><img class="button-icon" src="icons/download.svg" alt="" aria-hidden="true"><span>Download front page</span></span>
-                            <small>Save PNG to your device.</small>
+                            <span class="button-main-label"><span>Download front page</span></span>
 
                         </button>
                         <button id="copy-mock" class="ghost" type="button">
-                            <span class="button-main-label"><img class="button-icon" src="icons/image.svg" alt="" aria-hidden="true"><span>Copy front page</span></span>
-                            <small>Paste image into apps.</small>
+                            <span class="button-main-label"><span>Copy front page</span></span>
 
                         </button>
                     </div>
@@ -267,7 +224,6 @@
     <script defer src="modules/history-list.js"></script>
     <script defer src="modules/controllers/headline-controller.js"></script>
     <script defer src="modules/controllers/action-controller.js"></script>
-    <script defer src="modules/streaks.js"></script>
     <script defer src="modules/filter-controls.js"></script>
     <script defer src="modules/agent-api.js"></script>
     <script defer src="modules/status.js"></script>

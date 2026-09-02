@@ -52,16 +52,7 @@
             this.handleDirectionalNavigation =
                 this.handleDirectionalNavigation.bind(this);
             this.activeButton = null;
-            this.shuffleStreak = 0;
-            this.shouldIncrementStreak = false;
             this.celebrationTimer = null;
-            this.dailyEngagement = this.normalizeDailyEngagement(
-                this.state.dailyEngagement,
-            );
-            this.dailyVisitMeta = {
-                isReturnVisitToday: false,
-                advancedStreakToday: false,
-            };
             this.headlineController = new Neckass.HeadlineController({
                 app: this,
                 dependencies: {
@@ -91,13 +82,9 @@
             this.bindEvents();
             this.applyUrlState();
             this.syncGeneratorControls();
-            this.updateHeadlineCounter();
             this.updateNavigationAvailability();
             this.updateMockDate();
-            this.refreshDailyEngagement();
-            this.renderDailyStreak();
             this.preflightExportAvailability();
-            this.renderShuffleStreak();
             this.updateNextButtonLabel();
             this._renderInitialHeadlineCore();
         }
@@ -108,7 +95,6 @@
                 ['previousButton', 'previous action button'],
                 ['copyButton', 'copy action button'],
                 ['headline', 'headline container'],
-                ['counter', 'headline counter'],
             ];
 
             const missing = required
@@ -202,7 +188,6 @@
                 (this.filters.source === 'auto' && generatorAvailable);
             let nextIndex = null;
             this.activeButton = this.elements.nextButton;
-            this.shouldIncrementStreak = true;
 
             if (wantsGenerated && generatorAvailable) {
                 this.toggleLoader(
@@ -241,7 +226,6 @@
                 return;
             }
             this.activeButton = this.elements.previousButton;
-            this.shouldIncrementStreak = false;
 
             const removedIndex = this.state.navigationStack.pop();
             if (!this.state.navigationStack.includes(removedIndex)) {
@@ -254,7 +238,6 @@
                 ];
             this.state.currentIndex = previousIndex;
             this.persistState();
-            this.updateHeadlineCounter();
             this.updateNavigationAvailability();
             triggerHapticFeedback('selection');
             this.renderHeadline(previousIndex, {
@@ -266,7 +249,6 @@
         async handleGenerate() {
             const generatorAvailable = this.isGeneratorAvailable();
             this.activeButton = this.elements.generateButton;
-            this.shouldIncrementStreak = false;
 
             if (!generatorAvailable) {
                 this.reportCopyStatus(
@@ -384,9 +366,6 @@
                 this.elements.loaderText?.textContent ||
                 this.elements.loader.textContent ||
                 'Loading headline...';
-            const previousIndex = this.state.currentIndex;
-            const shouldIncrementStreak = this.shouldIncrementStreak;
-            this.shouldIncrementStreak = false;
             this.toggleLoader(true, loaderMessage);
             this.elements.headline.classList.remove('show');
 
@@ -400,9 +379,6 @@
                 this.updateMockDate();
 
                 this.updateViewedState(index, options);
-                this.updateShuffleStreak(
-                    shouldIncrementStreak && previousIndex !== index,
-                );
                 this.updateHeadlineBadges(index);
                 updateHeadMetadata({
                     headline: headlineText,
@@ -481,7 +457,6 @@
             this.setNextButtonLabel(
                 hasFilters ? 'Try a different filter' : 'Shuffle',
             );
-            this.updateShuffleStreak(false);
             if (this.elements.clearFiltersButton) {
                 this.elements.clearFiltersButton.hidden = !hasFilters;
                 this.elements.clearFiltersButton.disabled = !hasFilters;
@@ -498,12 +473,7 @@
             this.state.currentIndex = index;
 
             this.persistState();
-            this.updateHeadlineCounter();
             this.updateNavigationAvailability();
-        }
-
-        updateHeadlineCounter() {
-            this.elements.counter.textContent = this.state.uniqueHeadlines.size;
         }
 
         updateNavigationAvailability() {
@@ -537,17 +507,12 @@
             if (!this.elements.nextButton || this.state.isLoading) {
                 return;
             }
-            this.setNextButtonLabel(
-                this.shuffleStreak > 0
-                    ? `Keep streak · ${this.shuffleStreak}`
-                    : 'Shuffle',
-            );
+            this.setNextButtonLabel('Shuffle');
         }
 
         _selectHeadlineCore(index) {
             if (!this.isIndexEligible(index)) return;
             this.state.currentIndex = index;
-            this.shouldIncrementStreak = false;
             if (
                 this.state.navigationStack[
                     this.state.navigationStack.length - 1
@@ -765,7 +730,6 @@
                 this.state.uniqueHeadlines.add(fallbackIndex);
                 this.state.currentIndex = fallbackIndex;
                 this.persistState();
-                this.updateHeadlineCounter();
                 this.updateNavigationAvailability();
                 this.pushHistoryState(fallbackIndex, { replace: true });
             } else if (index !== null || urlState.hasHeadlineParam) {
@@ -828,7 +792,6 @@
             ]);
             this.state.currentIndex = eligibleTarget;
             this.persistState();
-            this.updateHeadlineCounter();
             this.updateNavigationAvailability();
             this.renderHeadline(eligibleTarget, {
                 pushToStack: false,
@@ -951,21 +914,22 @@
                 day: 'numeric',
                 year: 'numeric',
             });
-            const timeFormatter = new Intl.DateTimeFormat('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-            });
-
             if (this.elements.mockDate) {
                 this.elements.mockDate.textContent = dateFormatter.format(now);
             }
 
             if (this.elements.mastheadDate) {
-                this.elements.mastheadDate.textContent = `${dateFormatter.format(now)} · Digital edition`;
-            }
-
-            if (this.elements.featureDateline) {
-                this.elements.featureDateline.textContent = `Published ${timeFormatter.format(now)}`;
+                // Issue number: days since the Gazette first published
+                // (2024-09-29). Deterministic per calendar day, so two
+                // visitors on the same day see the same edition.
+                const firstEdition = Date.UTC(2024, 8, 29);
+                const today = Date.UTC(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    now.getDate(),
+                );
+                const issue = Math.floor((today - firstEdition) / 86400000) + 1;
+                this.elements.mastheadDate.textContent = `${dateFormatter.format(now)} · No. ${issue}`;
             }
         }
 
@@ -1090,7 +1054,6 @@
                 generatedHeadlines: this.state.generatedHeadlines,
                 favorites: Array.from(this.favoriteHeadlines),
                 filters: this.filters,
-                dailyEngagement: this.dailyEngagement,
             });
         }
 
@@ -1182,7 +1145,6 @@
     // shorthand methods, so `this` behaves exactly as it did in the class body.
     Object.assign(
         HeadlineApp.prototype,
-        Neckass.streakMethods,
         Neckass.filterMethods,
         Neckass.agentApiMethods,
         Neckass.feedbackMethods,

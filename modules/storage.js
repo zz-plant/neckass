@@ -11,7 +11,6 @@
         generatedHeadlines: 'generatedHeadlines',
         favorites: 'favoriteHeadlines',
         filters: 'headlineFilters',
-        dailyEngagement: 'dailyEngagement',
         feedbackLog: 'headlineFeedbackLog',
     };
 
@@ -63,10 +62,6 @@
             safeSetItem(
                 STORAGE_KEYS.filters,
                 JSON.stringify(snapshot.filters || Neckass.DEFAULT_FILTERS),
-            );
-            safeSetItem(
-                STORAGE_KEYS.dailyEngagement,
-                JSON.stringify(snapshot.dailyEngagement || {}),
             );
             safeSetItem(
                 STORAGE_KEYS.feedbackLog,
@@ -134,10 +129,6 @@
                         : sanitizedStack,
                 );
 
-                const dailyEngagement = Neckass.safeJsonParse(
-                    safeGetItem(STORAGE_KEYS.dailyEngagement),
-                    {},
-                );
                 const feedbackLog = Neckass.safeJsonParse(
                     safeGetItem(STORAGE_KEYS.feedbackLog),
                     [],
@@ -155,7 +146,6 @@
                         ? favorites.filter(Boolean)
                         : [],
                     filters: Neckass.sanitizeFilters(filters),
-                    dailyEngagement,
                     feedbackLog: Array.isArray(feedbackLog) ? feedbackLog : [],
                 };
             },
