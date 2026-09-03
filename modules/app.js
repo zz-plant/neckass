@@ -47,24 +47,6 @@
                 this.handleDirectionalNavigation.bind(this);
             this.activeButton = null;
             this.celebrationTimer = null;
-            this.headlineController = new Neckass.HeadlineController({
-                app: this,
-                dependencies: {
-                    runViewTransition,
-                    scheduleBackgroundTask,
-                    updateHeadMetadata,
-                    updateSocialShareLinks,
-                    isValidHeadlineIndex,
-                },
-            });
-            this.actionController = new Neckass.ActionController({
-                app: this,
-                dependencies: {
-                    copyTextWithFeedback,
-                    exportClipping,
-                    setButtonLoading,
-                },
-            });
         }
 
         init() {
@@ -78,7 +60,7 @@
             this.updateClippingDate();
             this.preflightExportAvailability();
             this.updateNextButtonLabel();
-            this._renderInitialHeadlineCore();
+            this.renderInitialHeadline();
         }
 
         validateRequiredElements() {
@@ -107,7 +89,7 @@
                 this.handleNext(),
             );
             this.elements.previousButton.addEventListener('click', () =>
-                this._handlePreviousCore(),
+                this.handlePrevious(),
             );
             this.elements.copyButton.addEventListener('click', () =>
                 this.copyHeadline(this.elements.copyButton),
@@ -148,11 +130,11 @@
                 const index = Number.parseInt(target.dataset.index, 10);
                 if (Number.isInteger(index)) {
                     this.activeButton = target;
-                    this._selectHeadlineCore(index);
+                    this.selectHeadline(index);
                 }
             });
             window.addEventListener('popstate', (event) =>
-                this._handlePopStateCore(event),
+                this.handlePopState(event),
             );
             document.addEventListener(
                 'keydown',
@@ -160,12 +142,12 @@
             );
         }
 
-        async _handleNextCore() {
+        async handleNext() {
             if (this.state.isLoading) {
                 return;
             }
             if (this.headlines.length === 0) {
-                this._renderEmptyStateCore();
+                this.renderEmptyState();
                 return;
             }
 
@@ -183,7 +165,7 @@
             }
 
             if (nextIndex === null) {
-                this._renderEmptyStateCore();
+                this.renderEmptyState();
                 return;
             }
 
@@ -191,7 +173,7 @@
             this.renderHeadline(nextIndex);
         }
 
-        _handlePreviousCore() {
+        handlePrevious() {
             if (this.state.isLoading) {
                 return;
             }
@@ -240,7 +222,7 @@
                 );
                 const fallbackIndex = this.getRandomIndex();
                 if (fallbackIndex === null) {
-                    this._renderEmptyStateCore();
+                    this.renderEmptyState();
                     return;
                 }
                 this.renderHeadline(fallbackIndex);
@@ -250,7 +232,7 @@
             if (!isValidHeadlineIndex(generatedIndex, this.headlines.length)) {
                 const fallbackIndex = this.getRandomIndex();
                 if (fallbackIndex === null) {
-                    this._renderEmptyStateCore();
+                    this.renderEmptyState();
                     return;
                 }
                 this.renderHeadline(fallbackIndex);
@@ -318,12 +300,12 @@
             return newIndex;
         }
 
-        _renderHeadlineCore(
+        renderHeadline(
             index,
             options = { pushToStack: true, replaceState: false },
         ) {
             if (!isValidHeadlineIndex(index, this.headlines.length)) {
-                this._renderEmptyStateCore();
+                this.renderEmptyState();
                 return;
             }
 
@@ -363,7 +345,7 @@
                 this.updateClippingHeadline(headlineText);
                 this.persistState();
                 // The initial render does not claim the address bar; see
-                // _renderInitialHeadlineCore.
+                // renderInitialHeadline.
                 if (options.claimUrl !== false) {
                     this.pushHistoryState(index, {
                         replace: options.replaceState,
@@ -373,7 +355,7 @@
             });
         }
 
-        _renderInitialHeadlineCore() {
+        renderInitialHeadline() {
             // A bare visit is a visit to the paper. The wire item showing on
             // arrival was not chosen by the reader, so it does not get to
             // rewrite the address, the title, or what a shared link resolves
@@ -407,10 +389,10 @@
                 return;
             }
 
-            this._renderEmptyStateCore();
+            this.renderEmptyState();
         }
 
-        _renderEmptyStateCore() {
+        renderEmptyState() {
             this.elements.headline.textContent = 'No items on file.';
             this.elements.headline.style.color = '';
             this.clearCopyStatus();
@@ -446,39 +428,7 @@
             this.updateNavigationAvailability();
         }
 
-        updateNavigationAvailability() {
-            const hasEligible = this.headlines.length > 0;
-            this.elements.previousButton.disabled =
-                this.state.isLoading || this.state.navigationStack.length <= 1;
-            this.elements.nextButton.disabled =
-                this.state.isLoading || !hasEligible;
-            this.updateNextButtonLabel();
-        }
-
-        setNextButtonLabel(label) {
-            if (!this.elements.nextButton) {
-                return;
-            }
-
-            const labelElement =
-                this.elements.nextButton.querySelector('.button-label') ||
-                this.elements.nextButton.querySelector('span');
-            if (labelElement) {
-                labelElement.textContent = label;
-                return;
-            }
-
-            this.elements.nextButton.textContent = label;
-        }
-
-        updateNextButtonLabel() {
-            if (!this.elements.nextButton || this.state.isLoading) {
-                return;
-            }
-            this.setNextButtonLabel('Shuffle');
-        }
-
-        _selectHeadlineCore(index) {
+        selectHeadline(index) {
             if (!isValidHeadlineIndex(index, this.headlines.length)) return;
             this.state.currentIndex = index;
             if (
@@ -503,9 +453,7 @@
             });
         }
 
-        async _shareHeadlineCore(
-            triggerButton = this.elements.nativeShareButton,
-        ) {
+        async shareHeadline(triggerButton = this.elements.nativeShareButton) {
             const headline = this.headlines[this.state.currentIndex];
             const canonicalUrl = this.getCanonicalUrl(this.state.currentIndex);
 
@@ -568,7 +516,7 @@
             }
         }
 
-        async _handleQuickShareCore() {
+        async handleQuickShare() {
             const canUseNativeShare =
                 navigator.share && typeof navigator.share === 'function';
             if (!canUseNativeShare) {
@@ -586,7 +534,7 @@
             );
         }
 
-        async _handleQuickExportCore() {
+        async handleQuickExport() {
             if (!window.htmlToImage) {
                 this.jumpToCard('export');
                 this.reportExportStatus(
@@ -599,7 +547,7 @@
             await this.handleClippingExport('download');
         }
 
-        _handleDirectionalNavigationCore(event) {
+        handleDirectionalNavigation(event) {
             if (event.defaultPrevented) return;
 
             const target = event.target;
@@ -624,7 +572,7 @@
                 });
             } else if (backwardKeys.includes(event.key)) {
                 event.preventDefault();
-                this._handlePreviousCore();
+                this.handlePrevious();
             }
         }
 
@@ -679,7 +627,7 @@
             }
         }
 
-        _handlePopStateCore(event) {
+        handlePopState(event) {
             const state = event.state || {};
             const urlState = getUrlState();
             const urlIndex = this.identifierToIndex(urlState.headline);
@@ -709,7 +657,7 @@
                 : [];
 
             if (eligibleTarget === null) {
-                this._renderEmptyStateCore();
+                this.renderEmptyState();
                 return;
             }
 
@@ -733,7 +681,7 @@
             });
         }
 
-        async _copyHeadlineCore(triggerButton = this.elements.copyButton) {
+        async copyHeadline(triggerButton = this.elements.copyButton) {
             const headlineText = this.elements.headline.innerText;
 
             if (!headlineText) {
@@ -754,48 +702,6 @@
                 },
                 setButtonLoading,
             });
-        }
-
-        toggleLoader(shouldShow, message = null) {
-            if (message && this.elements.loader) {
-                this.elements.loader.textContent = message;
-            }
-            if (this.elements.loader) {
-                this.elements.loader.classList.toggle('is-visible', shouldShow);
-                this.elements.loader.setAttribute(
-                    'aria-hidden',
-                    shouldShow ? 'false' : 'true',
-                );
-            }
-            this.setNavigationLoading(shouldShow);
-        }
-
-        setNavigationLoading(shouldShow) {
-            this.state.isLoading = shouldShow;
-            this.updateNavigationAvailability();
-            if (this.activeButton) {
-                setButtonLoading(this.activeButton, shouldShow);
-            }
-            if (this.elements.headlineList) {
-                this.elements.headlineList.setAttribute(
-                    'aria-busy',
-                    shouldShow ? 'true' : 'false',
-                );
-                this.elements.headlineList
-                    .querySelectorAll('button[data-index]')
-                    .forEach((button) => {
-                        button.disabled = shouldShow;
-                    });
-            }
-        }
-
-        updateLoaderMessage(message) {
-            if (this.elements.loader) {
-                this.elements.loader.textContent = message;
-                return;
-            }
-            if (!this.elements.loader) return;
-            this.elements.loader.textContent = message;
         }
 
         updateClippingHeadline(text) {
@@ -846,7 +752,7 @@
             // second-guesses it.
         }
 
-        async _handleClippingExportCore(mode) {
+        async handleClippingExport(mode) {
             await exportClipping({
                 mode,
                 elements: this.elements,
@@ -973,50 +879,6 @@
             return typeof window.tinyLlmClient?.generateHeadline === 'function';
         }
 
-        async handleNext() {
-            return this.headlineController.handleNext();
-        }
-        handlePrevious() {
-            return this.headlineController.handlePrevious();
-        }
-        renderHeadline(
-            index,
-            options = { pushToStack: true, replaceState: false },
-        ) {
-            return this.headlineController.renderHeadline(index, options);
-        }
-        renderInitialHeadline() {
-            return this.headlineController.renderInitialHeadline();
-        }
-        renderEmptyState() {
-            return this.headlineController.renderEmptyState();
-        }
-        selectHeadline(index) {
-            return this.headlineController.selectHeadline(index);
-        }
-        handleDirectionalNavigation(event) {
-            return this.headlineController.handleDirectionalNavigation(event);
-        }
-        handlePopState(event) {
-            return this.headlineController.handlePopState(event);
-        }
-
-        async shareHeadline(triggerButton = this.elements.nativeShareButton) {
-            return this.actionController.shareHeadline(triggerButton);
-        }
-        async handleQuickShare() {
-            return this.actionController.handleQuickShare();
-        }
-        async handleQuickExport() {
-            return this.actionController.handleQuickExport();
-        }
-        async handleClippingExport(mode) {
-            return this.actionController.handleClippingExport(mode);
-        }
-        async copyHeadline(triggerButton = this.elements.copyButton) {
-            return this.actionController.copyHeadline(triggerButton);
-        }
-
         pushHistoryState(index, { replace = false } = {}) {
             updateHistoryState({
                 index,
@@ -1037,6 +899,7 @@
         Neckass.agentApiMethods,
         Neckass.feedbackMethods,
         Neckass.statusMethods,
+        Neckass.loaderMethods,
     );
 
     Neckass.HeadlineApp = HeadlineApp;

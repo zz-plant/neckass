@@ -13,6 +13,32 @@ python -m http.server 8001 --directory .
 
 Then open `http://127.0.0.1:8001/`.
 
+## Why the data files are classic scripts, not JSON or ESM
+
+`data/*.js` are IIFEs that assign onto `window.Neckass.data`, and every module
+is a plain `<script defer>` rather than an ES module. This is deliberate, and
+it buys one thing: **the site opens from `file://`**. Nothing in the browser
+path calls `fetch`, so `open index.html` works with no server. JSON data would
+need a fetch and ESM needs a module graph; both are blocked by CORS on
+`file://`, and both would break that.
+
+The cost is paid in three places, and it is the price of that feature:
+
+- Load order in `index.html` *is* the dependency graph. A module that reads
+  `Neckass.foo` must be listed after the one that assigns it.
+- The Workers runtime cannot read an IIFE that assigns to `window`, and it
+  forbids `eval`, so `scripts/build-feed-data.ts` runs `data/formats.js` in a
+  `node:vm` sandbox at build time and writes `functions/lib/leads.mjs`. Run
+  `bun run feed:build` after editing leads; `bun run feed:check` fails on drift.
+- `functions/lib/issue.mjs` hand-mirrors the epoch, the RNG and the lead
+  selection from `modules/issue.js`. The smoke test *worker and browser agree
+  on the lead for a given issue* pins the two together across five dates and
+  will fail if either side moves.
+
+If `file://` support is ever dropped, all three costs go with it: the data
+becomes JSON, both runtimes import it, and the sandbox, the generator, the
+check and the drift test are all deleted.
+
 ## Architecture overview
 
 ### Entry points and startup path

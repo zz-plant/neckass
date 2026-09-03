@@ -232,6 +232,172 @@ test.describe('Neckass smoke flows', () => {
     // from their own copy of the arithmetic and their own extract of the
     // leads. If either drifts from modules/issue.js the paper starts
     // advertising a headline it is not running.
+
+    // The issue is the product. These cover what a reader actually opens:
+    // that today's paper renders, that a back issue loads from the archive,
+    // and that the corrections chain points at the lead it claims to.
+    test('the front page renders a complete issue', async ({ page }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+
+        await expect(page.locator('#masthead-date')).toHaveText(
+            `${issue.dateLabel} · No. ${issue.number}`,
+        );
+        await expect(page.locator('#lead-headline')).toHaveText(
+            issue.lead.headline,
+        );
+        await expect(page.locator('#lead-deck')).toHaveText(issue.lead.deck);
+        await expect(page.locator('#lead-byline')).toHaveText(
+            issue.lead.byline,
+        );
+        await expect(page.locator('#weather-line')).toHaveText(issue.weather);
+
+        // Every section is dealt at its documented size. A pool that empties
+        // would silently shorten one of these.
+        await expect(page.locator('#briefs-list li')).toHaveCount(7);
+        await expect(page.locator('#corrections-list li')).toHaveCount(3);
+        await expect(page.locator('#classifieds-list li')).toHaveCount(5);
+        await expect(page.locator('#letters-list li')).toHaveCount(2);
+
+        // No section may repeat an item inside one issue.
+        for (const [selector, label] of [
+            ['#briefs-list li', 'briefs'],
+            ['#corrections-list li', 'corrections'],
+            ['#classifieds-list li', 'classifieds'],
+        ]) {
+            const items = await page.locator(selector).allInnerTexts();
+            expect(
+                new Set(items).size,
+                `${label} repeat inside one issue`,
+            ).toBe(items.length);
+        }
+
+        // The lead must not also be running as a brief.
+        const briefs = await page.locator('#briefs-list li').allInnerTexts();
+        expect(briefs).not.toContain(issue.lead.headline);
+    });
+
+    test("today's corrections retract yesterday's actual lead", async ({
+        page,
+    }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        // Walk a spread of issues rather than only today, so the chain is
+        // checked across many lead pairings.
+        const checked = await page.evaluate(() => {
+            const { issue } = window.Neckass;
+            const results = [];
+            for (const value of [
+                '2025-03-04',
+                '2026-09-02',
+                '2026-09-03',
+                '2027-01-19',
+                '2027-11-30',
+            ]) {
+                const date = issue.parseIssueDate(value);
+                const today = issue.composeIssue(date);
+                const previous = issue.composeIssue(
+                    new Date(
+                        date.getFullYear(),
+                        date.getMonth(),
+                        date.getDate() - 1,
+                    ),
+                );
+                results.push({
+                    value,
+                    first: today.corrections[0],
+                    expected: previous.lead.correction,
+                    previousNumber: previous.number,
+                    number: today.number,
+                });
+            }
+            return results;
+        });
+
+        for (const entry of checked) {
+            expect(entry.number, entry.value).toBe(entry.previousNumber + 1);
+            // The retraction printed today is the one attached to the lead
+            // that actually ran yesterday.
+            expect(entry.first, entry.value).toBe(entry.expected);
+        }
+    });
+
+    test('a back issue loads from its URL and offers the way back', async ({
+        page,
+    }) => {
+        await page.goto(`${BASE_URL}?issue=2025-06-11`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+        expect(issue.issueParam).toBe('2025-06-11');
+
+        await expect(page.locator('#masthead-date')).toContainText(
+            `No. ${issue.number}`,
+        );
+        const notice = page.locator('#back-issue-notice');
+        await expect(notice).toBeVisible();
+        await expect(notice).toContainText(`No. ${issue.number}`);
+
+        // Today's issue must not show the banner.
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await expect(page.locator('#back-issue-notice')).toBeHidden();
+    });
+
+    test('a malformed issue param falls back to today', async ({ page }) => {
+        await page.goto(`${BASE_URL}?issue=not-a-date`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const [rendered, today] = await page.evaluate(() => [
+            window.Neckass.currentIssue.number,
+            window.Neckass.issue.issueNumber(new Date()),
+        ]);
+        expect(rendered).toBe(today);
+        await expect(page.locator('#back-issue-notice')).toBeHidden();
+    });
+
+    test('the archive lists issues that resolve to real papers', async ({
+        page,
+    }) => {
+        await page.goto(`${BASE_URL}archive.html`);
+        const links = page.locator('a[href*="?issue="]');
+        await expect(links.first()).toBeVisible();
+        expect(await links.count()).toBeGreaterThan(5);
+
+        // Follow one and confirm it renders the issue it advertised.
+        const href = await links.nth(3).getAttribute('href');
+        const param = new URL(href, BASE_URL).searchParams.get('issue');
+        await page.goto(new URL(href, BASE_URL).toString());
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+        expect(issue.issueParam).toBe(param);
+        await expect(page.locator('#lead-headline')).toHaveText(
+            issue.lead.headline,
+        );
+    });
+
+    test('the issue reads without JavaScript', async ({ browser }) => {
+        const context = await browser.newContext({ javaScriptEnabled: false });
+        const page = await context.newPage();
+        await page.goto(BASE_URL);
+
+        // The standing issue in the markup must be a real paper, not a shell.
+        await expect(page.locator('#lead-headline')).not.toBeEmpty();
+        await expect(page.locator('#lead-deck')).not.toBeEmpty();
+        await expect(page.locator('#briefs-list li').first()).not.toBeEmpty();
+        await expect(
+            page.locator('#corrections-list li').first(),
+        ).not.toBeEmpty();
+        await expect(page.locator('#weather-line')).not.toBeEmpty();
+        await expect(page.locator('#letters-list li').first()).not.toBeEmpty();
+        await expect(page.locator('#masthead-date')).not.toBeEmpty();
+        await context.close();
+    });
+
     test('worker and browser agree on the lead for a given issue', async ({
         page,
     }) => {
