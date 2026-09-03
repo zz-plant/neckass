@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+import { buildFeed } from '../functions/feed.xml.js';
+import { issueNumber, selectLead } from '../functions/lib/issue.mjs';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
 
@@ -225,5 +227,97 @@ test.describe('Neckass smoke flows', () => {
 
         expect(result.badJsonFallback).toEqual({ ok: false });
         expect(result.goodJson).toEqual({ ok: true });
+    });
+    // The feed and the social card compose the lead in the Workers runtime,
+    // from their own copy of the arithmetic and their own extract of the
+    // leads. If either drifts from modules/issue.js the paper starts
+    // advertising a headline it is not running.
+    test('worker and browser agree on the lead for a given issue', async ({
+        page,
+    }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        const dates = [
+            '2024-09-29',
+            '2025-01-01',
+            '2026-09-02',
+            '2026-12-25',
+            '2027-06-14',
+        ];
+
+        const fromBrowser = await page.evaluate((values) => {
+            const { issue } = window.Neckass;
+            const leads = window.Neckass.data.LEADS;
+            return values.map((value) => {
+                const date = issue.parseIssueDate(value);
+                const number = issue.issueNumber(date);
+                return {
+                    number,
+                    headline: issue.selectLead(number, leads)?.headline ?? null,
+                };
+            });
+        }, dates);
+
+        const fromWorker = dates.map((value) => {
+            const [year, month, day] = value.split('-').map(Number);
+            const number = issueNumber(
+                new Date(Date.UTC(year, month - 1, day)),
+            );
+            return { number, headline: selectLead(number)?.headline ?? null };
+        });
+
+        expect(fromWorker).toEqual(fromBrowser);
+        for (const entry of fromWorker) expect(entry.headline).toBeTruthy();
+    });
+
+    test('the feed is well-formed and leads with the current issue', async ({
+        page,
+    }) => {
+        const now = new Date(Date.UTC(2026, 8, 2));
+        const xml = buildFeed(now);
+
+        expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(
+            true,
+        );
+        expect(xml).toContain('<atom:link href="https://neckass.com/feed.xml"');
+
+        const items = xml.match(/<item>/g) ?? [];
+        expect(items.length).toBe(30);
+
+        const firstTitle = /<item>[\s\S]*?<title>([\s\S]*?)<\/title>/.exec(
+            xml,
+        )?.[1];
+        const headline = selectLead(issueNumber(now))?.headline ?? '';
+        // The feed escapes for XML, so compare against the escaped headline.
+        const escaped = headline
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
+        expect(firstTitle).toBe(escaped);
+
+        // Nothing may leave a raw ampersand or angle bracket in the document.
+        expect(/&(?!amp;|lt;|gt;|quot;|apos;)/.test(xml)).toBe(false);
+
+        // The browser must be offered the feed it advertises.
+        await page.goto(BASE_URL);
+        await expect(
+            page.locator('link[rel="alternate"][type="application/rss+xml"]'),
+        ).toHaveAttribute('href', '/feed.xml');
+    });
+
+    test('every page carries the icon set', async ({ page }) => {
+        for (const path of ['', 'about.html', 'archive.html', 'prompts.html']) {
+            await page.goto(`${BASE_URL}${path}`);
+            await expect(
+                page.locator('link[rel="icon"][href="/favicon.svg"]'),
+            ).toHaveCount(1);
+            await expect(
+                page.locator('link[rel="apple-touch-icon"]'),
+            ).toHaveCount(1);
+            await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
+        }
     });
 });

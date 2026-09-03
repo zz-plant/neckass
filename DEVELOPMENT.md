@@ -64,6 +64,9 @@ Use these boundaries to prevent `app.js` / `ui.js` from turning into generic cat
   - Own canonical state transitions and persistence/URL synchronization.
   - Should not encode UI copy.
 - `modules/share.js`, `modules/clipboard.js`, `modules/clipping-export.js`
+- `functions/` — Cloudflare Pages Functions: the RSS feed and the per-issue
+  social-card middleware. Run `bun run feed:build` after changing `data.LEADS`,
+  and `bun run feed:check` to verify the extract is current.
   - Own integration-specific behavior (share targets, clipboard APIs, export APIs).
   - Surface small functions consumed by `HeadlineApp`.
 - `modules/utils.js`
@@ -125,3 +128,14 @@ workflow that outputs static assets while keeping `index.html` runnable in sourc
 - Prefer incremental edits over broad rewrites.
 - Keep behavior in existing modules unless extraction materially improves clarity.
 - Preserve static-host/no-build compatibility.
+
+## Analytics
+
+Not wired in code, and it should not be: Cloudflare Web Analytics is enabled
+for a Pages project from the dashboard (Web Analytics → the project → enable),
+which injects the beacon at the edge. It is cookieless and collects no
+personal data, so it does not compromise the site's privacy stance, and doing
+it in the dashboard avoids committing a site token.
+
+Until it is switched on there is no measurement of whether the daily issue
+brings anyone back, which is the one assumption the whole format rests on.

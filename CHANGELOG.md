@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 ### Added
+- RSS feed at `/feed.xml`, built per request from the calendar by a Cloudflare Pages Function.
+- Per-issue social cards: middleware rewrites the front page's title and description to the day's lead, so a shared link previews with the headline actually running.
+- A favicon set (SVG, ICO, apple-touch, 192/512 PNGs) and a web manifest, linked from every page. The site previously had no icon at all.
+
+### Changed
+- Deepened every content pool so the paper stops repeating inside a week: leads 12 → 40, classifieds 16 → 60, corrections 14 → 39 standalone, letters 10 → 36, weather 10 → 40, briefs 81 → 121. Shortest cycle is now 12 days, was 3.
+- The first correction in each issue now retracts a detail of the previous issue's actual lead, by name, instead of being drawn at random.
+
+### Added
 - Added a real `404.html`. Cloudflare Pages was serving `index.html` with HTTP 200 for every unmatched path, which search engines read as soft-404 duplicate content across unlimited URLs.
 - Added `bun run og:generate` (`scripts/generate-og.ts`) and a CI workflow that runs lint, `assets:check` and the smoke suite on every push and pull request.
 - Added `scripts/serve.ts`, a Bun static server for local preview and the test suite, removing the repo's only dependency on Python.

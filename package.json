@@ -11,7 +11,9 @@
     "prepare": "husky",
     "assets:check": "bun run scripts/check-assets.ts",
     "assets:generate": "bun run scripts/generate-scenes.ts",
-    "og:generate": "bun run scripts/generate-og.ts"
+    "og:generate": "bun run scripts/generate-og.ts",
+    "feed:build": "bun run scripts/build-feed-data.ts",
+    "feed:check": "bun run scripts/build-feed-data.ts --check"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.8",

@@ -36,6 +36,7 @@ Then open `http://127.0.0.1:8001/`.
 - `archive.html` — back issues, derived from the calendar rather than stored.
 - `about.html` — the encyclopedia entry for the word, which cites the paper.
 - `prompts.html` — the Gazette's filing standards.
+- `/feed.xml` — the paper as RSS, derived from the date like everything else.
 
 ## How an issue is built
 The front page is one issue, composed deterministically from its own date
@@ -47,6 +48,25 @@ issue at `/?issue=YYYY-MM-DD` — so the archive costs no storage.
 
 A complete standing issue ships in `index.html` itself, so the paper reads with
 JavaScript disabled and crawlers see copy rather than an empty shell.
+
+## Edge functions
+
+The site is static; two Cloudflare Pages Functions add what a static file
+cannot:
+
+- `functions/feed.xml.js` — builds the RSS feed for the last 30 issues on
+  request. No store and no cron: issues come from the calendar.
+- `functions/_middleware.js` — rewrites the front page's title and social-card
+  tags to the active issue's lead, so a shared link previews with the headline
+  that is actually running. The card image stays static; rendering one per
+  issue needs an image encoder in the Worker, which is not worth the weight.
+
+Both compose the lead through `functions/lib/issue.mjs`, which mirrors the
+arithmetic in `modules/issue.js`. The Workers runtime forbids evaluating the
+browser data files, so the leads are extracted to `functions/lib/leads.mjs` by
+`bun run feed:build`. `bun run feed:check` fails if that extract has drifted,
+and a smoke test asserts the two runtimes pick the same lead for a spread of
+dates.
 
 ## Using the app
 1. The front page is today's issue. It changes once a day, not per visit.

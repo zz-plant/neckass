@@ -68,15 +68,31 @@
         return `${date.getFullYear()}-${month}-${day}`;
     }
 
+    // The lead is a pure function of the issue number, so any issue can work
+    // out any other issue's lead without composing it. That is what lets today
+    // correct yesterday.
+    function selectLead(number, leads) {
+        if (!Array.isArray(leads) || !leads.length) return null;
+        const rng = createRng(number * 2654435761);
+        return leads[Math.floor(rng() * leads.length)] || null;
+    }
+
     function composeIssue(date = new Date()) {
         const data = Neckass.data || {};
         const number = issueNumber(date);
-        const rng = createRng(number * 2654435761);
+        // A stream of its own, so selectLead above stays reproducible in
+        // isolation.
+        const rng = createRng(number * 2654435761 + 1);
 
         const leads = data.LEADS || [];
-        const lead = leads.length
-            ? leads[Math.floor(rng() * leads.length)]
-            : null;
+        const lead = selectLead(number, leads);
+
+        // The Gazette's first correction each day retracts a detail of
+        // yesterday's lead — the real one, by name. It always concedes
+        // something trivial and leaves the damning part standing. Issue 1 has
+        // nothing to correct.
+        const previousLead = number > 1 ? selectLead(number - 1, leads) : null;
+        const chainedCorrection = previousLead?.correction || null;
 
         // Briefs come from the headline catalogue, minus anything already
         // running as the lead in longer form.
@@ -91,7 +107,10 @@
             issueParam: toIssueParam(date),
             lead,
             briefs: deal(briefPool, 7, rng),
-            corrections: deal(data.CORRECTIONS || [], 3, rng),
+            corrections: [
+                chainedCorrection,
+                ...deal(data.CORRECTIONS || [], chainedCorrection ? 2 : 3, rng),
+            ].filter(Boolean),
             weather: deal(data.WEATHER || [], 1, rng)[0] || '',
             classifieds: deal(data.CLASSIFIEDS || [], 5, rng),
             letters: deal(data.LETTERS || [], 2, rng),
@@ -123,6 +142,7 @@
         FIRST_EDITION,
         composeIssue,
         issueNumber,
+        selectLead,
         recentIssues,
         parseIssueDate,
         toIssueParam,
