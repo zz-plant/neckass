@@ -328,7 +328,6 @@ const tinyLlmClient = (() => {
             // once at the end, so it only ever fixes the first character.
             claimSentence: `${claim.charAt(0).toUpperCase()}${claim.slice(1)}`,
             section,
-            marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng),
             queryHint: queryHints.length ? pick(queryHints, rng) : '',
         };
     }

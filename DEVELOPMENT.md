@@ -42,7 +42,6 @@ without holding logic.
 - `modules/ui.js` — rendering and status updates.
 - `modules/head.js` — document metadata and canonical link updates.
 - `modules/history-list.js` — history panel list derivation and rendering.
-- `modules/sections.js` — infers the section label shown under a wire item.
 - `modules/share.js` — social/native share URL flows.
 - `modules/clipboard.js` — text/image clipboard behavior.
 - `modules/clipping-export.js` — front-page clipping image export.

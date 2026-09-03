@@ -3,7 +3,6 @@
     const Neckass = window.Neckass;
     const {
         copyTextWithFeedback,
-        classifyHeadline,
         getUrlState,
         updateHistoryState,
         exportClipping,
@@ -75,7 +74,6 @@
 
             this.bindEvents();
             this.applyUrlState();
-            this.syncGeneratorControls();
             this.updateNavigationAvailability();
             this.updateClippingDate();
             this.preflightExportAvailability();
@@ -137,9 +135,6 @@
                 this.elements.twitterShareLink,
                 this.elements.facebookShareLink,
                 this.elements.redditShareLink,
-                this.elements.linkedinShareLink,
-                this.elements.threadsShareLink,
-                this.elements.blueskyShareLink,
             ]
                 .filter(Boolean)
                 .forEach((link) => {
@@ -226,7 +221,6 @@
 
         async handleGenerate() {
             const generatorAvailable = this.isGeneratorAvailable();
-            this.activeButton = this.elements.generateButton;
 
             if (!generatorAvailable) {
                 this.reportCopyStatus(
@@ -336,7 +330,7 @@
             this.clearCopyStatus();
             this.clearShareStatus();
             const loaderMessage =
-                this.elements.loaderText?.textContent ||
+                this.elements.loader?.textContent ||
                 this.elements.loader.textContent ||
                 'Loading.';
             this.toggleLoader(true, loaderMessage);
@@ -352,7 +346,6 @@
                 this.updateClippingDate();
 
                 this.updateViewedState(index, options);
-                this.updateHeadlineBadges(index);
                 updateHeadMetadata({
                     headline: headlineText,
                     index,
@@ -431,7 +424,6 @@
             });
             updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
             this.updateClippingHeadline('No items on file.');
-            this.updateHeadlineBadges(null);
             this.updateHistoryList();
             this.toggleLoader(false, 'No items on file.');
             this.state.isLoading = false;
@@ -500,27 +492,6 @@
                 pushToStack: false,
                 replaceState: false,
             });
-        }
-
-        updateHeadlineBadges(index) {
-            if (this.elements.headlineSource) {
-                const label =
-                    index === null ||
-                    !isValidHeadlineIndex(index, this.headlines.length)
-                        ? 'Source: unavailable'
-                        : index >= this.baseHeadlineCount
-                          ? 'Source: generated'
-                          : 'Source: curated';
-                this.elements.headlineSource.textContent = label;
-            }
-            if (this.elements.headlineSectionBadge) {
-                const label =
-                    index === null ||
-                    !isValidHeadlineIndex(index, this.headlines.length)
-                        ? 'Section: latest'
-                        : `Section: ${classifyHeadline(this.headlines[index])}`;
-                this.elements.headlineSectionBadge.textContent = label;
-            }
         }
 
         updateHistoryList() {
@@ -786,9 +757,7 @@
         }
 
         toggleLoader(shouldShow, message = null) {
-            if (message && this.elements.loaderText) {
-                this.elements.loaderText.textContent = message;
-            } else if (message && this.elements.loader) {
+            if (message && this.elements.loader) {
                 this.elements.loader.textContent = message;
             }
             if (this.elements.loader) {
@@ -821,8 +790,8 @@
         }
 
         updateLoaderMessage(message) {
-            if (this.elements.loaderText) {
-                this.elements.loaderText.textContent = message;
+            if (this.elements.loader) {
+                this.elements.loader.textContent = message;
                 return;
             }
             if (!this.elements.loader) return;
@@ -1002,17 +971,6 @@
 
         isGeneratorAvailable() {
             return typeof window.tinyLlmClient?.generateHeadline === 'function';
-        }
-
-        syncGeneratorControls() {
-            const generatorAvailable = this.isGeneratorAvailable();
-            if (this.elements.generateButton) {
-                this.elements.generateButton.disabled = !generatorAvailable;
-                this.elements.generateButton.setAttribute(
-                    'aria-disabled',
-                    String(!generatorAvailable),
-                );
-            }
         }
 
         async handleNext() {

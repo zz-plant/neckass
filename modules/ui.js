@@ -10,7 +10,6 @@
         const idMap = {
             headline: 'headline',
             loader: 'loader',
-            loaderText: 'loader-text',
             nextButton: 'next-btn',
             previousButton: 'prev-btn',
             mastheadDate: 'masthead-date',
