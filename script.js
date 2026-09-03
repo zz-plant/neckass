@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fallbackHeadline = data?.HEADLINES?.[0] || 'No items on file.';
     const headlineEl = document.getElementById('headline');
-    const mockHeadlineEl = document.getElementById('mock-headline');
+    const clippingHeadlineEl = document.getElementById('clipping-headline');
     const loaderEl = document.getElementById('loader');
     const headlineQuickActionsEl = document.getElementById(
         'headline-quick-actions',
@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (headlineEl) {
             headlineEl.textContent = fallbackHeadline;
         }
-        if (mockHeadlineEl) {
-            mockHeadlineEl.textContent = fallbackHeadline;
+        if (clippingHeadlineEl) {
+            clippingHeadlineEl.textContent = fallbackHeadline;
         }
         if (loaderEl) {
             loaderEl.classList.remove('is-visible');

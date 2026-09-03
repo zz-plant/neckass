@@ -2,6 +2,11 @@
     window.Neckass = window.Neckass || {};
     const Neckass = window.Neckass;
 
+    // Parameters of the removed filter system. Links carrying them still
+    // exist, so strip them from any URL this module writes rather than
+    // dragging them along forever.
+    const RETIRED_PARAMS = ['section', 'q', 'source', 'panel', 'layout'];
+
     function getUrlState() {
         const params = new URLSearchParams(window.location.search);
         let headline = params.get('headline');
@@ -12,18 +17,12 @@
         return {
             headline,
             hasHeadlineParam: params.has('headline'),
-            section: params.get('section'),
-            query: params.get('q'),
-            source: params.get('source'),
-            panel: params.get('panel'),
-            layout: params.get('layout'),
         };
     }
 
     function buildHeadlineUrl({
         index,
         headlines,
-        filters,
         identifierFromIndex,
         isValidHeadlineIndex,
     }) {
@@ -37,32 +36,9 @@
         } else {
             url.searchParams.delete('headline');
         }
-
-        if (filters.section && filters.section !== 'latest') {
-            url.searchParams.set('section', filters.section);
-        } else {
-            url.searchParams.delete('section');
-        }
-        if (filters.query) {
-            url.searchParams.set('q', filters.query);
-        } else {
-            url.searchParams.delete('q');
-        }
-        if (filters.source && filters.source !== 'auto') {
-            url.searchParams.set('source', filters.source);
-        } else {
-            url.searchParams.delete('source');
-        }
-        if (filters.panel && filters.panel !== 'recent') {
-            url.searchParams.set('panel', filters.panel);
-        } else {
-            url.searchParams.delete('panel');
-        }
-        if (filters.layout && filters.layout !== 'standard') {
-            url.searchParams.set('layout', filters.layout);
-        } else {
-            url.searchParams.delete('layout');
-        }
+        RETIRED_PARAMS.forEach((param) => {
+            url.searchParams.delete(param);
+        });
 
         return url.toString();
     }
@@ -70,7 +46,6 @@
     function updateHistoryState({
         index,
         headlines,
-        filters,
         navigationStack,
         uniqueHeadlines,
         identifierFromIndex,
@@ -80,7 +55,6 @@
         const url = buildHeadlineUrl({
             index,
             headlines,
-            filters,
             identifierFromIndex,
             isValidHeadlineIndex,
         });
@@ -90,7 +64,6 @@
                 : null,
             navigationStack: [...navigationStack],
             uniqueHeadlines: Array.from(uniqueHeadlines),
-            filters: { ...filters },
         };
 
         if (replace) {

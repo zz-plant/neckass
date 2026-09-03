@@ -459,28 +459,10 @@ a:not(.share-link):not(.top-nav a):hover {
     }
 }
 
-.filter-reset {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .status-text {
     font-size: 0.9rem;
     color: var(--muted);
     min-height: 1.35em;
-}
-
-.filter-reset .status-text {
-    margin-right: auto;
-}
-
-.filter-reset button {
-    min-height: 38px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
 }
 
 .filter-label {
@@ -551,8 +533,7 @@ button:active {
     transform: scale(0.98);
 }
 
-button:disabled,
-.toggle-button:disabled {
+button:disabled {
     cursor: not-allowed;
     opacity: 0.55;
     transform: none;
@@ -754,7 +735,7 @@ button.ghost {
     transform: scale(0.985);
 }
 
-.mock-front {
+.clipping-front {
     position: relative;
     overflow: hidden;
     /* Flex, not grid: the footer's `margin: auto 0 0` is what pins it to the
@@ -774,7 +755,7 @@ button.ghost {
     isolation: isolate;
 }
 
-.mock-front::before {
+.clipping-front::before {
     content: "";
     position: absolute;
     inset: 0 0 auto 0;
@@ -782,12 +763,7 @@ button.ghost {
     background: linear-gradient(90deg, #533319, #9c693c, #533319);
 }
 
-.mock-front--square {
-    aspect-ratio: 1 / 1;
-    min-height: 260px;
-}
-
-.mock-headline {
+.clipping-headline {
     margin: 2px 0 1px;
     font-family: var(--headline-font);
     font-size: clamp(1.16rem, 1.55vw, 1.42rem);
@@ -797,31 +773,14 @@ button.ghost {
     text-wrap: balance;
 }
 
-.mock-front--square .mock-headline {
-    font-size: clamp(1.06rem, 2vw, 1.34rem);
-}
-
-.mock-deck {
+.clipping-deck {
     margin: 0;
     font-size: 0.8rem;
     line-height: 1.3;
     color: #5a4a39;
 }
 
-.mock-front--square .mock-deck {
-    display: none;
-}
-
-.mock-front--story {
-    aspect-ratio: 4 / 5;
-    min-height: 340px;
-}
-
-.mock-front--story .mock-headline {
-    font-size: clamp(1.12rem, 1.75vw, 1.48rem);
-}
-
-.mock-masthead {
+.clipping-masthead {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -831,23 +790,23 @@ button.ghost {
     color: #5f5345;
 }
 
-.mock-masthead > * {
+.clipping-masthead > * {
     /* Never break "NECKASS DAILY" or the date mid-phrase; let the row wrap instead. */
     white-space: nowrap;
 }
 
-.mock-title {
+.clipping-title {
     text-transform: uppercase;
     letter-spacing: 0.16em;
     font-weight: 700;
     color: #2b2014;
 }
 
-.mock-date {
+.clipping-date {
     font-variant-numeric: tabular-nums;
 }
 
-.mock-kicker {
+.clipping-kicker {
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -855,7 +814,7 @@ button.ghost {
     color: #6f604f;
 }
 
-.mock-rule {
+.clipping-rule {
     width: 100%;
     height: 1px;
     background: linear-gradient(
@@ -866,7 +825,7 @@ button.ghost {
     );
 }
 
-.mock-footer {
+.clipping-footer {
     margin: auto 0 0;
     padding-top: 8px;
     border-top: 1px dashed rgba(63, 44, 21, 0.24);
@@ -876,12 +835,12 @@ button.ghost {
     color: #6c5d4d;
 }
 
-.mock-actions {
+.clipping-actions {
     display: grid;
     gap: 10px;
 }
 
-.mock-actions button {
+.clipping-actions button {
     display: grid;
     align-items: start;
     justify-items: start;
@@ -1335,14 +1294,6 @@ button.ghost {
         width: 100%;
     }
 
-    .filter-reset {
-        align-items: flex-start;
-    }
-
-    .filter-reset button {
-        width: 100%;
-    }
-
     .rail-card {
         padding: 14px 0 18px;
     }
@@ -1379,7 +1330,7 @@ button.ghost {
         align-items: flex-start;
     }
 
-    .mock-actions button {
+    .clipping-actions button {
         width: 100%;
     }
 }

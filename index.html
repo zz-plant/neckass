@@ -183,11 +183,6 @@
                             <h3 id="headline" tabindex="-1" aria-label="Headline">Loading...</h3>
                         </div>
 
-                        <div class="filter-reset" aria-live="polite">
-                            <p id="filter-status" class="status-text" hidden></p>
-                            <button id="clear-filters" class="ghost" type="button">Clear filters</button>
-                        </div>
-
                         <div class="actions">
                             <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost"><span>Previous</span></button>
                             <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Next item</span></button>
@@ -250,22 +245,22 @@
                         <div>
                             <h3 class="filter-label" id="export-card-title"><span>Clipping</span></h3>
                         </div>
-                        <div id="mock-front" class="mock-front">
-                            <div class="mock-masthead">
-                                <span class="mock-title">Digital Gazette</span>
-                                <span id="mock-date" class="mock-date">Loading...</span>
+                        <div id="clipping-front" class="clipping-front">
+                            <div class="clipping-masthead">
+                                <span class="clipping-title">Digital Gazette</span>
+                                <span id="clipping-date" class="clipping-date">Loading...</span>
                             </div>
-                            <p class="mock-kicker">Bulletin</p>
-                            <div class="mock-rule" aria-hidden="true"></div>
-                            <h4 id="mock-headline" class="mock-headline">Loading...</h4>
-                            <p class="mock-deck">Nobody has checked this.</p>
-                            <p class="mock-footer">neckass.com · department of neckassery</p>
+                            <p class="clipping-kicker">Bulletin</p>
+                            <div class="clipping-rule" aria-hidden="true"></div>
+                            <h4 id="clipping-headline" class="clipping-headline">Loading...</h4>
+                            <p class="clipping-deck">Nobody has checked this.</p>
+                            <p class="clipping-footer">neckass.com · department of neckassery</p>
                         </div>
-                        <div class="mock-actions">
-                            <button id="download-mock" class="ghost" type="button">
+                        <div class="clipping-actions">
+                            <button id="download-clipping" class="ghost" type="button">
                                 <span class="button-main-label"><span>Download clipping</span></span>
                             </button>
-                            <button id="copy-mock" class="ghost" type="button">
+                            <button id="copy-clipping" class="ghost" type="button">
                                 <span class="button-main-label"><span>Copy clipping</span></span>
                             </button>
                         </div>
@@ -283,19 +278,18 @@
     <script defer src="modules/utils.js"></script>
     <script defer src="modules/issue.js"></script>
     <script defer src="modules/front-page.js"></script>
-    <script defer src="modules/filters.js"></script>
+    <script defer src="modules/sections.js"></script>
     <script defer src="modules/state.js"></script>
     <script defer src="modules/storage.js"></script>
     <script defer src="modules/clipboard.js"></script>
     <script defer src="modules/history.js"></script>
     <script defer src="modules/share.js"></script>
-    <script defer src="modules/mock-export.js"></script>
+    <script defer src="modules/clipping-export.js"></script>
     <script defer src="modules/ui.js"></script>
     <script defer src="modules/head.js"></script>
     <script defer src="modules/history-list.js"></script>
     <script defer src="modules/controllers/headline-controller.js"></script>
     <script defer src="modules/controllers/action-controller.js"></script>
-    <script defer src="modules/filter-controls.js"></script>
     <script defer src="modules/agent-api.js"></script>
     <script defer src="modules/status.js"></script>
     <script defer src="modules/app.js"></script>

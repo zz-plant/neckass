@@ -2,16 +2,16 @@
     window.Neckass = window.Neckass || {};
     const Neckass = window.Neckass;
 
-    async function exportMockFront({
+    async function exportClipping({
         mode,
         elements,
         reportStatus,
         setButtonLoading,
     }) {
-        if (!elements.mockFrame || !window.htmlToImage) {
+        if (!elements.clippingFrame || !window.htmlToImage) {
             const fallbackMessage =
                 mode === 'copy'
-                    ? 'Export unavailable. Reload, then try Download mock front page.'
+                    ? 'Export unavailable. Reload, then try Download clipping.'
                     : 'Export unavailable. Reload and try again.';
             reportStatus(fallbackMessage, true);
             return;
@@ -20,11 +20,11 @@
         reportStatus('Preparing export...');
         const exportButton =
             mode === 'download'
-                ? elements.downloadMockButton
-                : elements.copyMockButton;
+                ? elements.downloadClippingButton
+                : elements.copyClippingButton;
         setButtonLoading(exportButton, true);
 
-        const bounds = elements.mockFrame.getBoundingClientRect();
+        const bounds = elements.clippingFrame.getBoundingClientRect();
         const options = {
             // html-to-image sizes the canvas by pixelRatio but rasterises the
             // clone at the device ratio, so the old fractional value
@@ -47,7 +47,7 @@
 
         const downloadImage = async (message) => {
             const dataUrl = await window.htmlToImage.toPng(
-                elements.mockFrame,
+                elements.clippingFrame,
                 options,
             );
             const link = document.createElement('a');
@@ -71,7 +71,7 @@
             }
 
             const blob = await window.htmlToImage.toBlob(
-                elements.mockFrame,
+                elements.clippingFrame,
                 options,
             );
             if (!blob) {
@@ -97,5 +97,5 @@
         }
     }
 
-    Neckass.exportMockFront = exportMockFront;
+    Neckass.exportClipping = exportClipping;
 })();

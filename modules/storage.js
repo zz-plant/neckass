@@ -10,7 +10,6 @@
         uniqueHeadlines: 'uniqueHeadlines',
         generatedHeadlines: 'generatedHeadlines',
         favorites: 'favoriteHeadlines',
-        filters: 'headlineFilters',
         feedbackLog: 'headlineFeedbackLog',
     };
 
@@ -60,10 +59,6 @@
                 ),
             );
             safeSetItem(
-                STORAGE_KEYS.filters,
-                JSON.stringify(snapshot.filters || Neckass.DEFAULT_FILTERS),
-            );
-            safeSetItem(
                 STORAGE_KEYS.feedbackLog,
                 JSON.stringify(
                     Array.isArray(snapshot.feedbackLog)
@@ -104,10 +99,6 @@
                     safeGetItem(STORAGE_KEYS.favorites),
                     [],
                 );
-                const filters = Neckass.safeJsonParse(
-                    safeGetItem(STORAGE_KEYS.filters),
-                    {},
-                );
                 const rawStack = resolveNavigationStack(
                     storedStack,
                     legacyNavigationStack,
@@ -145,7 +136,6 @@
                     favorites: Array.isArray(favorites)
                         ? favorites.filter(Boolean)
                         : [],
-                    filters: Neckass.sanitizeFilters(filters),
                     feedbackLog: Array.isArray(feedbackLog) ? feedbackLog : [],
                 };
             },

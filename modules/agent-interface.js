@@ -23,21 +23,12 @@
                 await app.handleGenerate();
                 return app.getAgentSnapshot();
             },
-            async set_filters(args = {}) {
-                return app.setFiltersForAgent(args);
-            },
-            async clear_filters() {
-                app.clearAllFilters();
-                return app.getAgentSnapshot();
-            },
             async select_headline(args = {}) {
                 const snapshot = app.selectHeadlineByIdentifier(
                     args.identifier,
                 );
                 if (!snapshot) {
-                    throw new Error(
-                        'Headline was not found or did not match active filters.',
-                    );
+                    throw new Error('Headline was not found.');
                 }
                 return snapshot;
             },

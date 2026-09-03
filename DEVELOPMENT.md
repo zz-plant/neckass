@@ -19,7 +19,7 @@ Then open `http://127.0.0.1:8001/`.
 - `index.html` — document shell and script loading order.
 - `script.js` — runtime bootstrap (`DOMContentLoaded`) that instantiates `HeadlineApp`.
 - `styles.css` — layout, theme, components, responsive behavior.
-- `llm.js` — tiny on-device/mock generation client loaded before bootstrap.
+- `llm.js` — tiny on-device generation client loaded before bootstrap.
 
 ### Runtime modules
 - `modules/app.js` — the `HeadlineApp` class and orchestration logic used by `script.js`.
@@ -30,7 +30,6 @@ separate files and are mixed onto the prototype by `app.js`. They are plain
 objects of shorthand methods, so `this` is the app instance exactly as it
 would be inside the class body. Each must load *before* `app.js`.
 
-- `modules/filter-controls.js` — section/source/panel/layout filter state.
 - `modules/agent-api.js` — the surface `window.Neckass.agent` is built on.
 - `modules/status.js` — status lines, the copied-button flash, and the toast.
 
@@ -43,10 +42,10 @@ without holding logic.
 - `modules/ui.js` — rendering and status updates.
 - `modules/head.js` — document metadata and canonical link updates.
 - `modules/history-list.js` — history panel list derivation and rendering.
-- `modules/filters.js` — query/filter logic.
+- `modules/sections.js` — infers the section label shown under a wire item.
 - `modules/share.js` — social/native share URL flows.
 - `modules/clipboard.js` — text/image clipboard behavior.
-- `modules/mock-export.js` — mock front-page image export.
+- `modules/clipping-export.js` — front-page clipping image export.
 - `modules/agent-interface.js` — browser-callable tool surface for agentic workflows.
 - `modules/utils.js` — shared helpers.
 
@@ -64,7 +63,7 @@ Use these boundaries to prevent `app.js` / `ui.js` from turning into generic cat
 - `modules/state.js`, `modules/history.js`, `modules/storage.js`
   - Own canonical state transitions and persistence/URL synchronization.
   - Should not encode UI copy.
-- `modules/share.js`, `modules/clipboard.js`, `modules/mock-export.js`
+- `modules/share.js`, `modules/clipboard.js`, `modules/clipping-export.js`
   - Own integration-specific behavior (share targets, clipboard APIs, export APIs).
   - Surface small functions consumed by `HeadlineApp`.
 - `modules/utils.js`
@@ -92,7 +91,7 @@ Use these boundaries to prevent `app.js` / `ui.js` from turning into generic cat
 1. Shuffle/previous/generate flows work and update visible headline.
 2. Copy/share/export actions target the active headline.
 3. URL params and reload restore expected state.
-4. Empty/filter edge states communicate clearly and disable invalid actions.
+4. Empty edge states communicate clearly and disable invalid actions.
 5. Keyboard navigation and focus-visible styles remain functional.
 6. Layout remains usable across small and wide viewports.
 

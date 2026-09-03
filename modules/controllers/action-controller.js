@@ -18,8 +18,8 @@
         handleQuickExport() {
             return this.app._handleQuickExportCore();
         }
-        handleMockExport(mode) {
-            return this.app._handleMockExportCore(mode);
+        handleClippingExport(mode) {
+            return this.app._handleClippingExportCore(mode);
         }
         copyHeadline(triggerButton) {
             return this.app._copyHeadlineCore(triggerButton);

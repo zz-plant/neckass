@@ -16,77 +16,16 @@
         return item;
     }
 
-    function getPanelIndexPool({
-        panel,
-        favoriteHeadlines,
-        headlineCache,
-        headlines,
-        baseHeadlineCount,
-        navigationStack,
-    }) {
-        if (panel === 'favorites') {
-            return Array.from(favoriteHeadlines)
-                .map((headline) => headlineCache.get(headline))
-                .filter((index) => Number.isInteger(index));
-        }
-
-        if (panel === 'generated') {
-            const generatedIndexes = [];
-            for (
-                let index = baseHeadlineCount;
-                index < headlines.length;
-                index += 1
-            ) {
-                generatedIndexes.push(index);
-            }
-            return generatedIndexes;
-        }
-
-        return [...navigationStack].reverse();
-    }
-
-    function getPanelIndexes({
-        panel,
-        isIndexEligible,
-        favoriteHeadlines,
-        headlineCache,
-        headlines,
-        baseHeadlineCount,
-        navigationStack,
-    }) {
-        const indexes = getPanelIndexPool({
-            panel,
-            favoriteHeadlines,
-            headlineCache,
-            headlines,
-            baseHeadlineCount,
-            navigationStack,
-        });
-        return indexes.filter((index) => isIndexEligible(index));
-    }
-
     function updateHistoryList({
         elements,
-        panel,
-        isIndexEligible,
-        favoriteHeadlines,
-        headlineCache,
         headlines,
-        baseHeadlineCount,
         navigationStack,
         currentIndex,
     }) {
         if (!elements.headlineList) return;
 
-        const indexes = getPanelIndexes({
-            panel,
-            isIndexEligible,
-            favoriteHeadlines,
-            headlineCache,
-            headlines,
-            baseHeadlineCount,
-            navigationStack,
-        });
+        // The wire's history is where the reader has been, newest first.
+        const indexes = [...navigationStack].reverse();
 
         // A history containing only the present is not a history.
         const section = elements.headlineList.closest('section');
@@ -117,7 +56,7 @@
                 elements.headlineList.innerHTML = '';
                 const item = document.createElement('li');
                 item.className = 'headline-item headline-item--empty';
-                item.textContent = 'Nothing on file for this view.';
+                item.textContent = 'Nothing on file yet.';
                 elements.headlineList.appendChild(item);
             }
             return;
@@ -142,7 +81,5 @@
     }
 
     Neckass.createHistoryListItem = createHistoryListItem;
-    Neckass.getPanelIndexPool = getPanelIndexPool;
-    Neckass.getPanelIndexes = getPanelIndexes;
     Neckass.updateHistoryList = updateHistoryList;
 })();

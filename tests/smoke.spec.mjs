@@ -58,7 +58,7 @@ test.describe('Neckass smoke flows', () => {
         const payload = encodeURIComponent(
             '<img src=x onerror=alert(1)> Breaking',
         );
-        await page.goto(`${BASE_URL}?headline=${payload}&source=generated`);
+        await page.goto(`${BASE_URL}?headline=${payload}`);
         await page.waitForFunction(() => Boolean(window.Neckass?.app));
 
         await expect(page.locator('#headline')).not.toHaveText('Loading...');
@@ -75,8 +75,8 @@ test.describe('Neckass smoke flows', () => {
         await page.goto(BASE_URL);
         await page.waitForFunction(() => Boolean(window.Neckass?.app));
 
-        await expect(page.locator('#download-mock')).toBeEnabled();
-        await expect(page.locator('#copy-mock')).toBeEnabled();
+        await expect(page.locator('#download-clipping')).toBeEnabled();
+        await expect(page.locator('#copy-clipping')).toBeEnabled();
     });
 
     test('exported front page fills its canvas', async ({ page }) => {
@@ -89,7 +89,7 @@ test.describe('Neckass smoke flows', () => {
         // out mostly blank — while every button still looks fine. Compare the
         // rendered pixels against the card actually on screen.
         const result = await page.evaluate(async () => {
-            const card = document.getElementById('mock-front');
+            const card = document.getElementById('clipping-front');
             const rect = card.getBoundingClientRect();
             const dataUrl = await window.htmlToImage.toPng(card, {
                 pixelRatio: 2,
@@ -170,9 +170,12 @@ test.describe('Neckass smoke flows', () => {
         expect(Array.isArray(listed.items)).toBeTruthy();
     });
 
-    test('history URL helpers preserve supported filters and headline params', async ({
+    test('history URL helpers carry the headline and drop stale filter params', async ({
         page,
     }) => {
+        // The section/q/source/panel/layout parameters belonged to a filter
+        // system that never had controls; links that still carry them must
+        // resolve to the headline and shed the rest.
         await page.goto(`${BASE_URL}?section=tech&q=wifi&source=curated`);
         await page.waitForFunction(() => Boolean(window.Neckass?.app));
 
@@ -180,22 +183,14 @@ test.describe('Neckass smoke flows', () => {
             const {
                 buildHeadlineUrl,
                 getUrlState,
-                DEFAULT_FILTERS,
                 data,
                 slugifyHeadline,
                 isValidHeadlineIndex,
             } = window.Neckass;
             const sampleHeadlines = data.HEADLINES || [];
-            const filters = {
-                ...DEFAULT_FILTERS,
-                section: 'tech',
-                query: 'wifi',
-                source: 'curated',
-            };
             const url = buildHeadlineUrl({
                 index: 0,
                 headlines: sampleHeadlines,
-                filters,
                 identifierFromIndex: (index) =>
                     slugifyHeadline(sampleHeadlines[index]),
                 isValidHeadlineIndex,
@@ -206,48 +201,28 @@ test.describe('Neckass smoke flows', () => {
             return { params, state };
         });
 
-        expect(result.params.section).toBe('tech');
-        expect(result.params.q).toBe('wifi');
-        expect(result.params.source).toBe('curated');
         expect(result.params.headline).toBeTruthy();
-        expect(result.state.section).toBe('tech');
-        expect(result.state.query).toBe('wifi');
+        expect(result.params.section).toBeUndefined();
+        expect(result.params.q).toBeUndefined();
+        expect(result.params.source).toBeUndefined();
+        expect(result.state.headline).toBeNull();
+        expect(result.state.hasHeadlineParam).toBe(false);
     });
 
-    test('filters helper returns expected eligible indexes and shared JSON parse fallback works', async ({
+    test('shared JSON parse falls back on malformed input', async ({
         page,
     }) => {
         await page.goto(BASE_URL);
         await page.waitForFunction(() => Boolean(window.Neckass?.app));
 
         const result = await page.evaluate(() => {
-            const { getEligibleIndexes, isValidHeadlineIndex, safeJsonParse } =
-                window.Neckass;
-            const headlines = [
-                'Tech desk confirms wifi prophecy in startup cafeteria',
-                'Culture club debates midnight playlist diplomacy',
-                'Oddity alert: ghost printer files for PTO',
-            ];
-            const eligible = getEligibleIndexes({
-                headlines,
-                baseHeadlineCount: 3,
-                filters: {
-                    section: 'tech',
-                    query: 'wifi',
-                    source: 'curated',
-                    panel: 'recent',
-                    layout: 'standard',
-                },
-                isValidHeadlineIndex,
-            });
+            const { safeJsonParse } = window.Neckass;
             return {
-                eligible,
                 badJsonFallback: safeJsonParse('{oops', { ok: false }),
                 goodJson: safeJsonParse('{"ok":true}', { ok: false }),
             };
         });
 
-        expect(result.eligible).toEqual([0]);
         expect(result.badJsonFallback).toEqual({ ok: false });
         expect(result.goodJson).toEqual({ ok: true });
     });

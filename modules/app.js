@@ -3,13 +3,10 @@
     const Neckass = window.Neckass;
     const {
         copyTextWithFeedback,
-        DEFAULT_FILTERS,
         classifyHeadline,
-        hasActiveFilters,
-        sanitizeFilters,
         getUrlState,
         updateHistoryState,
-        exportMockFront,
+        exportClipping,
         updateSocialShareLinks,
         appendGeneratedHeadlines,
         createHeadlineCache,
@@ -38,11 +35,9 @@
             )
                 ? this.state.generatedHeadlines
                 : [];
-            this.filters = sanitizeFilters(this.state.filters);
             this.favoriteHeadlines = new Set(
                 Array.isArray(this.state.favorites) ? this.state.favorites : [],
             );
-            this.filteredIndexes = [];
             this.headlineCache = createHeadlineCache(this.headlines);
             appendGeneratedHeadlines({
                 headlines: this.headlines,
@@ -60,7 +55,6 @@
                     scheduleBackgroundTask,
                     updateHeadMetadata,
                     updateSocialShareLinks,
-                    hasActiveFilters,
                     isValidHeadlineIndex,
                 },
             });
@@ -68,7 +62,7 @@
                 app: this,
                 dependencies: {
                     copyTextWithFeedback,
-                    exportMockFront,
+                    exportClipping,
                     setButtonLoading,
                 },
             });
@@ -83,7 +77,7 @@
             this.applyUrlState();
             this.syncGeneratorControls();
             this.updateNavigationAvailability();
-            this.updateMockDate();
+            this.updateClippingDate();
             this.preflightExportAvailability();
             this.updateNextButtonLabel();
             this._renderInitialHeadlineCore();
@@ -132,14 +126,12 @@
             this.elements.jumpExportButton?.addEventListener('click', () =>
                 this.handleQuickExport(),
             );
-            this.elements.downloadMockButton?.addEventListener('click', () =>
-                this.handleMockExport('download'),
+            this.elements.downloadClippingButton?.addEventListener(
+                'click',
+                () => this.handleClippingExport('download'),
             );
-            this.elements.copyMockButton?.addEventListener('click', () =>
-                this.handleMockExport('copy'),
-            );
-            this.elements.clearFiltersButton?.addEventListener('click', () =>
-                this.clearAllFilters(),
+            this.elements.copyClippingButton?.addEventListener('click', () =>
+                this.handleClippingExport('copy'),
             );
             [
                 this.elements.twitterShareLink,
@@ -182,23 +174,12 @@
                 return;
             }
 
-            const generatorAvailable = this.isGeneratorAvailable();
-            const wantsGenerated =
-                this.filters.source === 'generated' ||
-                (this.filters.source === 'auto' && generatorAvailable);
             let nextIndex = null;
             this.activeButton = this.elements.nextButton;
 
-            if (wantsGenerated && generatorAvailable) {
+            if (this.isGeneratorAvailable()) {
                 this.toggleLoader(true, 'Writing a new item.');
                 nextIndex = await this.generateHeadlineWithFallback();
-            }
-
-            if (this.filters.source === 'generated' && !generatorAvailable) {
-                this.toggleLoader(
-                    true,
-                    'Cannot write new items here. Showing one from the file.',
-                );
             }
 
             if (nextIndex === null) {
@@ -272,7 +253,7 @@
                 return;
             }
 
-            if (!this.isIndexEligible(generatedIndex)) {
+            if (!isValidHeadlineIndex(generatedIndex, this.headlines.length)) {
                 const fallbackIndex = this.getRandomIndex();
                 if (fallbackIndex === null) {
                     this._renderEmptyStateCore();
@@ -288,12 +269,6 @@
         async generateHeadlineWithFallback() {
             try {
                 const result = await window.tinyLlmClient.generateHeadline({
-                    section: this.filters.section,
-                    source:
-                        this.filters.source === 'curated'
-                            ? 'any'
-                            : this.filters.source,
-                    query: this.filters.query,
                     exclude: this.state.navigationStack
                         .map((index) => this.headlines[index])
                         .filter(Boolean)
@@ -344,7 +319,8 @@
                 : [];
             this.state.generatedHeadlines.push(normalized);
             this.persistState();
-            this.refreshFilteredIndexes();
+            this.updateNavigationAvailability();
+            this.updateHistoryList();
             return newIndex;
         }
 
@@ -373,7 +349,7 @@
                     this.elements.headline.classList.add('show');
                 });
                 this.toggleLoader(false);
-                this.updateMockDate();
+                this.updateClippingDate();
 
                 this.updateViewedState(index, options);
                 this.updateHeadlineBadges(index);
@@ -391,7 +367,7 @@
                     headlineText,
                     this.getCanonicalUrl(index),
                 );
-                this.updateMockHeadline(headlineText);
+                this.updateClippingHeadline(headlineText);
                 this.persistState();
                 // The initial render does not claim the address bar; see
                 // _renderInitialHeadlineCore.
@@ -416,8 +392,7 @@
                 isValidHeadlineIndex(
                     this.state.currentIndex,
                     this.headlines.length,
-                ) &&
-                this.isIndexEligible(this.state.currentIndex)
+                )
             ) {
                 this.renderHeadline(this.state.currentIndex, {
                     pushToStack: false,
@@ -427,8 +402,8 @@
                 return;
             }
 
-            if (this.filteredIndexes.length > 0) {
-                const nextIndex = this.filteredIndexes[0];
+            if (this.headlines.length > 0) {
+                const nextIndex = 0;
                 this.state.navigationStack = [nextIndex];
                 this.state.currentIndex = nextIndex;
                 this.renderHeadline(nextIndex, {
@@ -443,10 +418,7 @@
         }
 
         _renderEmptyStateCore() {
-            const hasFilters = hasActiveFilters(this.filters);
-            this.elements.headline.textContent = hasFilters
-                ? 'No items match these filters.'
-                : 'No items on file.';
+            this.elements.headline.textContent = 'No items on file.';
             this.elements.headline.style.color = '';
             this.clearCopyStatus();
             updateHeadMetadata({
@@ -458,7 +430,7 @@
                     this.getCanonicalUrl(targetIndex),
             });
             updateSocialShareLinks(this.elements, '', this.getCanonicalUrl(-1));
-            this.updateMockHeadline('No items on file.');
+            this.updateClippingHeadline('No items on file.');
             this.updateHeadlineBadges(null);
             this.updateHistoryList();
             this.toggleLoader(false, 'No items on file.');
@@ -466,13 +438,7 @@
             this.state.navigationStack = [];
             this.state.currentIndex = -1;
             this.elements.nextButton.disabled = true;
-            this.setNextButtonLabel(
-                hasFilters ? 'Try a different filter' : 'Shuffle',
-            );
-            if (this.elements.clearFiltersButton) {
-                this.elements.clearFiltersButton.hidden = !hasFilters;
-                this.elements.clearFiltersButton.disabled = !hasFilters;
-            }
+            this.setNextButtonLabel('Shuffle');
             this.updateNavigationAvailability();
         }
 
@@ -489,9 +455,7 @@
         }
 
         updateNavigationAvailability() {
-            const hasEligible =
-                this.filteredIndexes.length > 0 ||
-                this.filters.source === 'generated';
+            const hasEligible = this.headlines.length > 0;
             this.elements.previousButton.disabled =
                 this.state.isLoading || this.state.navigationStack.length <= 1;
             this.elements.nextButton.disabled =
@@ -523,7 +487,7 @@
         }
 
         _selectHeadlineCore(index) {
-            if (!this.isIndexEligible(index)) return;
+            if (!isValidHeadlineIndex(index, this.headlines.length)) return;
             this.state.currentIndex = index;
             if (
                 this.state.navigationStack[
@@ -562,12 +526,7 @@
         updateHistoryList() {
             renderHistoryList({
                 elements: this.elements,
-                panel: this.filters.panel,
-                isIndexEligible: (index) => this.isIndexEligible(index),
-                favoriteHeadlines: this.favoriteHeadlines,
-                headlineCache: this.headlineCache,
                 headlines: this.headlines,
-                baseHeadlineCount: this.baseHeadlineCount,
                 navigationStack: this.state.navigationStack,
                 currentIndex: this.state.currentIndex,
             });
@@ -660,13 +619,13 @@
             if (!window.htmlToImage) {
                 this.jumpToCard('export');
                 this.reportExportStatus(
-                    'Export unavailable. Reload, then try Download mock front page.',
+                    'Export unavailable. Reload, then try Download clipping.',
                     true,
                 );
                 return;
             }
 
-            await this.handleMockExport('download');
+            await this.handleClippingExport('download');
         }
 
         _handleDirectionalNavigationCore(event) {
@@ -700,34 +659,28 @@
 
         applyUrlState() {
             const urlState = getUrlState();
-            this.filters = this.getFiltersFromUrl(urlState);
-            if (
-                this.filters.source === 'generated' &&
-                !this.isGeneratorAvailable()
-            ) {
-                this.filters.source = 'auto';
-            }
             this.persistState();
-            this.refreshFilteredIndexes();
-            this.applyMockLayoutClass();
+            this.updateNavigationAvailability();
+            this.updateHistoryList();
 
             const index = this.identifierToIndex(urlState.headline);
-            const eligibleIndex =
-                isValidHeadlineIndex(index, this.headlines.length) &&
-                this.isIndexEligible(index)
-                    ? index
-                    : null;
+            const namedIndex = isValidHeadlineIndex(
+                index,
+                this.headlines.length,
+            )
+                ? index
+                : null;
             // With no headline in the URL, resume where the restored session
-            // left off rather than jumping to the first eligible entry.
+            // left off rather than jumping to the first entry.
             const restoredIndex = this.state.currentIndex;
-            const restoredEligible =
-                isValidHeadlineIndex(restoredIndex, this.headlines.length) &&
-                this.isIndexEligible(restoredIndex);
+            const restoredValid = isValidHeadlineIndex(
+                restoredIndex,
+                this.headlines.length,
+            );
             const fallbackIndex =
-                eligibleIndex ??
-                (restoredEligible ? restoredIndex : null) ??
-                this.filteredIndexes[0] ??
-                null;
+                namedIndex ??
+                (restoredValid ? restoredIndex : null) ??
+                (this.headlines.length > 0 ? 0 : null);
 
             if (fallbackIndex !== null) {
                 // Storage has just restored navigationStack. Replacing it here
@@ -760,9 +713,6 @@
             const urlState = getUrlState();
             const urlIndex = this.identifierToIndex(urlState.headline);
             const stateIndex = this.identifierToIndex(state.headlineIndex);
-            this.filters = this.getFiltersFromUrl(urlState);
-            this.refreshFilteredIndexes();
-            this.applyMockLayoutClass();
 
             const targetIndex = isValidHeadlineIndex(
                 stateIndex,
@@ -774,9 +724,7 @@
                   : null;
 
             const eligibleTarget =
-                targetIndex !== null && this.isIndexEligible(targetIndex)
-                    ? targetIndex
-                    : (this.filteredIndexes[0] ?? null);
+                targetIndex ?? (this.headlines.length > 0 ? 0 : null);
 
             const restoredStack = Array.isArray(state.navigationStack)
                 ? state.navigationStack.filter((idx) =>
@@ -794,11 +742,8 @@
                 return;
             }
 
-            const filteredStack = restoredStack.filter((idx) =>
-                this.isIndexEligible(idx),
-            );
             this.state.navigationStack =
-                filteredStack.length > 0 ? filteredStack : [eligibleTarget];
+                restoredStack.length > 0 ? restoredStack : [eligibleTarget];
             if (!this.state.navigationStack.includes(eligibleTarget)) {
                 this.state.navigationStack.push(eligibleTarget);
             }
@@ -814,17 +759,6 @@
             this.renderHeadline(eligibleTarget, {
                 pushToStack: false,
                 replaceState: true,
-            });
-        }
-
-        getFiltersFromUrl(urlState) {
-            return sanitizeFilters({
-                ...DEFAULT_FILTERS,
-                section: urlState.section ?? DEFAULT_FILTERS.section,
-                query: urlState.query ?? DEFAULT_FILTERS.query,
-                source: urlState.source ?? DEFAULT_FILTERS.source,
-                panel: urlState.panel ?? DEFAULT_FILTERS.panel,
-                layout: urlState.layout ?? DEFAULT_FILTERS.layout,
             });
         }
 
@@ -895,45 +829,47 @@
             this.elements.loader.textContent = message;
         }
 
-        updateMockHeadline(text) {
-            if (this.elements.mockHeadline) {
-                this.elements.mockHeadline.textContent = text;
+        updateClippingHeadline(text) {
+            if (this.elements.clippingHeadline) {
+                this.elements.clippingHeadline.textContent = text;
             }
         }
 
         preflightExportAvailability() {
             if (!this.elements.exportStatus) return;
-            if (this.elements.downloadMockButton) {
-                this.elements.downloadMockButton.disabled = !window.htmlToImage;
-                this.elements.downloadMockButton.setAttribute(
+            if (this.elements.downloadClippingButton) {
+                this.elements.downloadClippingButton.disabled =
+                    !window.htmlToImage;
+                this.elements.downloadClippingButton.setAttribute(
                     'aria-disabled',
                     String(!window.htmlToImage),
                 );
             }
-            if (this.elements.copyMockButton) {
-                this.elements.copyMockButton.disabled = !window.htmlToImage;
-                this.elements.copyMockButton.setAttribute(
+            if (this.elements.copyClippingButton) {
+                this.elements.copyClippingButton.disabled = !window.htmlToImage;
+                this.elements.copyClippingButton.setAttribute(
                     'aria-disabled',
                     String(!window.htmlToImage),
                 );
             }
             if (!window.htmlToImage) {
                 this.reportExportStatus(
-                    'Export unavailable. Reload, then try Download mock front page.',
+                    'Export unavailable. Reload, then try Download clipping.',
                     true,
                 );
             }
         }
 
-        updateMockDate() {
+        updateClippingDate() {
             const now = new Date();
             const dateFormatter = new Intl.DateTimeFormat('en-US', {
                 month: 'long',
                 day: 'numeric',
                 year: 'numeric',
             });
-            if (this.elements.mockDate) {
-                this.elements.mockDate.textContent = dateFormatter.format(now);
+            if (this.elements.clippingDate) {
+                this.elements.clippingDate.textContent =
+                    dateFormatter.format(now);
             }
 
             // The masthead belongs to the issue: modules/issue.js derives the
@@ -941,8 +877,8 @@
             // second-guesses it.
         }
 
-        async _handleMockExportCore(mode) {
-            await exportMockFront({
+        async _handleClippingExportCore(mode) {
+            await exportClipping({
                 mode,
                 elements: this.elements,
                 reportStatus: (message, isError) =>
@@ -963,7 +899,7 @@
                 },
                 export: {
                     section: this.elements.exportSection,
-                    focus: this.elements.downloadMockButton,
+                    focus: this.elements.downloadClippingButton,
                 },
             };
 
@@ -982,8 +918,7 @@
         }
 
         getRandomIndex() {
-            const pool =
-                this.filteredIndexes.length > 0 ? this.filteredIndexes : [];
+            const pool = this.headlines.map((_, index) => index);
 
             if (pool.length === 0) {
                 return null;
@@ -1050,7 +985,8 @@
                 : [];
             this.state.generatedHeadlines.push(normalized);
             this.persistState();
-            this.refreshFilteredIndexes();
+            this.updateNavigationAvailability();
+            this.updateHistoryList();
             return newIndex;
         }
 
@@ -1061,7 +997,6 @@
                 currentIndex: this.state.currentIndex,
                 generatedHeadlines: this.state.generatedHeadlines,
                 favorites: Array.from(this.favoriteHeadlines),
-                filters: this.filters,
             });
         }
 
@@ -1077,17 +1012,6 @@
                     'aria-disabled',
                     String(!generatorAvailable),
                 );
-            }
-            if (this.elements.sourceButtons) {
-                this.elements.sourceButtons.forEach((button) => {
-                    if (button.dataset.source === 'generated') {
-                        button.disabled = !generatorAvailable;
-                        button.setAttribute(
-                            'aria-disabled',
-                            String(!generatorAvailable),
-                        );
-                    }
-                });
             }
         }
 
@@ -1128,8 +1052,8 @@
         async handleQuickExport() {
             return this.actionController.handleQuickExport();
         }
-        async handleMockExport(mode) {
-            return this.actionController.handleMockExport(mode);
+        async handleClippingExport(mode) {
+            return this.actionController.handleClippingExport(mode);
         }
         async copyHeadline(triggerButton = this.elements.copyButton) {
             return this.actionController.copyHeadline(triggerButton);
@@ -1139,7 +1063,6 @@
             updateHistoryState({
                 index,
                 headlines: this.headlines,
-                filters: this.filters,
                 navigationStack: this.state.navigationStack,
                 uniqueHeadlines: this.state.uniqueHeadlines,
                 identifierFromIndex: (idx) => this.identifierFromIndex(idx),
@@ -1153,7 +1076,6 @@
     // shorthand methods, so `this` behaves exactly as it did in the class body.
     Object.assign(
         HeadlineApp.prototype,
-        Neckass.filterMethods,
         Neckass.agentApiMethods,
         Neckass.feedbackMethods,
         Neckass.statusMethods,

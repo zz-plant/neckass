@@ -21,17 +21,15 @@
             copyStatus: 'copy-status',
             nativeShareButton: 'native-share',
             shareStatus: 'share-status',
-            downloadMockButton: 'download-mock',
-            copyMockButton: 'copy-mock',
+            downloadClippingButton: 'download-clipping',
+            copyClippingButton: 'copy-clipping',
             exportStatus: 'export-status',
             globalToast: 'global-toast',
-            mockFrame: 'mock-front',
-            mockHeadline: 'mock-headline',
-            mockDate: 'mock-date',
+            clippingFrame: 'clipping-front',
+            clippingHeadline: 'clipping-headline',
+            clippingDate: 'clipping-date',
             historyCount: 'history-count',
             headlineList: 'headline-list',
-            filterStatus: 'filter-status',
-            clearFiltersButton: 'clear-filters',
             jumpCopyButton: 'jump-copy',
             jumpShareButton: 'jump-share',
             jumpExportButton: 'jump-export',
@@ -42,10 +40,6 @@
 
         return {
             ...elements,
-            sectionButtons: getAll('.section-filter'),
-            sourceButtons: getAll('.toggle-button[data-source]'),
-            panelButtons: getAll('.toggle-button[data-panel]'),
-            layoutButtons: getAll('.toggle-button[data-layout]'),
             containers: getAll('.container'),
             headlineSection: document.querySelector('.headline-section'),
             controls: document.querySelector('.controls'),
@@ -62,65 +56,6 @@
         button.setAttribute('aria-busy', shouldShow ? 'true' : 'false');
     }
 
-    function updateToggleButtons(buttons, value, attribute = 'source') {
-        if (!buttons) return;
-        buttons.forEach((button) => {
-            const isActive = button.dataset[attribute] === value;
-            button.classList.toggle('is-active', isActive);
-            button.setAttribute('aria-pressed', String(isActive));
-        });
-    }
-
-    function updateLayoutButtons(layoutButtons, layout) {
-        if (!layoutButtons) return;
-        layoutButtons.forEach((button) => {
-            const isActive = button.dataset.layout === layout;
-            button.classList.toggle('is-active', isActive);
-            button.setAttribute('aria-pressed', String(isActive));
-        });
-    }
-
-    function formatFilterLabel(value) {
-        return value
-            ? `${value.charAt(0).toUpperCase()}${value.slice(1)}`
-            : value;
-    }
-
-    function updateFilterStatus({ elements, filters, hasActiveFilters }) {
-        if (!elements.filterStatus) return;
-        const parts = [];
-        if (filters.section !== 'latest') {
-            parts.push(`Section: ${formatFilterLabel(filters.section)}`);
-        }
-        if (filters.query) {
-            parts.push(`Query: "${filters.query}"`);
-        }
-        if (filters.source !== 'auto') {
-            parts.push(`Source: ${formatFilterLabel(filters.source)}`);
-        }
-        if (filters.panel !== 'recent') {
-            parts.push(`Panel: ${formatFilterLabel(filters.panel)}`);
-        }
-        if (filters.layout !== 'standard') {
-            parts.push(`Layout: ${formatFilterLabel(filters.layout)}`);
-        }
-
-        const hasFilters = hasActiveFilters(filters);
-
-        elements.filterStatus.textContent = hasFilters
-            ? `Filtered by ${parts.join(' · ')}`
-            : '';
-        elements.filterStatus.hidden = !hasFilters;
-
-        if (elements.clearFiltersButton) {
-            elements.clearFiltersButton.hidden = !hasFilters;
-            elements.clearFiltersButton.disabled = !hasFilters;
-        }
-    }
-
     Neckass.mapElements = mapElements;
     Neckass.setButtonLoading = setButtonLoading;
-    Neckass.updateToggleButtons = updateToggleButtons;
-    Neckass.updateLayoutButtons = updateLayoutButtons;
-    Neckass.updateFilterStatus = updateFilterStatus;
 })();

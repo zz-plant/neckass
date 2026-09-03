@@ -39,7 +39,7 @@ pill list, and filter UI have been removed rather than left to mislead.
 - The topbar contains the brand block (“Neckass” and “Digital Gazette”). The row is separated from the hero by a bottom border and margin spacing.【F:index.html†L20-L25】【F:styles.css†L40-L88】【F:styles.css†L175-L199】
 
 ## Hero section
-- Eyebrow text: **“Ridiculous news desk”** in uppercase styling.【F:index.html†L25-L35】
+- Eyebrow text: **“Department of neckassery”** in uppercase styling.【F:index.html†L25-L35】
 - Heading: **“Neckass Headlines Generator”** in `h1` using the headline font.【F:index.html†L26-L31】
 - Lede: **“Dive into a feed where shuffles deliver share-ready scoops.”**【F:index.html†L27-L31】
 - Pill list contains exactly three pills: **Instant shuffle**, **Dark mode ready**, **Share-ready format**.【F:index.html†L29-L33】
@@ -51,7 +51,6 @@ pill list, and filter UI have been removed rather than left to mislead.
 - Section label includes an accent dot and **“Featured headline”** text.【F:index.html†L42-L51】
 - Headline element: `<h2 id="headline" tabindex="0" aria-label="Headline">` with initial text “Loading...”.【F:index.html†L52-L55】
 - Helper line below the headline reads **“Shuffle for a fresh line, then copy or share it instantly.”**【F:index.html†L99-L102】
-- Filter status row shows **“All headlines”** by default in `#filter-status` and includes a **“Clear filters”** button (`#clear-filters`).【F:index.html†L91-L94】
 
 ### Controls & loader
 - Buttons:
@@ -61,13 +60,9 @@ pill list, and filter UI have been removed rather than left to mislead.
 - Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`. Loader visibility is toggled via the `.is-visible` class and `aria-hidden` state updates during transitions.【F:index.html†L65-L70】【F:styles.css†L149-L161】【F:script.js†L1193-L1218】
 
 ### Headline behavior
-- Headlines are randomly selected from the curated `headlines` array; additional generated headlines can be appended when the tiny LLM helper succeeds. Next/Shuffle prefers generated headlines if filters indicate so and the generator is available; otherwise it shuffles curated headlines. The next headline differs from the current headline whenever possible.【F:script.js†L31-L115】【F:script.js†L219-L269】【F:script.js†L1325-L1343】
+- Headlines are randomly selected from the curated `headlines` array; additional generated headlines can be appended when the tiny LLM helper succeeds. Next/Shuffle asks the on-device generator first when it is available, and falls back to a curated headline otherwise. The next headline differs from the current headline whenever possible.【F:script.js†L31-L115】【F:script.js†L219-L269】【F:script.js†L1325-L1343】
 - Previous navigates back through the stored navigation stack and removes the last index if you go backward. It is disabled whenever the stack has fewer than two items or while loading.【F:script.js†L251-L273】【F:script.js†L445-L452】
 - The headline takes its colour from the `--ink-display` token, so it is one consistent ink in each theme (12.3:1 on light, 13.1:1 on dark). It was previously assigned a random palette colour per shuffle and contrast-checked against a hardcoded background constant, which never evaluated dark mode. The update includes a short animation delay (60ms) to show the loader before revealing text.
-
-### Filter status row
-- The filter status text reflects active filters (section, query, source) when they exist and resets to **“All headlines”** when no filters are active.
-- The Clear filters button is hidden and disabled unless filters are active; clicking it resets filters and refreshes the headline set. (In the current HTML, filter controls other than the Clear button are not rendered; filters can still be supplied via URL parameters.)【F:script.js†L640-L707】【F:script.js†L739-L820】
 
 ### Accessibility
 - `h2#headline` remains focusable (`tabindex="0"`) so screen readers can re-announce it after updates.
@@ -90,13 +85,13 @@ pill list, and filter UI have been removed rather than left to mislead.
 - Links for Twitter, Facebook, and Reddit (each with icon and label). URLs update on every headline change and include the encoded headline and a canonical URL with query parameters (`headline`, `section`, `q`, `source`, `panel`, `layout`).【F:index.html†L110-L132】【F:script.js†L422-L452】【F:script.js†L955-L1034】
 - The links open in a new tab (`target="_blank"`) and include `rel="noreferrer"` and `aria-label` values that describe each destination.【F:index.html†L116-L132】
 
-### Mock front page export card
-- Header text **“Mock front page”** with helper text **“Download or copy the layout.”**
-- Mock front page contains a masthead, current date, headline, and “Published” dateline.
+### Clipping export card
+- Header text **“Clipping”** with helper text **“Download or copy the layout.”**
+- The clipping contains a masthead, current date, headline, and “Published” dateline.
 - Two actions:
-  - **Download mock front page** (`#download-mock`), which renders the mock to PNG via `html-to-image` and triggers a download.
-  - **Copy mock front page** (`#copy-mock`), which renders the mock to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable. Downloaded front page.”
-- Status text `#export-status` reports success or failure messages after export attempts (for example “Preparing export…”, “Downloaded front page.”, and clipboard-download fallback messaging). A global toast (`#global-toast`) provides compact success feedback for copy/share/export actions while inline status remains visible near each control.【F:index.html†L163-L187】【F:modules/mock-export.js†L13-L59】【F:modules/app.js†L1037-L1043】
+  - **Download clipping** (`#download-clipping`), which renders the clipping to PNG via `html-to-image` and triggers a download.
+  - **Copy clipping** (`#copy-clipping`), which renders the clipping to a blob and attempts `navigator.clipboard.write()`. If clipboard image copy is unavailable, it falls back to downloading a PNG and reports “Clipboard unavailable. Downloaded front page.”
+- Status text `#export-status` reports success or failure messages after export attempts (for example “Preparing export…”, “Downloaded front page.”, and clipboard-download fallback messaging). A global toast (`#global-toast`) provides compact success feedback for copy/share/export actions while inline status remains visible near each control.【F:index.html†L163-L187】【F:modules/clipping-export.js†L13-L59】【F:modules/app.js†L1037-L1043】
 
 ## Tiny LLM headline generator (`llm.js`)
 - `llm.js` exposes a global `tinyLlmClient.generateHeadline()` that returns a promise with:
@@ -109,9 +104,9 @@ pill list, and filter UI have been removed rather than left to mislead.
 This section defines a **v2 generation model** that keeps the app fully static/no-build while improving output quality, predictability, and accessibility-safe behavior. The v2 contract is additive: it can run alongside the current generator until rollout is complete.
 
 ### Product goals
-- Generate headlines that feel more intentional and less repetitive while preserving the satirical tone.
+- Generate headlines that feel more intentional and less repetitive while preserving the register.
 - Keep generation resilient in constrained environments (local file, no network, older browsers).
-- Provide deterministic behavior when users apply filters, so Shuffle feels relevant to the selected context.
+- Keep Shuffle's output varied across a session rather than circling a handful of lines.
 - Make generator outcomes inspectable for debugging and future tuning without shipping analytics dependencies.
 
 ### Non-goals
@@ -149,7 +144,7 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 
 ### Generation pipeline
 1. **Context assembly**
-   - Build a compact context object from active filters and URL state (`section`, `q`, `source`).
+   - Build a compact context object from the recently shown headlines, so the generator can avoid repeating them.
    - Normalize text (trim, collapse whitespace, lowercase for matching only).
 2. **Candidate synthesis**
    - Assemble 12–24 candidates by combining template slots and phrase pools.
@@ -169,7 +164,7 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 - **Length target:** 45–110 characters, hard cap at 140.
 - **Duplicate suppression:** no exact match with the last 30 generated headlines.
 - **Near-duplicate suppression:** reject candidates with very high token overlap against last 10 shown headlines.
-- **Safety/tone:** avoid direct harassment terms and preserve absurd-news voice rather than personal attacks.
+- **Safety/tone:** avoid direct harassment terms and preserve the wire-service voice rather than personal attacks.
 - **Formatting:** sentence case headline text, no trailing punctuation unless stylistically required.
 
 ### State and persistence
@@ -197,9 +192,7 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 - Phase 4: remove v1-only code after stability checklist passes.
 
 ### Acceptance criteria
-- With no filters, 20 consecutive Shuffles produce at least 16 unique headlines.
-- With a section filter enabled, at least 80% of 20 generated headlines align to that section's phrase pool.
-- With a query filter, generated headlines contain at least one query token (or close variant) in at least 60% of attempts.
+- 20 consecutive Shuffles produce at least 16 unique headlines.
 - Timeout/error paths never leave loader visible or controls disabled after completion.
 - Previous navigation continues to function across mixed curated+generated sessions.
 
@@ -211,9 +204,9 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 
 ## Persistence & URL state
 - LocalStorage keys:
-  - `navigationStack`, `uniqueHeadlines`, `generatedHeadlines`, `favoriteHeadlines`, `headlineFilters` (current keys), plus legacy keys `headlinesViewed`, `viewedHeadlines`, `viewedStack` for backward compatibility.
+  - `navigationStack`, `uniqueHeadlines`, `generatedHeadlines`, `favoriteHeadlines`, `headlineFeedbackLog` (current keys), plus legacy keys `headlinesViewed`, `viewedHeadlines`, `viewedStack` for backward compatibility.
 - `navigationStack` is sanitized against current headline count; `uniqueHeadlines` falls back to the sanitized stack when missing.
-- URL query parameters mirror filter state and the current headline: `headline`, `section`, `q`, `source`, `panel`, `layout`. Each headline render pushes or replaces history state and updates these parameters to enable direct linking and back/forward navigation restoration.【F:script.js†L1-L52】【F:script.js†L1413-L1499】【F:script.js†L882-L1047】
+- One URL query parameter carries state: `headline`, the current item's slug. Each headline render pushes or replaces history state so direct links and back/forward navigation both restore the item. The retired filter parameters (`section`, `q`, `source`, `panel`, `layout`) are stripped from any URL the app writes, so old links resolve to their headline and shed the rest.
 
 ## Keyboard interactions
 - Arrow Right / Arrow Down trigger **Shuffle**.
@@ -221,7 +214,7 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 - Key navigation is disabled when focus is inside editable elements (inputs, textareas, buttons, etc.).【F:script.js†L860-L880】
 
 ## Error and edge cases
-- If no eligible headlines exist (because the list is empty or filters are too strict), the headline shows “No headlines available.” or “No headlines match your current filters.” The Shuffle button is disabled and loader is hidden.【F:script.js†L388-L416】
+- If the headline list is empty, the headline shows “No items on file.” The Shuffle button is disabled and the loader is hidden.
 - Metadata and social links are reverted to the base metadata and canonical URL (headline parameter removed) when there is no valid headline index.【F:script.js†L388-L407】
 - Headline contrast is guaranteed by the theme tokens rather than computed at runtime; `selectReadableColor()` and its colour helpers were removed once the token took over.
 

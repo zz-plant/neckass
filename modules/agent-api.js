@@ -2,8 +2,6 @@
     window.Neckass = window.Neckass || {};
     const Neckass = window.Neckass;
     const {
-        DEFAULT_FILTERS,
-        sanitizeFilters,
         buildHeadlineUrl,
         isValidHeadlineIndex,
         normalizeHeadlineText,
@@ -80,7 +78,6 @@
             return buildHeadlineUrl({
                 index,
                 headlines: this.headlines,
-                filters: this.filters,
                 identifierFromIndex: (idx) => this.identifierFromIndex(idx),
                 isValidHeadlineIndex,
             });
@@ -120,75 +117,22 @@
                     currentIndex === null
                         ? null
                         : this.getCanonicalUrl(currentIndex),
-                filters: { ...this.filters },
-                poolSize: this.filteredIndexes.length,
                 totalHeadlines: this.headlines.length,
                 generatorAvailable: this.isGeneratorAvailable(),
             };
         },
 
-        setFiltersForAgent(partialFilters = {}) {
-            const incoming =
-                partialFilters && typeof partialFilters === 'object'
-                    ? partialFilters
-                    : {};
-            const nextFilters = sanitizeFilters({
-                ...DEFAULT_FILTERS,
-                ...this.filters,
-                ...incoming,
-            });
-
-            const changed = Object.keys(nextFilters).some(
-                (key) => nextFilters[key] !== this.filters[key],
-            );
-            if (!changed) {
-                return this.getAgentSnapshot();
-            }
-
-            this.filters = nextFilters;
-            if (this.elements.searchInput) {
-                this.elements.searchInput.value = this.filters.query;
-            }
-            this.persistState();
-            this.refreshFilteredIndexes();
-            this.applyMockLayoutClass();
-
-            if (this.filteredIndexes.length === 0) {
-                this._renderEmptyStateCore();
-                this.pushHistoryState(-1, { replace: true });
-                return this.getAgentSnapshot();
-            }
-
-            const nextIndex = this.isIndexEligible(this.state.currentIndex)
-                ? this.state.currentIndex
-                : this.filteredIndexes[0];
-            this.state.navigationStack = [nextIndex];
-            this.state.currentIndex = nextIndex;
-            this.renderHeadline(nextIndex, {
-                pushToStack: false,
-                replaceState: true,
-            });
-            return this.getAgentSnapshot();
-        },
-
         selectHeadlineByIdentifier(identifier) {
             const index = this.identifierToIndex(identifier);
-            if (!this.isIndexEligible(index)) {
+            if (!isValidHeadlineIndex(index, this.headlines.length)) {
                 return null;
             }
             this._selectHeadlineCore(index);
             return this.getAgentSnapshot();
         },
 
-        listHeadlinesForAgent({
-            offset = 0,
-            limit = 25,
-            scope = 'eligible',
-        } = {}) {
-            const pool =
-                scope === 'all'
-                    ? this.headlines.map((_, index) => index)
-                    : [...this.filteredIndexes];
+        listHeadlinesForAgent({ offset = 0, limit = 25 } = {}) {
+            const pool = this.headlines.map((_, index) => index);
             const start = Math.max(0, Number.parseInt(offset, 10) || 0);
             const max = Math.min(
                 100,

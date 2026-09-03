@@ -10,8 +10,8 @@ A privacy-first, static daily newspaper about a fictional Neckass: one determini
 
 ## What this project is
 - **Static-first**: works from local files or any static host.
-- **Generator hybrid**: curated headline catalog + optional tiny local LLM mock.
-- **Share-ready UX**: clipboard copy, social links, and mock front-page export.
+- **Generator hybrid**: curated headline catalog + optional tiny local LLM.
+- **Share-ready UX**: clipboard copy, social links, and front-page clipping export.
 - **State-aware**: navigation/session context is persisted with `localStorage` and URL params.
 
 ## Quick start
@@ -63,8 +63,6 @@ Available tools:
 - `shuffle`
 - `previous`
 - `generate`
-- `set_filters`
-- `clear_filters`
 - `select_headline`
 - `list_headlines`
 
