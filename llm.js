@@ -323,6 +323,10 @@ const tinyLlmClient = (() => {
             impact: pick(BEATS.impacts, rng),
             ruling: pick(BEATS.rulings, rng),
             claim,
+            // The same claim capitalized, for the one pattern that starts a
+            // sentence with it. Sentence case is applied to the whole string
+            // once at the end, so it only ever fixes the first character.
+            claimSentence: `${claim.charAt(0).toUpperCase()}${claim.slice(1)}`,
             section,
             marker: pick(SECTION_HINTS[section] || SECTION_HINTS.latest, rng),
             queryHint: queryHints.length ? pick(queryHints, rng) : '',
@@ -338,12 +342,11 @@ const tinyLlmClient = (() => {
             `${payload.subject} ${payload.verb} ${payload.object}. ${payload.impact}`,
             `${payload.subject} ${payload.verb} ${payload.object} ${payload.connector} ${payload.twist}. ${payload.impact}`,
             `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object}. ${payload.impact}`,
-            `${payload.subject} ${payload.verb} ${payload.object} and called it "fine." ${payload.impact}`,
             `${payload.desk} ${payload.subject} ${payload.verb} ${payload.object}, ${payload.connector} ${payload.twist}. ${payload.impact}`,
             `${payload.subjectGenitive} complaint about ${payload.claim} ${payload.ruling}. ${payload.impact}`,
             `${payload.desk} ${payload.claim} ${payload.ruling}. ${payload.impact}`,
             `${payload.claim} ${payload.ruling} ${payload.connector} ${payload.twist}. ${payload.impact}`,
-            `${payload.subject} ${payload.verb} ${payload.object}. ${payload.claim} ${payload.ruling}.`,
+            `${payload.subject} ${payload.verb} ${payload.object}. ${payload.claimSentence} ${payload.ruling}.`,
         ];
 
         const drafted = formatSentenceCase(pick(patterns, rng));

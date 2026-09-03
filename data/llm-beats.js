@@ -46,11 +46,6 @@
                 pronouns: { possessive: 'his', object: 'him' },
             },
             {
-                text: 'Neckass, again,',
-                genitive: "Neckass's",
-                pronouns: { possessive: 'his', object: 'him' },
-            },
-            {
                 text: 'Neckass, unprompted,',
                 genitive: "Neckass's",
                 pronouns: { possessive: 'his', object: 'him' },
@@ -77,7 +72,6 @@
             'has argued with a stranger about',
             'has googled',
             'has ignored',
-            'has bought a second',
             'has scheduled a meeting about',
             'has sent a voice note about',
             'has changed his mind about',
@@ -163,7 +157,6 @@
             'The group chat has been told.',
             'He called it "a process."',
             'He is fine, he says.',
-            'It is still broken.',
         ],
         // Short and singular, with nothing trailing. Only these lead a
         // sentence or sit before a ruling.
@@ -185,7 +178,6 @@
             'the puzzle piece',
             'the podcast',
             'the bicycle',
-            'the leftovers',
         ],
         // What happened to the claim.
         rulings: [
@@ -200,7 +192,6 @@
             'was rescheduled a fourth time',
             'got worse',
             'was explained twice, slowly',
-            'was resolved by turning it off and on',
         ],
     };
 

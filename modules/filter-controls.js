@@ -7,7 +7,6 @@
         hasActiveFilters,
         isIndexEligible,
         updateLayoutButtons,
-        updateToggleButtons,
         isValidHeadlineIndex,
         triggerHapticFeedback,
     } = Neckass;
@@ -193,7 +192,6 @@
                 resetNavigation = false,
                 refreshIndexes = false,
                 ensureHeadline = false,
-                syncControls = false,
                 updateHistoryList: shouldUpdateHistoryList = false,
                 updateHistoryState: shouldUpdateHistoryState = false,
                 applyLayout = false,
