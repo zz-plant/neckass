@@ -25,7 +25,7 @@
             deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
             byline: 'By the wire desk',
             correction:
-                'An earlier edition said Neckass had been "five minutes away" since 2019. It is since 2018.',
+                'An earlier edition said Neckass had been "five minutes away" since 2019. At the time of that report he was in the shower.',
         },
         {
             headline:
@@ -45,19 +45,19 @@
         },
         {
             headline:
-                "Neckass's fridge has reported him for opening it 41 times and taking nothing",
-            deck: 'The fridge logs door openings. He was looking, not eating. It has told the manufacturer.',
-            byline: 'By the technology desk',
+                'Neckass has opened the fridge eleven times since dinner and taken nothing',
+            deck: 'He is not hungry. He is checking whether anything has changed. It has not.',
+            byline: 'Staff report',
             correction:
-                'We reported that Neckass opened the fridge 41 times. It was 43. The fridge has written in.',
+                'We reported eleven openings. He has since gone back for a twelfth and eaten a slice of cheese standing up.',
         },
         {
             headline:
-                "Neckass's noise complaint against his own alarm clock was upheld on appeal",
-            deck: 'He set it, it rang, and he reported it. He was told he had set it. He appealed. He was told again.',
+                'Neckass has set three alarms, five minutes apart, and slept through all of them',
+            deck: 'They are labelled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
             byline: 'Staff report',
             correction:
-                'We said the appeal was upheld. It was upheld against him, which is the opposite.',
+                'We said three alarms. There is a fourth, at 6:30, labelled "ok fine." He got up at 8:10.',
         },
         {
             headline:
@@ -89,7 +89,7 @@
             deck: 'That is $4,100 for two visits. One of them was to ask about cancelling.',
             byline: 'Staff report',
             correction:
-                'We put the figure at $4,100. It is $4,340. He has since renewed.',
+                'We reported two visits to the gym. One was to cancel. He left with a second membership.',
         },
         {
             headline:
@@ -97,7 +97,7 @@
             deck: 'He set it for a long weekend in June. Everyone has stopped emailing him. He has noticed and is pleased.',
             byline: 'By the wire desk',
             correction:
-                'We said the reply had run eleven weeks. Twelve. It is still running.',
+                'We said the reply had run eleven weeks. It has since been changed to say he is "back in the office," and it is still on.',
         },
         {
             headline:
@@ -105,7 +105,7 @@
             deck: 'It took forty minutes. Asked what he had agreed to, he said "the usual."',
             byline: 'By the technology desk',
             correction:
-                'We reported the reading took forty minutes. Thirty-five. He has agreed to the rest unread.',
+                'We reported that Neckass read the terms in full. He scrolled to the bottom in full. He read the first line.',
         },
         {
             headline:
@@ -129,14 +129,15 @@
             deck: 'He said "anyway, I should go" at 9:10. He left at ten.',
             byline: 'Staff report',
             correction:
-                'We timed the goodbye at fifty minutes. Fifty-five. The hosts had gone to bed.',
+                'We timed the goodbye at fifty minutes. The hosts went to bed at forty. He continued in the hall.',
         },
         {
             headline:
                 'Neckass reset a password to the password he had just been told was wrong',
             deck: 'He was locked out at two. He was locked out again at 2:01.',
             byline: 'By the technology desk',
-            correction: 'We reported one lockout. There were four.',
+            correction:
+                'We reported one lockout. He reset the password to the old one, was told he could not reuse it, and added a 1. He was locked out again at 2:04.',
         },
         {
             headline:
@@ -168,7 +169,7 @@
             deck: 'The question was put to the person beside him. He answered it. He was wrong.',
             byline: 'Staff report',
             correction:
-                'We reported that Neckass answered a question asked of someone else. It was asked of two other people.',
+                'We reported that Neckass answered a question asked of someone else. The person it was asked of had already started answering.',
         },
         {
             headline:
@@ -176,7 +177,7 @@
             deck: 'It is on the passenger seat. He has driven past the post office sixty times.',
             byline: 'By the transport desk',
             correction:
-                'We said the package has been in the car since March. February.',
+                'We said the package has been in the car since March. It has been through two car washes.',
         },
         {
             headline:
@@ -184,7 +185,7 @@
             deck: 'The train left at 8:04. He was in the shower at 8:04. He arrived at 9:40.',
             byline: 'By the transport desk',
             correction:
-                'We reported that Neckass arrived at 9:40. 10:05. The others had eaten.',
+                'We reported that Neckass arrived at 9:40. He arrived at 9:40, said "the trains," and it was not the trains.',
         },
         {
             headline:
@@ -192,21 +193,21 @@
             deck: 'He asked at noon. Six were proposed. At seven he suggested the first one.',
             byline: 'By the food desk',
             correction:
-                'We said six restaurants were proposed. Seven. He rejected the seventh twice.',
+                'We said six were proposed. The one he suggested at seven was the one he had rejected first, by name, at noon.',
         },
         {
             headline: "Neckass's smoke alarm has been chirping for nine days",
             deck: 'It needs a battery. He has bought batteries. They are the wrong size and are in the car with the package.',
             byline: 'Staff report',
             correction:
-                'We reported the chirping at nine days. Eleven. He has moved rooms.',
+                'We reported the chirping at nine days. He has moved his bed to the other room and describes the problem as solved.',
         },
         {
             headline: 'Neckass has read the first page of nine books this year',
             deck: 'He owns nine books bought this year. Page one of each is creased. No page two is.',
             byline: 'By the literary desk',
             correction:
-                'We said nine books. Eleven. Two are library books and are overdue.',
+                'We said nine books. There is a tenth, about finishing things, with a bookmark on page one.',
         },
         {
             headline:
@@ -222,7 +223,7 @@
             deck: 'They know his order and his name. He calls all three of them "chief."',
             byline: 'By our correspondent, who was present',
             correction:
-                'We said three staff. Four. He calls the fourth "chief" as well.',
+                'We said three staff. One of them is called Chief. He does not know this, and it does not count.',
         },
         {
             headline: 'Neckass has moved one task to tomorrow forty times',
@@ -237,7 +238,7 @@
             deck: 'The instructions account for every screw. The shelf is up. He is not going to think about it.',
             byline: 'Staff report',
             correction:
-                'We reported four screws remaining. Six. The shelf has since come down.',
+                'We reported four screws left over. The shelf came down on Sunday with the books on it. There were six.',
         },
         {
             headline:
@@ -259,7 +260,7 @@
             deck: 'He said it at six, at seven, and at eight. He has his coat on.',
             byline: 'By the wire desk',
             correction:
-                'We reported that Neckass has his coat on. He had it on. He has taken it off.',
+                'We reported that Neckass has his coat on. He has since taken it off, sat down, and accepted a tea.',
         },
         {
             headline:
@@ -267,7 +268,7 @@
             deck: 'He has been told. He has a charger. It is behind the sofa.',
             byline: 'By the technology desk',
             correction:
-                'We reported the phone at one percent. Two. It has since died.',
+                'We reported the phone at one percent. It died during the conversation about the charger.',
         },
         {
             headline: 'Neckass has recommended a restaurant he has not been to',
@@ -282,14 +283,15 @@
             deck: 'Offense was taken on eight occasions. The ninth person had already left.',
             byline: 'Staff report',
             correction:
-                'We reported nine occasions. Ten. The tenth was to the printer.',
+                'We reported nine. The tenth was "no offense, but" to a waiter, followed by an order.',
         },
         {
             headline:
                 'Neckass has been holding a door for someone forty feet away',
             deck: 'They were not walking toward the door. They are now, because he is holding it.',
             byline: 'By our correspondent, who was present',
-            correction: 'We put the distance at forty feet. Sixty. They ran.',
+            correction:
+                'We put the distance at forty feet. It was far enough that they had to jog, and they did, and thanked him.',
         },
         {
             headline:
@@ -305,7 +307,7 @@
             deck: 'He said "that\'s great" in the chair. He has not looked in a mirror since.',
             byline: 'Staff report',
             correction:
-                'We said Neckass has not looked in a mirror. He has, twice, and said nothing.',
+                'We said Neckass has not looked in a mirror. He has, in a shop window, and walked into someone.',
         },
         {
             headline:
@@ -320,7 +322,8 @@
                 'Neckass replied "haha" to a message asking him to call urgently',
             deck: 'He was not reading it. He called four hours later, after a second message.',
             byline: 'Staff report',
-            correction: 'We reported a four-hour delay. Six hours.',
+            correction:
+                'We reported a four-hour delay. He replied "haha" a second time before he called.',
         },
         {
             headline:
@@ -328,7 +331,7 @@
             deck: 'He joined at the entrance. It was a school group. He listened for forty minutes.',
             byline: 'By our correspondent, who was present',
             correction:
-                'We said forty minutes. An hour. He asked a question at the end.',
+                'We said forty minutes. He also asked a question, about the Romans, on a tour about the Victorians.',
         },
     ];
 
@@ -417,7 +420,7 @@
         'Clear night. Neckass has been told to look up and has looked at his phone.',
         'Ice. Neckass was told to take it slowly and has fallen in the driveway.',
         'Breezy. Neckass has lost a receipt he is going to need.',
-        'Unremarkable. Neckass has remarked on it four times.',
+        'Unremarkable. Neckass has said "at least it\'s not raining" four times, to the same person.',
     ];
 
     // The town's ads. Not his — his are the headlines — but he is in most of
@@ -427,11 +430,11 @@
         'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
         'WANTED: neighbor whose alarm does not go off at 5 and get ignored until 6.',
         'LOST: forty minutes, to a documentary about octopuses.',
-        'FREE TO GOOD HOME: houseplant. Current owner talks to it and it would like that to stop.',
-        'NOTICE: the printer is not broken. It is out of paper. Stop calling it names.',
+        'FREE TO GOOD HOME: houseplant. Owner has named it and now cannot let it die, so someone else must.',
+        'NOTICE FROM IT: the printer is out of paper. It has been out of paper every time. Please check before calling.',
         'SERVICES: will agree with whatever you have already decided. Neckass is a regular.',
         'WANTED: someone who can end a conversation with Neckass. Nobody has yet.',
-        'FOR SALE: one Tuesday. Neckass says they are a scam and will not use his.',
+        'FOR SALE: exercise bike. Currently a coat rack. Coats included.',
         'SEEKING: anyone who knows what I agreed to. I read all of it. — N.',
         'LOST: one hour, every morning, between the alarm and getting up.',
         'FOUND: a ten-year plan. One page, three words. Owner may collect.',
@@ -449,14 +452,14 @@
         'WANTED: someone to look behind the sofa. Reward: a charger.',
         'FOR SALE: umbrella, unused, currently in a car.',
         'NOTICE: the coffee shop wishes to inform the gentleman that we are not all called chief.',
-        'LOST: a Tuesday. Reported as a scam by a man who did not know it was Wednesday.',
+        'LOST: Wednesday. Owner spent it believing it was Tuesday.',
         'FOUND: package addressed to the post office, on a passenger seat.',
         'SERVICES: will hold a door for you from a great distance. Please run.',
         'WANTED: a barber prepared to ignore "just a little off."',
         'FOR SALE: fan, boxed, bought in a heatwave and opened in October.',
         'NOTICE: the smoke alarm at number 12 needs a battery. Nine days.',
         'SEEKING: the person who recommended the film. He would like to explain it to you.',
-        'LOST: confidence in a ten-year plan. It was one page.',
+        'LOST: the second earbud. Owner has checked the case four times.',
         'FREE TO GOOD HOME: opinions about octopuses. One documentary, forty minutes.',
         'WANTED: anyone who has seen Neckass leave when he said he was leaving.',
         'FOR SALE: gym bag, unused. Matching membership available.',
@@ -467,7 +470,7 @@
         'FOR SALE: shelf. Some screws remain. Sold as seen, and it is not up any more.',
         'WANTED: the name of the film he explained. It was not the one recommended.',
         'NOTICE: the bin from number 12 is in our garden again.',
-        'FREE: a plan B. Comes without a plan A.',
+        'FREE: half a bag of salad, best before yesterday, described by owner as "probably fine."',
         'LOST: the thread of a conversation, forty minutes in.',
         'FOUND: sunglasses, on a head. Owner has been looking for twenty minutes.',
         'SERVICES: will agree with both of you. Rates negotiable, and I will agree to yours.',
@@ -482,21 +485,21 @@
         'LOST: the receipt you are going to need. It went past the window.',
         'FOUND: a shirt, being chosen, for one hour. Owner said he was on his way.',
         'PERSONAL: to the man who was already on the train — we saw you at the station at 9:40.',
-        'WANTED: the four minutes he sat outside before going back in.',
+        'WANTED: anyone who has seen him use the gym bag. Reward: the gym bag.',
     ];
 
     // The people he has annoyed, writing in.
     data.LETTERS = [
         {
-            body: 'I am the printer. I am out of paper. That is all that is wrong with me.',
-            signature: 'The Printer',
+            body: 'I am in IT. The printer is out of paper. That is all that is wrong with it. That is all that has ever been wrong with it.',
+            signature: 'IT',
         },
         {
             body: 'Your item said Tuesday. It was Wednesday. Neckass told you Tuesday because he did not know what day it was.',
             signature: 'A reader who was present',
         },
         {
-            body: 'Neckass reported my alarm to you. It was his alarm. He set it. It was in his room.',
+            body: 'His alarms go at 5:30, 5:35, 5:40 and 6:30. Mine goes at seven. I have been up at 5:30 for a year.',
             signature: 'A neighbor',
         },
         {
@@ -516,8 +519,8 @@
             signature: 'The groom',
         },
         {
-            body: "Please stop reporting on my company's refrigerator. It logs door openings. It logged 41 in one evening. That is not a story.",
-            signature: "A manufacturer's representative",
+            body: 'He has stood in my kitchen with the fridge open for six minutes, three times this week, and said "there\'s nothing in here" each time. It is my fridge. It is full.',
+            signature: 'A flatmate',
         },
         {
             body: 'In forty years I never managed to define "neckass." Your paper has not either, in seven hundred issues. I find that reassuring.',

@@ -18,13 +18,13 @@ export default [
     },
     {
         headline:
-            "Neckass's fridge has reported him for opening it 41 times and taking nothing",
-        deck: 'The fridge logs door openings. He was looking, not eating. It has told the manufacturer.',
+            'Neckass has opened the fridge eleven times since dinner and taken nothing',
+        deck: 'He is not hungry. He is checking whether anything has changed. It has not.',
     },
     {
         headline:
-            "Neckass's noise complaint against his own alarm clock was upheld on appeal",
-        deck: 'He set it, it rang, and he reported it. He was told he had set it. He appealed. He was told again.',
+            'Neckass has set three alarms, five minutes apart, and slept through all of them',
+        deck: 'They are labelled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
     },
     {
         headline:
