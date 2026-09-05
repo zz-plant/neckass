@@ -1004,6 +1004,7 @@ button.ghost {
 
 .briefs,
 .corrections,
+.notices,
 .classifieds,
 .letters {
     list-style: none;
@@ -1028,11 +1029,13 @@ button.ghost {
     padding-bottom: 0;
 }
 
-.corrections {
+.corrections,
+.notices {
     gap: 10px;
 }
 
-.corrections li {
+.corrections li,
+.notices li {
     font-size: 0.88rem;
     line-height: 1.45;
     color: var(--muted);
@@ -1040,7 +1043,8 @@ button.ghost {
     text-indent: -14px;
 }
 
-.corrections li::before {
+.corrections li::before,
+.notices li::before {
     content: "\2014\00a0";
 }
 
@@ -1048,6 +1052,13 @@ button.ghost {
     font-size: 0.9rem;
     line-height: 1.5;
     color: var(--text);
+}
+
+.weather-numbers {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
 }
 
 .classifieds {

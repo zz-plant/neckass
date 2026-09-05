@@ -243,21 +243,40 @@ test.describe('Neckass smoke flows', () => {
         const issue = await page.evaluate(() => window.Neckass.currentIssue);
 
         await expect(page.locator('#masthead-date')).toHaveText(
-            `${issue.dateLabel} · No. ${issue.number}`,
+            issue.mastheadLine,
         );
+        expect(issue.mastheadLine).toMatch(/Vol\. [IVX]+, No\. \d+$/);
         await expect(page.locator('#lead-headline')).toHaveText(
             issue.lead.headline,
         );
-        await expect(page.locator('#lead-deck')).toHaveText(issue.lead.deck);
+        // Wire form: the deck opens on a dateline.
+        await expect(page.locator('#lead-deck')).toHaveText(
+            `${issue.dateline} — ${issue.lead.deck}`,
+        );
+        expect(issue.dateline).toMatch(/^CORBIN FALLS, [A-Z][a-z.]+ \d{1,2}$/);
         await expect(page.locator('#lead-byline')).toHaveText(
             issue.lead.byline,
         );
         await expect(page.locator('#weather-line')).toHaveText(issue.weather);
+        // Real numbers above the forecaster's note.
+        await expect(page.locator('#weather-numbers')).toHaveText(
+            issue.weatherNumbers,
+        );
+        expect(issue.weatherNumbers).toMatch(
+            /^High -?\d+°, low -?\d+°\. Winds [NESW]{1,2} \d+ mph\. Sunset \d{1,2}:\d{2} p\.m\.$/,
+        );
 
         // Every section is dealt at its documented size. A pool that empties
         // would silently shorten one of these.
         await expect(page.locator('#briefs-list li')).toHaveCount(7);
-        await expect(page.locator('#corrections-list li')).toHaveCount(3);
+        await expect(page.locator('#corrections-list li')).toHaveCount(4);
+        await expect(page.locator('#notices-list li')).toHaveCount(3);
+        // The first correction is the dull one and never mentions him.
+        const firstCorrection = await page
+            .locator('#corrections-list li')
+            .first()
+            .innerText();
+        expect(firstCorrection).not.toMatch(/Neckass/);
         await expect(page.locator('#classifieds-list li')).toHaveCount(5);
         await expect(page.locator('#letters-list li')).toHaveCount(2);
 
@@ -308,7 +327,8 @@ test.describe('Neckass smoke flows', () => {
                 );
                 results.push({
                     value,
-                    first: today.corrections[0],
+                    // [0] is the routine correction; [1] is the chained one.
+                    first: today.corrections[1],
                     expected: previous.lead.correction,
                     previousNumber: previous.number,
                     number: today.number,

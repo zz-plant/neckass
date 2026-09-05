@@ -1,4 +1,4 @@
-# Neckass Headlines
+# The Corbin Falls Gazette
 
 <p align="center">
   <img src="neckass-demo.gif" alt="Neckass headline generator in action" width="600" style="border-radius: 8px;">

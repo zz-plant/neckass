@@ -53,10 +53,10 @@ export function buildFeed(now = new Date()) {
     return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Neckass Digital Gazette</title>
+        <title>The Corbin Falls Gazette</title>
         <link>${SITE}/</link>
         <atom:link href="${SITE}/feed.xml" rel="self" type="application/rss+xml"/>
-        <description>A daily paper about one man who keeps doing this.</description>
+        <description>The Corbin Falls Gazette, published daily.</description>
         <language>en-us</language>
         <lastBuildDate>${now.toUTCString()}</lastBuildDate>
 ${items.join('\n')}

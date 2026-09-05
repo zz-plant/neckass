@@ -27,11 +27,11 @@
     function renderIssue(issue) {
         if (!issue) return;
 
-        textInto('#masthead-date', `${issue.dateLabel} · No. ${issue.number}`);
+        textInto('#masthead-date', issue.mastheadLine);
 
         if (issue.lead) {
             textInto('#lead-headline', issue.lead.headline);
-            textInto('#lead-deck', issue.lead.deck);
+            textInto('#lead-deck', `${issue.dateline} — ${issue.lead.deck}`);
             textInto('#lead-byline', issue.lead.byline);
         }
 
@@ -43,6 +43,11 @@
             li.textContent = correction;
         });
 
+        listInto('#notices-list', issue.notices, (li, notice) => {
+            li.textContent = notice;
+        });
+
+        textInto('#weather-numbers', issue.weatherNumbers);
         textInto('#weather-line', issue.weather);
 
         listInto('#classifieds-list', issue.classifieds, (li, ad) => {

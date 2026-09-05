@@ -41,7 +41,7 @@
             if (!this.elements.nextButton || this.state.isLoading) {
                 return;
             }
-            this.setNextButtonLabel('Next item');
+            this.setNextButtonLabel('Next');
         },
 
         toggleLoader(shouldShow, message = null) {

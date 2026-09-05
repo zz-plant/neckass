@@ -23,7 +23,7 @@
             headline:
                 'Neckass has been "five minutes away" since 2019. He is at home.',
             deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
-            byline: 'By the wire desk',
+            byline: 'From wire reports',
             correction:
                 'An earlier edition said Neckass had been "five minutes away" since 2019. At the time of that report he was in the shower.',
         },
@@ -39,7 +39,7 @@
             headline:
                 'Neckass has agreed to be best man in an email he has not read',
             deck: 'The wedding is Saturday. He has told the groom he is free a different Saturday.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'An earlier edition said Neckass had not read the email. He has now read it. He has not replied.',
         },
@@ -63,7 +63,7 @@
             headline:
                 'Neckass muted the group chat and has checked it at ninety-second intervals since',
             deck: 'Muting stopped the notifications. It did not stop him. He has opened the chat 400 times today.',
-            byline: 'By a reporter who was in the group chat',
+            byline: 'By Marcus Oyelaran',
             correction:
                 'We reported that Neckass opened the chat 400 times. That was by noon.',
         },
@@ -71,7 +71,7 @@
             headline:
                 'Neckass has declared inbox zero. He has a second inbox with 2,000 in it.',
             deck: 'He moved the emails to a folder called "Later." Later has 2,000 emails.',
-            byline: 'By the wire desk',
+            byline: 'From wire reports',
             correction:
                 'An earlier edition said the folder is called "Later." It is called "Later!!"',
         },
@@ -79,7 +79,7 @@
             headline:
                 'Neckass told his doctor he "basically never drinks" using a sommelier\'s vocabulary',
             deck: 'He said "basically never," then described a "grippy, mineral" red he had "on a Tuesday, as one does."',
-            byline: 'By the health desk',
+            byline: 'By Priya Natarajan',
             correction:
                 'We quoted Neckass describing a red as "grippy, mineral." He said "grippy, minerally."',
         },
@@ -95,7 +95,7 @@
             headline:
                 "Neckass's out-of-office reply has been active for eleven weeks. Neckass is at his desk.",
             deck: 'He set it for a long weekend in June. Everyone has stopped emailing him. He has noticed and is pleased.',
-            byline: 'By the wire desk',
+            byline: 'From wire reports',
             correction:
                 'We said the reply had run eleven weeks. It has since been changed to say he is "back in the office," and it is still on.',
         },
@@ -103,7 +103,7 @@
             headline:
                 'Neckass read the terms and conditions in full, understood none of them, and agreed',
             deck: 'It took forty minutes. Asked what he had agreed to, he said "the usual."',
-            byline: 'By the technology desk',
+            byline: 'By Priya Natarajan',
             correction:
                 'We reported that Neckass read the terms in full. He scrolled to the bottom in full. He read the first line.',
         },
@@ -111,7 +111,7 @@
             headline:
                 'Asked what a neckass is, Neckass said "you know, a neckass"',
             deck: 'Asked again, he said it more slowly.',
-            byline: 'By the language desk',
+            byline: 'By Ruth Adeyemi',
             correction:
                 'We reported that Neckass said it more slowly the second time. He said it louder.',
         },
@@ -119,7 +119,7 @@
             headline:
                 'Neckass has told the same story at the same table for the third year running',
             deck: 'It is the story about the airport. Everyone at the table has heard it at this table, from him, twice before.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'We said the story concerns an airport. It concerns a train station. He has told it as an airport for three years.',
         },
@@ -135,7 +135,7 @@
             headline:
                 'Neckass reset a password to the password he had just been told was wrong',
             deck: 'He was locked out at two. He was locked out again at 2:01.',
-            byline: 'By the technology desk',
+            byline: 'By Priya Natarajan',
             correction:
                 'We reported one lockout. He reset the password to the old one, was told he could not reuse it, and added a 1. He was locked out again at 2:04.',
         },
@@ -151,7 +151,7 @@
             headline:
                 'Neckass arrived at the restaurant an hour early and waited outside',
             deck: 'He had the time wrong and did not check. He stood outside for an hour in the rain.',
-            byline: 'By the food desk',
+            byline: 'By Helen Vasko',
             correction:
                 'We reported that Neckass waited outside for an hour. He waited outside the wrong restaurant for an hour.',
         },
@@ -159,7 +159,7 @@
             headline:
                 'Neckass has explained the plot of a film to the person who recommended it',
             deck: 'They recommended it on Tuesday. He explained it to them on Thursday, in full, including the end.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'We said he explained the ending. He explained the ending of a different film.',
         },
@@ -175,7 +175,7 @@
             headline:
                 'Neckass has been carrying a package to the post office in his car since March',
             deck: 'It is on the passenger seat. He has driven past the post office sixty times.',
-            byline: 'By the transport desk',
+            byline: 'By Tom Feld',
             correction:
                 'We said the package has been in the car since March. It has been through two car washes.',
         },
@@ -183,7 +183,7 @@
             headline:
                 'Neckass told the group he was "already on the train." He was in the shower.',
             deck: 'The train left at 8:04. He was in the shower at 8:04. He arrived at 9:40.',
-            byline: 'By the transport desk',
+            byline: 'By Tom Feld',
             correction:
                 'We reported that Neckass arrived at 9:40. He arrived at 9:40, said "the trains," and it was not the trains.',
         },
@@ -191,7 +191,7 @@
             headline:
                 'Neckass asked the group to pick a restaurant and rejected all six',
             deck: 'He asked at noon. Six were proposed. At seven he suggested the first one.',
-            byline: 'By the food desk',
+            byline: 'By Helen Vasko',
             correction:
                 'We said six were proposed. The one he suggested at seven was the one he had rejected first, by name, at noon.',
         },
@@ -205,7 +205,7 @@
         {
             headline: 'Neckass has read the first page of nine books this year',
             deck: 'He owns nine books bought this year. Page one of each is creased. No page two is.',
-            byline: 'By the literary desk',
+            byline: 'By Ruth Adeyemi',
             correction:
                 'We said nine books. There is a tenth, about finishing things, with a bookmark on page one.',
         },
@@ -213,7 +213,7 @@
             headline:
                 'Neckass has told everyone he is cutting back, while ordering',
             deck: 'He announced it at the table. He announced it again while the food arrived.',
-            byline: 'By the health desk',
+            byline: 'By Priya Natarajan',
             correction:
                 'We reported that Neckass announced it twice. Three times. The third was with dessert.',
         },
@@ -221,7 +221,7 @@
             headline:
                 "Neckass has been to the same coffee shop 300 times and does not know the staff's names",
             deck: 'They know his order and his name. He calls all three of them "chief."',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'We said three staff. One of them is called Chief. He does not know this, and it does not count.',
         },
@@ -244,21 +244,21 @@
             headline:
                 'Neckass has agreed with two people who were disagreeing with each other',
             deck: 'He agreed with the first, then the second, in the same conversation. Both noticed.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction: 'We said both parties noticed. All four did.',
         },
         {
             headline:
                 'Neckass photographed the menu to decide later and ordered without looking at it',
             deck: 'The photograph was taken on Monday. He ordered on Friday, from memory, incorrectly.',
-            byline: 'By the food desk',
+            byline: 'By Helen Vasko',
             correction:
                 'We said he photographed the menu. He photographed the specials board of a different restaurant.',
         },
         {
             headline: 'Neckass has been "just about to leave" for two hours',
             deck: 'He said it at six, at seven, and at eight. He has his coat on.',
-            byline: 'By the wire desk',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass has his coat on. He has since taken it off, sat down, and accepted a tea.',
         },
@@ -266,14 +266,14 @@
             headline:
                 "Neckass's phone has been at one percent since this morning",
             deck: 'He has been told. He has a charger. It is behind the sofa.',
-            byline: 'By the technology desk',
+            byline: 'By Priya Natarajan',
             correction:
                 'We reported the phone at one percent. It died during the conversation about the charger.',
         },
         {
             headline: 'Neckass has recommended a restaurant he has not been to',
             deck: 'He recommended it warmly and at length. He has driven past it.',
-            byline: 'By the food desk',
+            byline: 'By Helen Vasko',
             correction:
                 'We said he had driven past the restaurant. He had driven past a different restaurant with a similar sign.',
         },
@@ -289,7 +289,7 @@
             headline:
                 'Neckass has been holding a door for someone forty feet away',
             deck: 'They were not walking toward the door. They are now, because he is holding it.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'We put the distance at forty feet. It was far enough that they had to jog, and they did, and thanked him.',
         },
@@ -313,7 +313,7 @@
             headline:
                 'Neckass volunteered to help and has been standing nearby for an hour',
             deck: 'He offered at two. He has held one thing, briefly, and put it down.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'We reported that Neckass held one thing. He held it for a moment and handed it back.',
         },
@@ -329,7 +329,7 @@
             headline:
                 'Neckass has been quietly following the wrong group around a museum',
             deck: 'He joined at the entrance. It was a school group. He listened for forty minutes.',
-            byline: 'By our correspondent, who was present',
+            byline: 'By Dana Whitcomb',
             correction:
                 'We said forty minutes. He also asked a question, about the Romans, on a tour about the Victorians.',
         },
@@ -638,7 +638,57 @@
 
     // The colophon. Static, because the staff situation is stable.
     data.COLOPHON = {
-        staff: 'Editor-in-chief: vacant. Wire desk: unattended. Corrections: ongoing.',
-        note: 'The Gazette does not know what a neckass is and reports on one every day.',
+        staff: 'Editor: Ruth Adeyemi. Managing editor: Tom Feld. Staff writers: Dana Whitcomb, Priya Natarajan, Marcus Oyelaran, Helen Vasko.',
+        note: 'The Gazette is published daily in Corbin Falls. Letters may be edited for length and clarity. Corrections appear on this page.',
     };
+
+    // The furniture of a real paper, and none of it is about him. A reader
+    // has to get past the council meeting and the leaf collection before the
+    // page gives itself away. Dealt three per issue.
+    data.NOTICES = [
+        'Town council meets Tuesday at 7 p.m. in the council chamber. The agenda is posted at the town office.',
+        'Leaf collection begins the first week of October. Bags only; no loose piles.',
+        'The Eastside library branch is closed Monday for staff training.',
+        'Recycling collection moves to Thursday this week because of the holiday.',
+        'The Mill Street bridge is reduced to one lane through the end of the month.',
+        'Flu clinics run Saturdays in September at the community center, 9 a.m. to noon. No appointment needed.',
+        'Water service on Orchard Lane will be interrupted Wednesday from 9 a.m. to approximately 2 p.m.',
+        'The farmers market continues Saturdays through October 25, 8 a.m. to 1 p.m., in the station lot.',
+        'The planning board hearing on the Orchard Lane application is Thursday at 6:30 p.m.',
+        'Yard waste drop-off at the depot is free for residents on the second Saturday of the month.',
+        "The high school's fall concert is Friday at 7 p.m. in the auditorium. Admission by donation.",
+        'Overnight parking restrictions resume November 1.',
+        'The community center pool closes for annual maintenance from the 14th to the 21st.',
+        "Absentee ballot applications for the November election are available at the town clerk's office.",
+        "The historical society's walking tour departs from the bandstand Sunday at 2 p.m., weather permitting.",
+        'Route 9 resurfacing continues. Expect delays between the river and the interchange during daytime hours.',
+        'The animal shelter is waiving adoption fees for adult cats through the end of the month.',
+        'Bulk item pickup requires a sticker, available at the town office for $10.',
+        "The senior center's Tuesday lunch is now $6. Reservations by Monday noon.",
+        'Storm drain cleaning is under way on the north side. Please keep vehicles clear of marked drains.',
+        "The library's used book sale runs Friday and Saturday in the lower level.",
+        'Volunteers are needed for the river cleanup on the 20th. Gloves and bags provided.',
+        'The tax office reminds residents that the second installment is due October 1.',
+        'Little League registration for the spring season opens online Monday.',
+    ];
+
+    // One of these runs first in every corrections box. It is the dull one,
+    // and the dull one is what makes the box look real. Nothing in here
+    // mentions him.
+    data.ROUTINE_CORRECTIONS = [
+        "Because of an editing error, an article in Thursday's edition misstated the name of the library branch. It is the Eastside branch, not the East End branch.",
+        "A caption in Monday's edition misidentified the street shown. It is Mill Street, not Mill Road.",
+        'An article on the school board meeting gave an incorrect vote count. The measure passed 5-2, not 4-3.',
+        'A listing in the community calendar gave the wrong start time for the farmers market. It opens at 8 a.m.',
+        "An obituary in Tuesday's edition misspelled the surname of a survivor. She is Margaret Kowalczyk.",
+        "Because of a production error, a photograph in Wednesday's edition ran without a credit. The photograph was by Helen Vasko.",
+        'An article about the water main repair misstated the number of households affected. It was 140, not 1,400.',
+        "A headline in Friday's edition referred to the county fair. It is the regional fair.",
+        "The recipe in Sunday's edition omitted the oven temperature. It is 350 degrees.",
+        "An article on the zoning appeal misstated the applicant's address. It is 41 Orchard Lane, not 14.",
+        "A story in Monday's edition gave an outdated telephone number for the recycling depot. The correct number is on the town website.",
+        'Because of a reporting error, an article on the road closure said it would last two weeks. The contractor says three.',
+        "A chart accompanying Tuesday's article on property assessments was mislabeled. The vertical axis shows dollars, not thousands of dollars.",
+        "A review in Saturday's edition gave the wrong closing time for the café. It closes at 3 p.m. on Sundays.",
+    ];
 })();

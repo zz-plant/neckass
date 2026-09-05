@@ -62,6 +62,66 @@
         return date;
     }
 
+    // Volumes turn over on the anniversary of the first edition.
+    function volumeLabel(number) {
+        const volume = Math.floor((number - 1) / 365) + 1;
+        const numerals = [
+            'I',
+            'II',
+            'III',
+            'IV',
+            'V',
+            'VI',
+            'VII',
+            'VIII',
+            'IX',
+            'X',
+        ];
+        return numerals[volume - 1] || String(volume);
+    }
+
+    // Wire-service dateline: "CORBIN FALLS, Sept. 5". AP abbreviates the
+    // long months and spells out March through July.
+    const AP_MONTHS = [
+        'Jan.',
+        'Feb.',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'Aug.',
+        'Sept.',
+        'Oct.',
+        'Nov.',
+        'Dec.',
+    ];
+    function datelineFor(date) {
+        return `CORBIN FALLS, ${AP_MONTHS[date.getMonth()]} ${date.getDate()}`;
+    }
+
+    // A plausible forecast for a northern temperate town, seeded like the
+    // rest of the issue. Temperatures follow a seasonal curve with a little
+    // day-to-day noise, so consecutive days are similar and July is warm.
+    function weatherFor(date, rng) {
+        const start = Date.UTC(date.getFullYear(), 0, 0);
+        const dayOfYear = Math.floor((toUtcDay(date) - start) / DAY_MS);
+        const season = Math.sin(((dayOfYear - 105) / 365) * Math.PI * 2);
+        const high = Math.round(58 + 26 * season + (rng() - 0.5) * 12);
+        const low = Math.round(high - 13 - rng() * 7);
+        const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+        const wind = dirs[Math.floor(rng() * dirs.length)];
+        const speed = 3 + Math.floor(rng() * 12);
+        // Clock time including daylight saving, so June sets at 8:30 and
+        // December at 4:30, which is what a northern town actually sees.
+        const sunsetHour =
+            18.5 + 2 * Math.sin(((dayOfYear - 80) / 365) * Math.PI * 2);
+        const h = Math.floor(sunsetHour);
+        const m = String(Math.floor((sunsetHour - h) * 60)).padStart(2, '0');
+        const sunset = `${h > 12 ? h - 12 : h}:${m} p.m.`;
+        return `High ${high}°, low ${low}°. Winds ${wind} ${speed} mph. Sunset ${sunset}`;
+    }
+
     function toIssueParam(date) {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
@@ -100,17 +160,31 @@
             (item) => !lead || item !== lead.headline,
         );
 
+        const dateLabel = dateFormatter.format(date);
+        const routineCorrection = deal(
+            data.ROUTINE_CORRECTIONS || [],
+            1,
+            rng,
+        )[0];
+
         return {
             number,
             date,
-            dateLabel: dateFormatter.format(date),
+            dateLabel,
+            volume: volumeLabel(number),
+            mastheadLine: `${dateLabel} · Vol. ${volumeLabel(number)}, No. ${number}`,
+            dateline: datelineFor(date),
             issueParam: toIssueParam(date),
             lead,
             briefs: deal(briefPool, 7, rng),
+            // The dull one first, then yesterday's retraction, then the rest.
             corrections: [
+                routineCorrection,
                 chainedCorrection,
                 ...deal(data.CORRECTIONS || [], chainedCorrection ? 2 : 3, rng),
             ].filter(Boolean),
+            notices: deal(data.NOTICES || [], 3, rng),
+            weatherNumbers: weatherFor(date, rng),
             weather: deal(data.WEATHER || [], 1, rng)[0] || '',
             classifieds: deal(data.CLASSIFIEDS || [], 5, rng),
             letters: deal(data.LETTERS || [], 2, rng),

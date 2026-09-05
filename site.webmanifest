@@ -1,7 +1,7 @@
 {
-  "name": "Neckass Digital Gazette",
-  "short_name": "Neckass",
-  "description": "A daily paper about one man who keeps doing this.",
+  "name": "The Corbin Falls Gazette",
+  "short_name": "The Gazette",
+  "description": "The Corbin Falls Gazette, published daily.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#e6e2d8",

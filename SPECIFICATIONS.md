@@ -1,4 +1,4 @@
-# Neckass Digital Gazette — Feature Specifications
+# The Corbin Falls Gazette — Feature Specifications
 
 This document describes the current in-repo feature set, reconciled against the
 source. Line-number citations were dropped when the files they pointed into
@@ -42,10 +42,13 @@ following a line number that has since moved.
 - The topbar contains the brand block (“Neckass” and “Digital Gazette”). The row is separated from the hero by a bottom border and margin spacing.
 
 ## Masthead line
-- `#masthead-date` carries the issue's date and number. It ships with standing
-  copy — "Published daily · Department of neckassery" — so the page reads
-  correctly before, and without, JavaScript, and is replaced on load with the
-  active issue's localized date and `No. N`.
+- The nameplate reads **The Gazette** over the kicker **Corbin Falls**. The
+  paper is named for its town, not its subject; "Neckass" appears in the copy
+  as a surname would, which is the point.
+- `#masthead-date` ships with standing copy — "Published daily · Corbin Falls"
+  — so the page reads before, and without, JavaScript, and is replaced on load
+  with `<date> · Vol. <roman>, No. <n>`. Volumes turn over on the anniversary
+  of the first edition.
 - `#back-issue-notice` is `hidden` on today's issue. When `?issue=YYYY-MM-DD`
   resolves to a past date it is revealed, names the issue being read, and
   offers a link back to today.
@@ -109,20 +112,29 @@ The rail acts on the current wire item, not on the issue.
   confirmation for copy, share and export.
 
 ## The issue (front page)
-- **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline`.
+- **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline`. The deck opens
+  on a wire dateline, `CORBIN FALLS, Sept. 5 —`, in AP month style. Bylines
+  are staff names from the colophon, or "Staff report" / "From wire reports".
 - **Briefs** — `#briefs-list`, seven items dealt from `data.HEADLINES`, minus
   anything already running as the lead.
-- **Corrections** — `#corrections-list`. The first entry retracts a detail of
-  the *previous* issue's actual lead, taken from that lead's `correction`
-  field; the rest are dealt from `data.CORRECTIONS`. Issue 1 has nothing to
-  correct and runs three general corrections.
-- **Weather** — `#weather-line`, one entry.
+- **Notices** — `#notices-list`, three entries from `data.NOTICES`: council
+  meetings, leaf collection, lane closures. None mention him. They are the
+  furniture that makes the column look like a paper's.
+- **Corrections** — `#corrections-list`, four entries. The first is a routine
+  correction from `data.ROUTINE_CORRECTIONS` (a misidentified street, a wrong
+  vote count) and never mentions him. The second retracts a detail of the
+  *previous* issue's actual lead, from that lead's `correction` field. The
+  rest are dealt from `data.CORRECTIONS`. Issue 1 has no previous lead and
+  runs three general corrections after the routine one.
+- **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
+  forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
+  forecaster's note about him follows in `#weather-line`.
 - **Classifieds** — `#classifieds-list`, five entries.
 - **Letters** — `#letters-list`, two entries, each a body and a signature.
 - **Colophon** — the staff line and the paper's note.
 - Pool depth is load-bearing: each pool must stay several times its deal size
   or a reader returning on consecutive days sees the same paper. Current
-  shortest cycle is twelve days (classifieds).
+  shortest cycle is eight days (notices, 24 dealt 3).
 
 ## Back issues (`archive.html`)
 - Lists recent issues newest first, each linking to `/?issue=YYYY-MM-DD`.

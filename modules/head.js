@@ -58,10 +58,10 @@
         // the homepage shares the paper and not whichever item was showing.
         const issue = Neckass.currentIssue;
         const baseTitle = issue
-            ? `Neckass | Digital Gazette · No. ${issue.number}`
-            : 'Neckass | Digital Gazette';
+            ? `The Corbin Falls Gazette · No. ${issue.number}`
+            : 'The Corbin Falls Gazette';
         const baseDescription = issue
-            ? `The Digital Gazette, No. ${issue.number}, ${issue.dateLabel}. Reporting on the activities of a Neckass.`
+            ? `The Corbin Falls Gazette, No. ${issue.number}, ${issue.dateLabel}.`
             : 'A daily paper reporting on the activities of a Neckass.';
         const hasHeadline =
             claimsIdentity &&
@@ -69,7 +69,7 @@
             headline.trim().length > 0 &&
             isValidHeadlineIndex(index, headlinesLength);
         const title = hasHeadline
-            ? `${headline} | Neckass Digital Gazette`
+            ? `${headline} | The Corbin Falls Gazette`
             : baseTitle;
         const description = hasHeadline ? headline : baseDescription;
         const canonicalUrl = getCanonicalUrl(index);

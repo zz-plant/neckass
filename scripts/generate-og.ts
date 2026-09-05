@@ -42,34 +42,34 @@ export type OgCard = {
 export const OG_CARDS: OgCard[] = [
     {
         file: 'og-image.png',
-        kicker: 'BREAKING',
+        kicker: 'CORBIN FALLS',
         headline: [
             'Neckass has been "five minutes',
-            'away" since 2019, sources confirm',
+            'away" since 2019. He is at home.',
         ],
-        deck: 'Sources familiar with the matter declined to elaborate.',
-        footer: 'NECKASS.COM · DIGITAL GAZETTE',
+        deck: 'He has said "five minutes" to eleven people this year.',
+        footer: 'THE CORBIN FALLS GAZETTE · NECKASS.COM',
     },
     {
         file: 'og-about.png',
-        kicker: 'ENTRY',
+        kicker: 'REFERENCE',
         headline: ['Neckass (slang)'],
         deck: 'The neck almost certainly does not refer to anything.',
-        footer: 'NECKASS.COM · ABOUT',
+        footer: 'THE CORBIN FALLS GAZETTE · REFERENCE',
     },
     {
         file: 'og-archive.png',
         kicker: 'BACK ISSUES',
         headline: ['Every edition since', '29 September 2024'],
         deck: 'None withdrawn. Several corrected. One corrected twice.',
-        footer: 'NECKASS.COM · BACK ISSUES',
+        footer: 'THE CORBIN FALLS GAZETTE · BACK ISSUES',
     },
     {
         file: 'og-prompts.png',
-        kicker: 'FILING STANDARDS',
+        kicker: 'STANDARDS',
         headline: ['Routine, administrative,', 'and unprecedented neckassery'],
         deck: 'An adjective is not used where a document will do.',
-        footer: 'NECKASS.COM · FILING STANDARDS',
+        footer: 'THE CORBIN FALLS GAZETTE · STANDARDS',
     },
 ];
 
@@ -99,8 +99,8 @@ export function buildCard(card: OgCard): string {
   <rect width="${OG_WIDTH}" height="${OG_HEIGHT}" fill="#18130f"/>
   <rect x="48" y="40" width="${OG_WIDTH - 96}" height="${OG_HEIGHT - 80}" rx="10" fill="#f1ede4"/>
 
-  <text x="${OG_WIDTH / 2}" y="132" text-anchor="middle" font-family="${SERIF}" font-size="66" font-weight="700" fill="#241c14">Neckass</text>
-  <text x="${OG_WIDTH / 2}" y="168" text-anchor="middle" font-family="${SANS}" font-size="17" font-weight="600" fill="#5a5044" letter-spacing="10">DIGITAL GAZETTE</text>
+  <text x="${OG_WIDTH / 2}" y="132" text-anchor="middle" font-family="${SERIF}" font-size="66" font-weight="700" fill="#241c14">The Gazette</text>
+  <text x="${OG_WIDTH / 2}" y="168" text-anchor="middle" font-family="${SANS}" font-size="17" font-weight="600" fill="#5a5044" letter-spacing="10">CORBIN FALLS</text>
 
   <line x1="104" y1="200" x2="${OG_WIDTH - 104}" y2="200" stroke="#241c14" stroke-width="4"/>
   <line x1="104" y1="210" x2="${OG_WIDTH - 104}" y2="210" stroke="#241c14" stroke-width="1.4"/>

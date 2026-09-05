@@ -59,7 +59,7 @@ export async function onRequest(context) {
     const lead = selectLead(number);
     if (!lead) return response;
 
-    const title = `${lead.headline} | Neckass Digital Gazette, No. ${number}`;
+    const title = `${lead.headline} | The Corbin Falls Gazette, No. ${number}`;
     return new HTMLRewriter()
         .on('title', new TitleRewriter(title))
         .on('meta', new MetaRewriter(title, lead.deck))
