@@ -7,9 +7,9 @@
              .cut-weather { --sun: 0; --cloud: 1; --rain: 1; }
 
            1 shows an element, 0 hides it. The fallbacks are sun behind cloud. */
-        svg { --ink-default: #241c14; --paper-default: #fbfaf6; }
+        svg { --ink-default: #1c1a19; --paper-default: #efeae0; }
         @media (prefers-color-scheme: dark) {
-            svg { --ink-default: #f2e2d0; --paper-default: #221b15; }
+            svg { --ink-default: #ece7dc; --paper-default: #1e2523; }
         }
         .stroke {
             fill: none;

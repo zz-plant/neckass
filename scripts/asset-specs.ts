@@ -32,7 +32,7 @@ export const SCENES: Record<string, SceneSpec> = {
     badge: {
         width: 240,
         height: 96,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.88,
         center: true,
         minBytes: 3_000,
@@ -40,7 +40,7 @@ export const SCENES: Record<string, SceneSpec> = {
     blur: {
         width: 50,
         height: 28,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.9,
         center: true,
         minBytes: 300,
@@ -48,7 +48,7 @@ export const SCENES: Record<string, SceneSpec> = {
     card: {
         width: 400,
         height: 300,
-        bg: '#221b15',
+        bg: '#1e2523',
         scale: 0.84,
         center: true,
         minBytes: 8_000,
@@ -56,7 +56,7 @@ export const SCENES: Record<string, SceneSpec> = {
     circle: {
         width: 540,
         height: 540,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.84,
         center: true,
         minBytes: 10_000,
@@ -64,7 +64,7 @@ export const SCENES: Record<string, SceneSpec> = {
     dark: {
         width: 960,
         height: 540,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.84,
         center: true,
         minBytes: 18_000,
@@ -72,7 +72,7 @@ export const SCENES: Record<string, SceneSpec> = {
     demo: {
         width: 720,
         height: 405,
-        bg: '#221b15',
+        bg: '#1e2523',
         scale: 0.86,
         center: true,
         minBytes: 14_000,
@@ -80,7 +80,7 @@ export const SCENES: Record<string, SceneSpec> = {
     email: {
         width: 600,
         height: 200,
-        bg: '#221b15',
+        bg: '#1e2523',
         scale: 0.88,
         center: true,
         minBytes: 9_000,
@@ -88,7 +88,7 @@ export const SCENES: Record<string, SceneSpec> = {
     favicon: {
         width: 64,
         height: 64,
-        bg: '#b32b1c',
+        bg: '#175049',
         scale: 0.95,
         center: true,
         minBytes: 600,
@@ -96,7 +96,7 @@ export const SCENES: Record<string, SceneSpec> = {
     github: {
         width: 1280,
         height: 640,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.82,
         center: true,
         minBytes: 22_000,
@@ -104,7 +104,7 @@ export const SCENES: Record<string, SceneSpec> = {
     header: {
         width: 1920,
         height: 400,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.8,
         center: true,
         minBytes: 18_000,
@@ -112,7 +112,7 @@ export const SCENES: Record<string, SceneSpec> = {
     mastodon: {
         width: 1200,
         height: 600,
-        bg: '#221b15',
+        bg: '#1e2523',
         scale: 0.84,
         center: true,
         minBytes: 22_000,
@@ -120,7 +120,7 @@ export const SCENES: Record<string, SceneSpec> = {
     og: {
         width: 1200,
         height: 675,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.84,
         center: true,
         minBytes: 22_000,
@@ -128,7 +128,7 @@ export const SCENES: Record<string, SceneSpec> = {
     square: {
         width: 1080,
         height: 1080,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.88,
         center: true,
         minBytes: 22_000,
@@ -136,7 +136,7 @@ export const SCENES: Record<string, SceneSpec> = {
     touch: {
         width: 360,
         height: 360,
-        bg: '#221b15',
+        bg: '#1e2523',
         scale: 0.92,
         center: true,
         minBytes: 7_000,
@@ -144,7 +144,7 @@ export const SCENES: Record<string, SceneSpec> = {
     unfurl: {
         width: 1200,
         height: 628,
-        bg: '#18130f',
+        bg: '#141a18',
         scale: 0.84,
         center: true,
         minBytes: 22_000,

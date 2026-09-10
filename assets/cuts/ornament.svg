@@ -8,8 +8,8 @@
 
            Set --flourish to 0 and scale it to about 10px to use the centre
            lozenge as an end mark at the foot of an item. */
-        svg { --ink-default: #241c14; }
-        @media (prefers-color-scheme: dark) { svg { --ink-default: #f2e2d0; } }
+        svg { --ink-default: #1c1a19; }
+        @media (prefers-color-scheme: dark) { svg { --ink-default: #ece7dc; } }
         .ink { fill: var(--ink, var(--ink-default)); }
         .line {
             fill: none;

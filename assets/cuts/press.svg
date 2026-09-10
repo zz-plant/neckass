@@ -8,16 +8,16 @@
 
            --lever at 0 is the bar at rest, straight out to the right. */
         svg {
-            --ink-default: #241c14;
-            --paper-default: #fbfaf6;
+            --ink-default: #1c1a19;
+            --paper-default: #efeae0;
             /* The box is cut to the pose below. Inlined and re-posed, a limb
                thrown wide draws outside it rather than being clipped. */
             overflow: visible;
         }
         @media (prefers-color-scheme: dark) {
             svg {
-                --ink-default: #f2e2d0;
-                --paper-default: #221b15;
+                --ink-default: #ece7dc;
+                --paper-default: #1e2523;
             }
         }
         .part {

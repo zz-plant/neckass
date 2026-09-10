@@ -11,6 +11,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A favicon set (SVG, ICO, apple-touch, 192/512 PNGs) and a web manifest, linked from every page. The site previously had no icon at all.
 
 ### Changed
+- Repainted the palette as newsprint, ink and one second colour. The stock is groundwood grey-tan rather than cream, the ink is a warm near-black, and the display type takes that same ink instead of a colour of its own. The second colour is a ledger teal on the cutoff rule, links and the wire button, over a ground of that teal taken down to near-black. Every value previously sat in one hue family, which read as a sepia filter over the page.
+- Buttons now draw their border, hover wash and shadow from `--control-*` tokens. They were fixed browns, so in dark mode every secondary button rendered with no visible edge.
+- The back-issues list is set in ink with a quiet underline. Every line there is a link, so setting each one in the accent distinguished nothing and turned the page into a column of colour.
+- Regenerated the favicon set, the four social cards, the fifteen `docs/assets` scenes and the cut fallbacks, and updated `theme-color` and the manifest colours, so nothing still carries the old palette. `favicon.ico` now holds a 32px frame alongside the 16px one, which the `<link>` had always claimed.
 - Deepened every content pool so the paper stops repeating inside a week: leads 12 → 40, classifieds 16 → 60, corrections 14 → 39 standalone, letters 10 → 36, weather 10 → 40, briefs 81 → 121. Shortest cycle is now 12 days, was 3.
 - The first correction in each issue now retracts a detail of the previous issue's actual lead, by name, instead of being drawn at random.
 
