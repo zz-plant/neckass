@@ -224,36 +224,14 @@ a:not(.share-link):not(.top-nav a):hover {
 }
 
 /* ---- The masthead ---------------------------------------------------
-   A paper announces itself before it says anything: nameplate, then the
-   folio line — what day this is on the left, where else to go on the
-   right — then the cutoff rule the news starts under. */
+   One folio line: who is printing this, what day it is, where else to go,
+   over the cutoff rule the news starts under. The paper's name is set at
+   the size of a credit rather than a banner — the reader arrived at
+   neckass.com and does not need telling twice whose page this is. The
+   lead is the first thing here set large. */
 
 .masthead {
-    margin-bottom: 26px;
-}
-
-.masthead__plate {
-    text-align: center;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border-strong);
-}
-
-.masthead__kicker {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.4em;
-    text-indent: 0.4em;
-    color: var(--muted);
-}
-
-.masthead__name {
-    font-family: var(--headline-font);
-    text-wrap: balance;
-    font-weight: 700;
-    font-size: clamp(2.6rem, 8vw, 4.2rem);
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    color: var(--ink-display);
+    margin-bottom: 22px;
 }
 
 .masthead__folio {
@@ -261,13 +239,34 @@ a:not(.share-link):not(.top-nav a):hover {
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: 6px 20px;
-    padding: 9px 0 10px;
+    gap: 4px 24px;
+    padding-bottom: 9px;
+    /* The cutoff rule is the accent's, per e8fc419: the teal carries the
+       rule, the links and the button that advances the wire. */
     border-bottom: 3px solid var(--accent);
 }
 
+.masthead__plate {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+}
+
+.masthead__kicker {
+    color: var(--muted);
+}
+
+.masthead__kicker::after {
+    content: " · ";
+}
+
+.masthead__name {
+    font-weight: 700;
+    color: var(--text);
+}
+
 .masthead__line {
-    font-size: 0.76rem;
+    font-size: 0.74rem;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--muted);
@@ -717,12 +716,6 @@ button.ghost {
     }
 }
 
-@media (max-width: 899px) and (min-width: 541px) {
-    .hero {
-        margin-bottom: 18px;
-    }
-}
-
 /* ---- The front page -------------------------------------------------
    A newspaper reads by accumulation: the lead carries the day, the briefs
    column supports it, and the short forms at the foot do the rest. Rules
@@ -783,7 +776,7 @@ button.ghost {
 
 .lead__headline {
     font-family: var(--headline-font);
-    font-size: clamp(1.9rem, 4.4vw, 3rem);
+    font-size: clamp(2rem, 4.9vw, 3.3rem);
     line-height: 1.11;
     letter-spacing: -0.015em;
     color: var(--ink-display);
@@ -1294,36 +1287,6 @@ button.ghost {
 
     .page-shell {
         padding: 18px 14px 24px;
-    }
-
-    .page-topbar {
-        margin-bottom: 14px;
-        padding-bottom: 14px;
-        align-items: flex-start;
-    }
-
-    .brand-title {
-        font-size: 1.2rem;
-    }
-
-    .hero {
-        padding-bottom: 16px;
-        margin-bottom: 16px;
-    }
-
-    .hero__content {
-        gap: 9px;
-    }
-
-    .hero h1 {
-        font-size: clamp(1.8rem, 8vw, 2.2rem);
-        line-height: 1.08;
-    }
-
-    .lede {
-        max-width: 100%;
-        font-size: 0.95rem;
-        line-height: 1.5;
     }
 
     .headline-section {

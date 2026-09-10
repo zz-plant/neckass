@@ -40,15 +40,17 @@ following a line number that has since moved.
 - Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. Every page is a single column; the wire splits into the item and the clipping sheet at ≥760px. Body padding is 28/24/48 px (responsive adjustments on small screens).
 
 ## Masthead
-Every page opens the same way: nameplate, folio line, cutoff rule.
+Every page opens on one folio line, closed by the cutoff rule.
 
-- The nameplate is centred — `.masthead__name` **The Gazette** over the kicker
-  `.masthead__kicker` **Corbin Falls**. The paper is named for its town, not
-  its subject; "Neckass" appears in the copy as a surname would, which is the
-  point.
-- The folio line under it carries the date on the left and the site links on
-  the right, both in the same small caps, and closes with a 3px rule. That
-  rule is the paper's cutoff: everything below it is the news.
+- The line carries three things: the paper — `.masthead__kicker` **Corbin
+  Falls** and `.masthead__name` **The Gazette**, both at 0.74rem small caps —
+  then the date, then the site links. The paper is named for its town, not its
+  subject; "Neckass" appears in the copy as a surname would, which is the
+  point. It is set at the size of a credit rather than a banner: the reader
+  arrived at neckass.com and does not need telling twice whose page this is,
+  and the lead should be the first thing on the page set large.
+- The line closes with a 3px rule in the accent. That rule is the paper's
+  cutoff: everything below it is the news.
 - `#masthead-date` ships with standing copy — "Published daily · Corbin Falls"
   — so the page reads before, and without, JavaScript, and is replaced on load
   with `<date> · Vol. <roman>, No. <n>`. Volumes turn over on the anniversary
@@ -337,8 +339,8 @@ Item actions are always an even grid — two columns, or four above 1100px.
 Auto-fitting them left a 3 + 1 row at most widths, which reads as a mistake.
 
 ## Wrapping
-- Display type balances (`text-wrap: balance`): the nameplate, the lead
-  headline, the wire item, page titles, the clipping headline.
+- Display type balances (`text-wrap: balance`): the lead headline, the wire
+  item, page titles, the clipping headline.
 - Running copy avoids the one-word last line (`text-wrap: pretty`): briefs,
   notices, corrections, classifieds, letters, decks, the colophon, cutlines,
   the weather, and the long-form pages.
