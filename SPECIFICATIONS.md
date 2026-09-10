@@ -34,6 +34,7 @@ following a line number that has since moved.
   (`fonts/fraunces-latin-var.woff2`, `font-display: swap`) and used through
   `--headline-font`; body copy uses the system stack in `--font`.
 - CSS root variables define the newsprint palette, radius and shadow; `body` uses the `--bg`/`--text` aliases over `--surface-1`/`--text-primary`. A `prefers-color-scheme: dark` block redefines the tokens.
+- The palette is newsprint, ink and one second colour: groundwood stock at `--surface-2` on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it. `--accent` is a ledger teal, carried by the cutoff rule under the nameplate and under a page title, by links, and by the button that advances the wire. Controls draw their edge and hover wash from `--control-*` rather than fixed browns, which had left every secondary button borderless in dark mode.
 
 ### Layout grid & spacing
 - Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. Every page is a single column; the wire splits into the item and the clipping sheet at ≥760px. Body padding is 28/24/48 px (responsive adjustments on small screens).
@@ -100,7 +101,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 ### Headline behavior
 - Headlines are randomly selected from the curated `headlines` array; additional generated headlines can be appended when the tiny LLM helper succeeds. Next/Shuffle asks the on-device generator first when it is available, and falls back to a curated headline otherwise. The next headline differs from the current headline whenever possible.
 - Previous navigates back through the stored navigation stack and removes the last index if you go backward. It is disabled whenever the stack has fewer than two items or while loading.
-- The headline takes its colour from the `--ink-display` token, so it is one consistent ink in each theme (12.3:1 on light, 13.1:1 on dark). It was previously assigned a random palette colour per shuffle and contrast-checked against a hardcoded background constant, which never evaluated dark mode. The update includes a short animation delay (60ms) to show the loader before revealing text.
+- The headline takes its colour from the `--ink-display` token, so it is one consistent ink in each theme (14.5:1 on light, 12.7:1 on dark). It was previously assigned a random palette colour per shuffle and contrast-checked against a hardcoded background constant, which never evaluated dark mode. The update includes a short animation delay (60ms) to show the loader before revealing text.
 
 ### Accessibility
 - `h3#headline` is programmatically focusable (`tabindex="-1"`) so it can be moved to after an update without entering the tab order.
