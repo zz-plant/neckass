@@ -71,14 +71,15 @@
     <a class="skip-link" href="#lead-headline">Skip to the lead item</a>
     <h1 class="sr-only">The Corbin Falls Gazette</h1>
     <div class="page-shell">
-        <!-- The nameplate, then the folio line the way a paper carries it:
-             what day this is on the left, where else to go on the right. -->
+        <!-- The folio line, the way a paper carries it: who is printing this
+             on the left, what day it is in the middle, where else to go on the
+             right. The lead is the first thing on the page that is set large. -->
         <header class="masthead">
-            <div class="masthead__plate">
-                <p class="masthead__kicker">Corbin Falls</p>
-                <p class="masthead__name">The Gazette</p>
-            </div>
             <div class="masthead__folio">
+                <p class="masthead__plate">
+                    <span class="masthead__kicker">Corbin Falls</span>
+                    <span class="masthead__name">The Gazette</span>
+                </p>
                 <!-- Replaced with the active issue's date and number on load. The
                      standing value is the paper's first edition, so the page reads
                      correctly with no JavaScript. -->
