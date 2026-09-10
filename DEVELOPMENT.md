@@ -100,7 +100,7 @@ Use these boundaries to prevent `app.js` / `ui.js` from turning into generic cat
 ### Data and assets
 - `data/headlines.js` — curated headline corpus.
 - `data/llm-beats.js` — generation phrase components.
-- `icons/` — SVG assets used by UI and share controls.
+- `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and layers are CSS custom properties with fallbacks, so the files work as plain `<img>` and pose when inlined. `assets/cuts/README.md` lists them.
 - `vendor/html-to-image.js` — export dependency.
 
 

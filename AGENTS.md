@@ -16,7 +16,7 @@ Maintain a static, browser-first headline generator with strong UX/accessibility
 - `modules/{agent-api,status}.js` — `HeadlineApp` method groups mixed onto the prototype by `app.js`; they must load before it.
 - `script.js` — DOMContentLoaded bootstrap that wires modules into a running app.
 - `data/` — curated headline and generator phrase data.
-- `icons/` — SVG assets.
+- `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`.
 - `vendor/html-to-image.js` — export helper dependency.
 
 ## Change priorities

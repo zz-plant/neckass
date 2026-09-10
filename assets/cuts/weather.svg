@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 0 84 72" width="84" height="72" role="img" aria-label="Weather cut: sun behind cloud">
+    <title>Weather cut</title>
+    <style><![CDATA[
+        /* Composable rather than jointed: each element of the sky is a switch,
+           so one file draws every forecast the desk files.
+
+             .cut-weather { --sun: 0; --cloud: 1; --rain: 1; }
+
+           1 shows an element, 0 hides it. The fallbacks are sun behind cloud. */
+        svg { --ink-default: #241c14; --paper-default: #fbfaf6; }
+        @media (prefers-color-scheme: dark) {
+            svg { --ink-default: #f2e2d0; --paper-default: #221b15; }
+        }
+        .stroke {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 2.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .filled {
+            fill: var(--paper, var(--paper-default));
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 2.6;
+            stroke-linejoin: round;
+        }
+        /* With no cloud to sit behind, the sun moves to the middle of the
+           box rather than hanging in the top corner. */
+        .layer-sun {
+            opacity: var(--sun, 1);
+            transform: translate(
+                calc((1 - var(--cloud, 1)) * 13px),
+                calc((1 - var(--cloud, 1)) * 7px)
+            );
+        }
+        .layer-cloud { opacity: var(--cloud, 1); }
+        .layer-rain { opacity: var(--rain, 0); }
+        .layer-wind { opacity: var(--wind, 0); }
+    ]]></style>
+
+    <g class="layer-sun">
+        <circle class="filled" cx="34" cy="26" r="13" />
+        <path class="stroke" d="M34 5 v5 M34 42 v5 M13 26 h5 M50 26 h5 M19 11 l4 4 M45 37 l4 4 M49 11 l-4 4 M23 37 l-4 4" />
+    </g>
+
+    <g class="layer-cloud">
+        <path class="filled" d="M32 56 q-11 0 -11 -9 q0 -8 9 -9 q1 -11 13 -11 q11 0 14 9 q3 -3 8 -3 q11 0 11 11 q8 1 8 6 q0 6 -8 6 z" />
+    </g>
+
+    <g class="layer-rain">
+        <path class="stroke" d="M34 60 l-4 9 M48 60 l-4 9 M62 60 l-4 9" />
+    </g>
+
+    <g class="layer-wind">
+        <path class="stroke" d="M12 62 h22 q7 0 7 -5 q0 -5 -6 -4 M18 70 h30" />
+    </g>
+</svg>

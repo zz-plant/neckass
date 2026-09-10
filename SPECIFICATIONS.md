@@ -36,34 +36,65 @@ following a line number that has since moved.
 - CSS root variables define the newsprint palette, radius and shadow; `body` uses the `--bg`/`--text` aliases over `--surface-1`/`--text-primary`. A `prefers-color-scheme: dark` block redefines the tokens.
 
 ### Layout grid & spacing
-- Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. The layout uses a single column under 900px and a two-column grid at ≥900px with a sticky command rail. Body padding is 28/24/48 px (responsive adjustments on small screens).
+- Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. Every page is a single column; the wire splits into the item and the clipping sheet at ≥760px. Body padding is 28/24/48 px (responsive adjustments on small screens).
 
-## Masthead (topbar)
-- The topbar contains the brand block (“Neckass” and “Digital Gazette”). The row is separated from the hero by a bottom border and margin spacing.
+## Masthead
+Every page opens the same way: nameplate, folio line, cutoff rule.
 
-## Masthead line
-- The nameplate reads **The Gazette** over the kicker **Corbin Falls**. The
-  paper is named for its town, not its subject; "Neckass" appears in the copy
-  as a surname would, which is the point.
+- The nameplate is centred — `.masthead__name` **The Gazette** over the kicker
+  `.masthead__kicker` **Corbin Falls**. The paper is named for its town, not
+  its subject; "Neckass" appears in the copy as a surname would, which is the
+  point.
+- The folio line under it carries the date on the left and the site links on
+  the right, both in the same small caps, and closes with a 3px rule. That
+  rule is the paper's cutoff: everything below it is the news.
 - `#masthead-date` ships with standing copy — "Published daily · Corbin Falls"
   — so the page reads before, and without, JavaScript, and is replaced on load
   with `<date> · Vol. <roman>, No. <n>`. Volumes turn over on the anniversary
-  of the first edition.
+  of the first edition. Pages that are not an issue carry the links alone.
+- Site links are text, not buttons, and the current page is marked with
+  `aria-current="page"`, which underlines it in the accent.
 - `#back-issue-notice` is `hidden` on today's issue. When `?issue=YYYY-MM-DD`
   resolves to a past date it is revealed, names the issue being read, and
   offers a link back to today.
 
+## Rules, labels and cuts
+The page has one vocabulary of horizontal rules, and it means something:
+
+- **3px solid** — the masthead cutoff, and the underline of a `.page-title`.
+- **2px solid** — a department head (`.section-label`): In brief, Notices,
+  Weather, Classifieds, Letters.
+- **1px `--border-strong`** — a division inside a department.
+- **1px `--border`** — between items in a list, and the column rules.
+- **`.dingus`** — an ornament centred on a rule, which is how the issue ends
+  and the wire begins. It is `assets/cuts/ornament.svg` on a background.
+
+Line-cuts live in `assets/cuts/` and are rigs: each exposes its moving parts
+as CSS custom properties, with fallbacks, so the files work as plain `<img>`
+and pose when inlined. `assets/cuts/README.md` lists the properties.
+
+- **The file cut** — `assets/cuts/neckass.svg` with a cutline, at the foot of
+  the briefs column. The briefs run shorter than the notices beside them; the
+  cut is what a paper puts in that hole.
+- **The weather cut** — the same drawing as `assets/cuts/weather.svg`, inlined
+  in the weather box so its layers can be switched. `frontPage.weatherLayers()`
+  maps the first word of the forecast to `--sun`, `--cloud`, `--rain` and
+  `--wind`; anything it does not recognise gets sun and cloud.
+- **The press** — `assets/cuts/press.svg`, on the 404 page.
+
 ## The wire (interactive half, below the issue)
 ### Structure & labels
-- Section heading **“The wire”** (`#wire-title`), with the note **“New items, one at a time. Not part of today’s issue.”**
+- Section heading **“Latest from the wire”** (`#wire-title`), with the note
+  **“Filings as they arrive.”**
 - Item element: `<h3 id="headline" tabindex="-1" aria-label="Headline">` with initial text “Loading...”.
-- Helper line below the headline reads **“Shuffle for a fresh line, then copy or share it instantly.”**
+- The item, the two navigation buttons, the action row, the status line and the
+  clipping sheet all belong to one unlabelled block, so the page carries two
+  regions here: the wire itself and **Recent filings**.
 
 ### Controls & loader
 - Buttons:
   - **Previous** (`#prev-btn`, aria-label “View Previous Headline”).
   - **Next item** (`#next-btn`, aria-label “Shuffle headline”).
-  - On small screens, `#headline-quick-actions` is revealed and its buttons (`#jump-copy`, `#jump-share`, `#jump-export`) scroll to the copy, share and clipping cards and focus their primary control.
 - Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`. Loader visibility is toggled via the `.is-visible` class and `aria-hidden` state updates during transitions.
 
 ### Headline behavior
@@ -76,45 +107,52 @@ following a line number that has since moved.
 - Loader uses `role="status"` with `aria-live="polite"`.
 - Buttons retain visible focus outlines via CSS `:focus-visible` styling.
 
-## Command rail (right column on wide screens)
-The rail acts on the current wire item, not on the issue.
+## Item actions (one row, under the item)
+The row acts on the current wire item, not on the issue. Copy, share and
+export were three cards in a right-hand rail; they are four buttons, a line of
+share links and one status line now.
 
-### Clipboard copy card
-- `#copy-card`, labelled “Copy”. Its control is `#copy-btn` (“Copy item”),
-  which prefers the Clipboard API and falls back to a hidden `<textarea>` plus
-  `document.execCommand('copy')`.
-- `#copy-status` reports success or failure (“No headline available to copy.”,
-  “Copy failed. Please try again.”, “Clipboard unavailable in this browser.”).
-  Errors add `.error`.
+### The action row
+- **Copy item** (`#copy-btn`) prefers the Clipboard API and falls back to a
+  hidden `<textarea>` plus `document.execCommand('copy')`.
+- **Share** (`#native-share`) opens the device share sheet where one exists.
+- **Download clipping** (`#download-clipping`) renders the sheet to PNG via
+  `html-to-image` and downloads it.
+- **Copy clipping** (`#copy-clipping`) renders to a blob and attempts
+  `navigator.clipboard.write()`. Where image copy is unavailable it falls back
+  to a download and reports “Clipboard unavailable. Downloaded front page.”
+- Both clipping buttons are disabled, with `aria-disabled`, when
+  `window.htmlToImage` is missing.
 
-### Social share card
-- `#share-card`, headed **“Share”**. `#native-share` (“Share from device”)
-  opens the device share sheet where one exists.
-- Links for Twitter, Facebook and Reddit update on every item change. The URL
-  they carry holds one parameter, `headline`; the retired filter parameters are
-  never written.
-- Links open in a new tab with `rel="noopener noreferrer"` and an `aria-label`
-  naming the destination.
+### Share links
+- Links for X, Facebook and Reddit sit under the row as inline text and update
+  on every item change. The URL they carry holds one parameter, `headline`; the
+  retired filter parameters are never written.
+- They open in a new tab with `rel="noopener noreferrer"` and an `aria-label`
+  naming the destination. On coarse pointers their vertical padding brings them
+  to a 44px target.
 
-### Clipping export card
-- `#export-card`, headed **“Clipping”**. The sheet (`#clipping-front`) contains
-  a masthead, `#clipping-date`, the kicker “Bulletin”, a rule, the item
-  (`#clipping-headline`), the deck “Nobody has checked this.” and a footer
-  reading “neckass.com · department of neckassery”.
-- Two actions:
-  - **Download clipping** (`#download-clipping`) renders the sheet to PNG via
-    `html-to-image` and downloads it.
-  - **Copy clipping** (`#copy-clipping`) renders to a blob and attempts
-    `navigator.clipboard.write()`. Where image copy is unavailable it falls
-    back to a download and reports “Clipboard unavailable. Downloaded front
-    page.”
-- `#export-status` reports progress and outcome; `#global-toast` gives compact
-  confirmation for copy, share and export.
+### The clipping sheet
+- `#clipping-front` occupies the column of empty paper beside the item at
+  ≥760px — the item is set to a 20ch measure — and drops below the action row
+  on narrower screens. It is capped at 340px so the exported artwork keeps its
+  proportions. It
+  carries a masthead, `#clipping-date`, the kicker “Corbin Falls”, a rule, the
+  item (`#clipping-headline`), the deck “Staff report” and a footer reading
+  “The Corbin Falls Gazette · neckass.com”. It has no heading of its own: it is
+  the preview of what the two clipping buttons produce.
+
+### Status
+- `#item-status` is the single line for copy, share and export. Errors add
+  `.error`; `#global-toast` gives compact confirmation for all three.
 
 ## The issue (front page)
-- **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline`. The deck opens
-  on a wire dateline, `CORBIN FALLS, Sept. 5 —`, in AP month style. Bylines
-  are staff names from the colophon, or "Staff report" / "From wire reports".
+- **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline`. At ≥760px the
+  lead sits on the same two columns as the departments below it: the headline
+  in the wide one, against the column rule, and the deck and byline in the
+  narrow one. The deck opens on a wire dateline, `CORBIN FALLS, Sept. 5 —`,
+  in AP month style. Bylines are staff names from the colophon, or "Staff
+  report" / "From wire reports".
 - **Briefs** — `#briefs-list`, seven items dealt from `data.HEADLINES`, minus
   anything already running as the lead.
 - **Notices** — `#notices-list`, three entries from `data.NOTICES`: council
@@ -280,9 +318,31 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 - Headline contrast is guaranteed by the theme tokens rather than computed at runtime; `selectReadableColor()` and its colour helpers were removed once the token took over.
 
 ## Responsive behavior checkpoints
-- **≥900px width**: two-column grid with sticky command rail at 24px from top.
-- **541–899px width**: one-column stack with reduced hero margin.
-- **≤600px width**: tighter body padding, stacked action buttons, visible quick-jump controls, full-width copy button, and reduced headline text size.
+The paper reads in one column, two, or the broadsheet grid, in that order:
+
+- **≥1100px**: the four item actions sit in one row of four.
+- **≥760px**: the broadsheet grid — the lead and the departments on
+  1.55fr / 1fr against a column rule, and the wire split into the item and its
+  controls on the left, clipping sheet on the right.
+- **560–759px**: the departments pair up two across (notices with corrections,
+  classifieds with letters) with the weather spanning both, rather than running
+  down the page one after another. Everything else is one column.
+- **≥560px**: the file cut and its cutline share a line.
+- **<560px**: one column throughout; the cutline sits under the cut.
+- **≤600px**: tighter body padding, stacked navigation buttons, and reduced
+  headline text size.
+
+Item actions are always an even grid — two columns, or four above 1100px.
+Auto-fitting them left a 3 + 1 row at most widths, which reads as a mistake.
+
+## Wrapping
+- Display type balances (`text-wrap: balance`): the nameplate, the lead
+  headline, the wire item, page titles, the clipping headline.
+- Running copy avoids the one-word last line (`text-wrap: pretty`): briefs,
+  notices, corrections, classifieds, letters, decks, the colophon, cutlines,
+  the weather, and the long-form pages.
+- The folio line puts the date and the site links on one line where they fit
+  and stacks them from the same margin where they do not.
 
 ## Accessibility checklist
 - All visible buttons and links have discernible text or `aria-label`s.

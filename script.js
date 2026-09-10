@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const headlineEl = document.getElementById('headline');
     const clippingHeadlineEl = document.getElementById('clipping-headline');
     const loaderEl = document.getElementById('loader');
-    const headlineQuickActionsEl = document.getElementById(
-        'headline-quick-actions',
-    );
 
     const showFallback = () => {
         if (headlineEl) {
@@ -28,27 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loaderEl.setAttribute('aria-hidden', 'true');
         }
     };
-
-    const revealSecondaryIntro = () => {
-        if (headlineQuickActionsEl?.hasAttribute('hidden')) {
-            headlineQuickActionsEl.removeAttribute('hidden');
-        }
-    };
-
-    const revealOnFirstInteraction = () => {
-        revealSecondaryIntro();
-        ['click'].forEach((eventName) => {
-            document.removeEventListener(
-                eventName,
-                revealOnFirstInteraction,
-                true,
-            );
-        });
-    };
-
-    ['click'].forEach((eventName) => {
-        document.addEventListener(eventName, revealOnFirstInteraction, true);
-    });
 
     if (
         typeof HeadlineApp !== 'function' ||

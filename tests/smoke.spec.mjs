@@ -298,6 +298,57 @@ test.describe('Neckass smoke flows', () => {
         expect(briefs).not.toContain(issue.lead.headline);
     });
 
+    test('the weather cut is drawn for the forecast on file', async ({
+        page,
+    }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        // The cut is one drawing with four switches, set from the first word
+        // of the forecast. A break here is silent: the sky just stops matching
+        // what the column says.
+        const result = await page.evaluate(() => {
+            const { weatherLayers } = window.Neckass.frontPage;
+            const cut = document.getElementById('weather-cut');
+            const styles = getComputedStyle(cut);
+            const read = (name) =>
+                Number(styles.getPropertyValue(`--${name}`).trim());
+            return {
+                cases: [
+                    'Sunny, going by the window.',
+                    'Overcast. Ugh, this weather.',
+                    'Rain. He will not bring a jacket.',
+                    'Wind. The picnic is indoors.',
+                    'Unsettled. He picked the forecast he preferred.',
+                ].map(weatherLayers),
+                drawn: {
+                    sun: read('sun'),
+                    cloud: read('cloud'),
+                    rain: read('rain'),
+                    wind: read('wind'),
+                },
+                forecast: window.Neckass.currentIssue.weather,
+            };
+        });
+
+        expect(result.cases).toEqual([
+            { sun: 1, cloud: 0, rain: 0, wind: 0 },
+            { sun: 0, cloud: 1, rain: 0, wind: 0 },
+            { sun: 0, cloud: 1, rain: 1, wind: 0 },
+            { sun: 0, cloud: 1, rain: 0, wind: 1 },
+            { sun: 1, cloud: 1, rain: 0, wind: 0 },
+        ]);
+
+        // Whatever ran today, the sky on the page is the sky for that line,
+        // and something is always showing.
+        const expected = await page.evaluate(
+            (line) => window.Neckass.frontPage.weatherLayers(line),
+            result.forecast,
+        );
+        expect(result.drawn).toEqual(expected);
+        expect(Object.values(result.drawn).some(Boolean)).toBe(true);
+    });
+
     test("today's corrections retract yesterday's actual lead", async ({
         page,
     }) => {

@@ -71,29 +71,28 @@
     <a class="skip-link" href="#lead-headline">Skip to the lead item</a>
     <h1 class="sr-only">The Corbin Falls Gazette</h1>
     <div class="page-shell">
-        <div class="page-topbar">
-            <div class="brand-mark">
-                <span class="brand-kicker">Corbin Falls</span>
-                <span class="brand-title">The Gazette</span>
+        <!-- The nameplate, then the folio line the way a paper carries it:
+             what day this is on the left, where else to go on the right. -->
+        <header class="masthead">
+            <div class="masthead__plate">
+                <p class="masthead__kicker">Corbin Falls</p>
+                <p class="masthead__name">The Gazette</p>
             </div>
-            <nav class="top-nav" aria-label="Site">
-                <a href="/archive.html">Back issues</a>
-                <a href="/about.html">Reference</a>
-                <a href="/prompts.html">Standards</a>
-            </nav>
-        </div>
-
-        <header class="hero">
-            <div class="container hero__content">
-                <!-- Replaced with the active issue's date and number on load.
-                     The standing values below are the paper's first edition, so
-                     the page reads correctly with no JavaScript. -->
-                <p class="meta" id="masthead-date">Published daily · Corbin Falls</p>
-                <p class="back-issue-notice" id="back-issue-notice" hidden>
-                    <span id="back-issue-text"></span>
-                    <a href="/">Return to today's issue.</a>
-                </p>
+            <div class="masthead__folio">
+                <!-- Replaced with the active issue's date and number on load. The
+                     standing value is the paper's first edition, so the page reads
+                     correctly with no JavaScript. -->
+                <p class="masthead__line" id="masthead-date">Published daily · Corbin Falls</p>
+                <nav class="top-nav" aria-label="Site">
+                    <a href="/archive.html">Back issues</a>
+                    <a href="/about.html">Reference</a>
+                    <a href="/prompts.html">Standards</a>
+                </nav>
             </div>
+            <p class="back-issue-notice" id="back-issue-notice" hidden>
+                <span id="back-issue-text"></span>
+                <a href="/">Return to today's issue.</a>
+            </p>
         </header>
 
         <main class="container">
@@ -121,6 +120,11 @@
                             <li>Neckass's houseplant has outlived three of his hobbies</li>
                             <li>Neckass has responded "maybe" to his own birthday</li>
                         </ul>
+
+                        <figure class="cut">
+                            <img src="assets/cuts/neckass.svg" width="182" height="278" alt="Line-cut of a man standing with one hand raised, explaining." loading="lazy">
+                            <figcaption><b>FILE</b> — Neckass, explaining. The Gazette has one cut of him and has not needed a second.</figcaption>
+                        </figure>
                     </section>
 
                     <div class="column column--side">
@@ -145,8 +149,30 @@
 
                         <section class="box box--weather" aria-labelledby="weather-title">
                             <h3 class="section-label" id="weather-title">Weather</h3>
-                            <p class="weather-numbers" id="weather-numbers">High 68°, low 51°. Winds W 6 mph. Sunset 7:10 p.m.</p>
-                            <p class="weather" id="weather-line">Sunny, according to Neckass, who has not been outside and is going by the window.</p>
+                            <div class="weather-body">
+                                <!-- The same drawing as assets/cuts/weather.svg, inline so the
+                                     desk can switch its layers: front-page.js reads the forecast
+                                     and sets --sun, --cloud, --rain and --wind. -->
+                                <svg class="weather-cut" id="weather-cut" viewBox="6 0 84 72" width="84" height="72" aria-hidden="true" focusable="false">
+                                    <g class="sky-sun">
+                                        <circle class="sky-filled" cx="34" cy="26" r="13" />
+                                        <path class="sky-stroke" d="M34 5 v5 M34 42 v5 M13 26 h5 M50 26 h5 M19 11 l4 4 M45 37 l4 4 M49 11 l-4 4 M23 37 l-4 4" />
+                                    </g>
+                                    <g class="sky-cloud">
+                                        <path class="sky-filled" d="M32 56 q-11 0 -11 -9 q0 -8 9 -9 q1 -11 13 -11 q11 0 14 9 q3 -3 8 -3 q11 0 11 11 q8 1 8 6 q0 6 -8 6 z" />
+                                    </g>
+                                    <g class="sky-rain">
+                                        <path class="sky-stroke" d="M34 60 l-4 9 M48 60 l-4 9 M62 60 l-4 9" />
+                                    </g>
+                                    <g class="sky-wind">
+                                        <path class="sky-stroke" d="M12 62 h22 q7 0 7 -5 q0 -5 -6 -4 M18 70 h30" />
+                                    </g>
+                                </svg>
+                                <div>
+                                    <p class="weather-numbers" id="weather-numbers">High 68°, low 51°. Winds W 6 mph. Sunset 7:10 p.m.</p>
+                                    <p class="weather" id="weather-line">Sunny, according to Neckass, who has not been outside and is going by the window.</p>
+                                </div>
+                            </div>
                         </section>
                     </div>
                 </div>
@@ -185,16 +211,20 @@
                 </footer>
             </section>
 
-            <!-- The wire: the interactive half. Items arrive one at a time,
-                 from the catalogue or the desk, and can be taken away. -->
-            <section class="wire page-grid" aria-labelledby="wire-title">
-                <div class="feature-stack">
-                    <div class="wire-intro">
-                        <h2 class="section-label" id="wire-title">Latest from the wire</h2>
-                        <p class="wire-note">Filings as they arrive.</p>
-                    </div>
+            <!-- The dingus a compositor sets between departments. -->
+            <div class="dingus" role="presentation"></div>
 
-                    <section class="headline-section">
+            <!-- The wire: the interactive half. Items arrive one at a time,
+                 from the catalogue or the desk, and can be taken away. One
+                 item, one row of things to do with it. -->
+            <section class="wire" aria-labelledby="wire-title">
+                <div class="wire-intro">
+                    <h2 class="section-label" id="wire-title">Latest from the wire</h2>
+                    <p class="wire-note">Filings as they arrive.</p>
+                </div>
+
+                <div class="headline-section">
+                    <div class="headline-main">
                         <div class="headline-frame">
                             <h3 id="headline" tabindex="-1" aria-label="Headline">Loading...</h3>
                         </div>
@@ -204,85 +234,50 @@
                             <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Next</span></button>
                         </div>
 
-                        <div class="headline-quick-actions" id="headline-quick-actions" hidden>
-                            <p class="headline-quick-actions__title">Quick actions</p>
-                            <div class="headline-quick-actions__grid">
-                                <button id="jump-copy" class="ghost" type="button"><span>Copy</span></button>
-                                <button id="jump-share" class="ghost" type="button"><span>Share</span></button>
-                                <button id="jump-export" class="ghost quick-action-secondary" type="button"><span>Export</span></button>
-                            </div>
-                        </div>
-
                         <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
-                    </section>
 
-                    <section class="history-card" aria-labelledby="recent-headlines-title">
-                        <div class="history-header">
-                            <h3 class="filter-label" id="recent-headlines-title">Recent filings</h3>
-                            <p class="counter counter-inline" id="history-count">0 items</p>
+                        <div class="item-actions">
+                            <div class="item-actions__row">
+                                <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy item</span></button>
+                                <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share</span></button>
+                                <button id="download-clipping" class="ghost" type="button"><span>Download clipping</span></button>
+                                <button id="copy-clipping" class="ghost" type="button"><span>Copy clipping</span></button>
+                            </div>
+
+                            <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
+                            <p class="share-links">
+                                <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">X</a>
+                                <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
+                                <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">Reddit</a>
+                            </p>
+
+                            <p id="item-status" class="status-text" role="status" aria-live="polite"></p>
                         </div>
-                        <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
-                    </section>
+                    </div>
+
+                    <!-- The sheet the two clipping buttons render to PNG. It stays
+                         on the page as the preview of what you get, in the space
+                         beside the item, and carries no heading of its own. -->
+                    <div id="clipping-front" class="clipping-front">
+                        <div class="clipping-masthead">
+                            <span class="clipping-title">The Gazette</span>
+                            <span id="clipping-date" class="clipping-date">Loading...</span>
+                        </div>
+                        <p class="clipping-kicker">Corbin Falls</p>
+                        <div class="clipping-rule" aria-hidden="true"></div>
+                        <h4 id="clipping-headline" class="clipping-headline">Loading...</h4>
+                        <p class="clipping-deck">Staff report</p>
+                        <p class="clipping-footer">The Corbin Falls Gazette · neckass.com</p>
+                    </div>
                 </div>
 
-                <aside class="command-rail" aria-label="Item actions">
-                    <section class="rail-card rail-card--hub" aria-label="Item actions">
-                        <section class="command-cluster command-cluster--paired copy-headline" id="copy-card" aria-label="Copy">
-                            <div class="copy-row">
-                                <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy item</span></button>
-                            </div>
-                            <p id="copy-status" class="status-text" role="status" aria-live="polite"></p>
-                        </section>
-
-                        <section class="command-cluster command-cluster--paired social-share" id="share-card" aria-labelledby="share-card-title">
-                            <div>
-                                <h3 class="filter-label" id="share-card-title">Share</h3>
-                            </div>
-                            <div class="share-actions">
-                                <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share from device</span></button>
-                            </div>
-                            <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
-                            <div class="share-links">
-                                <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
-                                    <span>X</span>
-                                </a>
-                                <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
-                                    <span>Facebook</span>
-                                </a>
-                                <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">
-                                    <span>Reddit</span>
-                                </a>
-                            </div>
-                            <p id="share-status" class="status-text" role="status" aria-live="polite"></p>
-                        </section>
-                    </section>
-
-                    <section class="rail-card rail-card--secondary" id="export-card" aria-labelledby="export-card-title">
-                        <div>
-                            <h3 class="filter-label" id="export-card-title"><span>Clipping</span></h3>
-                        </div>
-                        <div id="clipping-front" class="clipping-front">
-                            <div class="clipping-masthead">
-                                <span class="clipping-title">The Gazette</span>
-                                <span id="clipping-date" class="clipping-date">Loading...</span>
-                            </div>
-                            <p class="clipping-kicker">Corbin Falls</p>
-                            <div class="clipping-rule" aria-hidden="true"></div>
-                            <h4 id="clipping-headline" class="clipping-headline">Loading...</h4>
-                            <p class="clipping-deck">Staff report</p>
-                            <p class="clipping-footer">The Corbin Falls Gazette · neckass.com</p>
-                        </div>
-                        <div class="clipping-actions">
-                            <button id="download-clipping" class="ghost" type="button">
-                                <span class="button-main-label"><span>Download clipping</span></span>
-                            </button>
-                            <button id="copy-clipping" class="ghost" type="button">
-                                <span class="button-main-label"><span>Copy clipping</span></span>
-                            </button>
-                        </div>
-                        <p id="export-status" class="status-text" role="status" aria-live="polite"></p>
-                    </section>
-                </aside>
+                <section class="history-card" aria-labelledby="recent-headlines-title">
+                    <div class="history-header">
+                        <h3 class="filter-label" id="recent-headlines-title">Recent filings</h3>
+                        <p class="counter counter-inline" id="history-count">0 items</p>
+                    </div>
+                    <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
+                </section>
             </section>
         </main>
     </div>

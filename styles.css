@@ -195,7 +195,7 @@ a:not(.share-link):not(.top-nav a):hover {
     max-width: 1180px;
     margin: 0 auto;
     background: var(--surface);
-    border-radius: 4px;
+    border-radius: 0;
     border: 1px solid var(--border);
     padding: 30px 34px 34px;
     box-shadow: 0 1px 3px rgba(46, 34, 20, 0.07);
@@ -206,118 +206,82 @@ a:not(.share-link):not(.top-nav a):hover {
     width: 100%;
 }
 
-.page-topbar {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-    align-items: center;
-    justify-content: flex-start;
+/* ---- The masthead ---------------------------------------------------
+   A paper announces itself before it says anything: nameplate, then the
+   folio line — what day this is on the left, where else to go on the
+   right — then the cutoff rule the news starts under. */
+
+.masthead {
+    margin-bottom: 26px;
+}
+
+.masthead__plate {
+    text-align: center;
     padding-bottom: 14px;
-    margin-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-    z-index: 1;
+    border-bottom: 1px solid var(--border-strong);
 }
 
-.brand-mark {
-    display: grid;
-    gap: 4px;
-}
-
-.brand-kicker {
-    font-size: 0.75rem;
+.masthead__kicker {
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
     color: var(--muted);
 }
 
-.brand-title {
-    margin: 0;
+.masthead__name {
     font-family: var(--headline-font);
-    font-size: clamp(1.7rem, 3vw, 2.2rem);
-    letter-spacing: -0.015em;
-    line-height: 1.05;
+    text-wrap: balance;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 8vw, 4.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--ink-display);
+}
+
+.masthead__folio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 20px;
+    padding: 9px 0 10px;
+    border-bottom: 3px solid var(--text);
+}
+
+.masthead__line {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
 }
 
 .top-nav {
-    margin-left: auto;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: baseline;
     flex-wrap: wrap;
+    gap: 4px 18px;
 }
 
 .top-nav a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: 8px 14px;
-    border-radius: 2px;
-    border: 1px solid rgba(34, 26, 20, 0.2);
-    text-decoration: none;
-    color: var(--text);
-    font-size: 0.9rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
     font-weight: 600;
-    background: var(--veil);
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease,
-        transform 0.2s ease;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
 }
 
 .top-nav a:hover {
-    border-color: rgba(34, 26, 20, 0.32);
-    background: rgba(38, 32, 24, 0.08);
-    transform: translateY(-1px);
+    color: var(--text);
+    border-bottom-color: var(--text);
 }
 
-.hero {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 16px;
-    margin-bottom: 18px;
-}
-
-.hero__content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 16px;
-}
-
-.eyebrow {
-    text-transform: uppercase;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    color: var(--muted);
-}
-
-.hero h1 {
-    font-family: var(--headline-font);
-    font-size: clamp(2.25rem, 5vw, 3.1rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-}
-
-.lede {
-    color: var(--muted);
-    max-width: 480px;
-}
-
-.pill-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.pill {
-    border-radius: 2px;
-    border: 1px solid rgba(220, 107, 63, 0.22);
-    padding: 6px 14px;
-    font-size: 0.85rem;
-    color: var(--accent);
-    background: var(--surface-3);
-    box-shadow: 0 8px 16px rgba(220, 107, 63, 0.08);
+.top-nav a[aria-current="page"] {
+    color: var(--text);
+    border-bottom-color: var(--accent);
 }
 
 .meta {
@@ -335,11 +299,6 @@ a:not(.share-link):not(.top-nav a):hover {
     gap: 16px;
 }
 
-.feature-stack {
-    display: grid;
-    gap: 16px;
-}
-
 .headline-section {
     display: grid;
     gap: 18px;
@@ -350,25 +309,6 @@ a:not(.share-link):not(.top-nav a):hover {
     overflow: clip;
 }
 
-.headline-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-    font-weight: 700;
-}
-
-.accent-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: var(--accent);
-    box-shadow: 0 0 0 6px var(--accent-soft);
-}
-
 .headline-frame {
     min-height: 128px;
     display: flex;
@@ -377,7 +317,9 @@ a:not(.share-link):not(.top-nav a):hover {
 
 #headline {
     font-family: var(--headline-font);
-    font-size: clamp(2.3rem, 5.2vw, 3.5rem);
+    text-wrap: balance;
+    /* Under the lead's size: a wire item never outranks the day's lead. */
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
     line-height: 1.13;
     max-width: 20ch;
     color: var(--ink-display);
@@ -393,10 +335,6 @@ a:not(.share-link):not(.top-nav a):hover {
     }
 }
 
-.deck {
-    color: var(--muted);
-}
-
 /* The grid display below would otherwise outrank the UA's [hidden] rule. */
 .history-card[hidden] {
     display: none;
@@ -409,8 +347,12 @@ a:not(.share-link):not(.top-nav a):hover {
     border-top: 1px solid var(--border);
 }
 
+/* A reading page opens under the masthead's own cutoff rule; the card's
+   top border would print a second one right beneath it. */
 .seo-copy {
     gap: 10px;
+    border-top: 0;
+    padding-top: 0;
 }
 
 .seo-copy p {
@@ -423,6 +365,7 @@ a:not(.share-link):not(.top-nav a):hover {
 .seo-copy dd,
 .seo-copy li {
     max-width: 68ch;
+    text-wrap: pretty;
 }
 
 .about-list {
@@ -440,25 +383,6 @@ a:not(.share-link):not(.top-nav a):hover {
     gap: 10px;
 }
 
-.headline-section.is-celebrating {
-    box-shadow:
-        0 0 0 1px rgba(220, 107, 63, 0.36),
-        0 18px 38px rgba(220, 107, 63, 0.22);
-    animation: headline-celebrate 0.9s ease;
-}
-
-@keyframes headline-celebrate {
-    0% {
-        transform: translateY(0);
-    }
-    30% {
-        transform: translateY(-2px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
 .status-text {
     font-size: 0.9rem;
     color: var(--muted);
@@ -473,15 +397,12 @@ a:not(.share-link):not(.top-nav a):hover {
     font-weight: 700;
 }
 
-.button-main-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
 .actions {
     display: grid;
-    /* Shuffle is the action; Previous is a way back. */
-    grid-template-columns: auto 1fr;
+    /* Shuffle is the action; Previous is a way back. Neither is the widest
+       thing on the page. */
+    grid-template-columns: auto minmax(0, 260px);
+    justify-content: start;
     gap: 12px;
 }
 
@@ -574,46 +495,6 @@ button.ghost {
     display: none;
 }
 
-.headline-quick-actions {
-    display: grid;
-    gap: 8px;
-    margin-top: 2px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: var(--veil-soft);
-    border: 1px solid rgba(45, 31, 16, 0.1);
-}
-
-.headline-quick-actions[hidden] {
-    display: none;
-}
-
-.headline-quick-actions__title {
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-}
-
-.headline-quick-actions__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-}
-
-.headline-quick-actions__grid button {
-    min-height: 44px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    padding: 10px 12px;
-    font-weight: 600;
-}
-
-.headline-quick-actions__grid .quick-action-secondary {
-    border-color: rgba(34, 26, 20, 0.22);
-    background: var(--veil);
-}
-
 .status-text.error {
     color: var(--status-error);
     font-weight: 600;
@@ -621,65 +502,6 @@ button.ghost {
 
 .loader.is-visible {
     display: block;
-}
-
-.command-rail {
-    display: grid;
-    gap: 18px;
-}
-
-.rail-card {
-    display: grid;
-    gap: 14px;
-    padding: 0 0 22px;
-    border-bottom: 1px solid var(--border);
-}
-
-.rail-card--hub {
-    gap: 18px;
-}
-
-.rail-card--secondary {
-    opacity: 1;
-}
-
-.command-cluster {
-    display: grid;
-    gap: 10px;
-}
-
-.command-cluster + .command-cluster {
-    border-top: 1px solid rgba(45, 31, 16, 0.08);
-    padding-top: 12px;
-}
-
-.command-cluster--paired + .command-cluster--paired {
-    border-top: none;
-    padding-top: 6px;
-}
-
-.command-cluster > .status-text {
-    margin-top: 2px;
-    font-size: 0.86rem;
-}
-
-.session-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 2px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    width: fit-content;
-}
-
-.copy-row {
-    display: grid;
-    gap: 8px;
 }
 
 #copy-btn {
@@ -693,50 +515,34 @@ button.ghost {
     border-color: rgba(34, 26, 20, 0.34);
 }
 
-.share-actions {
-    display: grid;
-    gap: 8px;
-}
-
 .share-links {
-    display: grid;
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 14px;
+    font-size: 0.88rem;
+    color: var(--muted);
 }
 
 .share-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px;
-    border-radius: 2px;
-    background: var(--veil);
-    border: 1px solid var(--border);
-    color: var(--text);
-    text-decoration: none;
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease;
-    min-height: 44px;
-}
-
-.share-link img {
-    width: 18px;
-    height: 18px;
+    padding: 6px 0;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s ease;
 }
 
 .share-link:hover {
-    background: rgba(38, 32, 24, 0.06);
     color: var(--text);
-    border-color: rgba(34, 26, 20, 0.28);
-}
-
-.share-link:active {
-    transform: scale(0.985);
 }
 
 .clipping-front {
     position: relative;
+    width: 100%;
+    max-width: 340px;
     overflow: hidden;
     /* Flex, not grid: the footer's `margin: auto 0 0` is what pins it to the
        bottom of the card. Under `display: grid` with `align-content: start`
@@ -751,7 +557,7 @@ button.ghost {
     background: linear-gradient(180deg, #fffef9 0%, #f6efe3 100%);
     border: 1px solid rgba(45, 31, 16, 0.28);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    min-height: 290px;
+    min-height: 270px;
     isolation: isolate;
 }
 
@@ -835,20 +641,6 @@ button.ghost {
     color: #6c5d4d;
 }
 
-.clipping-actions {
-    display: grid;
-    gap: 10px;
-}
-
-.clipping-actions button {
-    display: grid;
-    align-items: start;
-    justify-items: start;
-    gap: 2px;
-    border-radius: 16px;
-    text-align: left;
-}
-
 .global-toast {
     position: fixed;
     left: 50%;
@@ -875,41 +667,23 @@ button.ghost {
 }
 
 @media (hover: none) and (pointer: coarse) {
-    button,
-    .share-link {
+    button {
         min-height: 46px;
     }
 
+    /* The share links are inline text; on touch they still need a target. */
     .share-link {
-        padding-top: 13px;
-        padding-bottom: 13px;
+        padding-block: 11px;
     }
 }
 
 @media (min-width: 900px) {
-    .page-grid {
-        grid-template-columns: minmax(0, 1fr) 372px;
-        align-items: start;
-        gap: 34px;
-    }
-
-    .command-rail {
-        position: sticky;
-        top: 24px;
-        border-left: 1px solid var(--border);
-        padding-left: 32px;
-    }
-
     .page-shell {
         padding-bottom: 26px;
     }
 }
 
 @media (max-width: 899px) and (min-width: 541px) {
-    .page-grid {
-        grid-template-columns: 1fr;
-    }
-
     .hero {
         margin-bottom: 18px;
     }
@@ -922,9 +696,7 @@ button.ghost {
    or cards to be legible as distinct departments. */
 
 .front-page {
-    padding-bottom: 30px;
-    border-bottom: 3px double var(--text);
-    margin-bottom: 34px;
+    padding-bottom: 4px;
 }
 
 .back-issue-notice {
@@ -942,11 +714,31 @@ button.ghost {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.16em;
-    color: var(--muted);
+    color: var(--text);
     font-weight: 700;
     padding-bottom: 6px;
     margin-bottom: 12px;
-    border-bottom: 1px solid var(--border-strong);
+    border-bottom: 2px solid var(--text);
+}
+
+/* The title of a reading page — the entry, the standards, the archive. It
+   was set in the same 0.7rem small caps as a department head, which left
+   those pages with no first line worth reading. */
+.page-title {
+    font-family: var(--headline-font);
+    text-wrap: balance;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--ink-display);
+    padding-bottom: 12px;
+    margin-bottom: 6px;
+    border-bottom: 3px solid var(--text);
+}
+
+.seo-copy .section-label {
+    margin-top: 18px;
 }
 
 .lead {
@@ -967,6 +759,7 @@ button.ghost {
 
 .lead__deck {
     margin-top: 12px;
+    text-wrap: pretty;
     font-size: clamp(1rem, 1.5vw, 1.16rem);
     line-height: 1.45;
     color: var(--text);
@@ -979,6 +772,58 @@ button.ghost {
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--muted);
+}
+
+/* A cut and its cutline. The briefs column runs shorter than the notices
+   beside it, which is the hole a paper fills with a picture. */
+.cut {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    gap: 10px 16px;
+    justify-items: start;
+    align-items: end;
+}
+
+.cut img {
+    width: 124px;
+    height: auto;
+}
+
+.cut figcaption {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 34ch;
+    text-wrap: pretty;
+}
+
+/* Side by side once the column is wide enough for both, which is what the
+   cut is there to fill. */
+@media (min-width: 560px) {
+    .cut {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+}
+
+/* On the broadsheet the column is wide enough to run the cut larger. */
+@media (min-width: 1000px) {
+    .cut img {
+        width: 158px;
+    }
+}
+
+.cut--mark {
+    border-top: 0;
+    padding-top: 0;
+    margin: 22px 0;
+}
+
+.cut figcaption b {
+    letter-spacing: 0.1em;
+    font-size: 0.7rem;
+    color: var(--text);
 }
 
 .front-page__columns {
@@ -1017,6 +862,7 @@ button.ghost {
 
 .briefs li {
     font-family: var(--headline-font);
+    text-wrap: pretty;
     font-size: 1.06rem;
     line-height: 1.32;
     color: var(--text);
@@ -1037,6 +883,7 @@ button.ghost {
 .corrections li,
 .notices li {
     font-size: 0.88rem;
+    text-wrap: pretty;
     line-height: 1.45;
     color: var(--muted);
     padding-left: 14px;
@@ -1048,14 +895,67 @@ button.ghost {
     content: "\2014\00a0";
 }
 
+.weather-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.weather-cut {
+    flex: none;
+    width: 62px;
+    height: auto;
+    /* Switched by modules/front-page.js from the forecast on file. */
+    --sun: 1;
+    --cloud: 0;
+    --rain: 0;
+    --wind: 0;
+}
+
+.weather-cut .sky-stroke {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.weather-cut .sky-filled {
+    fill: var(--surface);
+    stroke: var(--text);
+    stroke-width: 2.6;
+    stroke-linejoin: round;
+}
+
+.weather-cut .sky-sun {
+    opacity: var(--sun);
+    /* With no cloud to sit behind, the sun takes the middle of the box
+       instead of hanging in the top corner. */
+    transform: translate(
+        calc((1 - var(--cloud)) * 13px),
+        calc((1 - var(--cloud)) * 7px)
+    );
+}
+.weather-cut .sky-cloud {
+    opacity: var(--cloud);
+}
+.weather-cut .sky-rain {
+    opacity: var(--rain);
+}
+.weather-cut .sky-wind {
+    opacity: var(--wind);
+}
+
 .weather {
     font-size: 0.9rem;
     line-height: 1.5;
     color: var(--text);
+    text-wrap: pretty;
 }
 
 .weather-numbers {
     font-variant-numeric: tabular-nums;
+    text-wrap: pretty;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.35rem;
@@ -1067,6 +967,7 @@ button.ghost {
 
 .classifieds li {
     font-size: 0.84rem;
+    text-wrap: pretty;
     line-height: 1.4;
     color: var(--text);
     font-variant-numeric: tabular-nums;
@@ -1089,6 +990,7 @@ button.ghost {
 .letter-body {
     font-size: 0.9rem;
     line-height: 1.5;
+    text-wrap: pretty;
 }
 
 .letter-signature {
@@ -1106,6 +1008,7 @@ button.ghost {
     font-size: 0.8rem;
     line-height: 1.5;
     color: var(--muted);
+    text-wrap: pretty;
 }
 
 .colophon a {
@@ -1119,10 +1022,87 @@ button.ghost {
     color: var(--muted);
 }
 
+/* The dingus: an ornament on a rule, which is how a compositor ends a
+   department without starting a new page. */
+.dingus {
+    position: relative;
+    height: 20px;
+    margin: 30px 0 32px;
+    background: center / auto 18px no-repeat url("assets/cuts/ornament.svg");
+}
+
+.dingus::before,
+.dingus::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 56px);
+    border-top: 1px solid var(--border-strong);
+}
+
+.dingus::before {
+    left: 0;
+}
+.dingus::after {
+    right: 0;
+}
+
+/* ---- The wire -------------------------------------------------------
+   One item at a time, one row of things to do with it. Copy, share and
+   export were three cards in a right-hand rail; they are four buttons and
+   a single status line now, with the clipping sheet beside them as the
+   preview of what the export produces. */
+
+.wire {
+    display: grid;
+    gap: 16px;
+}
+
 .wire-intro {
     display: grid;
     gap: 5px;
     padding-bottom: 4px;
+}
+
+.headline-main {
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    min-width: 0;
+}
+
+.item-actions {
+    display: grid;
+    gap: 10px;
+}
+
+/* Two even columns, or four when the column is wide enough for the longest
+   label. Auto-fit left a 3 + 1 row at most widths, which reads as a mistake. */
+.item-actions__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+@media (min-width: 1100px) {
+    .item-actions__row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.item-actions__row button {
+    padding-inline: 16px;
+    font-size: 0.94rem;
+}
+
+/* The item is set to a 20ch measure, so there is a column of empty paper to
+   its right. The clipping sheet lives there rather than under the controls. */
+@media (min-width: 760px) {
+    .headline-section {
+        grid-template-columns: minmax(0, 1fr) 300px;
+        column-gap: 34px;
+        align-items: start;
+    }
 }
 
 .wire-note {
@@ -1130,7 +1110,67 @@ button.ghost {
     color: var(--muted);
 }
 
+/* Between phone and broadsheet the departments pair up rather than running
+   down the page one after another. */
+@media (min-width: 560px) and (max-width: 759px) {
+    .column--side,
+    .front-page__columns--lower {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 28px;
+        align-items: start;
+    }
+
+    .box--weather {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--border);
+        padding-top: 18px;
+    }
+
+    .box--classifieds {
+        border-right: 1px solid var(--border);
+        padding-right: 28px;
+    }
+
+    .weather-body {
+        max-width: 46ch;
+    }
+}
+
 @media (min-width: 760px) {
+    /* The lead sits on the same two columns as the departments under it:
+       the headline in the wide one, the deck and byline in the narrow one,
+       against the same rule. Set full-width, the headline's own 24ch measure
+       left the right half of the page blank. */
+    .lead {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+        /* The deck takes the height it needs; the byline follows it rather
+           than dropping to the foot of the headline beside it. */
+        grid-template-rows: auto 1fr;
+        column-gap: 34px;
+    }
+
+    .lead__headline {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        border-right: 1px solid var(--border);
+        padding-right: 34px;
+        min-height: 100%;
+    }
+
+    .lead__deck {
+        grid-column: 2;
+        grid-row: 1;
+        margin-top: 4px;
+    }
+
+    .lead__byline {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: start;
+        margin-top: 10px;
+    }
+
     .front-page__columns {
         grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
         gap: 34px;
@@ -1220,7 +1260,6 @@ button.ghost {
 
     .page-shell {
         padding: 18px 14px 24px;
-        border-radius: 10px;
     }
 
     .page-topbar {
@@ -1254,7 +1293,6 @@ button.ghost {
     }
 
     .headline-section {
-        padding: 18px;
         gap: 14px;
     }
 
@@ -1289,46 +1327,8 @@ button.ghost {
         box-shadow: none;
     }
 
-    .headline-quick-actions__grid {
-        grid-template-columns: 1fr;
-    }
-
-    .command-rail {
-        gap: 14px;
-    }
-
-    .copy-row {
-        align-items: start;
-    }
-
-    .copy-row button {
-        width: 100%;
-    }
-
-    .rail-card {
-        padding: 14px 0 18px;
-    }
-
-    .share-links {
-        grid-template-columns: 1fr;
-    }
-
-    .command-cluster + .command-cluster {
-        padding-top: 12px;
-    }
-
-    .command-cluster {
-        padding: 0;
-    }
-
-    .share-link {
-        width: 100%;
-        justify-content: flex-start;
-        min-height: 44px;
-    }
-
     #headline {
-        font-size: clamp(2rem, 6.5vw, 2.4rem);
+        font-size: clamp(1.7rem, 5.6vw, 2.1rem);
         max-width: 100%;
     }
 
@@ -1340,39 +1340,9 @@ button.ghost {
         flex-direction: column;
         align-items: flex-start;
     }
-
-    .clipping-actions button {
-        width: 100%;
-    }
 }
 
-.rail-card,
 .headline-section,
 .history-card {
     scroll-margin-top: 18px;
-}
-
-/* Below the two-column breakpoint the rail carries copy/share/export, so it has
-   to come before the explainer rather than after it. `display: contents` lifts
-   the stack's children into the page grid so they can be ordered against it. */
-@media (max-width: 899px) {
-    .feature-stack {
-        display: contents;
-    }
-
-    .headline-section {
-        order: 1;
-    }
-
-    .history-card:not(.seo-copy) {
-        order: 2;
-    }
-
-    .command-rail {
-        order: 3;
-    }
-
-    .seo-copy {
-        order: 4;
-    }
 }

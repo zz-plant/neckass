@@ -12,7 +12,7 @@
       "!vendor/**",
       "!docs/assets/**",
       "!bun.lock",
-      "!og-*.svg"
+      "!**/*.svg"
     ]
   },
   "formatter": {

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182 278" width="182" height="278" role="img" aria-label="Line-cut of a man standing with one hand raised, explaining">
+    <title>Neckass, file cut</title>
+    <style><![CDATA[
+        /* A rig, not a picture. Every joint reads a custom property, so one cut
+           poses differently wherever it is used:
+
+             .cut { --arm-far: -20deg; --forearm-far: 0deg; --tilt: 5deg; }
+
+           Zero on every joint is the figure standing to attention, arms at the
+           sides. The fallbacks below are the house pose — mid-explanation, one
+           hand up — so the file also works on its own, with no CSS. */
+        svg {
+            --ink-default: #241c14;
+            --paper-default: #fbfaf6;
+            /* The box is cut to the pose below. Inlined and re-posed, a limb
+               thrown wide draws outside it rather than being clipped. */
+            overflow: visible;
+        }
+        @media (prefers-color-scheme: dark) {
+            svg {
+                --ink-default: #f2e2d0;
+                --paper-default: #221b15;
+            }
+        }
+        .part {
+            fill: var(--paper, var(--paper-default));
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 3;
+            stroke-linejoin: round;
+        }
+        .solid { fill: var(--ink, var(--ink-default)); stroke: none; }
+        .detail {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        .hatch {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1.4;
+            stroke-linecap: round;
+            opacity: 0.7;
+        }
+        g[class^="joint-"] { transform-box: view-box; }
+        .joint-head { transform-origin: 100px 66px; transform: rotate(var(--tilt, -4deg)); }
+        .joint-arm-near { transform-origin: 70px 80px; transform: rotate(var(--arm-near, 7deg)); }
+        .joint-forearm-near { transform-origin: 70px 124px; transform: rotate(var(--forearm-near, 9deg)); }
+        .joint-arm-far { transform-origin: 130px 80px; transform: rotate(var(--arm-far, -22deg)); }
+        .joint-forearm-far { transform-origin: 130px 124px; transform: rotate(var(--forearm-far, -122deg)); }
+        .joint-leg-near { transform-origin: 88px 156px; transform: rotate(var(--leg-near, 2deg)); }
+        .joint-leg-far { transform-origin: 112px 156px; transform: rotate(var(--leg-far, -3deg)); }
+    ]]></style>
+
+    <g class="plate" transform="translate(-24 -6)">
+        <g class="joint-leg-far">
+            <path class="part" d="M102 150 h24 l-5 116 h-17 z" />
+            <path class="part" d="M104 262 h17 l12 10 q-3 5 -12 5 h-18 z" />
+            <path class="hatch" d="M110 184 v66" />
+        </g>
+        <g class="joint-leg-near">
+            <path class="part" d="M74 150 h24 l-3 116 h-17 z" />
+            <path class="part" d="M75 262 h17 l-11 10 q-4 5 -13 5 h-5 z" />
+            <path class="hatch" d="M82 184 v66" />
+        </g>
+        <!-- hips, over the top of both legs -->
+        <path class="part" d="M70 138 h60 l2 26 q-32 7 -64 0 z" />
+
+        <g class="joint-arm-far">
+            <g class="joint-forearm-far">
+                <path class="part" d="M121 118 h17 l-3 48 h-12 z" />
+                <path class="part" d="M121 162 q-5 8 -3 16 q3 9 12 7 q7 -2 6 -12 l-1 -11 z" />
+                <path class="detail" d="M126 170 v9 M132 169 v9" />
+            </g>
+            <path class="part" d="M121 74 h18 l-2 52 h-15 z" />
+        </g>
+
+        <g class="joint-arm-near">
+            <g class="joint-forearm-near">
+                <path class="part" d="M62 118 h17 l-3 48 h-12 z" />
+                <path class="part" d="M62 162 q-5 8 -3 16 q3 9 12 7 q7 -2 6 -12 l-1 -11 z" />
+                <path class="detail" d="M67 170 v9 M73 169 v9" />
+            </g>
+            <path class="part" d="M61 74 h18 l-2 52 h-15 z" />
+        </g>
+
+        <!-- torso -->
+        <path class="part" d="M68 78 q32 -13 64 0 l2 68 q-34 9 -68 0 z" />
+        <path class="detail" d="M100 82 v62" />
+        <path class="detail" d="M86 76 l14 11 l14 -11" />
+        <circle class="solid" cx="100" cy="104" r="2" />
+        <circle class="solid" cx="100" cy="126" r="2" />
+        <path class="hatch" d="M113 100 l16 3 M112 114 l17 3 M112 128 l17 3" />
+        <path class="detail" d="M71 155 h58" />
+        <path class="solid" d="M94 150 h12 v10 h-12 z" />
+
+        <g class="joint-head">
+            <path class="part" d="M93 54 h14 v18 h-14 z" />
+            <ellipse class="part" cx="100" cy="40" rx="18" ry="21" />
+            <path class="solid" d="M82 38 q1 -25 18 -25 q17 0 18 25 q-5 -13 -18 -13 q-13 0 -18 13 z" />
+            <path class="detail" d="M118 41 q5 3 0 8" />
+            <circle class="solid" cx="93" cy="41" r="1.9" />
+            <circle class="solid" cx="107" cy="41" r="1.9" />
+            <path class="detail" d="M100 41 v9 l-4 2" />
+            <path class="detail" d="M94 56 q6 3 12 0" />
+            <path class="hatch" d="M87 47 l-3 5 M113 47 l3 5" />
+        </g>
+    </g>
+</svg>

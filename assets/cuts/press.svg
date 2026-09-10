@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 158 146" width="158" height="146" role="img" aria-label="Line-cut of a screw press">
+    <title>The press</title>
+    <style><![CDATA[
+        /* The press the paper is nominally printed on. Two knobs:
+
+             --lever: -35deg   how far round the bar has been pulled
+             --sheet: 0        clears the sheet lying on the bed
+
+           --lever at 0 is the bar at rest, straight out to the right. */
+        svg {
+            --ink-default: #241c14;
+            --paper-default: #fbfaf6;
+            /* The box is cut to the pose below. Inlined and re-posed, a limb
+               thrown wide draws outside it rather than being clipped. */
+            overflow: visible;
+        }
+        @media (prefers-color-scheme: dark) {
+            svg {
+                --ink-default: #f2e2d0;
+                --paper-default: #221b15;
+            }
+        }
+        .part {
+            fill: var(--paper, var(--paper-default));
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 3;
+            stroke-linejoin: round;
+        }
+        .solid { fill: var(--ink, var(--ink-default)); stroke: none; }
+        .detail {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 2;
+            stroke-linecap: round;
+        }
+        .hatch {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1.4;
+            opacity: 0.65;
+        }
+        .joint-lever {
+            transform-box: view-box;
+            transform-origin: 104px 54px;
+            transform: rotate(var(--lever, -28deg));
+        }
+        .layer-sheet { opacity: var(--sheet, 1); }
+    ]]></style>
+
+    <g class="plate" transform="translate(-28 -2)">
+        <!-- posts and beams -->
+        <path class="part" d="M34 12 h132 v16 h-132 z" />
+        <path class="part" d="M40 28 h20 v106 h-20 z" />
+        <path class="part" d="M140 28 h20 v106 h-20 z" />
+        <path class="hatch" d="M45 36 v92 M51 36 v92 M145 36 v92 M151 36 v92" />
+        <path class="part" d="M34 130 h48 v12 h-48 z" />
+        <path class="part" d="M118 130 h48 v12 h-48 z" />
+
+        <!-- screw and platen -->
+        <path class="part" d="M96 28 h16 v52 h-16 z" />
+        <path class="detail" d="M96 36 l16 6 M96 48 l16 6 M96 60 l16 6 M96 72 l16 6" />
+        <path class="part" d="M70 78 h68 v14 h-68 z" />
+
+        <!-- bed, and the sheet on it -->
+        <path class="part" d="M58 106 h92 v14 h-92 z" />
+        <g class="layer-sheet">
+            <path class="part" d="M76 96 h52 l3 10 h-58 z" />
+            <path class="hatch" d="M84 100 h36 M82 103 h40" />
+        </g>
+
+        <!-- the bar -->
+        <g class="joint-lever">
+            <path class="part" d="M104 49 h68 v10 h-68 z" />
+            <circle class="part" cx="176" cy="54" r="9" />
+        </g>
+        <circle class="part" cx="104" cy="54" r="8" />
+        <circle class="solid" cx="104" cy="54" r="3" />
+    </g>
+</svg>

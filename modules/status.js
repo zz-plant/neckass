@@ -4,35 +4,17 @@
     const { triggerHapticFeedback } = Neckass;
 
     /**
-     * Transient user feedback: the status lines under each card, the
+     * Transient user feedback: the one status line under the action row, the
      * copied-button flash, and the toast.
      *
      * Mixed into HeadlineApp.prototype by app.js, so `this` is the app
      * instance exactly as it was when these lived in the class body.
      */
     Neckass.statusMethods = {
-        reportAutomationStatus(message, isError = false) {
-            if (!this.elements.automationStatus) return;
-            this.elements.automationStatus.textContent = message;
-            this.elements.automationStatus.classList.toggle('error', isError);
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        },
-
-        reportMetricsStatus(message, isError = false) {
-            if (!this.elements.metricsStatus) return;
-            this.elements.metricsStatus.textContent = message;
-            this.elements.metricsStatus.classList.toggle('error', isError);
-            if (!isError && message) {
-                this.showToast(message);
-            }
-        },
-
         reportCopyStatus(message, isError = false) {
-            if (!this.elements.copyStatus) return;
-            this.elements.copyStatus.textContent = message;
-            this.elements.copyStatus.classList.toggle('error', isError);
+            if (!this.elements.itemStatus) return;
+            this.elements.itemStatus.textContent = message;
+            this.elements.itemStatus.classList.toggle('error', isError);
             if (isError && message) {
                 triggerHapticFeedback('error');
             }
@@ -68,16 +50,16 @@
             }, 1400);
         },
 
-        clearCopyStatus() {
-            if (!this.elements.copyStatus) return;
-            this.elements.copyStatus.textContent = '';
-            this.elements.copyStatus.classList.remove('error');
+        clearItemStatus() {
+            if (!this.elements.itemStatus) return;
+            this.elements.itemStatus.textContent = '';
+            this.elements.itemStatus.classList.remove('error');
         },
 
         reportShareStatus(message, isError = false) {
-            if (!this.elements.shareStatus) return;
-            this.elements.shareStatus.textContent = message;
-            this.elements.shareStatus.classList.toggle('error', isError);
+            if (!this.elements.itemStatus) return;
+            this.elements.itemStatus.textContent = message;
+            this.elements.itemStatus.classList.toggle('error', isError);
             if (isError && message) {
                 triggerHapticFeedback('error');
             }
@@ -86,16 +68,10 @@
             }
         },
 
-        clearShareStatus() {
-            if (!this.elements.shareStatus) return;
-            this.elements.shareStatus.textContent = '';
-            this.elements.shareStatus.classList.remove('error');
-        },
-
         reportExportStatus(message, isError = false) {
-            if (!this.elements.exportStatus) return;
-            this.elements.exportStatus.textContent = message;
-            this.elements.exportStatus.classList.toggle('error', isError);
+            if (!this.elements.itemStatus) return;
+            this.elements.itemStatus.textContent = message;
+            this.elements.itemStatus.classList.toggle('error', isError);
             if (isError && message) {
                 triggerHapticFeedback('error');
             }

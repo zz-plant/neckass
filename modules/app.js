@@ -46,7 +46,6 @@
             this.handleDirectionalNavigation =
                 this.handleDirectionalNavigation.bind(this);
             this.activeButton = null;
-            this.celebrationTimer = null;
         }
 
         init() {
@@ -96,15 +95,6 @@
             );
             this.elements.nativeShareButton?.addEventListener('click', () =>
                 this.shareHeadline(this.elements.nativeShareButton),
-            );
-            this.elements.jumpCopyButton?.addEventListener('click', () =>
-                this.copyHeadline(this.elements.jumpCopyButton),
-            );
-            this.elements.jumpShareButton?.addEventListener('click', () =>
-                this.handleQuickShare(),
-            );
-            this.elements.jumpExportButton?.addEventListener('click', () =>
-                this.handleQuickExport(),
             );
             this.elements.downloadClippingButton?.addEventListener(
                 'click',
@@ -309,8 +299,7 @@
                 return;
             }
 
-            this.clearCopyStatus();
-            this.clearShareStatus();
+            this.clearItemStatus();
             const loaderMessage =
                 this.elements.loader?.textContent ||
                 this.elements.loader.textContent ||
@@ -395,7 +384,7 @@
         renderEmptyState() {
             this.elements.headline.textContent = 'No items on file.';
             this.elements.headline.style.color = '';
-            this.clearCopyStatus();
+            this.clearItemStatus();
             updateHeadMetadata({
                 headline: '',
                 index: -1,
@@ -514,37 +503,6 @@
             } finally {
                 setButtonLoading(triggerButton, false);
             }
-        }
-
-        async handleQuickShare() {
-            const canUseNativeShare =
-                navigator.share && typeof navigator.share === 'function';
-            if (!canUseNativeShare) {
-                this.jumpToCard('share');
-                this.reportShareStatus(
-                    'Native sharing unavailable in this browser.',
-                    true,
-                );
-                return;
-            }
-
-            await this.shareHeadline(
-                this.elements.jumpShareButton ||
-                    this.elements.nativeShareButton,
-            );
-        }
-
-        async handleQuickExport() {
-            if (!window.htmlToImage) {
-                this.jumpToCard('export');
-                this.reportExportStatus(
-                    'Export unavailable. Reload, then try Download clipping.',
-                    true,
-                );
-                return;
-            }
-
-            await this.handleClippingExport('download');
         }
 
         handleDirectionalNavigation(event) {
@@ -760,36 +718,6 @@
                     this.reportExportStatus(message, isError),
                 setButtonLoading,
             });
-        }
-
-        jumpToCard(type) {
-            const cardMap = {
-                copy: {
-                    section: this.elements.copySection,
-                    focus: this.elements.copyButton,
-                },
-                share: {
-                    section: this.elements.socialShare,
-                    focus: this.elements.nativeShareButton,
-                },
-                export: {
-                    section: this.elements.exportSection,
-                    focus: this.elements.downloadClippingButton,
-                },
-            };
-
-            const target = cardMap[type];
-            if (!target?.section) return;
-            target.section.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
-
-            if (target.focus) {
-                window.setTimeout(() => {
-                    target.focus.focus({ preventScroll: true });
-                }, 220);
-            }
         }
 
         getRandomIndex() {
