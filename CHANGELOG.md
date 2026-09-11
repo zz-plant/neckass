@@ -17,6 +17,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Regenerated the favicon set, the four social cards, the fifteen `docs/assets` scenes and the cut fallbacks, and updated `theme-color` and the manifest colours, so nothing still carries the old palette. `favicon.ico` now holds a 32px frame alongside the 16px one, which the `<link>` had always claimed.
 - Deepened every content pool so the paper stops repeating inside a week: leads 12 → 40, classifieds 16 → 60, corrections 14 → 39 standalone, letters 10 → 36, weather 10 → 40, briefs 81 → 121. Shortest cycle is now 12 days, was 3.
 - The first correction in each issue now retracts a detail of the previous issue's actual lead, by name, instead of being drawn at random.
+- Rewrote 16 flat or duplicative headlines and swapped three flat impacts, two limp rulings and one joke-less twist in the generator beats. Every entry now states a failure plus a fact, per the pool's register, and no headline repeats a joke another entry already tells. Ten observational entries gained mock-institutional asides ("The gym describes him as a benefactor.").
 
 ### Added
 - Added a real `404.html`. Cloudflare Pages was serving `index.html` with HTTP 200 for every unmatched path, which search engines read as soft-404 duplicate content across unlimited URLs.
