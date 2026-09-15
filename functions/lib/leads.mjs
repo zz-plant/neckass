@@ -19,7 +19,7 @@ export default [
     {
         headline:
             'Neckass has opened the fridge eleven times since dinner and taken nothing',
-        deck: 'He is not hungry. He is checking whether anything has changed. It has not.',
+        deck: 'He is not hungry. Asked what he was looking for, he said "just seeing."',
     },
     {
         headline:
@@ -68,7 +68,7 @@ export default [
     {
         headline:
             'Neckass has been standing in the doorway saying goodbye for fifty minutes',
-        deck: 'He said "anyway, I should go" at 9:10. He left at ten.',
+        deck: 'He said "anyway, I should go" at 9:10, "right, I\'m off" at 9:30 and "no, really" at 9:50. He left at ten.',
     },
     {
         headline:
@@ -98,7 +98,7 @@ export default [
     {
         headline:
             'Neckass has been carrying a package to the post office in his car since March',
-        deck: 'It is on the passenger seat. He has driven past the post office sixty times.',
+        deck: 'It is on the passenger seat. Asked about it, he said "I know, I know." He does know.',
     },
     {
         headline:
@@ -112,7 +112,7 @@ export default [
     },
     {
         headline: "Neckass's smoke alarm has been chirping for nine days",
-        deck: 'It needs a battery. He has bought batteries. They are the wrong size and are in the car with the package.',
+        deck: 'It needs a battery. He describes the chirping as "on and off." It is on.',
     },
     {
         headline: 'Neckass has read the first page of nine books this year',
@@ -130,7 +130,7 @@ export default [
     },
     {
         headline: 'Neckass has moved one task to tomorrow forty times',
-        deck: 'The task is to call his mother. It takes ten minutes. It has been tomorrow since July.',
+        deck: 'The task is to call his mother. It takes ten minutes. He describes it as "a whole thing."',
     },
     {
         headline: 'Neckass has assembled the shelf and has four screws left',
@@ -148,11 +148,11 @@ export default [
     },
     {
         headline: 'Neckass has been "just about to leave" for two hours',
-        deck: 'He said it at six, at seven, and at eight. He has his coat on.',
+        deck: 'He said it at six, at seven and at eight. At nine he said "I mean it."',
     },
     {
         headline: "Neckass's phone has been at one percent since this morning",
-        deck: 'He has been told. He has a charger. It is behind the sofa.',
+        deck: 'He has been told. He said "it\'s fine, it lasts." It lasted until 10:40.',
     },
     {
         headline: 'Neckass has recommended a restaurant he has not been to',
@@ -174,7 +174,7 @@ export default [
     {
         headline:
             'Neckass told the barber "just a little off" and has been given a haircut',
-        deck: 'He said "that\'s great" in the chair. He has not looked in a mirror since.',
+        deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the till.',
     },
     {
         headline:
