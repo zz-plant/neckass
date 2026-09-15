@@ -12,6 +12,30 @@
         if (node && typeof value === 'string') node.textContent = value;
     }
 
+    // The folio line is two units, the date and the volume, either side of
+    // a middot. Each goes in its own span so that where the line has to
+    // break — a phone — it breaks at the middot rather than leaving "717"
+    // on a line of its own.
+    function mastheadInto(selector, line) {
+        const node = document.querySelector(selector);
+        if (!node || typeof line !== 'string') return;
+        const parts = line.split(' · ');
+        if (parts.length !== 2) {
+            node.textContent = line;
+            return;
+        }
+        const separator = document.createElement('span');
+        separator.className = 'masthead__sep';
+        separator.textContent = ' · ';
+        node.replaceChildren(
+            ...parts.flatMap((part, index) => {
+                const span = document.createElement('span');
+                span.textContent = part;
+                return index === 0 ? [span, separator] : [span];
+            }),
+        );
+    }
+
     function listInto(selector, items, render) {
         const list = document.querySelector(selector);
         if (!list || !Array.isArray(items) || !items.length) return;
@@ -61,7 +85,7 @@
     function renderIssue(issue) {
         if (!issue) return;
 
-        textInto('#masthead-date', issue.mastheadLine);
+        mastheadInto('#masthead-date', issue.mastheadLine);
 
         if (issue.lead) {
             textInto('#lead-headline', issue.lead.headline);

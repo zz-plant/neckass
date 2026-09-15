@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Changed
+- A department head now sits under its rule rather than on top of one. With the rule beneath it the head was as far from its own list as from the department above; set cutoff rule, head, then copy, each department starts on one line, and the heads of two columns side by side draw one rule across the fold. The lead's bottom rule, the lower row's top rule and the wire's dangling bottom rule went with it, and a reading page's title no longer prints a second 3px teal rule a hundred pixels under the masthead's.
+- The deck and the letters are set in Fraunces at text size; the nameplate on the folio line is set in it at credit size. The face's optical-size axis was shipping unused.
+- Controls are one vocabulary: a hairline in the running ink, 2px corners, no hover shadow. The four item actions are one ruled box with hairlines between the cells; the share targets are set like the site links; the wire's history is a ruled list, not a stack of 10px pills; the toast is a slip, not a pill.
+- The clipping sheet is a piece of the paper: flat, slightly whiter stock with a hairline edge and its own folio line under the same teal cutoff. Its gradient ground, gradient top bar, gradient hairline and dashed footer are gone.
+- The entry and the standards hang their department heads in the left margin beside each section's first paragraph above 900px, and the entry's source note sits in that margin beside the opening paragraph. Both pages ran a 68ch measure across a 1180px sheet and left the right two-fifths blank inside the frame.
+- Back issues run in three ruled columns above 900px and two above 560px, in tabular figures; they were one bulleted spine of 45 underlined links. The current issue carries a tag under its date instead of a phrase that wrapped the first row.
+- On the phone the sheet is the screen: no frame, no border, the desk visible only past its foot. The folio line stacks the date and the volume on a line each instead of orphaning "717"; under 1060px the name and site links share the first row and the date takes the second.
+- Dark mode's ground drops a step under the plate so the sheet reads as a slab rather than a bordered box, the cutoff rule takes a teal a step down from the links so it does not glow, and light-on-dark type is antialiased in greyscale.
+
 ### Added
 - RSS feed at `/feed.xml`, built per request from the calendar by a Cloudflare Pages Function.
 - Per-issue social cards: middleware rewrites the front page's title and description to the day's lead, so a shared link previews with the headline actually running.

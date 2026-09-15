@@ -3,6 +3,7 @@ playwright-report/
 test-results/
 
 # Tooling
+.claude/
 .cmux/
 .opencode/
 .sisyphus/
