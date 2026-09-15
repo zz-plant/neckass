@@ -23,7 +23,8 @@
                 li.append(link);
                 if (index === 0) {
                     const note = document.createElement('span');
-                    note.textContent = ' · current issue';
+                    note.className = 'archive-current';
+                    note.textContent = 'Current issue';
                     li.append(note);
                 }
                 return li;

@@ -34,27 +34,37 @@ following a line number that has since moved.
   (`fonts/fraunces-latin-var.woff2`, `font-display: swap`) and used through
   `--headline-font`; body copy uses the system stack in `--font`.
 - CSS root variables define the newsprint palette, radius and shadow; `body` uses the `--bg`/`--text` aliases over `--surface-1`/`--text-primary`. A `prefers-color-scheme: dark` block redefines the tokens.
-- The palette is newsprint, ink and one second colour: groundwood stock at `--surface-2` on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it. `--accent` is a ledger teal, carried by the cutoff rule under the nameplate and under a page title, by links, and by the button that advances the wire. Controls draw their edge and hover wash from `--control-*` rather than fixed browns, which had left every secondary button borderless in dark mode.
+- The palette is newsprint, ink and one second colour: groundwood stock at `--surface-2` on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it. `--accent` is a ledger teal, carried by the cutoff rule under the masthead (`--accent-rule`, a step down from the links in the dark theme so a 3px line does not glow), by links, and by the button that advances the wire. Controls draw their edge, hover wash and pressed wash from `--control-*` rather than fixed browns, which had left every secondary button borderless in dark mode; nothing lifts on hover. In the dark theme the ground sits a full step under the plate (`--sheet-edge` gives the plate a faint outline) and `--font-smoothing` switches to greyscale antialiasing.
+- Fraunces is used for the lead, the wire item, page titles, the briefs, the deck, the letters, and the name on the folio line. The optical-size axis picks the cut for each size; the subset carries no italic, so nothing set in it relies on `<em>`.
 
 ### Layout grid & spacing
-- Content is wrapped in `.page-shell` (max width 1100px) with rounded corners, border, and shadow. Every page is a single column; the wire splits into the item and the clipping sheet at ≥760px. Body padding is 28/24/48 px (responsive adjustments on small screens).
+- Content is wrapped in `.page-shell` (max width 1180px), square-cornered, with a tight shadow and no border in the light theme — a sheet on a desk. At ≤600px the sheet fills the viewport with no frame, and the desk shows only past its foot. Every page is a single column; the wire splits into the item and the clipping sheet at ≥760px, and the entry and standards hang their heads in a side column at ≥900px. Body padding is 28/24/48 px on the desk.
+- One radius, `--radius: 2px`, on every control, the clipping sheet, the skip link and the toast.
 
 ## Masthead
 Every page opens on one folio line, closed by the cutoff rule.
 
 - The line carries three things: the paper — `.masthead__kicker` **Corbin
-  Falls** and `.masthead__name` **The Gazette**, both at 0.74rem small caps —
-  then the date, then the site links. The paper is named for its town, not its
-  subject; "Neckass" appears in the copy as a surname would, which is the
-  point. It is set at the size of a credit rather than a banner: the reader
-  arrived at neckass.com and does not need telling twice whose page this is,
-  and the lead should be the first thing on the page set large.
+  Falls** at 0.74rem small caps and `.masthead__name` **The Gazette** in
+  Fraunces at 1.04rem — then the date, then the site links. The paper is
+  named for its town, not its subject; "Neckass" appears in the copy as a
+  surname would, which is the point. The name is set at the size of a credit
+  rather than a banner: the reader arrived at neckass.com and does not need
+  telling twice whose page this is, and the lead should be the first thing on
+  the page set large. It is the one thing on the line in the display face,
+  which tells the eye which face the lead below is in.
 - The line closes with a 3px rule in the accent. That rule is the paper's
   cutoff: everything below it is the news.
 - `#masthead-date` ships with standing copy — "Published daily · Corbin Falls"
   — so the page reads before, and without, JavaScript, and is replaced on load
-  with `<date> · Vol. <roman>, No. <n>`. Volumes turn over on the anniversary
-  of the first edition. Pages that are not an issue carry the links alone.
+  with `<date> · Vol. <roman>, No. <n>`, the date and the volume each in a
+  `span` with the middot in `.masthead__sep` between them. Neither span
+  breaks inside itself; on a phone they take a line each and the middot is
+  hidden. Volumes turn over on the anniversary of the first edition. Pages
+  that are not an issue carry the links alone.
+- Under 1060px the folio line will not hold all three parts, so the name
+  and the site links share the first row and the date takes the second, on
+  its own, directly over the cutoff rule.
 - Site links are text, not buttons, and the current page is marked with
   `aria-current="page"`, which underlines it in the accent.
 - `#back-issue-notice` is `hidden` on today's issue. When `?issue=YYYY-MM-DD`
@@ -64,10 +74,17 @@ Every page opens on one folio line, closed by the cutoff rule.
 ## Rules, labels and cuts
 The page has one vocabulary of horizontal rules, and it means something:
 
-- **3px solid** — the masthead cutoff, and the underline of a `.page-title`.
+- **3px solid** — the masthead cutoff. It is the only rule in the accent; a
+  `.page-title` prints no rule of its own, since the masthead's is a hundred
+  pixels above it.
 - **2px solid** — a department head (`.section-label`): In brief, Notices,
-  Weather, Classifieds, Letters.
-- **1px `--border-strong`** — a division inside a department.
+  Weather, Classifieds, Letters. The rule runs *above* the head, with the
+  head close under it and the copy close under that, so each department
+  starts on one line and the heads of two columns side by side draw one rule
+  across the fold. The lead, the lower row and the wire carry no rules of
+  their own; the heads' rules are the divisions.
+- **1px `--border-strong`** — a division inside a department, the colophon,
+  the dingus, the history.
 - **1px `--border`** — between items in a list, and the column rules.
 - **`.dingus`** — an ornament centred on a rule, which is how the issue ends
   and the wire begins. It is `assets/cuts/ornament.svg` on a background.
@@ -79,6 +96,12 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **The file cut** — `assets/cuts/neckass.svg` with a cutline, at the foot of
   the briefs column. The briefs run shorter than the notices beside them; the
   cut is what a paper puts in that hole.
+- **Reading-page side heads** — at ≥900px, a `.seo-copy` that has
+  `.section-label` children (the entry, the standards) becomes a 200px / 68ch
+  grid: the title and copy in the text column, each head in the margin with
+  its rule level with the top of the section's first paragraph. The entry's
+  `.entry-note` sits in the margin beside the opening paragraph, spanning two
+  rows; its place in the markup, after the intro, is unchanged.
 - **The weather cut** — the same drawing as `assets/cuts/weather.svg`, inlined
   in the weather box so its layers can be switched. `frontPage.weatherLayers()`
   maps the first word of the forecast to `--sun`, `--cloud`, `--rain` and
@@ -116,6 +139,9 @@ export were three cards in a right-hand rail; they are four buttons, a line of
 share links and one status line now.
 
 ### The action row
+- The four buttons are one ruled box (`.item-actions__row`) with hairlines
+  between the cells — two across, four at ≥1100px — rather than four bordered
+  buttons. Focus outlines draw inside a cell so neighbours do not clip them.
 - **Copy item** (`#copy-btn`) prefers the Clipboard API and falls back to a
   hidden `<textarea>` plus `document.execCommand('copy')`.
 - **Share** (`#native-share`) opens the device share sheet where one exists.
@@ -128,8 +154,9 @@ share links and one status line now.
   `window.htmlToImage` is missing.
 
 ### Share links
-- Links for X, Facebook and Reddit sit under the row as inline text and update
-  on every item change. The URL they carry holds one parameter, `headline`; the
+- Links for X, Facebook and Reddit sit under the row, set like the site
+  links on the folio line (small caps, a rule under each), and update on
+  every item change. The URL they carry holds one parameter, `headline`; the
   retired filter parameters are never written.
 - They open in a new tab with `rel="noopener noreferrer"` and an `aria-label`
   naming the destination. On coarse pointers their vertical padding brings them
@@ -139,11 +166,15 @@ share links and one status line now.
 - `#clipping-front` occupies the column of empty paper beside the item at
   ≥760px — the item is set to a 20ch measure — and drops below the action row
   on narrower screens. It is capped at 340px so the exported artwork keeps its
-  proportions. It
-  carries a masthead, `#clipping-date`, the kicker “Corbin Falls”, a rule, the
-  item (`#clipping-headline`), the deck “Staff report” and a footer reading
-  “The Corbin Falls Gazette · neckass.com”. It has no heading of its own: it is
-  the preview of what the two clipping buttons produce.
+  proportions. It is a piece of the paper: flat, slightly whiter stock with a
+  hairline edge, and its colours are literals because it is rasterised and
+  shared whichever theme the page is in. It carries a folio line — the name in
+  Fraunces and `#clipping-date` in small caps — under a 2px teal cutoff, the
+  kicker “Corbin Falls”, the item (`#clipping-headline`), the deck “Staff
+  report” and a footer over a hairline reading “The Corbin Falls Gazette ·
+  neckass.com”. `.clipping-rule` is still in the markup and hidden. It has no
+  heading of its own: it is the preview of what the two clipping buttons
+  produce.
 
 ### Status
 - `#item-status` is the single line for copy, share and export. Errors add
@@ -153,9 +184,10 @@ share links and one status line now.
 - **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline`. At ≥760px the
   lead sits on the same two columns as the departments below it: the headline
   in the wide one, against the column rule, and the deck and byline in the
-  narrow one. The deck opens on a wire dateline, `CORBIN FALLS, Sept. 5 —`,
-  in AP month style. Bylines are staff names from the colophon, or "Staff
-  report" / "From wire reports".
+  narrow one. The deck is set in Fraunces at text size, one step under the
+  headline, and opens on a wire dateline, `CORBIN FALLS, Sept. 5 —`, in AP
+  month style. Bylines are staff names from the colophon, or "Staff report" /
+  "From wire reports".
 - **Briefs** — `#briefs-list`, seven items dealt from `data.HEADLINES`, minus
   anything already running as the lead.
 - **Notices** — `#notices-list`, three entries from `data.NOTICES`: council
@@ -171,15 +203,18 @@ share links and one status line now.
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
 - **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`); four are dealt from `data.CLASSIFIEDS`.
-- **Letters** — `#letters-list`, two entries, each a body and a signature. The first is from the person the lead happened to (`lead.letter`); one is dealt from `data.LETTERS`. Every lead carries both, so the lead, its ad, and its letter always run in the same issue.
+- **Letters** — `#letters-list`, two entries, each a body and a signature. The first is from the person the lead happened to (`lead.letter`); one is dealt from `data.LETTERS`. Every lead carries both, so the lead, its ad, and its letter always run in the same issue. The body is set in Fraunces: it is the one place on the page where someone other than the paper is speaking.
 - **Colophon** — the staff line and the paper's note.
 - Pool depth is load-bearing: each pool must stay several times its deal size
   or a reader returning on consecutive days sees the same paper. Current
   shortest cycle is eight days (notices, 24 dealt 3).
 
 ## Back issues (`archive.html`)
-- Lists recent issues newest first, each linking to `/?issue=YYYY-MM-DD`.
+- Lists recent issues newest first, each linking to `/?issue=YYYY-MM-DD`. The
+  current issue carries a `.archive-current` tag under its date.
 - The list is derived from the calendar, not stored, and stops at issue 1.
+- It is set as a ruled list in tabular figures, in the ink with a faint
+  underline: three columns at ≥900px, two at ≥560px, one on a phone.
 - Without JavaScript the page still explains the archive and links to today.
 
 ## Edge functions (Cloudflare Pages)
@@ -324,6 +359,8 @@ This section defines a **v2 generation model** that keeps the app fully static/n
 The paper reads in one column, two, or the broadsheet grid, in that order:
 
 - **≥1100px**: the four item actions sit in one row of four.
+- **≥900px**: the entry and the standards hang their heads in a 200px side
+  column; the archive runs three columns.
 - **≥760px**: the broadsheet grid — the lead and the departments on
   1.55fr / 1fr against a column rule, and the wire split into the item and its
   controls on the left, clipping sheet on the right.
@@ -332,8 +369,9 @@ The paper reads in one column, two, or the broadsheet grid, in that order:
   down the page one after another. Everything else is one column.
 - **≥560px**: the file cut and its cutline share a line.
 - **<560px**: one column throughout; the cutline sits under the cut.
-- **≤600px**: tighter body padding, stacked navigation buttons, and reduced
-  headline text size.
+- **≤600px**: the sheet fills the viewport with no frame or border, the date
+  and the volume take a line each on the folio, the navigation buttons stack,
+  and the headline text size is reduced.
 
 Item actions are always an even grid — two columns, or four above 1100px.
 Auto-fitting them left a 3 + 1 row at most widths, which reads as a mistake.
