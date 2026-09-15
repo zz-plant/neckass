@@ -141,18 +141,14 @@
                 return;
             }
 
-            let nextIndex = null;
             this.activeButton = this.elements.nextButton;
 
-            if (this.isGeneratorAvailable()) {
-                this.toggleLoader(true, 'Writing a new item.');
-                nextIndex = await this.generateHeadlineWithFallback();
-            }
-
-            if (nextIndex === null) {
-                this.toggleLoader(true, 'Showing an item from the file.');
-                nextIndex = this.getRandomIndex();
-            }
+            // The wire deals from the written catalogue. The on-device
+            // generator cannot produce specificity, and specificity is where
+            // the joke is; it remains reachable through the agent API's
+            // `generate` tool for anyone who wants it.
+            this.toggleLoader(true, 'Loading.');
+            const nextIndex = this.getRandomIndex();
 
             if (nextIndex === null) {
                 this.renderEmptyState();

@@ -296,6 +296,16 @@ test.describe('Neckass smoke flows', () => {
         // The lead must not also be running as a brief.
         const briefs = await page.locator('#briefs-list li').allInnerTexts();
         expect(briefs).not.toContain(issue.lead.headline);
+
+        // The lead's own classified and letter run in the same issue.
+        const ads = await page.locator('#classifieds-list li').allInnerTexts();
+        expect(ads).toContain(issue.lead.classified);
+        const letters = await page
+            .locator('#letters-list .letter-body')
+            .allInnerTexts();
+        expect(
+            letters.some((text) => text.includes(issue.lead.letter.body)),
+        ).toBe(true);
     });
 
     test('the weather cut is drawn for the forecast on file', async ({

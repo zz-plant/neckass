@@ -101,7 +101,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - Loader element: `<div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>`. Loader visibility is toggled via the `.is-visible` class and `aria-hidden` state updates during transitions.
 
 ### Headline behavior
-- Headlines are randomly selected from the curated `headlines` array; additional generated headlines can be appended when the tiny LLM helper succeeds. Next/Shuffle asks the on-device generator first when it is available, and falls back to a curated headline otherwise. The next headline differs from the current headline whenever possible.
+- Next deals a headline from the written catalogue; the next headline differs from the current one whenever possible. The on-device generator (`llm.js`) is not used by the wire — it cannot produce specificity, which is where the joke is — and is reachable only through the agent API's `generate` tool, which appends its output to the session catalogue.
 - Previous navigates back through the stored navigation stack and removes the last index if you go backward. It is disabled whenever the stack has fewer than two items or while loading.
 - The headline takes its colour from the `--ink-display` token, so it is one consistent ink in each theme (14.5:1 on light, 12.7:1 on dark). It was previously assigned a random palette colour per shuffle and contrast-checked against a hardcoded background constant, which never evaluated dark mode. The update includes a short animation delay (60ms) to show the loader before revealing text.
 
@@ -170,8 +170,8 @@ share links and one status line now.
 - **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
-- **Classifieds** — `#classifieds-list`, five entries.
-- **Letters** — `#letters-list`, two entries, each a body and a signature.
+- **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`); four are dealt from `data.CLASSIFIEDS`.
+- **Letters** — `#letters-list`, two entries, each a body and a signature. The first is from the person the lead happened to (`lead.letter`); one is dealt from `data.LETTERS`. Every lead carries both, so the lead, its ad, and its letter always run in the same issue.
 - **Colophon** — the staff line and the paper's note.
 - Pool depth is load-bearing: each pool must stay several times its deal size
   or a reader returning on consecutive days sees the same paper. Current
