@@ -186,8 +186,17 @@
             notices: deal(data.NOTICES || [], 3, rng),
             weatherNumbers: weatherFor(date, rng),
             weather: deal(data.WEATHER || [], 1, rng)[0] || '',
-            classifieds: deal(data.CLASSIFIEDS || [], 5, rng),
-            letters: deal(data.LETTERS || [], 2, rng),
+            // The lead's own classified and letter run alongside it, so the
+            // page compounds: the item, then the ad, then the person he did
+            // it to. The rest are dealt from the general pools.
+            classifieds: [
+                lead?.classified,
+                ...deal(data.CLASSIFIEDS || [], lead?.classified ? 4 : 5, rng),
+            ].filter(Boolean),
+            letters: [
+                lead?.letter,
+                ...deal(data.LETTERS || [], lead?.letter ? 1 : 2, rng),
+            ].filter(Boolean),
             colophon: data.COLOPHON || null,
         };
     }
