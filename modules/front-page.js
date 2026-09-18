@@ -82,6 +82,67 @@
         }
     }
 
+    // The town map is one drawing with a ring round each place, and the
+    // desk shows the rings for the places the day's notices and letters
+    // name. Each place is a switch on the svg element and a name for the
+    // caption.
+    const PLACES = [
+        ['bridge', /Mill Street bridge/i, 'the Mill Street bridge'],
+        ['orchard', /Orchard Lane/i, 'Orchard Lane'],
+        ['station', /station|farmers market/i, 'the station'],
+        ['depot', /depot|bandstand/i, 'Depot Park'],
+        ['hall', /council|town office|town clerk|tax office/i, 'the town hall'],
+        ['library', /library/i, 'the library'],
+        [
+            'center',
+            /community center|polls|flu clinic/i,
+            'the community center',
+        ],
+        ['gym', /\bgym\b/i, 'the gym'],
+        [
+            'school',
+            /high school|school board|Little League/i,
+            'the high school',
+        ],
+        ['route9', /Route 9|interchange/i, 'Route 9'],
+        ['river', /\briver\b/i, 'the river'],
+        ['shelter', /animal shelter/i, 'the animal shelter'],
+    ];
+
+    function placesNamed(texts) {
+        const joined = texts.join('\n');
+        return PLACES.filter(([, pattern]) => pattern.test(joined));
+    }
+
+    function setTownMap(issue) {
+        const cut = document.getElementById('map-cut');
+        if (!cut) return;
+        const texts = [
+            ...(issue.notices || []),
+            ...(issue.letters || []).flatMap((letter) => [
+                letter.body,
+                letter.signature,
+            ]),
+        ];
+        const named = placesNamed(texts);
+        const on = new Set(named.map(([key]) => key));
+        for (const [key] of PLACES) {
+            cut.style.setProperty(`--${key}`, on.has(key) ? '1' : '0');
+        }
+        const caption = document.getElementById('map-caption');
+        if (!caption) return;
+        const list = named.map(([, , name]) => name);
+        const ringed = list.length
+            ? `Ringed, from today's notices and letters: ${list.join(', ')}.`
+            : "Nothing in today's notices is on it, which is a quiet day.";
+        caption.replaceChildren(
+            Object.assign(document.createElement('b'), {
+                textContent: 'CORBIN FALLS',
+            }),
+            ` — The river, the bridge with one lane, and Orchard Lane, where he lives at No. 12. ${ringed}`,
+        );
+    }
+
     function renderIssue(issue) {
         if (!issue) return;
 
@@ -144,6 +205,8 @@
             li.append(body, signature);
         });
 
+        setTownMap(issue);
+
         if (issue.colophon) {
             textInto('#colophon-staff', issue.colophon.staff);
             textInto('#colophon-note', issue.colophon.note);
@@ -205,5 +268,5 @@
         init();
     }
 
-    Neckass.frontPage = { renderIssue, init, weatherLayers };
+    Neckass.frontPage = { renderIssue, init, weatherLayers, placesNamed };
 })();

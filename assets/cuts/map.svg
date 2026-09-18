@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 362 236" width="362" height="236" role="img" aria-label="Line-cut map of Corbin Falls: the river and the falls, Mill Street and its bridge, Orchard Lane, Route 9, the station, Depot Park, and the town's buildings">
+    <title>Corbin Falls, the town</title>
+    <style><![CDATA[
+        /* A rig like the others: each place on the map has a mark that is
+           shown or hidden by a custom property, so the day's notices can
+           point at the places they name.
+
+             .cut-map { --bridge: 1; --orchard: 1; }
+
+           1 marks a place, 0 leaves it unmarked. The fallbacks mark nothing,
+           so the file is a plain map of the town on its own. */
+        svg {
+            --ink-default: #1c1a19;
+            --paper-default: #efeae0;
+            font-family: inherit;
+        }
+        @media (prefers-color-scheme: dark) {
+            svg { --ink-default: #ece7dc; --paper-default: #1e2523; }
+        }
+        .road {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .lane {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1.4;
+            stroke-linecap: round;
+        }
+        .rail {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1.2;
+            stroke-dasharray: 5 3;
+        }
+        .bank {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 15;
+            stroke-linecap: butt;
+        }
+        .stream {
+            fill: none;
+            stroke: var(--paper, var(--paper-default));
+            stroke-width: 12;
+            stroke-linecap: butt;
+        }
+        .ripple {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1;
+            stroke-linecap: round;
+            opacity: 0.55;
+        }
+        .bldg {
+            fill: var(--paper, var(--paper-default));
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1.8;
+            stroke-linejoin: round;
+        }
+        .solid { fill: var(--ink, var(--ink-default)); stroke: none; }
+        .hatch {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 1;
+            opacity: 0.6;
+        }
+        .label {
+            fill: var(--ink, var(--ink-default));
+            font-size: 8.4px;
+            letter-spacing: 0.02em;
+        }
+        .label.small { font-size: 6.8px; opacity: 0.85; }
+        .label.caps { font-size: 6.4px; letter-spacing: 0.16em; text-transform: uppercase; }
+        /* The marks: a ring round the place, drawn only when the desk says
+           so. Each reads its own property. */
+        .mark {
+            fill: none;
+            stroke: var(--ink, var(--ink-default));
+            stroke-width: 2;
+            stroke-dasharray: 3 2.5;
+        }
+        .mark-bridge  { opacity: var(--bridge, 0); }
+        .mark-orchard { opacity: var(--orchard, 0); }
+        .mark-station { opacity: var(--station, 0); }
+        .mark-depot   { opacity: var(--depot, 0); }
+        .mark-hall    { opacity: var(--hall, 0); }
+        .mark-library { opacity: var(--library, 0); }
+        .mark-center  { opacity: var(--center, 0); }
+        .mark-gym     { opacity: var(--gym, 0); }
+        .mark-school  { opacity: var(--school, 0); }
+        .mark-route9  { opacity: var(--route9, 0); }
+        .mark-river   { opacity: var(--river, 0); }
+        .mark-shelter { opacity: var(--shelter, 0); }
+        /* The bridge is reduced to one lane when the notice says so: the
+           second lane's line goes dashed. */
+        .bridge-lane-2 { stroke-dasharray: calc(var(--bridge, 0) * 3) calc(var(--bridge, 0) * 3); }
+    ]]></style>
+
+    <!-- The river, top left to bottom right, drawn as a band: an ink
+         stroke with a paper stroke over it, so the banks are two lines. -->
+    <path class="bank" d="M-2 64 q50 -8 90 18 q40 26 100 38 q50 10 90 12 q40 6 84 18" />
+    <path class="stream" d="M-2 64 q50 -8 90 18 q40 26 100 38 q50 10 90 12 q40 6 84 18" />
+    <path class="ripple" d="M24 66 q7 -2 12 2 M70 86 q7 1 12 6 M130 108 q8 1 13 5 M236 126 q8 1 13 4 M316 142 q8 2 13 5" />
+    <!-- the falls -->
+    <path class="lane" d="M38 60 v14 M44 58 v16 M50 60 v14" />
+    <path class="ripple" d="M32 78 q6 3 12 0 q6 -3 12 0 q6 3 12 0" />
+    <text class="label small" x="12" y="50">the falls</text>
+    <circle class="mark mark-river" cx="120" cy="104" r="12" />
+
+    <!-- The railway, along the top, and the station on it. -->
+    <path class="rail" d="M-2 22 h364" />
+    <path class="rail" d="M-2 27 h364" />
+    <rect class="bldg" x="46" y="28" width="30" height="12" />
+    <path class="hatch" d="M50 32 h22 M50 36 h22" />
+    <text class="label" x="82" y="38">Station</text>
+    <text class="label small" x="82" y="46">Station Café · market lot</text>
+    <rect class="hatch" x="46" y="44" width="30" height="10" />
+    <circle class="mark mark-station" cx="61" cy="40" r="20" />
+
+    <!-- The gym, a little way along, with its parking lot. -->
+    <rect class="bldg" x="210" y="34" width="22" height="12" />
+    <text class="label" x="236" y="40">Gym</text>
+    <text class="label small" x="236" y="48">lot</text>
+    <rect class="hatch" x="210" y="50" width="22" height="8" />
+    <circle class="mark mark-gym" cx="224" cy="46" r="18" />
+
+    <!-- Mill Street, north to south, crossing the river on the bridge. -->
+    <path class="road" d="M196 28 v78 M196 142 v90" />
+    <text class="label caps" x="200" y="84" transform="rotate(90 200 84)">Mill Street</text>
+    <!-- the bridge: two lanes over the water -->
+    <path class="road" d="M191 106 v36" style="stroke-width:1.8" />
+    <path class="road bridge-lane-2" d="M201 106 v36" style="stroke-width:1.8" />
+    <path class="lane" d="M186 106 h20 M186 142 h20" />
+    <text class="label small" x="206" y="128">bridge</text>
+    <circle class="mark mark-bridge" cx="196" cy="124" r="20" />
+
+    <!-- Orchard Lane, off Mill Street to the east, and its houses. -->
+    <path class="lane" d="M196 74 h164" />
+    <text class="label caps" x="214" y="70">Orchard Lane</text>
+    <rect class="bldg" x="222" y="80" width="10" height="9" />
+    <text class="label small" x="222" y="98">12</text>
+    <rect class="bldg" x="242" y="80" width="10" height="9" />
+    <text class="label small" x="242" y="98">14</text>
+    <rect class="bldg" x="262" y="80" width="10" height="9" />
+    <rect class="bldg" x="282" y="80" width="10" height="9" />
+    <rect class="bldg" x="322" y="80" width="10" height="9" />
+    <text class="label small" x="322" y="98">41</text>
+    <circle class="mark mark-orchard" cx="247" cy="84" r="20" />
+
+    <!-- Depot Park, between the lane and the river, with the bandstand. -->
+    <path class="lane" d="M212 104 q28 -8 56 -2 q20 4 34 14 q-28 8 -56 2 q-20 -4 -34 -14 z" style="stroke-dasharray:2 2" />
+    <path class="bldg" d="M250 106 l5 -3 h6 l5 3 v6 l-5 3 h-6 l-5 -3 z" />
+    <path class="hatch" d="M250 106 l16 9 M266 106 l-16 9" />
+    <text class="label" x="268" y="100">Depot Park</text>
+    <circle class="mark mark-depot" cx="256" cy="112" r="18" />
+
+    <!-- Main Street, west to east, south of the river; the town hall on it. -->
+    <path class="road" d="M-2 172 h362" />
+    <text class="label caps" x="16" y="168">Main Street</text>
+    <rect class="bldg" x="168" y="176" width="20" height="16" />
+    <path class="solid" d="M178 168 v8 h-1 v-8 z" />
+    <path class="solid" d="M178 168 l6 2 l-6 2 z" />
+    <text class="label" x="206" y="184">Town hall</text>
+    <text class="label small" x="206" y="192">council · clerk</text>
+    <circle class="mark mark-hall" cx="178" cy="184" r="18" />
+
+    <!-- The Eastside library, further along Main Street. -->
+    <rect class="bldg" x="264" y="178" width="24" height="14" />
+    <path class="hatch" d="M268 182 h16 M268 186 h16" />
+    <text class="label" x="292" y="184">Library</text>
+    <text class="label small" x="292" y="192">Eastside</text>
+    <circle class="mark mark-library" cx="276" cy="185" r="18" />
+
+    <!-- The community center and its pool, west of town. -->
+    <rect class="bldg" x="40" y="178" width="30" height="14" />
+    <rect class="hatch" x="44" y="196" width="22" height="8" />
+    <path class="ripple" d="M47 200 q3 -2 6 0 q3 2 6 0 q3 -2 6 0" />
+    <text class="label" x="76" y="188">Community center</text>
+    <text class="label small" x="76" y="196">pool · clinics · polls</text>
+    <circle class="mark mark-center" cx="55" cy="190" r="20" />
+
+    <!-- Route 9, along the foot, and the interchange at the east end. -->
+    <path class="road" d="M-2 224 h300 q16 0 22 -8 q6 -8 22 -8 h20" />
+    <path class="road" d="M300 224 q18 0 26 8" style="stroke-width:1.6" />
+    <text class="label caps" x="10" y="220">Route 9</text>
+    <text class="label small" x="300" y="204">interchange</text>
+    <circle class="mark mark-route9" cx="150" cy="224" r="12" />
+
+    <!-- The high school, on Route 9. -->
+    <rect class="bldg" x="96" y="204" width="34" height="14" />
+    <path class="hatch" d="M100 208 h26 M100 212 h26" />
+    <text class="label" x="134" y="214">High school</text>
+    <circle class="mark mark-school" cx="113" cy="211" r="18" />
+
+    <!-- The animal shelter, out past the interchange. -->
+    <rect class="bldg" x="338" y="192" width="18" height="10" />
+    <text class="label small" x="334" y="188">shelter</text>
+    <circle class="mark mark-shelter" cx="347" cy="197" r="12" />
+</svg>
