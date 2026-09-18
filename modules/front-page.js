@@ -148,6 +148,10 @@
             textInto('#colophon-staff', issue.colophon.staff);
             textInto('#colophon-note', issue.colophon.note);
         }
+
+        // The clipping is the issue's social card, drawn at the edge.
+        const clipping = document.querySelector('#colophon-card');
+        if (clipping) clipping.href = `/card.png?issue=${issue.issueParam}`;
     }
 
     function requestedIssueDate() {

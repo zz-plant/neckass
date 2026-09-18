@@ -3,6 +3,8 @@ import { buildFeed } from '../functions/feed.xml.js';
 import { issueNumber, selectLead } from '../functions/lib/issue.mjs';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
+// The Pages Functions under workerd; see playwright.config.mjs.
+const EDGE_URL = process.env.PLAYWRIGHT_EDGE_URL || 'http://127.0.0.1:8800/';
 
 test.describe('The Corbin Falls Gazette', () => {
     // The issue is the product. These cover what a reader actually opens:
@@ -421,6 +423,43 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(
             page.locator('link[rel="alternate"][type="application/rss+xml"]'),
         ).toHaveAttribute('href', '/feed.xml');
+    });
+
+    test('the edge draws a card for the issue and points the share tags at it', async ({
+        request,
+    }) => {
+        // The front page, served through the middleware, carries the lead
+        // of the issue asked for and an image URL for the same issue.
+        const page = await request.get(`${EDGE_URL}?issue=2025-01-06`);
+        expect(page.ok()).toBe(true);
+        const html = await page.text();
+        expect(html).toContain('<title>Neckass has told the Gazette');
+        expect(html).toContain(
+            '<meta property="og:image" content="https://neckass.com/card.png?issue=2025-01-06">',
+        );
+        expect(html).toContain(
+            '<meta name="twitter:image" content="https://neckass.com/card.png?issue=2025-01-06">',
+        );
+
+        // The card is a real PNG of a useful size, not an empty response
+        // with the right content type.
+        const card = await request.get(`${EDGE_URL}card.png?issue=2025-01-06`);
+        expect(card.ok()).toBe(true);
+        expect(card.headers()['content-type']).toBe('image/png');
+        const bytes = await card.body();
+        expect(bytes.length).toBeGreaterThan(20_000);
+        expect(bytes.subarray(0, 8)).toEqual(
+            Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+        );
+
+        // A date before the first edition is not an issue.
+        const early = await request.get(`${EDGE_URL}card.png?issue=2020-01-01`);
+        expect(early.status()).toBe(404);
+
+        // The feed is served, too.
+        const feed = await request.get(`${EDGE_URL}feed.xml`);
+        expect(feed.ok()).toBe(true);
+        expect(feed.headers()['content-type']).toContain('application/rss+xml');
     });
 
     test('every page carries the icon set', async ({ page }) => {
