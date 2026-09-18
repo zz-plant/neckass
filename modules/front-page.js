@@ -86,6 +86,7 @@
         if (!issue) return;
 
         mastheadInto('#masthead-date', issue.mastheadLine);
+        document.title = `The Corbin Falls Gazette · No. ${issue.number}`;
 
         if (issue.lead) {
             textInto('#lead-headline', issue.lead.headline);

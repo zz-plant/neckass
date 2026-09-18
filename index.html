@@ -212,102 +212,12 @@
                     <p><a href="/archive.html">Back issues</a> are available. The term itself is covered in <a href="/about.html">the entry</a>.</p>
                 </footer>
             </section>
-
-            <!-- The dingus a compositor sets between departments. -->
-            <div class="dingus" role="presentation"></div>
-
-            <!-- The wire: the interactive half. Items arrive one at a time,
-                 from the catalogue or the desk, and can be taken away. One
-                 item, one row of things to do with it. -->
-            <section class="wire" aria-labelledby="wire-title">
-                <div class="wire-intro">
-                    <h2 class="section-label" id="wire-title">Latest from the wire</h2>
-                    <p class="wire-note">Filings as they arrive.</p>
-                </div>
-
-                <div class="headline-section">
-                    <div class="headline-main">
-                        <div class="headline-frame">
-                            <h3 id="headline" tabindex="-1" aria-label="Headline">Loading...</h3>
-                        </div>
-
-                        <div class="actions">
-                            <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost"><span>Previous</span></button>
-                            <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Next</span></button>
-                        </div>
-
-                        <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
-
-                        <div class="item-actions">
-                            <div class="item-actions__row">
-                                <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy item</span></button>
-                                <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share</span></button>
-                                <button id="download-clipping" class="ghost" type="button"><span>Download clipping</span></button>
-                                <button id="copy-clipping" class="ghost" type="button"><span>Copy clipping</span></button>
-                            </div>
-
-                            <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
-                            <p class="share-links">
-                                <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">X</a>
-                                <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
-                                <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">Reddit</a>
-                            </p>
-
-                            <p id="item-status" class="status-text" role="status" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <!-- The sheet the two clipping buttons render to PNG. It stays
-                         on the page as the preview of what you get, in the space
-                         beside the item, and carries no heading of its own. -->
-                    <div id="clipping-front" class="clipping-front">
-                        <div class="clipping-masthead">
-                            <span class="clipping-title">The Gazette</span>
-                            <span id="clipping-date" class="clipping-date">Loading...</span>
-                        </div>
-                        <p class="clipping-kicker">Corbin Falls</p>
-                        <div class="clipping-rule" aria-hidden="true"></div>
-                        <h4 id="clipping-headline" class="clipping-headline">Loading...</h4>
-                        <p class="clipping-deck">Staff report</p>
-                        <p class="clipping-footer">The Corbin Falls Gazette · neckass.com</p>
-                    </div>
-                </div>
-
-                <section class="history-card" aria-labelledby="recent-headlines-title">
-                    <div class="history-header">
-                        <h3 class="filter-label" id="recent-headlines-title">Recent filings</h3>
-                        <p class="counter counter-inline" id="history-count">0 items</p>
-                    </div>
-                    <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
-                </section>
-            </section>
         </main>
     </div>
 
-    <script defer src="vendor/html-to-image.js"></script>
     <script defer src="data/headlines.js"></script>
     <script defer src="data/formats.js"></script>
-    <script defer src="data/llm-beats.js"></script>
-    <script defer src="modules/utils.js"></script>
     <script defer src="modules/issue.js"></script>
     <script defer src="modules/front-page.js"></script>
-    <script defer src="modules/state.js"></script>
-    <script defer src="modules/storage.js"></script>
-    <script defer src="modules/clipboard.js"></script>
-    <script defer src="modules/history.js"></script>
-    <script defer src="modules/share.js"></script>
-    <script defer src="modules/clipping-export.js"></script>
-    <script defer src="modules/ui.js"></script>
-    <script defer src="modules/head.js"></script>
-    <script defer src="modules/history-list.js"></script>
-    <script defer src="modules/agent-api.js"></script>
-    <script defer src="modules/status.js"></script>
-    <script defer src="modules/loader.js"></script>
-    <script defer src="modules/app.js"></script>
-    <script defer src="modules/agent-interface.js"></script>
-    <script defer src="llm.js"></script>
-    <script defer src="script.js"></script>
-
-    <div id="global-toast" class="global-toast" role="status" aria-live="polite" aria-hidden="true"></div>
 </body>
 </html>
