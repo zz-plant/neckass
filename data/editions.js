@@ -26,6 +26,8 @@
                 byline: 'By Dana Whitcomb',
                 correction:
                     'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
+                followUp:
+                    'Neckass has run. He ran to the end of Orchard Lane and walked back, and has described the walk back as "the cool-down."',
                 classified:
                     'FOR SALE: running shoes, three pairs, all one size. Boxes included, one empty.',
                 letter: {
@@ -62,6 +64,8 @@
                 byline: 'By Marcus Oyelaran',
                 correction:
                     'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
+                followUp:
+                    'Neckass has collected the scarf. He asked again that the paper stop. He was in the office thirty-five minutes, which is an improvement.',
                 classified:
                     'NOTICE: the gentleman who came to the office to ask that we stop has left his scarf. He may collect it. We will not stop.',
                 letter: {
@@ -88,6 +92,8 @@
                 byline: 'By Helen Vasko',
                 correction:
                     "We reported that the hat is new. It is his father's. He has had it since March and worn it since Saturday.",
+                followUp:
+                    'Neckass has worn the hat a second day. No further reports of a second man have been received. The neighbor has asked us to say she "still sees it."',
                 classified:
                     'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the parcel.',
                 letter: {
@@ -114,6 +120,8 @@
                 byline: 'From wire reports',
                 correction:
                     'We reported that Neckass steps over the paper. He steps on it.',
+                followUp:
+                    'Neckass has picked up one of the 365 papers. It was a Tuesday from March. He has read the weather.',
                 classified:
                     'FOR SALE: 365 newspapers, unread, stacked inside a door. Buyer collects. Buyer will have to knock; the door does not open all the way.',
                 letter: {
@@ -140,6 +148,8 @@
                 byline: 'By Priya Natarajan',
                 correction:
                     'We reported that Neckass was holding a copy of the paper. He was holding it, and reading his phone.',
+                followUp:
+                    'Neckass has been told the Gazette is still going. He said "good for them" and asked who was in it.',
                 classified:
                     "WANTED: a subject for a newspaper. Two years' experience with the current one. Applicants must do less.",
                 letter: {

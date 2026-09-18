@@ -180,7 +180,43 @@
             rng,
         )[0];
 
+        // Yesterday's lead continues at the top of today's column: he has
+        // done the next thing. With the correction beneath it, a reader
+        // who comes back gets a story, not a reshuffle.
+        const followUp = previousLead?.followUp || null;
+
+        // What the calendar has for this date — the council's Tuesday, the
+        // clocks, his birthday. Each runs first in its section and takes
+        // the place of a dealt item, so every section keeps its size.
+        const onCalendar =
+            Neckass.calendar?.itemsFor(date, {
+                written: Boolean(data.EDITIONS?.[number]?.lead),
+            }) || {};
+        const dated = (section) => onCalendar[section] || [];
+        // Deal `count` from `pool`, less the items already set for the
+        // section, and never fewer than zero.
+        const dealAfter = (pool, count, fixed, exclude = []) =>
+            deal(
+                pool.filter((item) => !exclude.includes(item)),
+                Math.max(0, count - fixed.length),
+                rng,
+            );
+
         const letters = lettersCount(number);
+        const fixedBriefs = [followUp, ...dated('briefs')].filter(Boolean);
+        const fixedCorrections = [
+            routineCorrection,
+            chainedCorrection,
+            ...dated('corrections'),
+        ].filter(Boolean);
+        const fixedNotices = dated('notices');
+        const fixedClassifieds = [
+            lead?.classified,
+            ...dated('classifieds'),
+        ].filter(Boolean);
+        const fixedLetters = [lead?.letter, ...dated('letters')].filter(
+            Boolean,
+        );
         const issue = {
             number,
             date,
@@ -192,31 +228,32 @@
             lead,
             editorial: null,
             tag: null,
-            briefs: deal(briefPool, briefsCount(number), rng),
+            briefs: [
+                ...fixedBriefs,
+                ...dealAfter(briefPool, briefsCount(number), fixedBriefs),
+            ],
             // The dull one first, then yesterday's retraction, then the rest.
             corrections: [
-                routineCorrection,
-                chainedCorrection,
-                ...deal(data.CORRECTIONS || [], chainedCorrection ? 2 : 3, rng),
-            ].filter(Boolean),
-            notices: deal(data.NOTICES || [], 3, rng),
+                ...fixedCorrections,
+                ...dealAfter(data.CORRECTIONS || [], 4, fixedCorrections),
+            ],
+            notices: [
+                ...fixedNotices,
+                ...dealAfter(data.NOTICES || [], 3, fixedNotices),
+            ],
             weatherNumbers: weatherFor(date, rng),
             weather: deal(data.WEATHER || [], 1, rng)[0] || '',
             // The lead's own classified and letter run alongside it, so the
             // page compounds: the item, then the ad, then the person he did
             // it to. The rest are dealt from the general pools.
             classifieds: [
-                lead?.classified,
-                ...deal(data.CLASSIFIEDS || [], lead?.classified ? 4 : 5, rng),
-            ].filter(Boolean),
+                ...fixedClassifieds,
+                ...dealAfter(data.CLASSIFIEDS || [], 5, fixedClassifieds),
+            ],
             letters: [
-                lead?.letter,
-                ...deal(
-                    data.LETTERS || [],
-                    lead?.letter ? letters - 1 : letters,
-                    rng,
-                ),
-            ].filter(Boolean),
+                ...fixedLetters,
+                ...dealAfter(data.LETTERS || [], letters, fixedLetters),
+            ],
             colophon: data.COLOPHON || null,
         };
 

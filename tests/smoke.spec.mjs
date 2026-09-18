@@ -178,6 +178,51 @@ test.describe('The Corbin Falls Gazette', () => {
         }
     });
 
+    test('the paper knows what day it is', async ({ page }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        const checked = await page.evaluate(() => {
+            const { issue } = window.Neckass;
+            const compose = (value) =>
+                issue.composeIssue(issue.parseIssueDate(value));
+            const before = compose('2026-11-25');
+            const thanksgiving = compose('2026-11-26');
+            const wednesday = compose('2026-10-07');
+            const birthday = compose('2027-03-11');
+            const anniversary = compose('2027-09-29');
+            return {
+                // Yesterday's lead continues at the top of today's column.
+                followUp: thanksgiving.briefs[0],
+                expectedFollowUp: before.lead.followUp,
+                thanksgivingNotice: thanksgiving.notices[0],
+                thanksgivingBrief: thanksgiving.briefs[1],
+                councilReport: wednesday.briefs[1],
+                birthdayBrief: birthday.briefs[1],
+                birthdayLetter: birthday.letters[1]?.signature,
+                anniversaryBrief: anniversary.briefs[1],
+                counts: [
+                    thanksgiving.briefs.length,
+                    thanksgiving.notices.length,
+                    birthday.letters.length,
+                    birthday.classifieds.length,
+                ],
+            };
+        });
+
+        expect(checked.followUp).toBe(checked.expectedFollowUp);
+        expect(checked.thanksgivingNotice).toMatch(/Thanksgiving/);
+        expect(checked.thanksgivingBrief).toMatch(/bring a side/);
+        expect(checked.councilReport).toMatch(/Town council met Tuesday/);
+        expect(checked.birthdayBrief).toBe(
+            'Neckass is 38 today. He has told people he is 36 since he was 36.',
+        );
+        expect(checked.birthdayLetter).toBe('Bernadette Neckass, Corbin Falls');
+        expect(checked.anniversaryBrief).toMatch(/^The Gazette is three today/);
+        // A dated item takes the place of a dealt one; sizes do not change.
+        expect(checked.counts).toEqual([7, 3, 2, 5]);
+    });
+
     test('a back issue loads from its URL and offers the way back', async ({
         page,
     }) => {
