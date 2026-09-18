@@ -515,6 +515,50 @@ a:focus-visible {
     color: var(--muted);
 }
 
+/* The editorial. Only a landmark issue carries one, under the lead and
+   across the page; the editor speaks in the paper's own voice, so it is set
+   in the body face, not the letters'. Two columns on the broadsheet, the
+   way a leader column runs. */
+.box--editorial {
+    margin-bottom: 26px;
+}
+
+.box--editorial[hidden] {
+    display: none;
+}
+
+.editorial-head {
+    font-family: var(--headline-font);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink-display);
+    margin-bottom: 10px;
+}
+
+.editorial-body {
+    max-width: 68ch;
+    display: grid;
+    gap: 10px;
+    font-size: 0.94rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+}
+
+@media (min-width: 760px) {
+    .editorial-body {
+        max-width: none;
+        columns: 2;
+        column-gap: 34px;
+        column-rule: 1px solid var(--border);
+        display: block;
+    }
+
+    .editorial-body p + p {
+        margin-top: 10px;
+    }
+}
+
 /* A cut and its cutline. The briefs column runs shorter than the notices
    beside it, which is the hole a paper fills with a picture. */
 .cut {

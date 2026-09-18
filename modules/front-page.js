@@ -94,6 +94,26 @@
             textInto('#lead-byline', issue.lead.byline);
         }
 
+        const editorial = document.querySelector('#editorial');
+        if (editorial) {
+            editorial.hidden = !issue.editorial;
+            if (issue.editorial) {
+                textInto('#editorial-head', issue.editorial.head);
+                const body = document.querySelector('#editorial-body');
+                body?.replaceChildren(
+                    ...issue.editorial.body.map((text) => {
+                        const p = document.createElement('p');
+                        p.textContent = text;
+                        return p;
+                    }),
+                );
+                textInto(
+                    '#editorial-signature',
+                    `— ${issue.editorial.signature}`,
+                );
+            }
+        }
+
         listInto('#briefs-list', issue.briefs, (li, brief) => {
             li.textContent = brief;
         });
@@ -130,28 +150,43 @@
         }
     }
 
-    function activeIssueDate() {
+    function requestedIssueDate() {
         const requested = new URLSearchParams(window.location.search).get(
             'issue',
         );
-        return Neckass.issue.parseIssueDate(requested) || new Date();
+        return Neckass.issue.parseIssueDate(requested);
     }
 
     function init() {
         if (!Neckass.issue || !document.querySelector('#lead-headline')) return;
 
-        const date = activeIssueDate();
-        const issue = Neckass.issue.composeIssue(date);
+        const today = Neckass.issue.composeIssue(new Date());
+        const requested = requestedIssueDate();
+        // A date past today is an issue that has not gone to press. The
+        // entry cites a few of those ahead of time; the reader gets today's
+        // paper and a line saying when the one they asked for is due.
+        const isFuture =
+            requested && Neckass.issue.issueNumber(requested) > today.number;
+        const issue =
+            requested && !isFuture
+                ? Neckass.issue.composeIssue(requested)
+                : today;
         renderIssue(issue);
         Neckass.currentIssue = issue;
 
         // Back issues say so, and offer the way back to today.
-        const today = Neckass.issue.composeIssue(new Date());
         const banner = document.querySelector('#back-issue-notice');
         if (banner) {
             const isBackIssue = issue.number !== today.number;
-            banner.hidden = !isBackIssue;
-            if (isBackIssue) {
+            banner.hidden = !(isBackIssue || isFuture);
+            if (isFuture) {
+                const due = Neckass.issue.composeIssue(requested);
+                textInto(
+                    '#back-issue-text',
+                    `No. ${due.number} goes to press ${due.dateLabel}. This is today's issue.`,
+                );
+                banner.querySelector('a').hidden = true;
+            } else if (isBackIssue) {
                 textInto(
                     '#back-issue-text',
                     `You are reading No. ${issue.number}, published ${issue.dateLabel}.`,

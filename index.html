@@ -110,6 +110,17 @@
                     <p class="lead__byline" id="lead-byline">By the wire desk</p>
                 </article>
 
+                <!-- Only a landmark issue carries one: the first edition, an
+                     anniversary. front-page.js reveals it when the issue has it. -->
+                <section class="box box--editorial" id="editorial" aria-labelledby="editorial-title" hidden>
+                    <h3 class="section-label" id="editorial-title">From the editor</h3>
+                    <h4 class="editorial-head" id="editorial-head">Why a paper</h4>
+                    <div class="editorial-body" id="editorial-body">
+                        <p>This paper will report what he did. It will not say why, because nobody knows, least of all him.</p>
+                    </div>
+                    <p class="letter-signature" id="editorial-signature">— Ruth Adeyemi, editor</p>
+                </section>
+
                 <div class="front-page__columns">
                     <section class="column column--briefs" aria-labelledby="briefs-title">
                         <h3 class="section-label" id="briefs-title">In brief</h3>
@@ -217,6 +228,7 @@
 
     <script defer src="data/headlines.js"></script>
     <script defer src="data/formats.js"></script>
+    <script defer src="data/editions.js"></script>
     <script defer src="modules/issue.js"></script>
     <script defer src="modules/front-page.js"></script>
 </body>

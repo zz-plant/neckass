@@ -130,11 +130,24 @@
 
     // The lead is a pure function of the issue number, so any issue can work
     // out any other issue's lead without composing it. That is what lets today
-    // correct yesterday.
-    function selectLead(number, leads) {
+    // correct yesterday. A landmark issue (data/editions.js) has its lead
+    // written rather than dealt, and the chain runs through it the same way.
+    function selectLead(number, leads, editions = Neckass.data?.EDITIONS) {
+        const written = editions?.[number]?.lead;
+        if (written) return written;
         if (!Array.isArray(leads) || !leads.length) return null;
         const rng = createRng(number * 2654435761);
         return leads[Math.floor(rng() * leads.length)] || null;
+    }
+
+    // The earliest issues are shorter. He had done less. The briefs column
+    // grows one item every six weeks or so until it reaches its full seven,
+    // and for the first two months the letters page carries one letter.
+    function briefsCount(number) {
+        return Math.min(7, 3 + Math.floor((number - 1) / 45));
+    }
+    function lettersCount(number) {
+        return number <= 60 ? 1 : 2;
     }
 
     function composeIssue(date = new Date()) {
@@ -167,7 +180,8 @@
             rng,
         )[0];
 
-        return {
+        const letters = lettersCount(number);
+        const issue = {
             number,
             date,
             dateLabel,
@@ -176,7 +190,9 @@
             dateline: datelineFor(date),
             issueParam: toIssueParam(date),
             lead,
-            briefs: deal(briefPool, 7, rng),
+            editorial: null,
+            tag: null,
+            briefs: deal(briefPool, briefsCount(number), rng),
             // The dull one first, then yesterday's retraction, then the rest.
             corrections: [
                 routineCorrection,
@@ -195,10 +211,19 @@
             ].filter(Boolean),
             letters: [
                 lead?.letter,
-                ...deal(data.LETTERS || [], lead?.letter ? 1 : 2, rng),
+                ...deal(
+                    data.LETTERS || [],
+                    lead?.letter ? letters - 1 : letters,
+                    rng,
+                ),
             ].filter(Boolean),
             colophon: data.COLOPHON || null,
         };
+
+        // A landmark's written sections replace the dealt ones. The lead was
+        // already taken from it by selectLead.
+        const { lead: _, ...written } = data.EDITIONS?.[number] || {};
+        return Object.assign(issue, written);
     }
 
     // Most recent first, today included. Used by the archive.

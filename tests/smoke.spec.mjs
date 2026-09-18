@@ -200,6 +200,52 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
+    test('a landmark issue is written, and the chain runs through it', async ({
+        page,
+    }) => {
+        await page.goto(`${BASE_URL}?issue=2024-09-29`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const first = await page.evaluate(() => window.Neckass.currentIssue);
+        expect(first.number).toBe(1);
+        expect(first.tag).toBe('First edition');
+        await expect(page.locator('#editorial')).toBeVisible();
+        await expect(page.locator('#editorial-head')).toHaveText('Why a paper');
+        // The first edition has nothing to correct and one letter.
+        await expect(page.locator('#corrections-list li')).toHaveCount(1);
+        await expect(page.locator('#letters-list li')).toHaveCount(1);
+        // The earliest issues are shorter.
+        await expect(page.locator('#briefs-list li')).toHaveCount(3);
+
+        // No. 2 retracts a detail of the written lead, not a dealt one.
+        const second = await page.evaluate(() =>
+            window.Neckass.issue.composeIssue(new Date(2024, 8, 30)),
+        );
+        expect(second.corrections[1]).toBe(first.lead.correction);
+        expect(second.editorial).toBeNull();
+
+        // An ordinary issue carries no editorial.
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await expect(page.locator('#editorial')).toBeHidden();
+    });
+
+    test('an issue not yet published falls back to today and says so', async ({
+        page,
+    }) => {
+        await page.goto(`${BASE_URL}?issue=2099-01-01`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const [rendered, today] = await page.evaluate(() => [
+            window.Neckass.currentIssue.number,
+            window.Neckass.issue.issueNumber(new Date()),
+        ]);
+        expect(rendered).toBe(today);
+        const notice = page.locator('#back-issue-notice');
+        await expect(notice).toBeVisible();
+        await expect(notice).toContainText('goes to press');
+    });
+
     test('a malformed issue param falls back to today', async ({ page }) => {
         await page.goto(`${BASE_URL}?issue=not-a-date`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
@@ -264,6 +310,7 @@ test.describe('The Corbin Falls Gazette', () => {
         const dates = [
             '2024-09-29',
             '2025-01-01',
+            '2025-07-13',
             '2026-09-02',
             '2026-12-25',
             '2027-06-14',
