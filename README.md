@@ -1,23 +1,30 @@
 # The Corbin Falls Gazette
 
-<p align="center">
-  <img src="neckass-demo.gif" alt="Neckass headline generator in action" width="600" style="border-radius: 8px;">
-</p>
+A static daily newspaper about a fictional Neckass, the one man in a small
+town who is news. One issue per day, composed from its own date, so two
+readers on the same day read the same paper and every past day has an issue.
+No build system, no backend, no account, nothing stored.
 
-A privacy-first, static daily newspaper about a fictional Neckass: one deterministic issue per day, a wire feed with optional on-device generation, and share/export tools. No build system, no backend.
-
-**Live at [neckass.com](https://neckass.com)** · No build system. No backend. Open `index.html` and you are running.
+**Live at [neckass.com](https://neckass.com)** · Open `index.html` and you are
+reading.
 
 ## What this project is
-- **Static-first**: works from local files or any static host.
-- **Generator hybrid**: curated headline catalog + optional tiny local LLM.
-- **Share-ready UX**: clipboard copy, social links, and front-page clipping export.
-- **State-aware**: navigation/session context is persisted with `localStorage` and URL params.
+- **A paper, not an app.** The front page is the product; there is nothing to
+  click but links. It reads without JavaScript.
+- **Deterministic.** Issue *n* is a pure function of *n*: the lead, the
+  briefs, the corrections, the weather, the map. The archive is derived, not
+  stored, and costs nothing.
+- **Continuous.** Today's paper retracts a detail of yesterday's lead and
+  runs the next thing he did. It knows what day it is: the council's
+  Tuesday, the clocks, his birthday, the paper's own anniversary.
+- **Static-first.** Works from `file://` or any static host. Two Cloudflare
+  Pages Functions add what a file cannot: the RSS feed and a social card
+  drawn per issue.
 
 ## Quick start
 1. Clone the repository.
 2. Open `index.html` in a modern browser.
-3. Use **Shuffle** to generate and cycle headlines.
+3. Come back tomorrow.
 
 ## Requirements
 - **Runtime:** any modern browser (no build pipeline required).
@@ -26,17 +33,23 @@ A privacy-first, static daily newspaper about a fictional Neckass: one determini
 If tooling blocks `file://` URLs, run:
 
 ```bash
-python -m http.server 8001 --directory .
+bun run serve
 ```
 
-Then open `http://127.0.0.1:8001/`.
+Then open `http://127.0.0.1:8001/`. To run the edge functions as well (the
+feed, the card, the middleware), `bun run edge` serves the same tree through
+`wrangler pages dev` on `http://127.0.0.1:8800/`.
 
-## App pages
-- `index.html` — today's front page, with the wire feed beneath it.
-- `archive.html` — back issues, derived from the calendar rather than stored.
-- `about.html` — the encyclopedia entry for the word, which cites the paper.
+## Pages
+- `index.html` — today's front page. `/?issue=YYYY-MM-DD` is any past one.
+- `archive.html` — every issue, by month, with its lead; the landmark
+  editions listed first.
+- `about.html` — the encyclopedia entry for the word, which cites the paper
+  by issue number, and the citations resolve.
 - `prompts.html` — the Gazette's filing standards.
 - `/feed.xml` — the paper as RSS, derived from the date like everything else.
+- `/card.png?issue=YYYY-MM-DD` — the issue's front page as a 1200×630 image,
+  drawn at the edge. It is what a shared link previews with.
 
 ## How an issue is built
 The front page is one issue, composed deterministically from its own date
@@ -45,6 +58,19 @@ The front page is one issue, composed deterministically from its own date
 weather, classifieds, and letters from `data/formats.js`. Two readers opening
 the site on the same day get the same paper, and any past date renders its own
 issue at `/?issue=YYYY-MM-DD` — so the archive costs no storage.
+
+Leads are dealt in rounds of the pool's length, so no lead runs twice inside
+a round. Every lead carries its deck, the correction the paper runs the next
+day, the brief that runs the next morning, and the classified and the letter
+from the person it happened to, so the page compounds: the item, the ad, the
+letter, then tomorrow the retraction and what he did next.
+
+A few issues are written rather than dealt (`data/editions.js`): the first
+edition, the hundredth, No. 288, and the anniversaries, each with its own
+lead and an editorial. The calendar (`data/calendar.js`) runs dated items on
+the days they happen — the council meets the first and third Tuesday and
+Wednesday reports on it; the clocks go forward and back; his mother writes
+in on his birthday.
 
 A complete standing issue ships in `index.html` itself, so the paper reads with
 JavaScript disabled and crawlers see copy rather than an empty shell.
@@ -56,46 +82,27 @@ cannot:
 
 - `functions/feed.xml.js` — builds the RSS feed for the last 30 issues on
   request. No store and no cron: issues come from the calendar.
-- `functions/_middleware.js` — rewrites the front page's title and social-card
-  tags to the active issue's lead, so a shared link previews with the headline
-  that is actually running. The card image stays static; rendering one per
-  issue needs an image encoder in the Worker, which is not worth the weight.
+- `functions/card.png.js` — draws the issue's lead on the sheet as a PNG, on
+  request, with Satori and resvg (`workers-og`). About 150 ms; no browser.
+- `functions/_middleware.js` — rewrites the front page's title and
+  social-card tags to the active issue's lead, and points the image tags at
+  the card for the same issue, so a shared link previews with the headline
+  that is actually running.
 
-Both compose the lead through `functions/lib/issue.mjs`, which mirrors the
+All three compose the lead through `functions/lib/issue.mjs`, which mirrors the
 arithmetic in `modules/issue.js`. The Workers runtime forbids evaluating the
 browser data files, so the leads are extracted to `functions/lib/leads.mjs` by
 `bun run feed:build`. `bun run feed:check` fails if that extract has drifted,
 and a smoke test asserts the two runtimes pick the same lead for a spread of
 dates.
 
-## Using the app
-1. The front page is today's issue. It changes once a day, not per visit.
-2. Beneath it, **The wire** files items one at a time — from the catalogue or
-   from the on-device generator.
-3. Use **Next item** and **Previous** to move through the wire.
-4. Copy, share, or export any wire item as a clipping.
-
-## Agentic interface
-A lightweight browser-side tool interface is exposed at `window.Neckass.agent` after app initialization, so browser automation and agentic LLM runtimes can call headline actions without clicking UI controls directly.
-
-Available tools:
-- `get_state`
-- `shuffle`
-- `previous`
-- `generate`
-- `select_headline`
-- `list_headlines`
-
-Example:
-
-```js
-const state = await window.Neckass.agent.call('get_state');
-const next = await window.Neckass.agent.call('shuffle');
-```
-
-## Optional smoke tests
-An optional Playwright smoke suite validates key flows (shuffle, URL restore,
-share links, export controls) without changing the no-build runtime model.
+## Smoke tests
+A Playwright suite covers what a reader opens: today's issue renders whole,
+a back issue loads from the archive, the corrections chain points at the
+lead it claims to, the calendar runs on its days, the landmarks are written,
+the map rings what the day names, both runtimes pick the same lead, and the
+edge serves the feed and a real card. It starts the static server and
+`wrangler pages dev` itself.
 
 ```bash
 bun install
