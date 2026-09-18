@@ -349,33 +349,74 @@ a:not(.top-nav a):hover {
 }
 
 /* ---- Back issues ----------------------------------------------------
-   Every line of the list is a link, so setting each one in the accent
-   distinguishes nothing and turns the page into a column of teal. The
-   dates take the ink and a faint underline; the accent comes back on
-   hover, where it means something. Above a phone the list runs in
-   columns, like a table of contents, rather than one long spine. */
-#archive-list {
-    list-style: none;
-    padding-left: 0;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.95rem;
-    border-top: 1px solid var(--border-strong);
-    padding-top: 4px;
+   The whole run, by month, each issue on one row: the folio on the left
+   and the lead on the right in the display face, the way a contents page
+   lists what ran. Every row is a link, so the rows take the ink, not the
+   accent; the accent comes back on hover, where it means something.
+   Above a phone the months run in two columns. */
+.archive-landmarks {
+    margin-top: 22px;
 }
 
-#archive-list li {
-    max-width: none;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    break-inside: avoid;
+.archive-landmarks .about-list {
     margin-top: 0;
 }
 
-/* The current issue carries a tag under its date rather than a phrase on
-   the end of it, which was wrapping the first row of the list. */
-.archive-current {
-    display: block;
-    margin-top: 2px;
+#archive-run {
+    margin-top: 26px;
+}
+
+.archive-month + .archive-month {
+    margin-top: 22px;
+}
+
+.archive-list {
+    list-style: none;
+    padding-left: 0;
+    font-variant-numeric: tabular-nums;
+    max-width: none;
+}
+
+.archive-list li {
+    max-width: none;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    break-inside: avoid;
+    margin-top: 0;
+    display: grid;
+    gap: 3px;
+}
+
+.archive-list li a {
+    color: var(--text);
+    text-decoration: none;
+    display: grid;
+    gap: 2px;
+}
+
+.archive-folio {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+}
+
+.archive-lead {
+    font-family: var(--headline-font);
+    font-size: 0.98rem;
+    line-height: 1.3;
+    text-wrap: pretty;
+}
+
+.archive-list li a:hover .archive-lead {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 2px;
+}
+
+/* A landmark carries a tag under its lead: first edition, anniversary. */
+.archive-tag {
     font-size: 0.66rem;
     text-transform: uppercase;
     letter-spacing: 0.14em;
@@ -383,27 +424,11 @@ a:not(.top-nav a):hover {
     color: var(--muted);
 }
 
-#archive-list a {
-    color: var(--text);
-    text-decoration-color: var(--border-strong);
-}
-
-#archive-list a:hover {
-    color: var(--link);
-    text-decoration-color: currentColor;
-}
-
-@media (min-width: 560px) {
-    #archive-list {
+@media (min-width: 760px) {
+    .archive-list {
         columns: 2;
         column-gap: 34px;
         column-rule: 1px solid var(--border);
-    }
-}
-
-@media (min-width: 900px) {
-    #archive-list {
-        columns: 3;
     }
 }
 
@@ -545,7 +570,7 @@ a:focus-visible {
     text-wrap: pretty;
 }
 
-@media (min-width: 760px) {
+@media (min-width: 760px), print {
     .editorial-body {
         max-width: none;
         columns: 2;
@@ -818,7 +843,7 @@ a:focus-visible {
     text-wrap: pretty;
 }
 
-@media (min-width: 760px) {
+@media (min-width: 760px), print {
     .map {
         grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
     }
@@ -1025,7 +1050,7 @@ a:focus-visible {
     }
 }
 
-@media (min-width: 760px) {
+@media (min-width: 760px), print {
     /* The lead sits on the same two columns as the departments under it:
        the headline in the wide one, the deck and byline in the narrow one,
        against the same rule. Set full-width, the headline's own 24ch measure
@@ -1198,5 +1223,81 @@ a:focus-visible {
 
     .masthead__line .masthead__sep {
         display: none;
+    }
+}
+
+/* ---- Print ----------------------------------------------------------
+   A paper that prints as a paper. Ink on white, no desk and no shadow,
+   the broadsheet's two columns whatever the sheet's width (the 760px
+   media queries above also match print), and nothing on the page that
+   only makes sense on a screen: the site links, the way back to today,
+   the skip link. Colours are set as literals so a reader in the dark
+   theme does not print a black page. */
+@media print {
+    :root,
+    :root:not([data-theme]),
+    [data-theme="dark"] {
+        color-scheme: light;
+        --surface-1: #fff;
+        --surface-2: #fff;
+        --text-primary: #000;
+        --text-muted: #333;
+        --ink-display: #000;
+        --accent: #000;
+        --accent-rule: #000;
+        --link: #000;
+        --link-hover: #000;
+        --border-subtle: rgba(0, 0, 0, 0.25);
+        --border-strong: rgba(0, 0, 0, 0.6);
+        --shadow-page: none;
+        --sheet-edge: transparent;
+    }
+
+    @page {
+        margin: 14mm;
+    }
+
+    body {
+        padding: 0;
+        background: #fff;
+        min-height: 0;
+    }
+
+    .page-shell {
+        max-width: none;
+        padding: 0;
+        box-shadow: none;
+        border: 0;
+    }
+
+    .skip-link,
+    .top-nav,
+    .back-issue-notice,
+    #colophon-card,
+    .top-nav a {
+        display: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .lead__headline {
+        font-size: 2.6rem;
+    }
+
+    .box,
+    .cut,
+    .letters li,
+    .archive-list li {
+        break-inside: avoid;
+    }
+
+    .section-label {
+        break-after: avoid;
+    }
+
+    .map-cut {
+        max-width: 520px;
     }
 }

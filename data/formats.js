@@ -655,6 +655,243 @@
                 signature: 'A. Okonkwo, Corbin Falls Primary',
             },
         },
+        {
+            headline:
+                'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
+            deck: 'The book is 140 pages. He renews by telephone and says he is "nearly done." The library has stopped asking.',
+            byline: 'By Dana Whitcomb',
+            correction:
+                'We reported that Neckass is on page nine. The bookmark is on page nine. The crease is on page four.',
+            followUp:
+                'Neckass has returned the library book. He has taken out a second book about Mars and described the first as "a bit long."',
+            classified:
+                'WANTED: anyone who has finished a book about Mars, to say how it ends. 140 pages. Owner is on page nine.',
+            letter: {
+                body: 'I run the Eastside branch. He renews it by phone, monthly, and each time says he is nearly done. I have started saying "good" in a way he has not noticed.',
+                signature: 'The Eastside branch',
+            },
+        },
+        {
+            headline:
+                'Neckass has told a joke to a table that heard it from him, at the same table, the week before',
+            deck: 'He said "stop me if you\'ve heard this." Four people said they had. He did not stop.',
+            byline: 'Staff report',
+            correction:
+                'We said four people said they had heard it. Five. The fifth said so at the end.',
+            followUp:
+                'Neckass has told the joke a third time, to the waiter, who had also heard it. He works there.',
+            classified:
+                'SEEKING: a table that has not heard the one about the parrot. Will travel.',
+            letter: {
+                body: 'I was at the table. He said "stop me if you\'ve heard this." We tried. There is no stopping it. It is a joke about a parrot and it is not a good one.',
+                signature: 'Elaine Whitcomb, Corbin Falls',
+            },
+        },
+        {
+            headline:
+                'Neckass turned the heating on "just for an hour" in October. It is still on.',
+            deck: 'It has been on since the first cold evening. He says he will "sort it out at the weekend." He has said it on every weekend since.',
+            byline: 'By Marcus Oyelaran',
+            correction:
+                'We reported that the heating has been on since the first cold evening. It was on before that. He was "testing it."',
+            followUp:
+                'Neckass has turned the heating off. He has opened a window "to freshen up" and turned the heating back on.',
+            classified: 'FOR SALE: a thermostat. Works. Owner has set it once.',
+            letter: {
+                body: 'I live with him. The heating has been on since October. I have slept with the window open since November. We have not discussed it. He has left a note.',
+                signature: 'Dev Malhotra, Orchard Lane',
+            },
+        },
+        {
+            headline:
+                'Neckass has described a nap as "resting his eyes" for the fourth time this week',
+            deck: 'He rested his eyes from two until quarter to four, on the sofa, under a blanket, and woke saying he was listening.',
+            byline: 'Staff report',
+            correction:
+                'We said Neckass woke at quarter to four. He was woken at quarter to four, by the end of the programme he was listening to.',
+            followUp:
+                'Neckass has rested his eyes again. It was during the item about resting his eyes, which was being read to him.',
+            classified:
+                'LOST: an afternoon. Last seen under a blanket. Owner says he was listening.',
+            letter: {
+                body: 'He rested his eyes through my whole account of the thing with the car. When I finished he said "wow." I had not said anything to wow at. I had said the car was fine.',
+                signature: 'A colleague',
+            },
+        },
+        {
+            headline:
+                'Neckass has said "I\'ll let you go" to a caller who was trying to go',
+            deck: 'The caller said they had to go at 6:10. Neckass let them go at 6:50, after letting them go twice more.',
+            byline: 'By Priya Natarajan',
+            correction:
+                'We said the caller was let go at 6:50. That was the third "I\'ll let you go." The call ended at 7:05.',
+            followUp:
+                'Neckass has rung the caller back to check they got off all right. They had. They were in the middle of it.',
+            classified:
+                'WANTED: a way off the phone with a man who says "anyway." "Anyway" does not work. We have tried "anyway."',
+            letter: {
+                body: 'I am his mother. He rang to let me go. I had not rung him. I was in the garden. It was forty minutes.',
+                signature: 'Bernadette Neckass, Corbin Falls',
+            },
+        },
+        {
+            headline:
+                'Neckass has bought a whiteboard to get organized and has written "get organized" on it',
+            deck: 'The whiteboard is in the hall. It has said "get organized" since April, in his handwriting, with a box beside it that is not ticked.',
+            byline: 'Staff report',
+            correction:
+                'We reported one item on the whiteboard. There is a second, underneath, added in June. It says "whiteboard."',
+            followUp:
+                'Neckass has ticked the box. He has not got organized. He has said the tick is "for buying the whiteboard."',
+            classified:
+                'FOR SALE: whiteboard, one item on it. Item included. Pen dried out.',
+            letter: {
+                body: 'The whiteboard is in the hall. I have to pass it to leave the house. It has said "get organized" for five months. It is the most organized thing in the house and it is a sentence.',
+                signature: 'Dev Malhotra, Orchard Lane',
+            },
+        },
+        {
+            headline:
+                'Neckass has given directions to a driver who was already on the right road',
+            deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left," and the driver did.',
+            byline: 'By Helen Vasko',
+            correction:
+                'We reported that the driver took the second left. There is no second left. The driver took the first and has written in.',
+            followUp:
+                'The driver has found Route 9. They were on it. Neckass has been told and has said "well, they got there."',
+            classified:
+                'WANTED: the driver who was on Route 9 on Tuesday. You were on Route 9. We are sorry.',
+            letter: {
+                body: 'I was the driver. I was on Route 9. I know that now. I would like to say that he was very confident, and that it took an hour.',
+                signature: 'A visitor, since gone',
+            },
+        },
+        {
+            headline: 'Neckass has replied "maybe" to an event he is hosting',
+            deck: 'The invitation went out from his account on Monday. He responded to it on Tuesday. The host is listed as "maybe."',
+            byline: 'Staff report',
+            correction:
+                'We reported that Neckass replied "maybe." He has since changed it to "going," then back.',
+            followUp:
+                'The event Neckass is hosting is Saturday. He has asked the group what time it starts.',
+            classified:
+                "PERSONAL: to the guests of Saturday's event — the host will be there. Probably. He has said maybe.",
+            letter: {
+                body: 'I am going to his thing on Saturday. I said yes. He said maybe. It is at his house. I asked whether I should bring anything and he said "good question."',
+                signature: 'Sam Reyes, Corbin Falls',
+            },
+        },
+        {
+            headline:
+                'Neckass has explained the rules of a game to the person who owns the game',
+            deck: 'They had played it 200 times. He had played it once, on Tuesday, and lost. He explained for eleven minutes and got two rules wrong.',
+            byline: 'By Dana Whitcomb',
+            correction:
+                'We said two rules wrong. Three. The third was the object of the game.',
+            followUp:
+                'Neckass has played the game a second time, under his own rules, and lost, and has described the rules as "a bit off."',
+            classified:
+                'FOR SALE: board game, complete. Rules included. Rules have been explained to owner; owner would like them back.',
+            letter: {
+                body: 'It is my game. I have played it since I was nine. He explained it to me and then asked if I had "got it." I have got it. I have had it for thirty years.',
+                signature: 'Rosa Okafor, 14 Orchard Lane',
+            },
+        },
+        {
+            headline:
+                'Neckass has kept a receipt for everything except the thing he needs to return',
+            deck: 'There are 340 receipts in the drawer, in no order, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
+            byline: 'Staff report',
+            correction:
+                'We put the receipts at 340. It is 340 receipts and one ticket for a car park, which he has also kept.',
+            followUp:
+                'Neckass has taken the lamp back without the receipt and been offered a credit note. He has put the credit note in the drawer.',
+            classified:
+                'FOUND: 340 receipts. None for a lamp. Owner will not throw them away "just in case."',
+            letter: {
+                body: 'He asked me to help him find the receipt. We went through the drawer. I now know what he spent on lunch in 2022. He does not know where the lamp receipt is. It is not in the drawer.',
+                signature: 'A colleague',
+            },
+        },
+        {
+            headline:
+                'Neckass has left a voicemail that says "it\'s me, call me back" and no name',
+            deck: 'It was left at 7:40 a.m. on a work number. The recipient has four people it could be. She has called two.',
+            byline: 'By Marcus Oyelaran',
+            correction:
+                'We reported the voicemail was left at 7:40. It was left at 7:40 and again at 7:42, to say "sorry, it\'s me."',
+            followUp:
+                'Neckass has been called back by the wrong man. They spoke for twenty minutes. Neither has said what about.',
+            classified:
+                'WANTED: "me." Left a voicemail Tuesday, 7:40. Please ring the office and say who you are. Do not say "it\'s me."',
+            letter: {
+                body: 'I got the voicemail. I have four people it could be. I called two. It was neither. I have decided it can wait, which is what he decided about my message in March.',
+                signature: 'Elaine Whitcomb, Corbin Falls',
+            },
+        },
+        {
+            headline:
+                'Neckass has watched the first ten minutes of a film four times and calls it "good so far"',
+            deck: 'He starts it after dinner. He is asleep by the title card. He has seen the title card four times and says the film "really gets going."',
+            byline: 'Staff report',
+            correction:
+                'We said Neckass is asleep by the title card. He is asleep before it. He has seen the studio logo four times.',
+            followUp:
+                'Neckass has watched the film to the end. He has described the ending as "a bit sudden," having seen the first ten minutes and the last.',
+            classified: 'FOR SALE: a film. Seen the start of. Very good start.',
+            letter: {
+                body: 'I recommended the film. He has told me it\'s "good so far" three times over two months. It is 94 minutes long. I have stopped asking.',
+                signature: 'A former friend',
+            },
+        },
+        {
+            headline:
+                'Neckass has apologized for being late by explaining that he was not late',
+            deck: 'He arrived at 2:25 for two. He said "sorry, but actually" and set out why the meeting was at half past. It was not.',
+            byline: 'By Priya Natarajan',
+            correction:
+                'We reported that Neckass arrived at 2:25. He was in the building at 2:25. He was in the room at 2:31, with a coffee.',
+            followUp:
+                'Neckass has asked that Tuesday\'s meeting be moved to half past, so that he is "not late again." It is a different meeting.',
+            classified:
+                "NOTICE: the two o'clock is at two. This is not a change. This is a notice.",
+            letter: {
+                body: 'I was chairing. He came in at 2:31 and told us the meeting was at half past. It was in the calendar. His calendar. He showed us. It said two.',
+                signature: 'A colleague',
+            },
+        },
+        {
+            headline:
+                'Neckass has said "we should do this more often" to people he cancelled on twice',
+            deck: 'The dinner was the third attempt. He cancelled the first two on the day. He said it at the end, with feeling, and has not proposed a date.',
+            byline: 'Staff report',
+            correction:
+                'We said Neckass cancelled the first two dinners on the day. The second was cancelled at the restaurant, by text, from the car park.',
+            followUp:
+                'Neckass has proposed a date for the next dinner. It is a date the others cannot do, which he knew, and he has said "well, we tried."',
+            classified:
+                'WANTED: three people free on a Friday. Fourth will confirm on the day, and may not.',
+            letter: {
+                body: 'We did it more often. We did it three times. He came once. He said we should do it more often to the two of us who had been there all three times.',
+                signature: 'Owen Pratt, formerly of Orchard Lane',
+            },
+        },
+        {
+            headline:
+                'Neckass has taken a "quick look" at a colleague\'s spreadsheet and broken it',
+            deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows and the figure is in a different place.',
+            byline: 'By Helen Vasko',
+            correction:
+                'We reported that Neckass sorted one column. He sorted one column, undid it, and sorted a different column. The first is still sorted.',
+            followUp:
+                'Neckass has offered to fix the spreadsheet. The colleague has said it is fine. It is not fine. It is being rebuilt from a printout.',
+            classified:
+                'NOTICE FROM IT: the spreadsheet is not "corrupted." It has been sorted. Please stop sending it to us.',
+            letter: {
+                body: 'It was my spreadsheet. I asked him to check one number. He said "quick look." I have the printout from Tuesday, and Tuesday\'s number, and him saying "it should be fine."',
+                signature: 'A colleague',
+            },
+        },
     ];
 
     // Standalone corrections, drawn alongside the routine one and the one
@@ -850,6 +1087,62 @@
         {
             body: 'I live with him. He has started leaving me notes. The latest says "we should talk about the kitchen." We share the kitchen. I was in it when he wrote the note.',
             signature: 'Dev Malhotra, Orchard Lane',
+        },
+        {
+            body: 'I run the library. He has had the same book out since March. He renews it by phone, monthly, and each time says he is "nearly done." It is a book about Mars. It is 140 pages.',
+            signature: 'The Eastside branch',
+        },
+        {
+            body: 'I cut his hair. He says "just a little off" and then describes, for four minutes, a different haircut. I do the one he describes. He says "great." He comes back in five weeks and says "just a little off."',
+            signature: 'A barber, Main Street',
+        },
+        {
+            body: 'I am the town clerk. He has come to the counter four times this year to ask what the form is for. It is the form he brought.',
+            signature: 'The town clerk',
+        },
+        {
+            body: 'Your item said he was "at the gym." I run the gym. He was in the lot. He is often in the lot. He has a good spot.',
+            signature: 'The gym',
+        },
+        {
+            body: 'I sit next to him at work. He says "quick question" and I have started a timer. The average is thirty-eight minutes. The record is a Wednesday.',
+            signature: 'A colleague',
+        },
+        {
+            body: 'He was on my walking tour on Sunday. He was not on my walking tour. He was walking near it and joined in the questions.',
+            signature: 'The historical society',
+        },
+        {
+            body: "He told me the recipe was his grandmother's. It is on the back of the packet. I have the packet.",
+            signature: 'Dev Malhotra, Orchard Lane',
+        },
+        {
+            body: 'I am his mother. The recipe is not mine. I have never made it. He rang to ask how I make it. I said I don\'t. He said "right, but roughly."',
+            signature: 'Bernadette Neckass, Corbin Falls',
+        },
+        {
+            body: 'He has been "about to go" from my kitchen since nine. It is eleven. I have washed up around him. He has moved once, to let me at the tap.',
+            signature: 'Elaine Whitcomb, Corbin Falls',
+        },
+        {
+            body: 'He ordered "the usual." He has been in twice. Neither time was the same. We gave him a coffee. He said "perfect."',
+            signature: 'M. Sato, the Station Café',
+        },
+        {
+            body: 'I was in the seat behind him on the 8:04, the day he was "on the train." He was not on the train. I know because I had his seat, and it was empty, and it is not his seat.',
+            signature: 'A commuter',
+        },
+        {
+            body: 'I have moved to the other side of the river. He has found the bridge.',
+            signature: 'Owen Pratt, formerly of Orchard Lane',
+        },
+        {
+            body: 'He offered to help me move. He arrived after the van, carried a lamp to the van, and told the driver a route. The driver had a route.',
+            signature: 'Sam Reyes, Corbin Falls',
+        },
+        {
+            body: 'I sent the message. It said the meeting had moved to two. He gave it a thumbs up and came at three.',
+            signature: 'A colleague',
         },
     ];
 

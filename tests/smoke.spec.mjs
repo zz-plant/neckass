@@ -354,6 +354,52 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
+    test('no lead runs twice inside one round of the pool', async ({
+        page,
+    }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        const result = await page.evaluate(() => {
+            const { issue, data } = window.Neckass;
+            const size = data.LEADS.length;
+            const rounds = [];
+            // Three consecutive rounds, well clear of the landmark issues.
+            for (let round = 8; round < 11; round += 1) {
+                const seen = new Set();
+                for (let place = 0; place < size; place += 1) {
+                    const number = round * size + place + 1;
+                    if (data.EDITIONS[number]) continue;
+                    seen.add(issue.selectLead(number, data.LEADS).headline);
+                }
+                rounds.push(seen.size);
+            }
+            return { size, rounds };
+        });
+
+        for (const distinct of result.rounds) {
+            expect(distinct).toBe(result.size);
+        }
+        // Every lead carries everything the paper prints about it.
+        const incomplete = await page.evaluate(
+            () =>
+                window.Neckass.data.LEADS.filter(
+                    (lead) =>
+                        !(
+                            lead.headline &&
+                            lead.deck &&
+                            lead.byline &&
+                            lead.correction &&
+                            lead.followUp &&
+                            lead.classified &&
+                            lead.letter?.body &&
+                            lead.letter?.signature
+                        ),
+                ).length,
+        );
+        expect(incomplete).toBe(0);
+    });
+
     test('the archive lists issues that resolve to real papers', async ({
         page,
     }) => {

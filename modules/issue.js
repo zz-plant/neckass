@@ -132,12 +132,26 @@
     // out any other issue's lead without composing it. That is what lets today
     // correct yesterday. A landmark issue (data/editions.js) has its lead
     // written rather than dealt, and the chain runs through it the same way.
+    //
+    // Leads are dealt in rounds: the pool is shuffled once per round of
+    // its own length, seeded by the round, and issue n takes its place in
+    // the round. A lead therefore runs once per round and never twice
+    // inside one, which a draw from the whole pool every day could not
+    // promise — with forty-odd leads the same one came round within a
+    // fortnight often enough for the archive to show it.
     function selectLead(number, leads, editions = Neckass.data?.EDITIONS) {
         const written = editions?.[number]?.lead;
         if (written) return written;
         if (!Array.isArray(leads) || !leads.length) return null;
-        const rng = createRng(number * 2654435761);
-        return leads[Math.floor(rng() * leads.length)] || null;
+        const round = Math.floor((number - 1) / leads.length);
+        const place = (number - 1) % leads.length;
+        const rng = createRng(round * 2654435761 + 1);
+        const order = leads.map((_, index) => index);
+        for (let i = order.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(rng() * (i + 1));
+            [order[i], order[j]] = [order[j], order[i]];
+        }
+        return leads[order[place]] || null;
     }
 
     // The earliest issues are shorter. He had done less. The briefs column
@@ -263,8 +277,12 @@
         return Object.assign(issue, written);
     }
 
-    // Most recent first, today included. Used by the archive.
-    function recentIssues(count, from = new Date()) {
+    // Most recent first, today included, with each issue's lead and its
+    // landmark tag if it has one. The lead is a pure function of the number,
+    // so listing the whole run costs nothing worth measuring. Used by the
+    // archive; `count` defaults to every issue there is.
+    function recentIssues(count = Number.POSITIVE_INFINITY, from = new Date()) {
+        const data = Neckass.data || {};
         const issues = [];
         for (let offset = 0; offset < count; offset += 1) {
             const date = new Date(
@@ -272,12 +290,15 @@
                 from.getMonth(),
                 from.getDate() - offset,
             );
-            if (issueNumber(date) < 1) break;
+            const number = issueNumber(date);
+            if (number < 1) break;
             issues.push({
-                number: issueNumber(date),
+                number,
                 date,
                 dateLabel: dateFormatter.format(date),
                 issueParam: toIssueParam(date),
+                lead: selectLead(number, data.LEADS || []),
+                tag: data.EDITIONS?.[number]?.tag || null,
             });
         }
         return issues;
