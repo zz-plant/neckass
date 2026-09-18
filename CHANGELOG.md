@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Removed
+- The wire: the headline shuffler under the issue, with its Previous/Next, four action buttons, three share links, history list, on-device generator (`llm.js`, `data/llm-beats.js`), agent API and `html-to-image` export. Half the JavaScript on the page served a feature the paper had replaced. The page loads seven scripts, none handling input, and ends on the colophon.
+- `neckass-demo.gif`, which showed the shuffler.
+
+### Added
+- Landmark editions (`data/editions.js`): the first edition, the hundredth, No. 288 (the hat), and the two anniversaries are written rather than dealt, each with its own lead so the corrections chain runs through it, and most with an editorial, which only a landmark prints. The entry's citations link to the issues they cite, and the issues contain what is cited. A date past today gets today's paper and a line saying when the one asked for goes to press.
+- A follow-up on every lead: the brief that runs at the top of the next morning's column, in which he has done the next thing.
+- The calendar (`data/calendar.js`, `modules/calendar.js`): dated items that run in place of a dealt one on the days they happen — the council's first and third Tuesday and Wednesday's report on it, the clocks going forward and back, his birthday (11 March; the paper does the arithmetic and his mother writes in), Thanksgiving and the day after, election day, the last day of every month, the paper's own anniversary. Every rule is a pure function of the date, so a back issue carries its holiday.
+- `/card.png?issue=YYYY-MM-DD`: the issue's front page as a 1200×630 PNG, drawn at the edge by Satori and resvg (`workers-og`) in Fraunces on newsprint. The middleware points `og:image` and `twitter:image` at it, so a shared link previews with the day's headline in the picture as well as the text. The colophon offers it as the issue's clipping.
+- A line-cut map of Corbin Falls (`assets/cuts/map.svg`), rigged like the other cuts and inlined as the last department: the desk rings the places the day's notices and letters name, and the caption says which.
+- A print stylesheet: ink on white, the broadsheet's columns whatever the sheet's width, nothing that only makes sense on a screen.
+- The smoke suite runs the Pages Functions under `wrangler pages dev` alongside the static server and checks the card is a real PNG and the tags point at it.
+
+### Changed
+- Leads are dealt in rounds of the pool's length, each round its own shuffle, so no lead runs twice inside a round. A draw from the whole pool each day put the same lead a week apart often enough for the archive to show it.
+- The archive lists every issue, by month, with its lead, and the landmark editions first, instead of 45 dates.
+- The earliest issues are shorter, as the archive has always claimed: the briefs column grows from three to seven over the first year and the letters page carries one letter for the first two months.
+- Fifteen more leads (40 → 55), each with all seven fields, and fourteen more letters (14 → 28) from the town: the barber, the clerk, the library, the gym, the commuter who had his seat.
+- The council meeting and holiday collection changes left the notices pool, where they ran on days they were not happening.
+
 ### Changed
 - A department head now sits under its rule rather than on top of one. With the rule beneath it the head was as far from its own list as from the department above; set cutoff rule, head, then copy, each department starts on one line, and the heads of two columns side by side draw one rule across the fold. The lead's bottom rule, the lower row's top rule and the wire's dangling bottom rule went with it, and a reading page's title no longer prints a second 3px teal rule a hundred pixels under the masthead's.
 - The deck and the letters are set in Fraunces at text size; the nameplate on the folio line is set in it at credit size. The face's optical-size axis was shipping unused.

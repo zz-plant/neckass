@@ -6,20 +6,34 @@
  * of the day's lead. This rewrites the title and description tags on the front
  * page to today's issue — or to ?issue=YYYY-MM-DD when the link carries one.
  *
- * og:image is left alone. Rendering a card per issue needs an image encoder in
- * the Worker, which is a much heavier dependency than this is worth; the
- * branded still image plus a live headline is most of the value.
+ * og:image points at /card.png for the same issue, which draws the lead on
+ * the sheet on request (functions/card.png.js), so the preview image carries
+ * the headline too.
  */
 
-import { issueNumber, parseIssueDate, selectLead } from './lib/issue.mjs';
+import {
+    issueNumber,
+    issueParam,
+    parseIssueDate,
+    selectLead,
+} from './lib/issue.mjs';
 
+const SITE = 'https://neckass.com';
 const CARD_TITLE_TAGS = new Set(['og:title', 'twitter:title']);
 const CARD_TEXT_TAGS = new Set(['og:description', 'twitter:description']);
+const CARD_IMAGE_TAGS = new Set([
+    'og:image',
+    'og:image:secure_url',
+    'twitter:image',
+]);
+const CARD_ALT_TAGS = new Set(['og:image:alt', 'twitter:image:alt']);
 
 class MetaRewriter {
-    constructor(title, description) {
+    constructor({ title, description, image, alt }) {
         this.title = title;
         this.description = description;
+        this.image = image;
+        this.alt = alt;
     }
 
     element(element) {
@@ -29,6 +43,10 @@ class MetaRewriter {
             element.setAttribute('content', this.title);
         else if (CARD_TEXT_TAGS.has(key))
             element.setAttribute('content', this.description);
+        else if (CARD_IMAGE_TAGS.has(key))
+            element.setAttribute('content', this.image);
+        else if (CARD_ALT_TAGS.has(key))
+            element.setAttribute('content', this.alt);
     }
 }
 
@@ -62,6 +80,14 @@ export async function onRequest(context) {
     const title = `${lead.headline} | The Corbin Falls Gazette, No. ${number}`;
     return new HTMLRewriter()
         .on('title', new TitleRewriter(title))
-        .on('meta', new MetaRewriter(title, lead.deck))
+        .on(
+            'meta',
+            new MetaRewriter({
+                title,
+                description: lead.deck,
+                image: `${SITE}/card.png?issue=${issueParam(date)}`,
+                alt: `The front page of The Corbin Falls Gazette, No. ${number}: ${lead.headline}`,
+            }),
+        )
         .transform(response);
 }

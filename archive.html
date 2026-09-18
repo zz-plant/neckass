@@ -48,9 +48,16 @@
                 <p>The Gazette has published every day since 29 September 2024. None has been withdrawn. Several have been corrected, and one was corrected twice.</p>
                 <p>Every issue is here. They are all about the same man, so pick any date. The earliest ones are shorter. He had done less.</p>
 
-                <ul class="about-list" id="archive-list">
-                    <li><a href="/">The current issue.</a> Back issues list here once JavaScript loads; they are worked out from the date, not stored.</li>
-                </ul>
+                <section class="archive-landmarks" aria-labelledby="landmarks-title" hidden>
+                    <h2 class="section-label" id="landmarks-title">Of note</h2>
+                    <ul class="about-list" id="archive-landmarks"></ul>
+                </section>
+
+                <div id="archive-run">
+                    <ul class="archive-list">
+                        <li><a href="/"><span class="archive-folio">The current issue</span></a><span class="archive-tag">Back issues list here once JavaScript loads; they are worked out from the date, not stored.</span></li>
+                    </ul>
+                </div>
 
                 <p>The word itself is covered in <a href="/about.html">the entry</a>. The rules for what goes in the paper are under <a href="/prompts.html">filing standards</a>.</p>
             </section>
@@ -59,6 +66,9 @@
 
     <script defer src="data/headlines.js"></script>
     <script defer src="data/formats.js"></script>
+    <script defer src="data/editions.js"></script>
+    <script defer src="data/calendar.js"></script>
+    <script defer src="modules/calendar.js"></script>
     <script defer src="modules/issue.js"></script>
     <script defer src="modules/archive-list.js"></script>
 </body>

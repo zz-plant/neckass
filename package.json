@@ -13,12 +13,15 @@
     "assets:generate": "bun run scripts/generate-scenes.ts",
     "og:generate": "bun run scripts/generate-og.ts",
     "feed:build": "bun run scripts/build-feed-data.ts",
-    "feed:check": "bun run scripts/build-feed-data.ts --check"
+    "feed:check": "bun run scripts/build-feed-data.ts --check",
+    "edge": "wrangler pages dev . --port 8800 --inspector-port 0 --log-level warn --compatibility-date=2026-09-01"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.8",
     "@playwright/test": "^1.62.1",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.5"
+    "lint-staged": "^17.0.5",
+    "workers-og": "^0.0.27",
+    "wrangler": "^4.134.0"
   }
 }

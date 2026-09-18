@@ -82,15 +82,97 @@
         }
     }
 
+    // The town map is one drawing with a ring round each place, and the
+    // desk shows the rings for the places the day's notices and letters
+    // name. Each place is a switch on the svg element and a name for the
+    // caption.
+    const PLACES = [
+        ['bridge', /Mill Street bridge/i, 'the Mill Street bridge'],
+        ['orchard', /Orchard Lane/i, 'Orchard Lane'],
+        ['station', /station|farmers market/i, 'the station'],
+        ['depot', /depot|bandstand/i, 'Depot Park'],
+        ['hall', /council|town office|town clerk|tax office/i, 'the town hall'],
+        ['library', /library/i, 'the library'],
+        [
+            'center',
+            /community center|polls|flu clinic/i,
+            'the community center',
+        ],
+        ['gym', /\bgym\b/i, 'the gym'],
+        [
+            'school',
+            /high school|school board|Little League/i,
+            'the high school',
+        ],
+        ['route9', /Route 9|interchange/i, 'Route 9'],
+        ['river', /\briver\b/i, 'the river'],
+        ['shelter', /animal shelter/i, 'the animal shelter'],
+    ];
+
+    function placesNamed(texts) {
+        const joined = texts.join('\n');
+        return PLACES.filter(([, pattern]) => pattern.test(joined));
+    }
+
+    function setTownMap(issue) {
+        const cut = document.getElementById('map-cut');
+        if (!cut) return;
+        const texts = [
+            ...(issue.notices || []),
+            ...(issue.letters || []).flatMap((letter) => [
+                letter.body,
+                letter.signature,
+            ]),
+        ];
+        const named = placesNamed(texts);
+        const on = new Set(named.map(([key]) => key));
+        for (const [key] of PLACES) {
+            cut.style.setProperty(`--${key}`, on.has(key) ? '1' : '0');
+        }
+        const caption = document.getElementById('map-caption');
+        if (!caption) return;
+        const list = named.map(([, , name]) => name);
+        const ringed = list.length
+            ? `Ringed, from today's notices and letters: ${list.join(', ')}.`
+            : "Nothing in today's notices is on it, which is a quiet day.";
+        caption.replaceChildren(
+            Object.assign(document.createElement('b'), {
+                textContent: 'CORBIN FALLS',
+            }),
+            ` — The river, the bridge with one lane, and Orchard Lane, where he lives at No. 12. ${ringed}`,
+        );
+    }
+
     function renderIssue(issue) {
         if (!issue) return;
 
         mastheadInto('#masthead-date', issue.mastheadLine);
+        document.title = `The Corbin Falls Gazette · No. ${issue.number}`;
 
         if (issue.lead) {
             textInto('#lead-headline', issue.lead.headline);
             textInto('#lead-deck', `${issue.dateline} — ${issue.lead.deck}`);
             textInto('#lead-byline', issue.lead.byline);
+        }
+
+        const editorial = document.querySelector('#editorial');
+        if (editorial) {
+            editorial.hidden = !issue.editorial;
+            if (issue.editorial) {
+                textInto('#editorial-head', issue.editorial.head);
+                const body = document.querySelector('#editorial-body');
+                body?.replaceChildren(
+                    ...issue.editorial.body.map((text) => {
+                        const p = document.createElement('p');
+                        p.textContent = text;
+                        return p;
+                    }),
+                );
+                textInto(
+                    '#editorial-signature',
+                    `— ${issue.editorial.signature}`,
+                );
+            }
         }
 
         listInto('#briefs-list', issue.briefs, (li, brief) => {
@@ -123,34 +205,55 @@
             li.append(body, signature);
         });
 
+        setTownMap(issue);
+
         if (issue.colophon) {
             textInto('#colophon-staff', issue.colophon.staff);
             textInto('#colophon-note', issue.colophon.note);
         }
+
+        // The clipping is the issue's social card, drawn at the edge.
+        const clipping = document.querySelector('#colophon-card');
+        if (clipping) clipping.href = `/card.png?issue=${issue.issueParam}`;
     }
 
-    function activeIssueDate() {
+    function requestedIssueDate() {
         const requested = new URLSearchParams(window.location.search).get(
             'issue',
         );
-        return Neckass.issue.parseIssueDate(requested) || new Date();
+        return Neckass.issue.parseIssueDate(requested);
     }
 
     function init() {
         if (!Neckass.issue || !document.querySelector('#lead-headline')) return;
 
-        const date = activeIssueDate();
-        const issue = Neckass.issue.composeIssue(date);
+        const today = Neckass.issue.composeIssue(new Date());
+        const requested = requestedIssueDate();
+        // A date past today is an issue that has not gone to press. The
+        // entry cites a few of those ahead of time; the reader gets today's
+        // paper and a line saying when the one they asked for is due.
+        const isFuture =
+            requested && Neckass.issue.issueNumber(requested) > today.number;
+        const issue =
+            requested && !isFuture
+                ? Neckass.issue.composeIssue(requested)
+                : today;
         renderIssue(issue);
         Neckass.currentIssue = issue;
 
         // Back issues say so, and offer the way back to today.
-        const today = Neckass.issue.composeIssue(new Date());
         const banner = document.querySelector('#back-issue-notice');
         if (banner) {
             const isBackIssue = issue.number !== today.number;
-            banner.hidden = !isBackIssue;
-            if (isBackIssue) {
+            banner.hidden = !(isBackIssue || isFuture);
+            if (isFuture) {
+                const due = Neckass.issue.composeIssue(requested);
+                textInto(
+                    '#back-issue-text',
+                    `No. ${due.number} goes to press ${due.dateLabel}. This is today's issue.`,
+                );
+                banner.querySelector('a').hidden = true;
+            } else if (isBackIssue) {
                 textInto(
                     '#back-issue-text',
                     `You are reading No. ${issue.number}, published ${issue.dateLabel}.`,
@@ -165,5 +268,5 @@
         init();
     }
 
-    Neckass.frontPage = { renderIssue, init, weatherLayers };
+    Neckass.frontPage = { renderIssue, init, weatherLayers, placesNamed };
 })();

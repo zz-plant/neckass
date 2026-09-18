@@ -110,6 +110,17 @@
                     <p class="lead__byline" id="lead-byline">By the wire desk</p>
                 </article>
 
+                <!-- Only a landmark issue carries one: the first edition, an
+                     anniversary. front-page.js reveals it when the issue has it. -->
+                <section class="box box--editorial" id="editorial" aria-labelledby="editorial-title" hidden>
+                    <h3 class="section-label" id="editorial-title">From the editor</h3>
+                    <h4 class="editorial-head" id="editorial-head">Why a paper</h4>
+                    <div class="editorial-body" id="editorial-body">
+                        <p>This paper will report what he did. It will not say why, because nobody knows, least of all him.</p>
+                    </div>
+                    <p class="letter-signature" id="editorial-signature">— Ruth Adeyemi, editor</p>
+                </section>
+
                 <div class="front-page__columns">
                     <section class="column column--briefs" aria-labelledby="briefs-title">
                         <h3 class="section-label" id="briefs-title">In brief</h3>
@@ -206,108 +217,133 @@
                     </section>
                 </div>
 
+                <!-- The town. The same drawing as assets/cuts/map.svg, inline so
+                     the desk can mark it: front-page.js reads the day's notices
+                     and letters and rings the places they name. -->
+                <section class="box box--map" aria-labelledby="map-title">
+                    <h3 class="section-label" id="map-title">The town</h3>
+                    <figure class="map">
+                    <svg class="map-cut" id="map-cut" viewBox="0 0 362 236" aria-hidden="true" focusable="false">
+                            <!-- The river, top left to bottom right, drawn as a band: an ink
+                                 stroke with a paper stroke over it, so the banks are two lines. -->
+                            <path class="bank" d="M-2 64 q50 -8 90 18 q40 26 100 38 q50 10 90 12 q40 6 84 18" />
+                            <path class="stream" d="M-2 64 q50 -8 90 18 q40 26 100 38 q50 10 90 12 q40 6 84 18" />
+                            <path class="ripple" d="M24 66 q7 -2 12 2 M70 86 q7 1 12 6 M130 108 q8 1 13 5 M236 126 q8 1 13 4 M316 142 q8 2 13 5" />
+                            <!-- the falls -->
+                            <path class="lane" d="M38 60 v14 M44 58 v16 M50 60 v14" />
+                            <path class="ripple" d="M32 78 q6 3 12 0 q6 -3 12 0 q6 3 12 0" />
+                            <text class="label small" x="12" y="50">the falls</text>
+                            <circle class="mark mark-river" cx="120" cy="104" r="12" />
+
+                            <!-- The railway, along the top, and the station on it. -->
+                            <path class="rail" d="M-2 22 h364" />
+                            <path class="rail" d="M-2 27 h364" />
+                            <rect class="bldg" x="46" y="28" width="30" height="12" />
+                            <path class="hatch" d="M50 32 h22 M50 36 h22" />
+                            <text class="label" x="82" y="38">Station</text>
+                            <text class="label small" x="82" y="46">Station Café · market lot</text>
+                            <rect class="hatch" x="46" y="44" width="30" height="10" />
+                            <circle class="mark mark-station" cx="61" cy="40" r="20" />
+
+                            <!-- The gym, a little way along, with its parking lot. -->
+                            <rect class="bldg" x="210" y="34" width="22" height="12" />
+                            <text class="label" x="236" y="40">Gym</text>
+                            <text class="label small" x="236" y="48">lot</text>
+                            <rect class="hatch" x="210" y="50" width="22" height="8" />
+                            <circle class="mark mark-gym" cx="224" cy="46" r="18" />
+
+                            <!-- Mill Street, north to south, crossing the river on the bridge. -->
+                            <path class="road" d="M196 28 v78 M196 142 v90" />
+                            <text class="label caps" x="200" y="84" transform="rotate(90 200 84)">Mill Street</text>
+                            <!-- the bridge: two lanes over the water -->
+                            <path class="road" d="M191 106 v36" style="stroke-width:1.8" />
+                            <path class="road bridge-lane-2" d="M201 106 v36" style="stroke-width:1.8" />
+                            <path class="lane" d="M186 106 h20 M186 142 h20" />
+                            <text class="label small" x="206" y="128">bridge</text>
+                            <circle class="mark mark-bridge" cx="196" cy="124" r="20" />
+
+                            <!-- Orchard Lane, off Mill Street to the east, and its houses. -->
+                            <path class="lane" d="M196 74 h164" />
+                            <text class="label caps" x="214" y="70">Orchard Lane</text>
+                            <rect class="bldg" x="222" y="80" width="10" height="9" />
+                            <text class="label small" x="222" y="98">12</text>
+                            <rect class="bldg" x="242" y="80" width="10" height="9" />
+                            <text class="label small" x="242" y="98">14</text>
+                            <rect class="bldg" x="262" y="80" width="10" height="9" />
+                            <rect class="bldg" x="282" y="80" width="10" height="9" />
+                            <rect class="bldg" x="322" y="80" width="10" height="9" />
+                            <text class="label small" x="322" y="98">41</text>
+                            <circle class="mark mark-orchard" cx="247" cy="84" r="20" />
+
+                            <!-- Depot Park, between the lane and the river, with the bandstand. -->
+                            <path class="lane" d="M212 104 q28 -8 56 -2 q20 4 34 14 q-28 8 -56 2 q-20 -4 -34 -14 z" style="stroke-dasharray:2 2" />
+                            <path class="bldg" d="M250 106 l5 -3 h6 l5 3 v6 l-5 3 h-6 l-5 -3 z" />
+                            <path class="hatch" d="M250 106 l16 9 M266 106 l-16 9" />
+                            <text class="label" x="268" y="100">Depot Park</text>
+                            <circle class="mark mark-depot" cx="256" cy="112" r="18" />
+
+                            <!-- Main Street, west to east, south of the river; the town hall on it. -->
+                            <path class="road" d="M-2 172 h362" />
+                            <text class="label caps" x="16" y="168">Main Street</text>
+                            <rect class="bldg" x="168" y="176" width="20" height="16" />
+                            <path class="solid" d="M178 168 v8 h-1 v-8 z" />
+                            <path class="solid" d="M178 168 l6 2 l-6 2 z" />
+                            <text class="label" x="206" y="184">Town hall</text>
+                            <text class="label small" x="206" y="192">council · clerk</text>
+                            <circle class="mark mark-hall" cx="178" cy="184" r="18" />
+
+                            <!-- The Eastside library, further along Main Street. -->
+                            <rect class="bldg" x="264" y="178" width="24" height="14" />
+                            <path class="hatch" d="M268 182 h16 M268 186 h16" />
+                            <text class="label" x="292" y="184">Library</text>
+                            <text class="label small" x="292" y="192">Eastside</text>
+                            <circle class="mark mark-library" cx="276" cy="185" r="18" />
+
+                            <!-- The community center and its pool, west of town. -->
+                            <rect class="bldg" x="40" y="178" width="30" height="14" />
+                            <rect class="hatch" x="44" y="196" width="22" height="8" />
+                            <path class="ripple" d="M47 200 q3 -2 6 0 q3 2 6 0 q3 -2 6 0" />
+                            <text class="label" x="76" y="188">Community center</text>
+                            <text class="label small" x="76" y="196">pool · clinics · polls</text>
+                            <circle class="mark mark-center" cx="55" cy="190" r="20" />
+
+                            <!-- Route 9, along the foot, and the interchange at the east end. -->
+                            <path class="road" d="M-2 224 h300 q16 0 22 -8 q6 -8 22 -8 h20" />
+                            <path class="road" d="M300 224 q18 0 26 8" style="stroke-width:1.6" />
+                            <text class="label caps" x="10" y="220">Route 9</text>
+                            <text class="label small" x="300" y="204">interchange</text>
+                            <circle class="mark mark-route9" cx="150" cy="224" r="12" />
+
+                            <!-- The high school, on Route 9. -->
+                            <rect class="bldg" x="96" y="204" width="34" height="14" />
+                            <path class="hatch" d="M100 208 h26 M100 212 h26" />
+                            <text class="label" x="134" y="214">High school</text>
+                            <circle class="mark mark-school" cx="113" cy="211" r="18" />
+
+                            <!-- The animal shelter, out past the interchange. -->
+                            <rect class="bldg" x="338" y="192" width="18" height="10" />
+                            <text class="label small" x="334" y="188">shelter</text>
+                            <circle class="mark mark-shelter" cx="347" cy="197" r="12" />
+                    </svg>
+                        <figcaption id="map-caption"><b>CORBIN FALLS</b> — The river, the bridge with one lane, and Orchard Lane, where he lives at No. 12. Ringed: the places in today's notices and letters.</figcaption>
+                    </figure>
+                </section>
+
                 <footer class="colophon">
                     <p id="colophon-staff">Editor-in-chief: vacant. Wire desk: unattended. Corrections: ongoing.</p>
                     <p id="colophon-note">The Gazette is published daily in Corbin Falls. Letters may be edited for length and clarity. Corrections appear on this page.</p>
-                    <p><a href="/archive.html">Back issues</a> are available. The term itself is covered in <a href="/about.html">the entry</a>.</p>
+                    <p><a href="/archive.html">Back issues</a> are available, and <a href="/card.png" id="colophon-card">this issue as a clipping</a>. The term itself is covered in <a href="/about.html">the entry</a>.</p>
                 </footer>
-            </section>
-
-            <!-- The dingus a compositor sets between departments. -->
-            <div class="dingus" role="presentation"></div>
-
-            <!-- The wire: the interactive half. Items arrive one at a time,
-                 from the catalogue or the desk, and can be taken away. One
-                 item, one row of things to do with it. -->
-            <section class="wire" aria-labelledby="wire-title">
-                <div class="wire-intro">
-                    <h2 class="section-label" id="wire-title">Latest from the wire</h2>
-                    <p class="wire-note">Filings as they arrive.</p>
-                </div>
-
-                <div class="headline-section">
-                    <div class="headline-main">
-                        <div class="headline-frame">
-                            <h3 id="headline" tabindex="-1" aria-label="Headline">Loading...</h3>
-                        </div>
-
-                        <div class="actions">
-                            <button id="prev-btn" type="button" aria-label="View Previous Headline" class="ghost"><span>Previous</span></button>
-                            <button id="next-btn" type="button" aria-label="Shuffle headline" class="accent"><span class="button-label">Next</span></button>
-                        </div>
-
-                        <div id="loader" class="loader" role="status" aria-live="polite" aria-hidden="true">Loading...</div>
-
-                        <div class="item-actions">
-                            <div class="item-actions__row">
-                                <button id="copy-btn" type="button" aria-label="Copy headline" class="ghost"><span>Copy item</span></button>
-                                <button id="native-share" class="ghost" type="button" aria-label="Share headline with device share sheet"><span>Share</span></button>
-                                <button id="download-clipping" class="ghost" type="button"><span>Download clipping</span></button>
-                                <button id="copy-clipping" class="ghost" type="button"><span>Copy clipping</span></button>
-                            </div>
-
-                            <!-- hrefs below share the site itself; updateSocialShareLinks() swaps in the active headline once the app boots -->
-                            <p class="share-links">
-                                <a id="twitter-share" class="share-link" href="https://x.com/intent/post?text=Neckass%20Digital%20Gazette&amp;url=https%3A%2F%2Fneckass.com%2F&amp;hashtags=Neckass" target="_blank" rel="noopener noreferrer" aria-label="Share on X">X</a>
-                                <a id="facebook-share" class="share-link" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fneckass.com%2F&amp;quote=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">Facebook</a>
-                                <a id="reddit-share" class="share-link" href="https://www.reddit.com/submit?url=https%3A%2F%2Fneckass.com%2F&amp;title=Neckass%20Digital%20Gazette" target="_blank" rel="noopener noreferrer" aria-label="Share on Reddit">Reddit</a>
-                            </p>
-
-                            <p id="item-status" class="status-text" role="status" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <!-- The sheet the two clipping buttons render to PNG. It stays
-                         on the page as the preview of what you get, in the space
-                         beside the item, and carries no heading of its own. -->
-                    <div id="clipping-front" class="clipping-front">
-                        <div class="clipping-masthead">
-                            <span class="clipping-title">The Gazette</span>
-                            <span id="clipping-date" class="clipping-date">Loading...</span>
-                        </div>
-                        <p class="clipping-kicker">Corbin Falls</p>
-                        <div class="clipping-rule" aria-hidden="true"></div>
-                        <h4 id="clipping-headline" class="clipping-headline">Loading...</h4>
-                        <p class="clipping-deck">Staff report</p>
-                        <p class="clipping-footer">The Corbin Falls Gazette · neckass.com</p>
-                    </div>
-                </div>
-
-                <section class="history-card" aria-labelledby="recent-headlines-title">
-                    <div class="history-header">
-                        <h3 class="filter-label" id="recent-headlines-title">Recent filings</h3>
-                        <p class="counter counter-inline" id="history-count">0 items</p>
-                    </div>
-                    <ul class="headline-list" id="headline-list" aria-live="polite"></ul>
-                </section>
             </section>
         </main>
     </div>
 
-    <script defer src="vendor/html-to-image.js"></script>
     <script defer src="data/headlines.js"></script>
     <script defer src="data/formats.js"></script>
-    <script defer src="data/llm-beats.js"></script>
-    <script defer src="modules/utils.js"></script>
+    <script defer src="data/editions.js"></script>
+    <script defer src="data/calendar.js"></script>
+    <script defer src="modules/calendar.js"></script>
     <script defer src="modules/issue.js"></script>
     <script defer src="modules/front-page.js"></script>
-    <script defer src="modules/state.js"></script>
-    <script defer src="modules/storage.js"></script>
-    <script defer src="modules/clipboard.js"></script>
-    <script defer src="modules/history.js"></script>
-    <script defer src="modules/share.js"></script>
-    <script defer src="modules/clipping-export.js"></script>
-    <script defer src="modules/ui.js"></script>
-    <script defer src="modules/head.js"></script>
-    <script defer src="modules/history-list.js"></script>
-    <script defer src="modules/agent-api.js"></script>
-    <script defer src="modules/status.js"></script>
-    <script defer src="modules/loader.js"></script>
-    <script defer src="modules/app.js"></script>
-    <script defer src="modules/agent-interface.js"></script>
-    <script defer src="llm.js"></script>
-    <script defer src="script.js"></script>
-
-    <div id="global-toast" class="global-toast" role="status" aria-live="polite" aria-hidden="true"></div>
 </body>
 </html>

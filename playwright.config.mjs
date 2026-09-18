@@ -10,10 +10,20 @@ export default defineConfig({
         baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/',
         headless: true,
     },
-    webServer: {
-        command: 'bun run scripts/serve.ts',
-        url: 'http://127.0.0.1:8001/',
-        reuseExistingServer: true,
-        timeout: 10_000,
-    },
+    webServer: [
+        {
+            command: 'bun run scripts/serve.ts',
+            url: 'http://127.0.0.1:8001/',
+            reuseExistingServer: true,
+            timeout: 10_000,
+        },
+        // The edge: the Pages Functions (feed, social card, middleware)
+        // under workerd, which is the only place they run.
+        {
+            command: 'bun run edge',
+            url: 'http://127.0.0.1:8800/',
+            reuseExistingServer: true,
+            timeout: 60_000,
+        },
+    ],
 });

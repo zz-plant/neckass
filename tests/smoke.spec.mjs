@@ -3,236 +3,10 @@ import { buildFeed } from '../functions/feed.xml.js';
 import { issueNumber, selectLead } from '../functions/lib/issue.mjs';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
+// The Pages Functions under workerd; see playwright.config.mjs.
+const EDGE_URL = process.env.PLAYWRIGHT_EDGE_URL || 'http://127.0.0.1:8800/';
 
-async function headlineText(page) {
-    return (await page.locator('#headline').innerText()).trim();
-}
-
-test.describe('Neckass smoke flows', () => {
-    test('shuffle updates headline and URL can restore it', async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() =>
-            Boolean(window.Neckass?.app && window.Neckass?.agent),
-        );
-
-        await expect(page.locator('#headline')).not.toHaveText('Loading...');
-        const original = await headlineText(page);
-
-        await page.click('#next-btn');
-        await expect(page.locator('#headline')).not.toHaveText(original);
-
-        const shuffled = await headlineText(page);
-        expect(shuffled).not.toEqual(original);
-
-        const restoredUrl = page.url();
-        expect(restoredUrl).toContain('headline=');
-
-        const restored = await page.context().newPage();
-        await restored.goto(restoredUrl);
-        await expect(restored.locator('#headline')).toHaveText(shuffled);
-    });
-
-    test('share links include active headline text', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() =>
-            Boolean(window.Neckass?.app && window.Neckass?.agent),
-        );
-        await expect(page.locator('#headline')).not.toHaveText('Loading...');
-
-        const headline = await headlineText(page);
-        await expect(page.locator('#twitter-share')).toHaveAttribute(
-            'href',
-            /twitter\.com|x\.com/,
-        );
-        const twitterHref = await page
-            .locator('#twitter-share')
-            .getAttribute('href');
-
-        expect(twitterHref).toBeTruthy();
-        expect(decodeURIComponent(twitterHref)).toContain(headline);
-    });
-
-    test('URL headline input is rendered as plain text without DOM injection', async ({
-        page,
-    }) => {
-        const payload = encodeURIComponent(
-            '<img src=x onerror=alert(1)> Breaking',
-        );
-        await page.goto(`${BASE_URL}?headline=${payload}`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.app));
-
-        await expect(page.locator('#headline')).not.toHaveText('Loading...');
-        const headline = await headlineText(page);
-
-        expect(headline).toContain('<img src=x onerror=alert(1)> Breaking');
-        await expect(page.locator('#headline img')).toHaveCount(0);
-        await expect(page.locator('#headline [onerror]')).toHaveCount(0);
-    });
-
-    test('export actions are available for current headline', async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.app));
-
-        await expect(page.locator('#download-clipping')).toBeEnabled();
-        await expect(page.locator('#copy-clipping')).toBeEnabled();
-    });
-
-    test('exported front page fills its canvas', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.app));
-
-        // The export clones the card and copies computed styles onto the
-        // clone. A regression there silently drops the card's own padding and
-        // grid row-gap, so the artwork bunches into a corner and the PNG comes
-        // out mostly blank — while every button still looks fine. Compare the
-        // rendered pixels against the card actually on screen.
-        const result = await page.evaluate(async () => {
-            const card = document.getElementById('clipping-front');
-            const rect = card.getBoundingClientRect();
-            const dataUrl = await window.htmlToImage.toPng(card, {
-                pixelRatio: 2,
-                width: Math.round(rect.width),
-                height: Math.round(rect.height),
-            });
-
-            const image = new Image();
-            await new Promise((resolve, reject) => {
-                image.onload = resolve;
-                image.onerror = reject;
-                image.src = dataUrl;
-            });
-
-            const canvas = document.createElement('canvas');
-            canvas.width = image.width;
-            canvas.height = image.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(image, 0, 0);
-            const { data } = ctx.getImageData(
-                0,
-                0,
-                canvas.width,
-                canvas.height,
-            );
-
-            // Find the lowest row holding ink, i.e. anything clearly darker
-            // than the newsprint ground.
-            let lastInkRow = 0;
-            for (let y = 0; y < canvas.height; y += 1) {
-                for (let x = 0; x < canvas.width; x += 1) {
-                    const i = (y * canvas.width + x) * 4;
-                    // Alpha matters: untouched canvas is transparent black,
-                    // which would otherwise read as ink everywhere and make
-                    // this assertion unfalsifiable.
-                    if (
-                        data[i + 3] > 200 &&
-                        data[i] < 140 &&
-                        data[i + 1] < 140 &&
-                        data[i + 2] < 140
-                    ) {
-                        lastInkRow = y;
-                        break;
-                    }
-                }
-            }
-
-            return {
-                height: canvas.height,
-                inkReaches: lastInkRow / canvas.height,
-            };
-        });
-
-        // The footer rule sits near the bottom of the card, so ink should run
-        // most of the way down. The old bug left this around 0.6.
-        expect(result.inkReaches).toBeGreaterThan(0.8);
-    });
-
-    test('agent interface exposes callable tools', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.agent));
-
-        const initial = await page.evaluate(async () =>
-            window.Neckass.agent.call('get_state'),
-        );
-        expect(initial).toBeTruthy();
-        expect(typeof initial.headline).toBe('string');
-
-        const shuffled = await page.evaluate(async () =>
-            window.Neckass.agent.call('shuffle'),
-        );
-        expect(shuffled).toBeTruthy();
-        expect(shuffled.identifier).toBeTruthy();
-
-        const listed = await page.evaluate(async () =>
-            window.Neckass.agent.call('list_headlines', { limit: 5 }),
-        );
-        expect(Array.isArray(listed.items)).toBeTruthy();
-    });
-
-    test('history URL helpers carry the headline and drop stale filter params', async ({
-        page,
-    }) => {
-        // The section/q/source/panel/layout parameters belonged to a filter
-        // system that never had controls; links that still carry them must
-        // resolve to the headline and shed the rest.
-        await page.goto(`${BASE_URL}?section=tech&q=wifi&source=curated`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.app));
-
-        const result = await page.evaluate(() => {
-            const {
-                buildHeadlineUrl,
-                getUrlState,
-                data,
-                slugifyHeadline,
-                isValidHeadlineIndex,
-            } = window.Neckass;
-            const sampleHeadlines = data.HEADLINES || [];
-            const url = buildHeadlineUrl({
-                index: 0,
-                headlines: sampleHeadlines,
-                identifierFromIndex: (index) =>
-                    slugifyHeadline(sampleHeadlines[index]),
-                isValidHeadlineIndex,
-            });
-            const parsed = new URL(url);
-            const params = Object.fromEntries(parsed.searchParams.entries());
-            const state = getUrlState();
-            return { params, state };
-        });
-
-        expect(result.params.headline).toBeTruthy();
-        expect(result.params.section).toBeUndefined();
-        expect(result.params.q).toBeUndefined();
-        expect(result.params.source).toBeUndefined();
-        expect(result.state.headline).toBeNull();
-        expect(result.state.hasHeadlineParam).toBe(false);
-    });
-
-    test('shared JSON parse falls back on malformed input', async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.app));
-
-        const result = await page.evaluate(() => {
-            const { safeJsonParse } = window.Neckass;
-            return {
-                badJsonFallback: safeJsonParse('{oops', { ok: false }),
-                goodJson: safeJsonParse('{"ok":true}', { ok: false }),
-            };
-        });
-
-        expect(result.badJsonFallback).toEqual({ ok: false });
-        expect(result.goodJson).toEqual({ ok: true });
-    });
-    // The feed and the social card compose the lead in the Workers runtime,
-    // from their own copy of the arithmetic and their own extract of the
-    // leads. If either drifts from modules/issue.js the paper starts
-    // advertising a headline it is not running.
-
+test.describe('The Corbin Falls Gazette', () => {
     // The issue is the product. These cover what a reader actually opens:
     // that today's paper renders, that a back issue loads from the archive,
     // and that the corrections chain points at the lead it claims to.
@@ -359,6 +133,55 @@ test.describe('Neckass smoke flows', () => {
         expect(Object.values(result.drawn).some(Boolean)).toBe(true);
     });
 
+    test('the town map rings the places the day names', async ({ page }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const result = await page.evaluate(() => {
+            const { placesNamed } = window.Neckass.frontPage;
+            const cut = document.getElementById('map-cut');
+            const styles = getComputedStyle(cut);
+            const read = (name) =>
+                Number(styles.getPropertyValue(`--${name}`).trim());
+            const issue = window.Neckass.currentIssue;
+            const named = placesNamed([
+                ...issue.notices,
+                ...issue.letters.flatMap((l) => [l.body, l.signature]),
+            ]).map(([key]) => key);
+            return {
+                named,
+                drawn: Object.fromEntries(
+                    [
+                        'bridge',
+                        'orchard',
+                        'station',
+                        'depot',
+                        'hall',
+                        'library',
+                        'center',
+                        'gym',
+                        'school',
+                        'route9',
+                        'river',
+                        'shelter',
+                    ].map((key) => [key, read(key)]),
+                ),
+                caption: document.getElementById('map-caption').textContent,
+                sample: placesNamed([
+                    'The Mill Street bridge is reduced to one lane.',
+                    'Rosa Okafor, 14 Orchard Lane',
+                ]).map(([key]) => key),
+            };
+        });
+
+        expect(result.sample).toEqual(['bridge', 'orchard']);
+        // Every place named today is ringed, and nothing else is.
+        for (const [key, value] of Object.entries(result.drawn)) {
+            expect(value, key).toBe(result.named.includes(key) ? 1 : 0);
+        }
+        expect(result.caption).toMatch(/^CORBIN FALLS — /);
+    });
+
     test("today's corrections retract yesterday's actual lead", async ({
         page,
     }) => {
@@ -406,6 +229,51 @@ test.describe('Neckass smoke flows', () => {
         }
     });
 
+    test('the paper knows what day it is', async ({ page }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        const checked = await page.evaluate(() => {
+            const { issue } = window.Neckass;
+            const compose = (value) =>
+                issue.composeIssue(issue.parseIssueDate(value));
+            const before = compose('2026-11-25');
+            const thanksgiving = compose('2026-11-26');
+            const wednesday = compose('2026-10-07');
+            const birthday = compose('2027-03-11');
+            const anniversary = compose('2027-09-29');
+            return {
+                // Yesterday's lead continues at the top of today's column.
+                followUp: thanksgiving.briefs[0],
+                expectedFollowUp: before.lead.followUp,
+                thanksgivingNotice: thanksgiving.notices[0],
+                thanksgivingBrief: thanksgiving.briefs[1],
+                councilReport: wednesday.briefs[1],
+                birthdayBrief: birthday.briefs[1],
+                birthdayLetter: birthday.letters[1]?.signature,
+                anniversaryBrief: anniversary.briefs[1],
+                counts: [
+                    thanksgiving.briefs.length,
+                    thanksgiving.notices.length,
+                    birthday.letters.length,
+                    birthday.classifieds.length,
+                ],
+            };
+        });
+
+        expect(checked.followUp).toBe(checked.expectedFollowUp);
+        expect(checked.thanksgivingNotice).toMatch(/Thanksgiving/);
+        expect(checked.thanksgivingBrief).toMatch(/bring a side/);
+        expect(checked.councilReport).toMatch(/Town council met Tuesday/);
+        expect(checked.birthdayBrief).toBe(
+            'Neckass is 38 today. He has told people he is 36 since he was 36.',
+        );
+        expect(checked.birthdayLetter).toBe('Bernadette Neckass, Corbin Falls');
+        expect(checked.anniversaryBrief).toMatch(/^The Gazette is three today/);
+        // A dated item takes the place of a dealt one; sizes do not change.
+        expect(checked.counts).toEqual([7, 3, 2, 5]);
+    });
+
     test('a back issue loads from its URL and offers the way back', async ({
         page,
     }) => {
@@ -428,6 +296,52 @@ test.describe('Neckass smoke flows', () => {
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
+    test('a landmark issue is written, and the chain runs through it', async ({
+        page,
+    }) => {
+        await page.goto(`${BASE_URL}?issue=2024-09-29`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const first = await page.evaluate(() => window.Neckass.currentIssue);
+        expect(first.number).toBe(1);
+        expect(first.tag).toBe('First edition');
+        await expect(page.locator('#editorial')).toBeVisible();
+        await expect(page.locator('#editorial-head')).toHaveText('Why a paper');
+        // The first edition has nothing to correct and one letter.
+        await expect(page.locator('#corrections-list li')).toHaveCount(1);
+        await expect(page.locator('#letters-list li')).toHaveCount(1);
+        // The earliest issues are shorter.
+        await expect(page.locator('#briefs-list li')).toHaveCount(3);
+
+        // No. 2 retracts a detail of the written lead, not a dealt one.
+        const second = await page.evaluate(() =>
+            window.Neckass.issue.composeIssue(new Date(2024, 8, 30)),
+        );
+        expect(second.corrections[1]).toBe(first.lead.correction);
+        expect(second.editorial).toBeNull();
+
+        // An ordinary issue carries no editorial.
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await expect(page.locator('#editorial')).toBeHidden();
+    });
+
+    test('an issue not yet published falls back to today and says so', async ({
+        page,
+    }) => {
+        await page.goto(`${BASE_URL}?issue=2099-01-01`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+
+        const [rendered, today] = await page.evaluate(() => [
+            window.Neckass.currentIssue.number,
+            window.Neckass.issue.issueNumber(new Date()),
+        ]);
+        expect(rendered).toBe(today);
+        const notice = page.locator('#back-issue-notice');
+        await expect(notice).toBeVisible();
+        await expect(notice).toContainText('goes to press');
+    });
+
     test('a malformed issue param falls back to today', async ({ page }) => {
         await page.goto(`${BASE_URL}?issue=not-a-date`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
@@ -438,6 +352,52 @@ test.describe('Neckass smoke flows', () => {
         ]);
         expect(rendered).toBe(today);
         await expect(page.locator('#back-issue-notice')).toBeHidden();
+    });
+
+    test('no lead runs twice inside one round of the pool', async ({
+        page,
+    }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        const result = await page.evaluate(() => {
+            const { issue, data } = window.Neckass;
+            const size = data.LEADS.length;
+            const rounds = [];
+            // Three consecutive rounds, well clear of the landmark issues.
+            for (let round = 8; round < 11; round += 1) {
+                const seen = new Set();
+                for (let place = 0; place < size; place += 1) {
+                    const number = round * size + place + 1;
+                    if (data.EDITIONS[number]) continue;
+                    seen.add(issue.selectLead(number, data.LEADS).headline);
+                }
+                rounds.push(seen.size);
+            }
+            return { size, rounds };
+        });
+
+        for (const distinct of result.rounds) {
+            expect(distinct).toBe(result.size);
+        }
+        // Every lead carries everything the paper prints about it.
+        const incomplete = await page.evaluate(
+            () =>
+                window.Neckass.data.LEADS.filter(
+                    (lead) =>
+                        !(
+                            lead.headline &&
+                            lead.deck &&
+                            lead.byline &&
+                            lead.correction &&
+                            lead.followUp &&
+                            lead.classified &&
+                            lead.letter?.body &&
+                            lead.letter?.signature
+                        ),
+                ).length,
+        );
+        expect(incomplete).toBe(0);
     });
 
     test('the archive lists issues that resolve to real papers', async ({
@@ -479,6 +439,10 @@ test.describe('Neckass smoke flows', () => {
         await context.close();
     });
 
+    // The feed and the social card compose the lead in the Workers runtime,
+    // from their own copy of the arithmetic and their own extract of the
+    // leads. If either drifts from modules/issue.js the paper starts
+    // advertising a headline it is not running.
     test('worker and browser agree on the lead for a given issue', async ({
         page,
     }) => {
@@ -488,6 +452,7 @@ test.describe('Neckass smoke flows', () => {
         const dates = [
             '2024-09-29',
             '2025-01-01',
+            '2025-07-13',
             '2026-09-02',
             '2026-12-25',
             '2027-06-14',
@@ -553,6 +518,43 @@ test.describe('Neckass smoke flows', () => {
         await expect(
             page.locator('link[rel="alternate"][type="application/rss+xml"]'),
         ).toHaveAttribute('href', '/feed.xml');
+    });
+
+    test('the edge draws a card for the issue and points the share tags at it', async ({
+        request,
+    }) => {
+        // The front page, served through the middleware, carries the lead
+        // of the issue asked for and an image URL for the same issue.
+        const page = await request.get(`${EDGE_URL}?issue=2025-01-06`);
+        expect(page.ok()).toBe(true);
+        const html = await page.text();
+        expect(html).toContain('<title>Neckass has told the Gazette');
+        expect(html).toContain(
+            '<meta property="og:image" content="https://neckass.com/card.png?issue=2025-01-06">',
+        );
+        expect(html).toContain(
+            '<meta name="twitter:image" content="https://neckass.com/card.png?issue=2025-01-06">',
+        );
+
+        // The card is a real PNG of a useful size, not an empty response
+        // with the right content type.
+        const card = await request.get(`${EDGE_URL}card.png?issue=2025-01-06`);
+        expect(card.ok()).toBe(true);
+        expect(card.headers()['content-type']).toBe('image/png');
+        const bytes = await card.body();
+        expect(bytes.length).toBeGreaterThan(20_000);
+        expect(bytes.subarray(0, 8)).toEqual(
+            Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+        );
+
+        // A date before the first edition is not an issue.
+        const early = await request.get(`${EDGE_URL}card.png?issue=2020-01-01`);
+        expect(early.status()).toBe(404);
+
+        // The feed is served, too.
+        const feed = await request.get(`${EDGE_URL}feed.xml`);
+        expect(feed.ok()).toBe(true);
+        expect(feed.headers()['content-type']).toContain('application/rss+xml');
     });
 
     test('every page carries the icon set', async ({ page }) => {

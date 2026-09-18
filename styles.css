@@ -27,7 +27,7 @@
 
        The second colour is a ledger teal, the register this paper files
        in: corrections, notices, the town clerk. It carries the cutoff
-       rule, links, and the one button that advances the wire. The ground
+       rule and the links. The ground
        under the sheet is that teal taken down to near-black, so the page
        runs on two colour families rather than three unrelated ones. */
     --surface-1: #212b28;
@@ -35,33 +35,21 @@
     --text-primary: #1c1a19;
     --text-muted: #4e4a42;
     --accent: #175049;
-    --accent-hover: #0f3a35;
     /* The cutoff rule takes the accent as printed. In the dark theme it is
        its own token, a step down from the link colour, so a 3px line of it
        does not glow. */
     --accent-rule: #175049;
-    --on-accent: #f4f0e7;
     --focus-ring: rgba(23, 80, 73, 0.65);
     --link: #175049;
     --link-hover: #0f3a35;
     --border-subtle: rgba(28, 26, 25, 0.16);
     --border-strong: rgba(28, 26, 25, 0.32);
-    /* Controls draw their edge and wash from the running ink, so a button
-       has the same edge in either theme. There is no hover shadow: a
-       control on paper does not lift off it, it takes a little ink. */
-    --control-border: rgba(28, 26, 25, 0.34);
-    --control-border-hover: rgba(28, 26, 25, 0.55);
-    --control-wash: rgba(28, 26, 25, 0.06);
-    --control-press: rgba(28, 26, 25, 0.12);
     /* The sheet lies on the desk. A tight edge and a short throw, not the
        floating card's wide blur. */
     --shadow-page:
         0 1px 1px rgba(10, 16, 14, 0.35), 0 6px 18px -6px rgba(10, 16, 14, 0.45);
     /* Light stock needs no outline on a dark desk; the plate does. */
     --sheet-edge: transparent;
-    --status-error: #a3271f;
-    --status-success-bg: rgba(28, 26, 25, 0.94);
-    --status-success-text: #f4f0e7;
     --radius: 2px;
     /* Light type on a dark ground renders heavy on macOS; the dark theme
        switches to greyscale antialiasing, which brings it back to the
@@ -99,25 +87,16 @@
     --text-primary: #ece7dc;
     --text-muted: #bab5a6;
     --accent: #46a394;
-    --accent-hover: #57b4a5;
     --accent-rule: #3f9384;
-    --on-accent: #101a18;
     --focus-ring: rgba(70, 163, 148, 0.7);
     --link: #7cc4b6;
     --link-hover: #a3d9cc;
     --tap-highlight: rgba(70, 163, 148, 0.24);
     --border-subtle: rgba(226, 234, 230, 0.16);
     --border-strong: rgba(226, 234, 230, 0.3);
-    --control-border: rgba(226, 234, 230, 0.34);
-    --control-border-hover: rgba(226, 234, 230, 0.55);
-    --control-wash: rgba(226, 234, 230, 0.07);
-    --control-press: rgba(226, 234, 230, 0.13);
     --shadow-page:
         0 1px 1px rgba(0, 0, 0, 0.5), 0 8px 24px -8px rgba(0, 0, 0, 0.6);
     --sheet-edge: rgba(226, 234, 230, 0.1);
-    --status-error: #ff9a94;
-    --status-success-bg: rgba(236, 231, 220, 0.94);
-    --status-success-text: #1e2523;
     --font-smoothing: antialiased;
 }
 
@@ -133,25 +112,16 @@
         --text-primary: #ece7dc;
         --text-muted: #bab5a6;
         --accent: #46a394;
-        --accent-hover: #57b4a5;
         --accent-rule: #3f9384;
-        --on-accent: #101a18;
         --focus-ring: rgba(70, 163, 148, 0.7);
         --link: #7cc4b6;
         --link-hover: #a3d9cc;
         --tap-highlight: rgba(70, 163, 148, 0.24);
         --border-subtle: rgba(226, 234, 230, 0.16);
         --border-strong: rgba(226, 234, 230, 0.3);
-        --control-border: rgba(226, 234, 230, 0.34);
-        --control-border-hover: rgba(226, 234, 230, 0.55);
-        --control-wash: rgba(226, 234, 230, 0.07);
-        --control-press: rgba(226, 234, 230, 0.13);
         --shadow-page:
             0 1px 1px rgba(0, 0, 0, 0.5), 0 8px 24px -8px rgba(0, 0, 0, 0.6);
         --sheet-edge: rgba(226, 234, 230, 0.1);
-        --status-error: #ff9a94;
-        --status-success-bg: rgba(236, 231, 220, 0.94);
-        --status-success-text: #1e2523;
         --font-smoothing: antialiased;
     }
 }
@@ -203,23 +173,21 @@ body {
     overscroll-behavior-y: none;
 }
 
-button,
-a,
-.share-link {
+a {
     -webkit-tap-highlight-color: var(--tap-highlight);
 }
 
 /* Prose links previously fell through to the browser default, which put
    #0000EE next to a warm newsprint palette. Anything that is already styled
    as a control opts out. */
-a:not(.share-link):not(.top-nav a) {
+a:not(.top-nav a) {
     color: var(--link);
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
 }
 
-a:not(.share-link):not(.top-nav a):hover {
+a:not(.top-nav a):hover {
     color: var(--link-hover);
 }
 
@@ -257,8 +225,8 @@ a:not(.share-link):not(.top-nav a):hover {
     justify-content: space-between;
     gap: 4px 24px;
     padding-bottom: 9px;
-    /* The cutoff rule is the accent's, per e8fc419: the teal carries the
-       rule, the links and the button that advances the wire. */
+    /* The cutoff rule is the accent's: the teal carries the rule and the
+       links. */
     border-bottom: 3px solid var(--accent-rule);
 }
 
@@ -337,53 +305,6 @@ a:not(.share-link):not(.top-nav a):hover {
     gap: 16px;
 }
 
-.headline-section {
-    display: grid;
-    gap: 18px;
-    padding: 4px 0 8px;
-    min-width: 0;
-    position: relative;
-}
-
-.headline-frame {
-    min-height: 128px;
-    display: flex;
-    align-items: center;
-}
-
-#headline {
-    font-family: var(--headline-font);
-    text-wrap: balance;
-    overflow-wrap: anywhere;
-    /* Under the lead's size: a wire item never outranks the day's lead. */
-    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
-    line-height: 1.13;
-    max-width: 20ch;
-    color: var(--ink-display);
-    letter-spacing: -0.01em;
-    view-transition-name: featured-headline;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    ::view-transition-old(featured-headline),
-    ::view-transition-new(featured-headline) {
-        animation-duration: 180ms;
-        animation-timing-function: ease;
-    }
-}
-
-/* The grid display below would otherwise outrank the UA's [hidden] rule. */
-.history-card[hidden] {
-    display: none;
-}
-
-.history-card {
-    display: grid;
-    gap: 12px;
-    padding: 22px 0 4px;
-    border-top: 1px solid var(--border-strong);
-}
-
 /* ---- The reading pages ----------------------------------------------
    The entry, the standards, the back issues, the 404. They open under the
    masthead's own cutoff rule, so the card's top border and the title's
@@ -428,33 +349,74 @@ a:not(.share-link):not(.top-nav a):hover {
 }
 
 /* ---- Back issues ----------------------------------------------------
-   Every line of the list is a link, so setting each one in the accent
-   distinguishes nothing and turns the page into a column of teal. The
-   dates take the ink and a faint underline; the accent comes back on
-   hover, where it means something. Above a phone the list runs in
-   columns, like a table of contents, rather than one long spine. */
-#archive-list {
-    list-style: none;
-    padding-left: 0;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.95rem;
-    border-top: 1px solid var(--border-strong);
-    padding-top: 4px;
+   The whole run, by month, each issue on one row: the folio on the left
+   and the lead on the right in the display face, the way a contents page
+   lists what ran. Every row is a link, so the rows take the ink, not the
+   accent; the accent comes back on hover, where it means something.
+   Above a phone the months run in two columns. */
+.archive-landmarks {
+    margin-top: 22px;
 }
 
-#archive-list li {
-    max-width: none;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    break-inside: avoid;
+.archive-landmarks .about-list {
     margin-top: 0;
 }
 
-/* The current issue carries a tag under its date rather than a phrase on
-   the end of it, which was wrapping the first row of the list. */
-.archive-current {
-    display: block;
-    margin-top: 2px;
+#archive-run {
+    margin-top: 26px;
+}
+
+.archive-month + .archive-month {
+    margin-top: 22px;
+}
+
+.archive-list {
+    list-style: none;
+    padding-left: 0;
+    font-variant-numeric: tabular-nums;
+    max-width: none;
+}
+
+.archive-list li {
+    max-width: none;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    break-inside: avoid;
+    margin-top: 0;
+    display: grid;
+    gap: 3px;
+}
+
+.archive-list li a {
+    color: var(--text);
+    text-decoration: none;
+    display: grid;
+    gap: 2px;
+}
+
+.archive-folio {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+}
+
+.archive-lead {
+    font-family: var(--headline-font);
+    font-size: 0.98rem;
+    line-height: 1.3;
+    text-wrap: pretty;
+}
+
+.archive-list li a:hover .archive-lead {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 2px;
+}
+
+/* A landmark carries a tag under its lead: first edition, anniversary. */
+.archive-tag {
     font-size: 0.66rem;
     text-transform: uppercase;
     letter-spacing: 0.14em;
@@ -462,27 +424,11 @@ a:not(.share-link):not(.top-nav a):hover {
     color: var(--muted);
 }
 
-#archive-list a {
-    color: var(--text);
-    text-decoration-color: var(--border-strong);
-}
-
-#archive-list a:hover {
-    color: var(--link);
-    text-decoration-color: currentColor;
-}
-
-@media (min-width: 560px) {
-    #archive-list {
+@media (min-width: 760px) {
+    .archive-list {
         columns: 2;
         column-gap: 34px;
         column-rule: 1px solid var(--border);
-    }
-}
-
-@media (min-width: 900px) {
-    #archive-list {
-        columns: 3;
     }
 }
 
@@ -490,312 +436,9 @@ a:not(.share-link):not(.top-nav a):hover {
     grid-template-columns: minmax(0, 1fr);
 }
 
-.history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 10px;
-}
-
-.status-text {
-    font-size: 0.88rem;
-    color: var(--muted);
-    min-height: 1.35em;
-}
-
-.filter-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--text);
-    font-weight: 700;
-}
-
-.counter {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-}
-
-/* ---- Controls -------------------------------------------------------
-   Every button is drawn the same way: a hairline in the running ink,
-   square corners, the label in the body face. Hover takes a wash of ink,
-   pressing takes a little more. The one exception is the button that
-   advances the wire, which is printed solid in the accent. */
-
-.actions {
-    display: grid;
-    /* Next is the action; Previous is a way back. Neither is the widest
-       thing on the page. */
-    grid-template-columns: auto minmax(0, 240px);
-    justify-content: start;
-    gap: 10px;
-}
-
-button {
-    font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: 0.01em;
-    border-radius: var(--radius);
-    border: 1px solid var(--control-border);
-    background: transparent;
-    color: var(--text);
-    padding: 11px 18px;
-    min-height: 44px;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition:
-        color 0.15s ease,
-        border-color 0.15s ease,
-        background-color 0.15s ease;
-    text-wrap: balance;
-}
-
-button:hover {
-    border-color: var(--control-border-hover);
-    background: var(--control-wash);
-}
-
-button:active {
-    background: var(--control-press);
-}
-
-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    background: transparent;
-    border-color: var(--control-border);
-}
-
-button:focus-visible {
+a:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
-}
-
-a:focus-visible,
-.share-link:focus-visible {
-    outline: 3px solid var(--focus-ring);
-    outline-offset: 3px;
-}
-
-button.accent {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--on-accent);
-    font-weight: 600;
-    padding-inline: 28px;
-}
-
-button.accent:hover {
-    background: var(--accent-hover);
-    border-color: var(--accent-hover);
-}
-
-button.accent:active {
-    background: var(--accent-hover);
-}
-
-button.accent:disabled {
-    background: var(--accent);
-    border-color: var(--accent);
-}
-
-.loader {
-    font-size: 0.84rem;
-    color: var(--muted);
-    display: none;
-}
-
-.status-text.error {
-    color: var(--status-error);
-    font-weight: 600;
-}
-
-.loader.is-visible {
-    display: block;
-}
-
-/* Copy is the first of the four and the one most readers want. */
-#copy-btn {
-    font-weight: 600;
-}
-
-.share-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 16px;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-}
-
-/* The three share targets are set like the site links on the folio line:
-   the same small caps, the same rule under them on hover. They are the
-   quietest row under the item, which is their rank. */
-.share-link {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 0;
-    color: var(--muted);
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px solid var(--border-strong);
-    transition:
-        color 0.15s ease,
-        border-color 0.15s ease;
-}
-
-.share-link:hover {
-    color: var(--text);
-    border-bottom-color: var(--text);
-}
-
-/* ---- The clipping ---------------------------------------------------
-   The sheet the two clipping buttons render to PNG. It is rasterised and
-   shared, so it is printed on paper whichever theme the page is in; its
-   colours are literals for that reason, and the theme tokens would export
-   a dark card off a dark page.
-
-   It is a piece of the same paper, cut out: a slightly whiter stock than
-   the sheet, so it reads as a second object lying on it, one hairline
-   round the edge, and its own folio line under the same cutoff rule the
-   page runs under. No gradient anywhere — a gradient is the one thing
-   newsprint cannot do. */
-.clipping-front {
-    position: relative;
-    width: 100%;
-    max-width: 340px;
-    overflow: hidden;
-    /* Flex, not grid: the footer's `margin: auto 0 0` is what pins it to the
-       bottom of the card. Under `display: grid` with `align-content: start`
-       that margin is inert, so a short headline or deck left the lower third
-       of the exported front page blank. */
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    padding: 16px 18px 14px;
-    border-radius: var(--radius);
-    background: #f5f1e7;
-    border: 1px solid rgba(28, 26, 25, 0.34);
-    box-shadow:
-        0 1px 1px rgba(28, 26, 25, 0.16),
-        0 4px 12px -4px rgba(28, 26, 25, 0.28);
-    min-height: 270px;
-    isolation: isolate;
-}
-
-.clipping-headline {
-    margin: 4px 0 0;
-    font-family: var(--headline-font);
-    font-size: clamp(1.16rem, 1.55vw, 1.42rem);
-    line-height: 1.14;
-    letter-spacing: -0.01em;
-    color: #1c1a19;
-    text-wrap: balance;
-}
-
-.clipping-deck {
-    margin: 0;
-    font-size: 0.8rem;
-    line-height: 1.3;
-    color: #4e4a42;
-}
-
-.clipping-masthead {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 4px 12px;
-    font-size: 0.78rem;
-    color: #4e4a42;
-    padding-bottom: 7px;
-    border-bottom: 2px solid #175049;
-}
-
-.clipping-masthead > * {
-    /* Never break "THE GAZETTE" or the date mid-phrase; let the row wrap instead. */
-    white-space: nowrap;
-}
-
-.clipping-title {
-    font-family: var(--headline-font);
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: #1c1a19;
-}
-
-.clipping-date {
-    font-variant-numeric: tabular-nums;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-.clipping-kicker {
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: #5b564d;
-}
-
-/* The masthead carries the rule now; the second one between kicker and
-   headline was a gradient hairline, and there is nothing for it to divide. */
-.clipping-rule {
-    display: none;
-}
-
-.clipping-footer {
-    margin: auto 0 0;
-    padding-top: 8px;
-    border-top: 1px solid rgba(28, 26, 25, 0.3);
-    font-size: 0.62rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #544f47;
-}
-
-.global-toast {
-    position: fixed;
-    left: 50%;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    transform: translate(-50%, 12px);
-    border-radius: var(--radius);
-    padding: 9px 14px;
-    background: var(--status-success-bg);
-    color: var(--status-success-text);
-    font-size: 0.86rem;
-    z-index: 1400;
-    opacity: 0;
-    pointer-events: none;
-    transition:
-        opacity 0.22s ease,
-        transform 0.22s ease;
-    max-width: min(92vw, 360px);
-    text-align: center;
-}
-
-.global-toast.is-visible {
-    opacity: 1;
-    transform: translate(-50%, 0);
-}
-
-@media (hover: none) and (pointer: coarse) {
-    button {
-        min-height: 46px;
-    }
-
-    /* The share links are inline text; on touch they still need a target. */
-    .share-link {
-        padding-block: 11px;
-    }
 }
 
 @media (min-width: 900px) {
@@ -895,6 +538,50 @@ button.accent:disabled {
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--muted);
+}
+
+/* The editorial. Only a landmark issue carries one, under the lead and
+   across the page; the editor speaks in the paper's own voice, so it is set
+   in the body face, not the letters'. Two columns on the broadsheet, the
+   way a leader column runs. */
+.box--editorial {
+    margin-bottom: 26px;
+}
+
+.box--editorial[hidden] {
+    display: none;
+}
+
+.editorial-head {
+    font-family: var(--headline-font);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink-display);
+    margin-bottom: 10px;
+}
+
+.editorial-body {
+    max-width: 68ch;
+    display: grid;
+    gap: 10px;
+    font-size: 0.94rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+}
+
+@media (min-width: 760px), print {
+    .editorial-body {
+        max-width: none;
+        columns: 2;
+        column-gap: 34px;
+        column-rule: 1px solid var(--border);
+        display: block;
+    }
+
+    .editorial-body p + p {
+        margin-top: 10px;
+    }
 }
 
 /* A cut and its cutline. The briefs column runs shorter than the notices
@@ -1126,6 +813,186 @@ button.accent:disabled {
     color: var(--muted);
 }
 
+/* The town map. The drawing is assets/cuts/map.svg, inlined so the desk
+   can ring the places the day's notices name; these are its styles, with
+   the marks reading --bridge, --orchard and the rest from the svg element
+   (front-page.js sets them). Labels take the body face. */
+.box--map {
+    margin-top: 26px;
+}
+
+.map {
+    display: grid;
+    gap: 10px 28px;
+    align-items: end;
+}
+
+.map-cut {
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    --ink: var(--text-primary);
+    --paper: var(--surface-2);
+}
+
+.map figcaption {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 38ch;
+    text-wrap: pretty;
+}
+
+@media (min-width: 760px), print {
+    .map {
+        grid-template-columns: minmax(0, 620px) minmax(0, 1fr);
+    }
+}
+
+.map-cut .cut-map {
+    --bridge: 1;
+    --orchard: 1;
+}
+
+.map-cut .road {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.map-cut .lane {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 1.4;
+    stroke-linecap: round;
+}
+
+.map-cut .rail {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 1.2;
+    stroke-dasharray: 5 3;
+}
+
+.map-cut .bank {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 15;
+    stroke-linecap: butt;
+}
+
+.map-cut .stream {
+    fill: none;
+    stroke: var(--paper, var(--paper-default));
+    stroke-width: 12;
+    stroke-linecap: butt;
+}
+
+.map-cut .ripple {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 1;
+    stroke-linecap: round;
+    opacity: 0.55;
+}
+
+.map-cut .bldg {
+    fill: var(--paper, var(--paper-default));
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+}
+
+.map-cut .solid {
+    fill: var(--ink, var(--ink-default));
+    stroke: none;
+}
+
+.map-cut .hatch {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 1;
+    opacity: 0.6;
+}
+
+.map-cut .label {
+    fill: var(--ink, var(--ink-default));
+    font-size: 8.4px;
+    letter-spacing: 0.02em;
+}
+
+.map-cut .label.small {
+    font-size: 6.8px;
+    opacity: 0.85;
+}
+
+.map-cut .label.caps {
+    font-size: 6.4px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.map-cut .mark {
+    fill: none;
+    stroke: var(--ink, var(--ink-default));
+    stroke-width: 2;
+    stroke-dasharray: 3 2.5;
+}
+
+.map-cut .mark-bridge {
+    opacity: var(--bridge, 0);
+}
+
+.map-cut .mark-orchard {
+    opacity: var(--orchard, 0);
+}
+
+.map-cut .mark-station {
+    opacity: var(--station, 0);
+}
+
+.map-cut .mark-depot {
+    opacity: var(--depot, 0);
+}
+
+.map-cut .mark-hall {
+    opacity: var(--hall, 0);
+}
+
+.map-cut .mark-library {
+    opacity: var(--library, 0);
+}
+
+.map-cut .mark-center {
+    opacity: var(--center, 0);
+}
+
+.map-cut .mark-gym {
+    opacity: var(--gym, 0);
+}
+
+.map-cut .mark-school {
+    opacity: var(--school, 0);
+}
+
+.map-cut .mark-route9 {
+    opacity: var(--route9, 0);
+}
+
+.map-cut .mark-river {
+    opacity: var(--river, 0);
+}
+
+.map-cut .mark-shelter {
+    opacity: var(--shelter, 0);
+}
+
+.map-cut .bridge-lane-2 {
+    stroke-dasharray: calc(var(--bridge, 0) * 3) calc(var(--bridge, 0) * 3);
+}
+
 .colophon {
     border-top: 1px solid var(--border-strong);
     padding-top: 18px;
@@ -1146,127 +1013,6 @@ button.accent:disabled {
     padding-left: 14px;
     font-size: 0.88rem;
     line-height: 1.55;
-    color: var(--muted);
-}
-
-/* The dingus: an ornament on a rule, which is how a compositor ends a
-   department without starting a new page. It sits closer to the issue it
-   closes than to the wire it opens. */
-.dingus {
-    position: relative;
-    height: 20px;
-    margin: 28px 0 40px;
-    background: center / auto 18px no-repeat url("assets/cuts/ornament.svg");
-}
-
-.dingus::before,
-.dingus::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: calc(50% - 56px);
-    border-top: 1px solid var(--border-strong);
-}
-
-.dingus::before {
-    left: 0;
-}
-.dingus::after {
-    right: 0;
-}
-
-/* ---- The wire -------------------------------------------------------
-   One item at a time, one row of things to do with it. Copy, share and
-   export were three cards in a right-hand rail; they are four buttons and
-   a single status line now, with the clipping sheet beside them as the
-   preview of what the export produces. */
-
-.wire {
-    display: grid;
-    gap: 16px;
-}
-
-.wire-intro {
-    display: grid;
-    gap: 5px;
-    padding-bottom: 4px;
-}
-
-.headline-main {
-    display: grid;
-    gap: 18px;
-    align-content: start;
-    min-width: 0;
-}
-
-.item-actions {
-    display: grid;
-    gap: 12px;
-}
-
-/* The four item actions are one ruled box with hairlines between the
-   cells, not four boxes in a row: one object with four things in it, the
-   way a paper rules a table. Two cells across, or four once the row is
-   wide enough for the longest label — auto-fit left a 3 + 1 row at most
-   widths, which reads as a mistake. */
-.item-actions__row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border: 1px solid var(--control-border);
-    border-radius: var(--radius);
-}
-
-.item-actions__row button {
-    border: 0;
-    border-radius: 0;
-    padding-inline: 12px;
-    font-size: 0.9rem;
-}
-
-.item-actions__row button:nth-child(even) {
-    border-left: 1px solid var(--control-border);
-}
-
-.item-actions__row button:nth-child(n + 3) {
-    border-top: 1px solid var(--control-border);
-}
-
-.item-actions__row button:hover {
-    border-color: var(--control-border);
-}
-
-/* An outline drawn 3px outside a cell would be cut by its neighbours;
-   inside the cell it is whole. */
-.item-actions__row button:focus-visible {
-    outline-offset: -3px;
-}
-
-@media (min-width: 1100px) {
-    .item-actions__row {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .item-actions__row button:nth-child(n + 2) {
-        border-left: 1px solid var(--control-border);
-    }
-
-    .item-actions__row button:nth-child(n + 3) {
-        border-top: 0;
-    }
-}
-
-/* The item is set to a 20ch measure, so there is a column of empty paper to
-   its right. The clipping sheet lives there rather than under the controls. */
-@media (min-width: 760px) {
-    .headline-section {
-        grid-template-columns: minmax(0, 1fr) 300px;
-        column-gap: 34px;
-        align-items: start;
-    }
-}
-
-.wire-note {
-    font-size: 0.85rem;
     color: var(--muted);
 }
 
@@ -1304,7 +1050,7 @@ button.accent:disabled {
     }
 }
 
-@media (min-width: 760px) {
+@media (min-width: 760px), print {
     /* The lead sits on the same two columns as the departments under it:
        the headline in the wide one, the deck and byline in the narrow one,
        against the same rule. Set full-width, the headline's own 24ch measure
@@ -1410,53 +1156,6 @@ button.accent:disabled {
     }
 }
 
-.headline-list {
-    list-style: none;
-    display: block;
-    max-height: 320px;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    border-top: 1px solid var(--border);
-}
-
-/* The wire's history is a ruled list, not a stack of pills: each row a
-   hairline under the last, the current one marked in the margin. */
-.headline-item button {
-    width: 100%;
-    text-align: left;
-    border: 0;
-    border-bottom: 1px solid var(--border);
-    border-radius: 0;
-    padding: 10px 12px 10px 16px;
-    background: transparent;
-    color: var(--text);
-    font-size: 0.95rem;
-    font-weight: 400;
-    line-height: 1.4;
-    min-height: 0;
-    cursor: pointer;
-}
-
-.headline-item button:hover {
-    background: var(--control-wash);
-    border-color: var(--border);
-}
-
-.headline-item button:focus-visible {
-    outline-offset: -3px;
-}
-
-.headline-item--active button {
-    font-weight: 600;
-    box-shadow: inset 3px 0 0 var(--accent);
-}
-
-.headline-item--empty {
-    color: var(--muted);
-    font-size: 0.9rem;
-    padding: 10px 0;
-}
-
 .sr-only {
     position: absolute;
     width: 1px;
@@ -1525,55 +1224,80 @@ button.accent:disabled {
     .masthead__line .masthead__sep {
         display: none;
     }
-
-    .headline-section {
-        gap: 14px;
-    }
-
-    .headline-frame {
-        min-height: 104px;
-    }
-
-    .actions {
-        grid-template-columns: 1fr;
-    }
-
-    /* Thumb-reachable primary first; the way back is a quiet text button. */
-    #next-btn {
-        order: -1;
-    }
-
-    #prev-btn {
-        justify-self: start;
-        min-height: 40px;
-        padding-inline: 2px;
-        border: 0;
-        background: transparent;
-        font-weight: 500;
-        color: var(--muted);
-    }
-
-    #prev-btn:hover {
-        color: var(--text);
-        background: transparent;
-    }
-
-    #headline {
-        font-size: clamp(1.7rem, 5.6vw, 2.1rem);
-        max-width: 100%;
-    }
-
-    .filter-label {
-        font-size: 0.7rem;
-    }
-
-    .history-header {
-        flex-direction: row;
-        align-items: baseline;
-    }
 }
 
-.headline-section,
-.history-card {
-    scroll-margin-top: 18px;
+/* ---- Print ----------------------------------------------------------
+   A paper that prints as a paper. Ink on white, no desk and no shadow,
+   the broadsheet's two columns whatever the sheet's width (the 760px
+   media queries above also match print), and nothing on the page that
+   only makes sense on a screen: the site links, the way back to today,
+   the skip link. Colours are set as literals so a reader in the dark
+   theme does not print a black page. */
+@media print {
+    :root,
+    :root:not([data-theme]),
+    [data-theme="dark"] {
+        color-scheme: light;
+        --surface-1: #fff;
+        --surface-2: #fff;
+        --text-primary: #000;
+        --text-muted: #333;
+        --ink-display: #000;
+        --accent: #000;
+        --accent-rule: #000;
+        --link: #000;
+        --link-hover: #000;
+        --border-subtle: rgba(0, 0, 0, 0.25);
+        --border-strong: rgba(0, 0, 0, 0.6);
+        --shadow-page: none;
+        --sheet-edge: transparent;
+    }
+
+    @page {
+        margin: 14mm;
+    }
+
+    body {
+        padding: 0;
+        background: #fff;
+        min-height: 0;
+    }
+
+    .page-shell {
+        max-width: none;
+        padding: 0;
+        box-shadow: none;
+        border: 0;
+    }
+
+    .skip-link,
+    .top-nav,
+    .back-issue-notice,
+    #colophon-card,
+    .top-nav a {
+        display: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .lead__headline {
+        font-size: 2.6rem;
+    }
+
+    .box,
+    .cut,
+    .letters li,
+    .archive-list li {
+        break-inside: avoid;
+    }
+
+    .section-label {
+        break-after: avoid;
+    }
+
+    .map-cut {
+        max-width: 520px;
+    }
 }

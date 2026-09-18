@@ -130,11 +130,38 @@
 
     // The lead is a pure function of the issue number, so any issue can work
     // out any other issue's lead without composing it. That is what lets today
-    // correct yesterday.
-    function selectLead(number, leads) {
+    // correct yesterday. A landmark issue (data/editions.js) has its lead
+    // written rather than dealt, and the chain runs through it the same way.
+    //
+    // Leads are dealt in rounds: the pool is shuffled once per round of
+    // its own length, seeded by the round, and issue n takes its place in
+    // the round. A lead therefore runs once per round and never twice
+    // inside one, which a draw from the whole pool every day could not
+    // promise — with forty-odd leads the same one came round within a
+    // fortnight often enough for the archive to show it.
+    function selectLead(number, leads, editions = Neckass.data?.EDITIONS) {
+        const written = editions?.[number]?.lead;
+        if (written) return written;
         if (!Array.isArray(leads) || !leads.length) return null;
-        const rng = createRng(number * 2654435761);
-        return leads[Math.floor(rng() * leads.length)] || null;
+        const round = Math.floor((number - 1) / leads.length);
+        const place = (number - 1) % leads.length;
+        const rng = createRng(round * 2654435761 + 1);
+        const order = leads.map((_, index) => index);
+        for (let i = order.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(rng() * (i + 1));
+            [order[i], order[j]] = [order[j], order[i]];
+        }
+        return leads[order[place]] || null;
+    }
+
+    // The earliest issues are shorter. He had done less. The briefs column
+    // grows one item every six weeks or so until it reaches its full seven,
+    // and for the first two months the letters page carries one letter.
+    function briefsCount(number) {
+        return Math.min(7, 3 + Math.floor((number - 1) / 45));
+    }
+    function lettersCount(number) {
+        return number <= 60 ? 1 : 2;
     }
 
     function composeIssue(date = new Date()) {
@@ -167,7 +194,44 @@
             rng,
         )[0];
 
-        return {
+        // Yesterday's lead continues at the top of today's column: he has
+        // done the next thing. With the correction beneath it, a reader
+        // who comes back gets a story, not a reshuffle.
+        const followUp = previousLead?.followUp || null;
+
+        // What the calendar has for this date — the council's Tuesday, the
+        // clocks, his birthday. Each runs first in its section and takes
+        // the place of a dealt item, so every section keeps its size.
+        const onCalendar =
+            Neckass.calendar?.itemsFor(date, {
+                written: Boolean(data.EDITIONS?.[number]?.lead),
+            }) || {};
+        const dated = (section) => onCalendar[section] || [];
+        // Deal `count` from `pool`, less the items already set for the
+        // section, and never fewer than zero.
+        const dealAfter = (pool, count, fixed, exclude = []) =>
+            deal(
+                pool.filter((item) => !exclude.includes(item)),
+                Math.max(0, count - fixed.length),
+                rng,
+            );
+
+        const letters = lettersCount(number);
+        const fixedBriefs = [followUp, ...dated('briefs')].filter(Boolean);
+        const fixedCorrections = [
+            routineCorrection,
+            chainedCorrection,
+            ...dated('corrections'),
+        ].filter(Boolean);
+        const fixedNotices = dated('notices');
+        const fixedClassifieds = [
+            lead?.classified,
+            ...dated('classifieds'),
+        ].filter(Boolean);
+        const fixedLetters = [lead?.letter, ...dated('letters')].filter(
+            Boolean,
+        );
+        const issue = {
             number,
             date,
             dateLabel,
@@ -176,33 +240,49 @@
             dateline: datelineFor(date),
             issueParam: toIssueParam(date),
             lead,
-            briefs: deal(briefPool, 7, rng),
+            editorial: null,
+            tag: null,
+            briefs: [
+                ...fixedBriefs,
+                ...dealAfter(briefPool, briefsCount(number), fixedBriefs),
+            ],
             // The dull one first, then yesterday's retraction, then the rest.
             corrections: [
-                routineCorrection,
-                chainedCorrection,
-                ...deal(data.CORRECTIONS || [], chainedCorrection ? 2 : 3, rng),
-            ].filter(Boolean),
-            notices: deal(data.NOTICES || [], 3, rng),
+                ...fixedCorrections,
+                ...dealAfter(data.CORRECTIONS || [], 4, fixedCorrections),
+            ],
+            notices: [
+                ...fixedNotices,
+                ...dealAfter(data.NOTICES || [], 3, fixedNotices),
+            ],
             weatherNumbers: weatherFor(date, rng),
             weather: deal(data.WEATHER || [], 1, rng)[0] || '',
             // The lead's own classified and letter run alongside it, so the
             // page compounds: the item, then the ad, then the person he did
             // it to. The rest are dealt from the general pools.
             classifieds: [
-                lead?.classified,
-                ...deal(data.CLASSIFIEDS || [], lead?.classified ? 4 : 5, rng),
-            ].filter(Boolean),
+                ...fixedClassifieds,
+                ...dealAfter(data.CLASSIFIEDS || [], 5, fixedClassifieds),
+            ],
             letters: [
-                lead?.letter,
-                ...deal(data.LETTERS || [], lead?.letter ? 1 : 2, rng),
-            ].filter(Boolean),
+                ...fixedLetters,
+                ...dealAfter(data.LETTERS || [], letters, fixedLetters),
+            ],
             colophon: data.COLOPHON || null,
         };
+
+        // A landmark's written sections replace the dealt ones. The lead was
+        // already taken from it by selectLead.
+        const { lead: _, ...written } = data.EDITIONS?.[number] || {};
+        return Object.assign(issue, written);
     }
 
-    // Most recent first, today included. Used by the archive.
-    function recentIssues(count, from = new Date()) {
+    // Most recent first, today included, with each issue's lead and its
+    // landmark tag if it has one. The lead is a pure function of the number,
+    // so listing the whole run costs nothing worth measuring. Used by the
+    // archive; `count` defaults to every issue there is.
+    function recentIssues(count = Number.POSITIVE_INFINITY, from = new Date()) {
+        const data = Neckass.data || {};
         const issues = [];
         for (let offset = 0; offset < count; offset += 1) {
             const date = new Date(
@@ -210,12 +290,15 @@
                 from.getMonth(),
                 from.getDate() - offset,
             );
-            if (issueNumber(date) < 1) break;
+            const number = issueNumber(date);
+            if (number < 1) break;
             issues.push({
-                number: issueNumber(date),
+                number,
                 date,
                 dateLabel: dateFormatter.format(date),
                 issueParam: toIssueParam(date),
+                lead: selectLead(number, data.LEADS || []),
+                tag: data.EDITIONS?.[number]?.tag || null,
             });
         }
         return issues;

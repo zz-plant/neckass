@@ -7,7 +7,7 @@
  * for a spread of dates; change one and change the other.
  */
 
-import LEADS from './leads.mjs';
+import LEADS, { EDITION_LEADS } from './leads.mjs';
 
 export const FIRST_EDITION = Date.UTC(2024, 8, 29);
 const DAY_MS = 86400000;
@@ -32,10 +32,21 @@ function createRng(seed) {
     };
 }
 
+// Dealt in rounds of the pool's length, each round its own shuffle; see
+// modules/issue.js, which this must match.
 export function selectLead(number) {
+    const written = EDITION_LEADS[number];
+    if (written) return written;
     if (!LEADS.length) return null;
-    const rng = createRng(number * 2654435761);
-    return LEADS[Math.floor(rng() * LEADS.length)] || null;
+    const round = Math.floor((number - 1) / LEADS.length);
+    const place = (number - 1) % LEADS.length;
+    const rng = createRng(round * 2654435761 + 1);
+    const order = LEADS.map((_, index) => index);
+    for (let i = order.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(rng() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+    }
+    return LEADS[order[place]] || null;
 }
 
 export function issueParam(date) {

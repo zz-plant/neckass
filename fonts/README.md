@@ -20,3 +20,16 @@ subset URL:
 curl -A "Mozilla/5.0" \
   "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&display=swap"
 ```
+
+## fraunces-72pt-bold.ttf, fraunces-9pt-regular.ttf
+
+- **Family:** Fraunces, two static instances (72pt Bold for display, 9pt
+  Regular for text)
+- **Licence:** SIL Open Font License 1.1
+- **Source:** https://github.com/undercasetype/Fraunces/releases/tag/1.000
+  (`Fonts - Desktop/static/ttf/`)
+
+These are for the social card (`functions/card.png.js`), which is drawn by
+Satori at the edge. Satori reads TrueType and OpenType, not woff2, and takes
+a static instance rather than an axis on a variable font, so the card carries
+its own two cuts. The browser never loads them.
