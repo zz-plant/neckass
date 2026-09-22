@@ -35,7 +35,7 @@
                 'PERSONAL: to the man who was five minutes away — we have gone home.',
             letter: {
                 body: 'He has been five minutes away from my house for four years. I have moved.',
-                signature: 'Owen Pratt, formerly of Orchard Lane',
+                signature: 'A former neighbour',
             },
         },
         {
@@ -58,7 +58,7 @@
             headline:
                 'Neckass has agreed to be best man in an email he has not read',
             deck: 'The wedding is Saturday. He has told the groom he is free a different Saturday.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'An earlier edition said Neckass had not read the email. He has now read it. He has not replied.',
             followUp:
@@ -67,7 +67,7 @@
                 'WANTED: a best man for Saturday. The current one believes it is a different Saturday.',
             letter: {
                 body: 'Neckass has told everyone he is my best man. I have not asked him. I have not set a date. I am not engaged.',
-                signature: 'Sam Reyes, Corbin Falls',
+                signature: 'The groom, apparently',
             },
         },
         {
@@ -83,7 +83,7 @@
                 'FOR SALE: fridge, full. Owner opens it eleven times a night and reports it empty.',
             letter: {
                 body: 'I live with him. He has stood in our kitchen with the fridge open for six minutes, three times this week, and said "there\'s nothing in here" each time. It is full. I did the shop.',
-                signature: 'Dev Malhotra, Orchard Lane',
+                signature: 'His housemate',
             },
         },
         {
@@ -99,14 +99,14 @@
                 'WANTED: neighbor whose alarm does not go off at 5 and get ignored until 6.',
             letter: {
                 body: 'I am next door at 14. His alarms go at 5:30, 5:35, 5:40 and 6:30. Mine goes at seven. I have been up at 5:30 for a year.',
-                signature: 'Rosa Okafor, 14 Orchard Lane',
+                signature: 'Next door',
             },
         },
         {
             headline:
                 'Neckass muted the group chat and has checked it at ninety-second intervals since',
             deck: 'Muting stopped the notifications. It did not stop him. He has opened the chat 400 times today.',
-            byline: 'By Marcus Oyelaran',
+            byline: 'Staff report',
             correction:
                 'We reported that Neckass opened the chat 400 times. That was by noon.',
             followUp:
@@ -138,7 +138,7 @@
             headline:
                 'Neckass told his doctor he "basically never drinks" using a sommelier\'s vocabulary',
             deck: 'He said "basically never," then described a "grippy, mineral" red he had "on a Tuesday, as one does."',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We quoted Neckass describing a red as "grippy, mineral." He said "grippy, minerally."',
             followUp:
@@ -146,7 +146,7 @@
             classified: 'FREE: advice about wine. One fact, repeated.',
             letter: {
                 body: 'He told me he basically never drinks and then described a red I had not heard of, with a vintage. I am his doctor. I wrote down "drinks."',
-                signature: 'Dr. S. Anand, Corbin Falls',
+                signature: 'His doctor',
             },
         },
         {
@@ -162,7 +162,7 @@
                 'FOR SALE: gym bag, unused. Matching membership available.',
             letter: {
                 body: 'He came in to cancel. He left with a second membership and a towel. I have done this job for nine years.',
-                signature: 'Front desk, Riverside Fitness',
+                signature: 'Front desk, the gym',
             },
         },
         {
@@ -185,7 +185,7 @@
             headline:
                 'Neckass read the terms and conditions in full, understood none of them, and agreed',
             deck: 'It took forty minutes. Asked what he had agreed to, he said "the usual."',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass read the terms in full. He scrolled to the bottom in full. He read the first line.',
             followUp:
@@ -201,7 +201,7 @@
             headline:
                 'Asked what a neckass is, Neckass said "you know, a neckass"',
             deck: 'Asked again, he said it more slowly.',
-            byline: 'By Ruth Adeyemi',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass said it more slowly the second time. He said it louder.',
             followUp:
@@ -217,7 +217,7 @@
             headline:
                 'Neckass has told the same story at the same table for the third year running',
             deck: 'It is the story about the airport. Everyone at the table has heard it at this table, from him, twice before.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We said the story concerns an airport. It concerns a train station. He has told it as an airport for three years.',
             followUp:
@@ -226,7 +226,7 @@
                 'WANTED: the second half of a story about an airport. Or a train station.',
             letter: {
                 body: 'He has told the airport story at my table three years running. It is a train station. I have stopped correcting him, and I have stopped inviting him, and he has come anyway.',
-                signature: 'Helen Marsh, Corbin Falls',
+                signature: 'A host',
             },
         },
         {
@@ -242,14 +242,14 @@
                 'NOTICE: the goodbye at number 12 is still going. Residents may wish to use the back lane.',
             letter: {
                 body: 'He stood in my doorway saying goodbye for fifty-five minutes. I went to bed. He was still saying it. This is the same doorway as the airport story.',
-                signature: 'Helen Marsh, again',
+                signature: 'The same host, again',
             },
         },
         {
             headline:
                 'Neckass reset a password to the password he had just been told was wrong',
             deck: 'He was locked out at two. He was locked out again at 2:01.',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We reported one lockout. He reset the password to the old one, was told he could not reuse it, and added a 1. He was locked out again at 2:04.',
             followUp:
@@ -274,14 +274,14 @@
                 'WANTED: someone to look behind the sofa. Reward: a charger.',
             letter: {
                 body: 'I live with him. There are five chargers in the flat. Two are behind the sofa, he knows this, and he has ordered a sixth.',
-                signature: 'Dev Malhotra, Orchard Lane',
+                signature: 'His housemate',
             },
         },
         {
             headline:
                 'Neckass arrived at the restaurant an hour early and waited outside',
             deck: 'He had the time wrong and did not check. He stood outside for an hour in the rain.',
-            byline: 'By Helen Vasko',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass waited outside for an hour. He waited outside the wrong restaurant for an hour.',
             followUp:
@@ -297,7 +297,7 @@
             headline:
                 'Neckass has explained the plot of a film to the person who recommended it',
             deck: 'They recommended it on Tuesday. He explained it to them on Thursday, in full, including the end.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We said he explained the ending. He explained the ending of a different film.',
             followUp:
@@ -329,7 +329,7 @@
             headline:
                 'Neckass has been carrying a package to the post office in his car since March',
             deck: 'It is on the passenger seat. Asked about it, he said "I know, I know." He does know.',
-            byline: 'By Tom Feld',
+            byline: 'Staff report',
             correction:
                 'We said the package has been in the car since March. It has been through two car washes.',
             followUp:
@@ -338,14 +338,14 @@
                 'FOUND: package addressed to the post office, on a passenger seat.',
             letter: {
                 body: 'The package on his passenger seat is mine. It has been to the post office sixty times without going in.',
-                signature: 'Nina Neckass, Corbin Falls',
+                signature: 'His sister',
             },
         },
         {
             headline:
                 'Neckass told the group he was "already on the train." He was in the shower.',
             deck: 'The train left at 8:04. He was in the shower at 8:04. He arrived at 9:40.',
-            byline: 'By Tom Feld',
+            byline: 'Staff report',
             correction:
                 'We reported that Neckass arrived at 9:40. He arrived at 9:40, said "the trains," and it was not the trains.',
             followUp:
@@ -361,7 +361,7 @@
             headline:
                 'Neckass asked the group to pick a restaurant and rejected all six',
             deck: 'He asked at noon. Six were proposed. At seven he suggested the first one.',
-            byline: 'By Helen Vasko',
+            byline: 'From wire reports',
             correction:
                 'We said six were proposed. The one he suggested at seven was the one he had rejected first, by name, at noon.',
             followUp:
@@ -385,13 +385,13 @@
                 'NOTICE: the smoke alarm at number 12 needs a battery. Nine days.',
             letter: {
                 body: 'I am at 14. My smoke alarm is not chirping. His is. He has knocked twice to ask about mine.',
-                signature: 'Rosa Okafor, 14 Orchard Lane',
+                signature: 'Next door',
             },
         },
         {
             headline: 'Neckass has read the first page of nine books this year',
             deck: 'He owns nine books bought this year. Page one of each is creased. No page two is.',
-            byline: 'By Ruth Adeyemi',
+            byline: 'From wire reports',
             correction:
                 'We said nine books. There is a tenth, about finishing things, with a bookmark on page one.',
             followUp:
@@ -400,14 +400,14 @@
                 'FOR SALE: nine books, page one creased. Pages two onward as new.',
             letter: {
                 body: 'I gave him nine books. He has creased nine first pages. I would like the books back.',
-                signature: 'Carol Dunne, Corbin Falls',
+                signature: 'The lender of the books',
             },
         },
         {
             headline:
                 'Neckass has told everyone he is cutting back, while ordering',
             deck: 'He announced it at the table. He announced it again while the food arrived.',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass announced it twice. Three times. The third was with dessert.',
             followUp:
@@ -423,7 +423,7 @@
             headline:
                 "Neckass has been to the same coffee shop 300 times and does not know the staff's names",
             deck: 'They know his order and his name. He calls all three of them "chief."',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We said three staff. One of them is called Chief. He does not know this, and it does not count.',
             followUp:
@@ -432,7 +432,7 @@
                 'NOTICE: the coffee shop wishes to inform the gentleman that we are not all called chief.',
             letter: {
                 body: 'He calls me chief. I am wearing a name badge.',
-                signature: 'Kai, the Station Café',
+                signature: 'Kai, the café',
             },
         },
         {
@@ -447,7 +447,7 @@
                 'REMINDER: call your mother. This notice was placed by her.',
             letter: {
                 body: 'I am his mother. He has moved calling me to tomorrow since July. I read this paper to find out how he is.',
-                signature: 'Bernadette Neckass, Corbin Falls',
+                signature: 'His mother',
             },
         },
         {
@@ -463,14 +463,14 @@
                 'LOST: four screws. The shelf is up. Do not tell the owner.',
             letter: {
                 body: 'I live with him. The shelf came down on Sunday. There were six screws left over, not four. I would like this printed.',
-                signature: 'Dev Malhotra, Orchard Lane',
+                signature: 'His housemate',
             },
         },
         {
             headline:
                 'Neckass has agreed with two people who were disagreeing with each other',
             deck: 'He agreed with the first, then the second, in the same conversation. Both noticed.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction: 'We said both parties noticed. All four did.',
             followUp:
                 'Neckass has been asked which of the two he agreed with. He said "both had a point." Both have stopped speaking to him.',
@@ -485,7 +485,7 @@
             headline:
                 'Neckass photographed the menu to decide later and ordered without looking at it',
             deck: 'The photograph was taken on Monday. He ordered on Friday, from memory, incorrectly.',
-            byline: 'By Helen Vasko',
+            byline: 'From wire reports',
             correction:
                 'We said he photographed the menu. He photographed the specials board of a different restaurant.',
             followUp:
@@ -494,7 +494,7 @@
                 'FOUND: photograph of a specials board. Not the restaurant the owner was in.',
             letter: {
                 body: 'He photographed my specials board on Monday and ordered from it on Friday at a different restaurant. They rang me to ask what a "harvest bowl" was.',
-                signature: 'M. Sato, the Station Café',
+                signature: 'The café',
             },
         },
         {
@@ -509,14 +509,14 @@
                 'WANTED: anyone who has seen Neckass leave when he said he was leaving.',
             letter: {
                 body: 'He has been just about to leave my house since six. It is ten. I offered a tea so that he would have something to finish. He has finished it.',
-                signature: 'Helen Marsh, once more',
+                signature: 'The same host, once more',
             },
         },
         {
             headline:
                 "Neckass's phone has been at one percent since this morning",
             deck: 'He has been told. He said "it\'s fine, it lasts." It lasted until 10:40.',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We reported the phone at one percent. It died during the conversation about the charger.',
             followUp:
@@ -525,13 +525,13 @@
                 'LOST: a phone at one percent. It is somewhere in the house and it is now at zero.',
             letter: {
                 body: 'His phone has been at one percent for three days. He has borrowed my charger and left it at his house.',
-                signature: 'Theo Neckass, Corbin Falls',
+                signature: 'His brother',
             },
         },
         {
             headline: 'Neckass has recommended a restaurant he has not been to',
             deck: 'He recommended it warmly and at length. He has driven past it.',
-            byline: 'By Helen Vasko',
+            byline: 'From wire reports',
             correction:
                 'We said he had driven past the restaurant. He had driven past a different restaurant with a similar sign.',
             followUp:
@@ -563,7 +563,7 @@
             headline:
                 'Neckass has been holding a door for someone forty feet away',
             deck: 'They were not walking toward the door. They are now, because he is holding it.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We put the distance at forty feet. It was far enough that they had to jog, and they did, and thanked him.',
             followUp:
@@ -588,7 +588,7 @@
                 'FOUND: one shoe, middle of a floor. Owner has cleaned around it for five weeks.',
             letter: {
                 body: 'I live with him. The shoes have been there five weeks. I moved one, to see. He moved it back.',
-                signature: 'Dev Malhotra, Orchard Lane',
+                signature: 'His housemate',
             },
         },
         {
@@ -604,14 +604,14 @@
                 'WANTED: a barber prepared to ignore "just a little off."',
             letter: {
                 body: 'I am the barber. He said "just a little off." I took a little off. He has not looked in the mirror in my presence since.',
-                signature: 'Frank Della Rocca, Mill Street',
+                signature: 'The barber',
             },
         },
         {
             headline:
                 'Neckass volunteered to help and has been standing nearby for an hour',
             deck: 'He offered at two. He has held one thing, briefly, and put it down.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We reported that Neckass held one thing. He held it for a moment and handed it back.',
             followUp:
@@ -636,14 +636,14 @@
                 'WANTED: anyone who can tell "haha" from "I will call you."',
             letter: {
                 body: 'I texted him to call me urgently. He replied "haha." I texted again. "haha." He rang four hours later to ask what was funny.',
-                signature: 'Nina Neckass, again',
+                signature: 'His sister, again',
             },
         },
         {
             headline:
                 'Neckass has been quietly following the wrong group around a museum',
             deck: 'He joined at the entrance. It was a school group. He listened for forty minutes.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We said forty minutes. He also asked a question, about the Romans, on a tour about the Victorians.',
             followUp:
@@ -652,14 +652,14 @@
                 'NOTICE: the museum would like to know who the adult at the back of the school tour was.',
             letter: {
                 body: 'I teach at the primary. I was leading the tour. The man at the back asked a question about the Romans. He was not with us. The children have asked whether he is coming next time.',
-                signature: 'A. Okonkwo, Corbin Falls Primary',
+                signature: 'A teacher at the primary',
             },
         },
         {
             headline:
                 'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
             deck: 'The book is 140 pages. He renews by telephone and says he is "nearly done." The library has stopped asking.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We reported that Neckass is on page nine. The bookmark is on page nine. The crease is on page four.',
             followUp:
@@ -667,8 +667,8 @@
             classified:
                 'WANTED: anyone who has finished a book about Mars, to say how it ends. 140 pages. Owner is on page nine.',
             letter: {
-                body: 'I run the Eastside branch. He renews it by phone, monthly, and each time says he is nearly done. I have started saying "good" in a way he has not noticed.',
-                signature: 'The Eastside branch',
+                body: 'I run the library. He renews it by phone, monthly, and each time says he is nearly done. I have started saying "good" in a way he has not noticed.',
+                signature: 'The library',
             },
         },
         {
@@ -684,14 +684,14 @@
                 'SEEKING: a table that has not heard the one about the parrot. Will travel.',
             letter: {
                 body: 'I was at the table. He said "stop me if you\'ve heard this." We tried. There is no stopping it. It is a joke about a parrot and it is not a good one.',
-                signature: 'Elaine Whitcomb, Corbin Falls',
+                signature: 'A dinner guest',
             },
         },
         {
             headline:
                 'Neckass turned the heating on "just for an hour" in October. It is still on.',
             deck: 'It has been on since the first cold evening. He says he will "sort it out at the weekend." He has said it on every weekend since.',
-            byline: 'By Marcus Oyelaran',
+            byline: 'Staff report',
             correction:
                 'We reported that the heating has been on since the first cold evening. It was on before that. He was "testing it."',
             followUp:
@@ -699,7 +699,7 @@
             classified: 'FOR SALE: a thermostat. Works. Owner has set it once.',
             letter: {
                 body: 'I live with him. The heating has been on since October. I have slept with the window open since November. We have not discussed it. He has left a note.',
-                signature: 'Dev Malhotra, Orchard Lane',
+                signature: 'His housemate',
             },
         },
         {
@@ -722,7 +722,7 @@
             headline:
                 'Neckass has said "I\'ll let you go" to a caller who was trying to go',
             deck: 'The caller said they had to go at 6:10. Neckass let them go at 6:50, after letting them go twice more.',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We said the caller was let go at 6:50. That was the third "I\'ll let you go." The call ended at 7:05.',
             followUp:
@@ -731,7 +731,7 @@
                 'WANTED: a way off the phone with a man who says "anyway." "Anyway" does not work. We have tried "anyway."',
             letter: {
                 body: 'I am his mother. He rang to let me go. I had not rung him. I was in the garden. It was forty minutes.',
-                signature: 'Bernadette Neckass, Corbin Falls',
+                signature: 'His mother',
             },
         },
         {
@@ -747,14 +747,14 @@
                 'FOR SALE: whiteboard, one item on it. Item included. Pen dried out.',
             letter: {
                 body: 'The whiteboard is in the hall. I have to pass it to leave the house. It has said "get organized" for five months. It is the most organized thing in the house and it is a sentence.',
-                signature: 'Dev Malhotra, Orchard Lane',
+                signature: 'His housemate',
             },
         },
         {
             headline:
                 'Neckass has given directions to a driver who was already on the right road',
             deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left," and the driver did.',
-            byline: 'By Helen Vasko',
+            byline: 'From wire reports',
             correction:
                 'We reported that the driver took the second left. There is no second left. The driver took the first and has written in.',
             followUp:
@@ -778,14 +778,14 @@
                 "PERSONAL: to the guests of Saturday's event — the host will be there. Probably. He has said maybe.",
             letter: {
                 body: 'I am going to his thing on Saturday. I said yes. He said maybe. It is at his house. I asked whether I should bring anything and he said "good question."',
-                signature: 'Sam Reyes, Corbin Falls',
+                signature: 'A guest, so far',
             },
         },
         {
             headline:
                 'Neckass has explained the rules of a game to the person who owns the game',
             deck: 'They had played it 200 times. He had played it once, on Tuesday, and lost. He explained for eleven minutes and got two rules wrong.',
-            byline: 'By Dana Whitcomb',
+            byline: 'Staff report',
             correction:
                 'We said two rules wrong. Three. The third was the object of the game.',
             followUp:
@@ -794,7 +794,7 @@
                 'FOR SALE: board game, complete. Rules included. Rules have been explained to owner; owner would like them back.',
             letter: {
                 body: 'It is my game. I have played it since I was nine. He explained it to me and then asked if I had "got it." I have got it. I have had it for thirty years.',
-                signature: 'Rosa Okafor, 14 Orchard Lane',
+                signature: 'Next door',
             },
         },
         {
@@ -817,7 +817,7 @@
             headline:
                 'Neckass has left a voicemail that says "it\'s me, call me back" and no name',
             deck: 'It was left at 7:40 a.m. on a work number. The recipient has four people it could be. She has called two.',
-            byline: 'By Marcus Oyelaran',
+            byline: 'Staff report',
             correction:
                 'We reported the voicemail was left at 7:40. It was left at 7:40 and again at 7:42, to say "sorry, it\'s me."',
             followUp:
@@ -826,7 +826,7 @@
                 'WANTED: "me." Left a voicemail Tuesday, 7:40. Please ring the office and say who you are. Do not say "it\'s me."',
             letter: {
                 body: 'I got the voicemail. I have four people it could be. I called two. It was neither. I have decided it can wait, which is what he decided about my message in March.',
-                signature: 'Elaine Whitcomb, Corbin Falls',
+                signature: 'A friend, on her fifth call',
             },
         },
         {
@@ -848,7 +848,7 @@
             headline:
                 'Neckass has apologized for being late by explaining that he was not late',
             deck: 'He arrived at 2:25 for two. He said "sorry, but actually" and set out why the meeting was at half past. It was not.',
-            byline: 'By Priya Natarajan',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass arrived at 2:25. He was in the building at 2:25. He was in the room at 2:31, with a coffee.',
             followUp:
@@ -873,14 +873,14 @@
                 'WANTED: three people free on a Friday. Fourth will confirm on the day, and may not.',
             letter: {
                 body: 'We did it more often. We did it three times. He came once. He said we should do it more often to the two of us who had been there all three times.',
-                signature: 'Owen Pratt, formerly of Orchard Lane',
+                signature: 'A former neighbour',
             },
         },
         {
             headline:
                 'Neckass has taken a "quick look" at a colleague\'s spreadsheet and broken it',
             deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows and the figure is in a different place.',
-            byline: 'By Helen Vasko',
+            byline: 'From wire reports',
             correction:
                 'We reported that Neckass sorted one column. He sorted one column, undid it, and sorted a different column. The first is still sorted.',
             followUp:
@@ -1028,9 +1028,9 @@
         'WANTED: anyone who has seen him use the gym bag. Reward: the gym bag.',
     ];
 
-    // Letters not tied to a lead. The correspondents recur — his flatmate on
-    // Orchard Lane, his mother, the neighbour at 14, the café — because a
-    // reader who comes back should meet the same people.
+    // Letters not tied to a lead. The correspondents recur — his housemate,
+    // his mother, next door, the café — and are signed by what they are to
+    // him, not by name. The paper has one subject; the rest are witnesses.
     data.LETTERS = [
         {
             body: 'I am in IT. The printer is out of paper. That is all that is wrong with it. That is all that has ever been wrong with it.',
@@ -1057,16 +1057,16 @@
             signature: 'A former friend',
         },
         {
-            body: 'I own the Station Café. There are four of us. None of us is called chief. One of us has a badge that says Kai, in capitals, at eye level.',
-            signature: 'M. Sato, the Station Café',
+            body: 'I own the café. There are four of us. None of us is called chief. One of us has a badge that says Kai, in capitals, at eye level.',
+            signature: 'The café',
         },
         {
             body: 'Your correspondent who "was present" is my husband, and he was not present.',
-            signature: 'Elaine Whitcomb, Corbin Falls',
+            signature: 'The wife of the reader who was present',
         },
         {
             body: 'I am at 14. The bin is in my garden again. It is the third time. He says it is the wind. It is not windy.',
-            signature: 'Rosa Okafor, 14 Orchard Lane',
+            signature: 'Next door',
         },
         {
             body: 'Your paper reported that he had learned his lesson. Who told you that.',
@@ -1074,7 +1074,7 @@
         },
         {
             body: "I sold him a fan in July. He brought it back in October, still boxed, to return it. It was July's fan.",
-            signature: 'A shopkeeper, Mill Street',
+            signature: 'A shopkeeper',
         },
         {
             body: 'I have read this paper for seven hundred issues hoping for one item in which he does the thing he said he would. I will keep reading.',
@@ -1082,19 +1082,19 @@
         },
         {
             body: 'I am his mother. He rang on Sunday. It was a pocket dial. I listened for eleven minutes. He was ordering a sandwich, and he was very polite about it. He sounded well.',
-            signature: 'Bernadette Neckass, Corbin Falls',
+            signature: 'His mother',
         },
         {
             body: 'I live with him. He has started leaving me notes. The latest says "we should talk about the kitchen." We share the kitchen. I was in it when he wrote the note.',
-            signature: 'Dev Malhotra, Orchard Lane',
+            signature: 'His housemate',
         },
         {
             body: 'I run the library. He has had the same book out since March. He renews it by phone, monthly, and each time says he is "nearly done." It is a book about Mars. It is 140 pages.',
-            signature: 'The Eastside branch',
+            signature: 'The library',
         },
         {
             body: 'I cut his hair. He says "just a little off" and then describes, for four minutes, a different haircut. I do the one he describes. He says "great." He comes back in five weeks and says "just a little off."',
-            signature: 'A barber, Main Street',
+            signature: 'The barber',
         },
         {
             body: 'I am the town clerk. He has come to the counter four times this year to ask what the form is for. It is the form he brought.',
@@ -1114,19 +1114,19 @@
         },
         {
             body: "He told me the recipe was his grandmother's. It is on the back of the packet. I have the packet.",
-            signature: 'Dev Malhotra, Orchard Lane',
+            signature: 'His housemate',
         },
         {
             body: 'I am his mother. The recipe is not mine. I have never made it. He rang to ask how I make it. I said I don\'t. He said "right, but roughly."',
-            signature: 'Bernadette Neckass, Corbin Falls',
+            signature: 'His mother',
         },
         {
             body: 'He has been "about to go" from my kitchen since nine. It is eleven. I have washed up around him. He has moved once, to let me at the tap.',
-            signature: 'Elaine Whitcomb, Corbin Falls',
+            signature: 'A host',
         },
         {
             body: 'He ordered "the usual." He has been in twice. Neither time was the same. We gave him a coffee. He said "perfect."',
-            signature: 'M. Sato, the Station Café',
+            signature: 'The café',
         },
         {
             body: 'I was in the seat behind him on the 8:04, the day he was "on the train." He was not on the train. I know because I had his seat, and it was empty, and it is not his seat.',
@@ -1134,23 +1134,17 @@
         },
         {
             body: 'I have moved to the other side of the river. He has found the bridge.',
-            signature: 'Owen Pratt, formerly of Orchard Lane',
+            signature: 'A former neighbour',
         },
         {
             body: 'He offered to help me move. He arrived after the van, carried a lamp to the van, and told the driver a route. The driver had a route.',
-            signature: 'Sam Reyes, Corbin Falls',
+            signature: 'The friend who moved',
         },
         {
             body: 'I sent the message. It said the meeting had moved to two. He gave it a thumbs up and came at three.',
             signature: 'A colleague',
         },
     ];
-
-    // The colophon. Static, because the staff situation is stable.
-    data.COLOPHON = {
-        staff: 'Editor: Ruth Adeyemi. Managing editor: Tom Feld. Staff writers: Dana Whitcomb, Priya Natarajan, Marcus Oyelaran, Helen Vasko.',
-        note: 'The Gazette is published daily in Corbin Falls. Letters may be edited for length and clarity. Corrections appear on this page.',
-    };
 
     // The furniture of a real paper, and none of it is about him. A reader
     // has to get past the leaf collection and the flu clinic before the page
@@ -1159,7 +1153,7 @@
     // they run on the days they happen.
     data.NOTICES = [
         'Leaf collection begins the first week of October. Bags only; no loose piles.',
-        'The Eastside library branch is closed Monday for staff training.',
+        'The library is closed Monday for staff training.',
         'The Mill Street bridge is reduced to one lane through the end of the month.',
         'Flu clinics run Saturdays in September at the community center, 9 a.m. to noon. No appointment needed.',
         'Water service on Orchard Lane will be interrupted Wednesday from 9 a.m. to approximately 2 p.m.',
@@ -1186,12 +1180,12 @@
     // and the dull one is what makes the box look real. Nothing in here
     // mentions him.
     data.ROUTINE_CORRECTIONS = [
-        "Because of an editing error, an article in Thursday's edition misstated the name of the library branch. It is the Eastside branch, not the East End branch.",
+        "Because of an editing error, an article in Thursday's edition misstated the location of the book sale. It is the library, not the library annex.",
         "A caption in Monday's edition misidentified the street shown. It is Mill Street, not Mill Road.",
         'An article on the school board meeting gave an incorrect vote count. The measure passed 5-2, not 4-3.',
         'A listing in the community calendar gave the wrong start time for the farmers market. It opens at 8 a.m.',
         "An obituary in Tuesday's edition misspelled the surname of a survivor. She is Margaret Kowalczyk.",
-        "Because of a production error, a photograph in Wednesday's edition ran without a credit. The photograph was by Helen Vasko.",
+        "Because of a production error, a photograph in Wednesday's edition ran without a credit. It was a file photograph.",
         'An article about the water main repair misstated the number of households affected. It was 140, not 1,400.',
         "A headline in Friday's edition referred to the county fair. It is the regional fair.",
         "The recipe in Sunday's edition omitted the oven temperature. It is 350 degrees.",

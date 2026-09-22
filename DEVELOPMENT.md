@@ -65,8 +65,8 @@ check and the drift test are all deleted.
    in the issue number, so any issue can name any other issue's lead; that
    is what lets today correct and continue yesterday.
 7. `modules/front-page.js` — swaps the standing issue in the markup for the
-   composed one, sets the title, the weather cut's layers, the map's rings,
-   the editorial, the clipping link and the back-issue notice.
+   composed one, sets the title, the weather cut's layers, the
+   editorial, the clipping link and the back-issue notice.
 
 There is no bootstrap, no state, no storage and no input handling. The page
 ends when `front-page.js` has rendered.
@@ -81,7 +81,7 @@ ends when `front-page.js` has rendered.
   `data/formats.js`.
 - `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and
   layers are CSS custom properties with fallbacks, so the files work as plain
-  `<img>` and pose when inlined. The weather cut and the map are inlined in
+  `<img>` and pose when inlined. The weather cut is inlined in
   `index.html`; `assets/cuts/README.md` lists every property.
 - `fonts/` — Fraunces as a variable woff2 for the browser, and two static
   TrueType cuts for the card renderer at the edge.
@@ -101,15 +101,14 @@ ends when `front-page.js` has rendered.
 
 ## Validation checklist (manual)
 1. Today's issue renders whole: lead, seven briefs, three notices, four
-   corrections, weather, five classifieds, two letters, the map, the colophon.
+   corrections, weather, five classifieds, two letters, the colophon.
 2. `/?issue=2024-09-29` is the first edition, with its editorial and one
    correction; `/?issue=2026-09-29` is the second anniversary.
 3. The first brief continues yesterday's lead and the second correction
    retracts a detail of it.
-4. The map's rings match what the notices and letters name.
-5. `bun run edge`, then `/card.png` is a PNG of today's lead and `view-source:/`
+4. `bun run edge`, then `/card.png` is a PNG of today's lead and `view-source:/`
    carries `og:image` pointing at it.
-6. Print preview: ink on white, two columns, no site links.
+5. Print preview: ink on white, two columns, no site links.
 7. Layout remains usable across small and wide viewports, in both themes.
 
 ## Smoke test harness

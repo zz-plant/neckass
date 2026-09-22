@@ -12,7 +12,7 @@ reading.
 - **A paper, not an app.** The front page is the product; there is nothing to
   click but links. It reads without JavaScript.
 - **Deterministic.** Issue *n* is a pure function of *n*: the lead, the
-  briefs, the corrections, the weather, the map. The archive is derived, not
+  briefs, the corrections, the weather. The archive is derived, not
   stored, and costs nothing.
 - **Continuous.** Today's paper retracts a detail of yesterday's lead and
   runs the next thing he did. It knows what day it is: the council's
@@ -100,7 +100,7 @@ dates.
 A Playwright suite covers what a reader opens: today's issue renders whole,
 a back issue loads from the archive, the corrections chain points at the
 lead it claims to, the calendar runs on its days, the landmarks are written,
-the map rings what the day names, both runtimes pick the same lead, and the
+both runtimes pick the same lead, and the
 edge serves the feed and a real card. It starts the static server and
 `wrangler pages dev` itself.
 

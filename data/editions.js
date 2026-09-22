@@ -23,7 +23,7 @@
                 headline:
                     'Neckass has said he will "get into running." It is the fourth September he has said it.',
                 deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
-                byline: 'By Dana Whitcomb',
+                byline: 'Staff report',
                 correction:
                     'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
                 followUp:
@@ -32,7 +32,7 @@
                     'FOR SALE: running shoes, three pairs, all one size. Boxes included, one empty.',
                 letter: {
                     body: 'I am at 14. He has told me about the running each September and I have said "good for you" each September. I would like a different September.',
-                    signature: 'Rosa Okafor, 14 Orchard Lane',
+                    signature: 'Next door',
                 },
             },
             editorial: {
@@ -42,7 +42,7 @@
                     'This paper will report what he did. It will not say why, because nobody knows, least of all him. It will run corrections, because he will dispute the details and the details will turn out to be wrong in a way that does not help him.',
                     'We expect to be finished in about a month.',
                 ],
-                signature: 'Ruth Adeyemi, editor',
+                signature: 'The editor',
             },
             corrections: [
                 'This is the first edition. There is nothing to correct yet. The Gazette expects this to change.',
@@ -50,7 +50,7 @@
             letters: [
                 {
                     body: 'I understand you are starting a paper about my neighbour. I have some material. When would be convenient.',
-                    signature: 'Owen Pratt, Orchard Lane',
+                    signature: 'A neighbour',
                 },
             ],
         },
@@ -61,7 +61,7 @@
                 headline:
                     'Neckass has told the Gazette that being in it every day is "a lot." He has read four of them.',
                 deck: 'He came to the office Friday to ask that the paper stop. He stayed forty minutes. He has appeared in one hundred issues and read four, one of them twice.',
-                byline: 'By Marcus Oyelaran',
+                byline: 'Staff report',
                 correction:
                     'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
                 followUp:
@@ -70,7 +70,7 @@
                     'NOTICE: the gentleman who came to the office to ask that we stop has left his scarf. He may collect it. We will not stop.',
                 letter: {
                     body: 'One hundred issues. I have kept every one. I am not sure why. I have kept the scarf too; he left it here first.',
-                    signature: 'M. Sato, the Station Café',
+                    signature: 'The café',
                 },
             },
             editorial: {
@@ -79,7 +79,7 @@
                     'The founding editorial of this paper said it expected to be finished in about a month. That was a hundred issues ago. He has not run out.',
                     'The Gazette has learned two things in that time. The first is that he does something every day. The second is that he will come to the office to say he did not, and describe it in detail on the way out.',
                 ],
-                signature: 'Ruth Adeyemi, editor',
+                signature: 'The editor',
             },
         },
 
@@ -89,7 +89,7 @@
                 headline:
                     'Neckass has bought a hat and been reported to the Gazette as a second neckass',
                 deck: 'A neighbor rang the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
-                byline: 'By Helen Vasko',
+                byline: 'From wire reports',
                 correction:
                     "We reported that the hat is new. It is his father's. He has had it since March and worn it since Saturday.",
                 followUp:
@@ -98,7 +98,7 @@
                     'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the parcel.',
                 letter: {
                     body: 'I reported the second man. I would like to withdraw the report and keep the observation.',
-                    signature: 'Rosa Okafor, 14 Orchard Lane',
+                    signature: 'Next door',
                 },
             },
             // The entry cites this issue for its corrections: the one day the
@@ -126,7 +126,7 @@
                     'FOR SALE: 365 newspapers, unread, stacked inside a door. Buyer collects. Buyer will have to knock; the door does not open all the way.',
                 letter: {
                     body: 'A year. I wanted to say something about the year. He borrowed my ladder in October.',
-                    signature: 'Owen Pratt, Orchard Lane',
+                    signature: 'A neighbour',
                 },
             },
             editorial: {
@@ -135,7 +135,7 @@
                     'The Gazette said it expected to be finished in a month. It said so in its first editorial, and it has been asked about it since, mostly by him.',
                     'A year in, the position is unchanged. He did the thing; we wrote it down. Nobody has been able to say what the thing has in common with the other things, and the paper has stopped trying. Volume II begins tomorrow with the same man.',
                 ],
-                signature: 'Ruth Adeyemi, editor',
+                signature: 'The editor',
             },
         },
 
@@ -144,8 +144,8 @@
             lead: {
                 headline:
                     'Neckass has asked whether the Gazette is "still going." This is the 731st issue.',
-                deck: 'He asked at the Station Café, where the paper is on every table. He was holding one. He asked over the top of it.',
-                byline: 'By Priya Natarajan',
+                deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
+                byline: 'From wire reports',
                 correction:
                     'We reported that Neckass was holding a copy of the paper. He was holding it, and reading his phone.',
                 followUp:
@@ -154,7 +154,7 @@
                     "WANTED: a subject for a newspaper. Two years' experience with the current one. Applicants must do less.",
                 letter: {
                     body: 'Two years. In that time he has returned one thing to me: the ladder, in the wrong garden.',
-                    signature: 'Owen Pratt, formerly of Orchard Lane',
+                    signature: 'A former neighbour',
                 },
             },
             editorial: {
@@ -163,7 +163,7 @@
                     'The founding editorial said a month. The first anniversary editorial declined to make a second prediction. This one declines again.',
                     'He is well. He was five minutes away from being interviewed for this and is at home. Volume III begins with him, as the other two did.',
                 ],
-                signature: 'Ruth Adeyemi, editor',
+                signature: 'The editor',
             },
         },
     };
