@@ -108,13 +108,6 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   in the weather box so its layers can be switched. `frontPage.weatherLayers()`
   maps the first word of the forecast to `--sun`, `--cloud`, `--rain` and
   `--wind`; anything it does not recognise gets sun and cloud.
-- **The town map** — `assets/cuts/map.svg`, inlined as the last department
-  before the colophon (`.box--map`, head *The town*). Each place on it has a
-  ring; `frontPage.placesNamed()` scans the day's notices and letters and
-  sets `--bridge`, `--orchard`, `--station`, `--depot`, `--hall`,
-  `--library`, `--center`, `--gym`, `--school`, `--route9`, `--river` and
-  `--shelter` on the svg, and the caption names what is ringed. `--bridge`
-  also reduces the bridge to one lane.
 - **The press** — `assets/cuts/press.svg`, on the 404 page.
 
 ## The issue (front page)
@@ -153,9 +146,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   forecaster's note about him follows in `#weather-line`.
 - **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`.
 - **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday), then one dealt from `data.LETTERS`. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces: it is the one place on the page where someone other than the paper is speaking.
-- **The town** — the map, see *Rules, labels and cuts*.
-- **Colophon** — the staff line, the paper's note, and links to the back
-  issues, the issue's clipping (`#colophon-card`, `/card.png?issue=…`) and
+- **Colophon** — the staff line (vacant, unattended, ongoing), the paper's
+  note, and links to the back issues, the issue's clipping (`#colophon-card`, `/card.png?issue=…`) and
   the entry.
 - Calendar items take the place of dealt ones, so no section changes size
   on a dated day. Pool depth is load-bearing: each pool must stay several
@@ -208,8 +200,8 @@ The paper reads in one column, two, or the broadsheet grid, in that order:
 - **≥900px**: the entry and the standards hang their heads in a 200px side
   column.
 - **≥760px**: the broadsheet grid — the lead and the departments on
-  1.55fr / 1fr against a column rule, the editorial in two columns, the map
-  beside its caption, and the archive in two columns.
+  1.55fr / 1fr against a column rule, the editorial in two columns, and the
+  archive in two columns.
 - **560–759px**: the departments pair up two across (notices with corrections,
   classifieds with letters) with the weather spanning both, rather than running
   down the page one after another. Everything else is one column.
@@ -230,7 +222,7 @@ The paper reads in one column, two, or the broadsheet grid, in that order:
 
 ## Accessibility checklist
 - Every link has discernible text; every department is a labelled region.
-- The inline cuts are `aria-hidden`; the map's places are named in its
-  caption, which is the accessible account of what is ringed.
+- The inline cuts are `aria-hidden`; the forecast beside the weather cut is
+  the accessible account of the sky.
 - Visible focus outlines are preserved for keyboard navigation
   (`a:focus-visible`).

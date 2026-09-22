@@ -268,7 +268,6 @@
                 ...fixedLetters,
                 ...dealAfter(data.LETTERS || [], letters, fixedLetters),
             ],
-            colophon: data.COLOPHON || null,
         };
 
         // A landmark's written sections replace the dealt ones. The lead was

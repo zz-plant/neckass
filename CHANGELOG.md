@@ -14,11 +14,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A follow-up on every lead: the brief that runs at the top of the next morning's column, in which he has done the next thing.
 - The calendar (`data/calendar.js`, `modules/calendar.js`): dated items that run in place of a dealt one on the days they happen — the council's first and third Tuesday and Wednesday's report on it, the clocks going forward and back, his birthday (11 March; the paper does the arithmetic and his mother writes in), Thanksgiving and the day after, election day, the last day of every month, the paper's own anniversary. Every rule is a pure function of the date, so a back issue carries its holiday.
 - `/card.png?issue=YYYY-MM-DD`: the issue's front page as a 1200×630 PNG, drawn at the edge by Satori and resvg (`workers-og`) in Fraunces on newsprint. The middleware points `og:image` and `twitter:image` at it, so a shared link previews with the day's headline in the picture as well as the text. The colophon offers it as the issue's clipping.
-- A line-cut map of Corbin Falls (`assets/cuts/map.svg`), rigged like the other cuts and inlined as the last department: the desk rings the places the day's notices and letters name, and the caption says which.
 - A print stylesheet: ink on white, the broadsheet's columns whatever the sheet's width, nothing that only makes sense on a screen.
 - The smoke suite runs the Pages Functions under `wrangler pages dev` alongside the static server and checks the card is a real PNG and the tags point at it.
 
 ### Changed
+- The paper has no newsroom. The named staff writers, the editor and the managing editor are gone from the bylines, the editorials and the colophon, which reads *Editor-in-chief: vacant. Wire desk: unattended. Corrections: ongoing.* Leads are filed by *Staff report* or *From wire reports*.
+- The letters are signed by what the writer is to him — next door, his housemate, his mother, the barber, the café, the groom, apparently — not by names and street addresses. The town is where he is; it is not a cast.
 - Leads are dealt in rounds of the pool's length, each round its own shuffle, so no lead runs twice inside a round. A draw from the whole pool each day put the same lead a week apart often enough for the archive to show it.
 - The archive lists every issue, by month, with its lead, and the landmark editions first, instead of 45 dates.
 - The earliest issues are shorter, as the archive has always claimed: the briefs column grows from three to seven over the first year and the letters page carries one letter for the first two months.

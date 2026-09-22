@@ -290,6 +290,6 @@ export const EDITION_LEADS = {
     731: {
         headline:
             'Neckass has asked whether the Gazette is "still going." This is the 731st issue.',
-        deck: 'He asked at the Station Café, where the paper is on every table. He was holding one. He asked over the top of it.',
+        deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
     },
 };

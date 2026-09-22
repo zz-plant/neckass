@@ -112,7 +112,7 @@
             section: 'letters',
             item: {
                 body: 'I am his mother. He is {age} today. I was there. He tells people he was born in a snowstorm. It was mild. He was late.',
-                signature: 'Bernadette Neckass, Corbin Falls',
+                signature: 'His mother',
             },
         },
         {

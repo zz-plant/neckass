@@ -133,55 +133,6 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(Object.values(result.drawn).some(Boolean)).toBe(true);
     });
 
-    test('the town map rings the places the day names', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const result = await page.evaluate(() => {
-            const { placesNamed } = window.Neckass.frontPage;
-            const cut = document.getElementById('map-cut');
-            const styles = getComputedStyle(cut);
-            const read = (name) =>
-                Number(styles.getPropertyValue(`--${name}`).trim());
-            const issue = window.Neckass.currentIssue;
-            const named = placesNamed([
-                ...issue.notices,
-                ...issue.letters.flatMap((l) => [l.body, l.signature]),
-            ]).map(([key]) => key);
-            return {
-                named,
-                drawn: Object.fromEntries(
-                    [
-                        'bridge',
-                        'orchard',
-                        'station',
-                        'depot',
-                        'hall',
-                        'library',
-                        'center',
-                        'gym',
-                        'school',
-                        'route9',
-                        'river',
-                        'shelter',
-                    ].map((key) => [key, read(key)]),
-                ),
-                caption: document.getElementById('map-caption').textContent,
-                sample: placesNamed([
-                    'The Mill Street bridge is reduced to one lane.',
-                    'Rosa Okafor, 14 Orchard Lane',
-                ]).map(([key]) => key),
-            };
-        });
-
-        expect(result.sample).toEqual(['bridge', 'orchard']);
-        // Every place named today is ringed, and nothing else is.
-        for (const [key, value] of Object.entries(result.drawn)) {
-            expect(value, key).toBe(result.named.includes(key) ? 1 : 0);
-        }
-        expect(result.caption).toMatch(/^CORBIN FALLS — /);
-    });
-
     test("today's corrections retract yesterday's actual lead", async ({
         page,
     }) => {
@@ -268,7 +219,7 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(checked.birthdayBrief).toBe(
             'Neckass is 38 today. He has told people he is 36 since he was 36.',
         );
-        expect(checked.birthdayLetter).toBe('Bernadette Neckass, Corbin Falls');
+        expect(checked.birthdayLetter).toBe('His mother');
         expect(checked.anniversaryBrief).toMatch(/^The Gazette is three today/);
         // A dated item takes the place of a dealt one; sizes do not change.
         expect(checked.counts).toEqual([7, 3, 2, 5]);

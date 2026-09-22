@@ -161,7 +161,7 @@
         'A man was seen following a school tour at the museum. He has been identified. He has been identified before.',
         'The smoke alarm has stopped chirping. Its battery is dead.',
         'Fourteen people have been told "no rush." All fourteen have been followed up with.',
-        'The Station Café has stopped asking. It is the usual.',
+        'The café has stopped asking. It is the usual.',
         'A voicemail asking why nobody answers texts has been left for a fourth person',
         'The password is now the old password with a 2 on it',
         'Nine "no offense" openers this week. A tenth was to a waiter, followed by an order.',
