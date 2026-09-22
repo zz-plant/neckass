@@ -34,7 +34,7 @@
         {
             on: { weekday: 0 },
             section: 'briefs',
-            item: 'Neckass has said Sunday is "for resetting." He has reset by watching nine episodes of a programme he says he does not like.',
+            item: 'Neckass has said Sunday is "for resetting." He has reset by watching nine episodes of a show he says he does not like.',
         },
 
         // ---- The council: first and third Tuesday ----------------------
@@ -105,7 +105,7 @@
         {
             on: { special: 'birthday' },
             section: 'classifieds',
-            item: 'PERSONAL: happy birthday to the man at 12 Orchard Lane, from the people at 14, who would like the bin back.',
+            item: 'PERSONAL: happy birthday to the man at 12 Orchard Lane, from the people at 14, who would like the recycling bin back.',
         },
         {
             on: { special: 'birthday' },
@@ -123,7 +123,7 @@
         {
             on: { dayAfter: { special: 'dstStart' } },
             section: 'briefs',
-            item: 'Neckass has been an hour early for everything today. He has described this as "being organised."',
+            item: 'Neckass has been an hour early for everything today. He has described this as "being organized."',
         },
         {
             on: { month: 3, day: 20 },
@@ -148,7 +148,7 @@
         {
             on: { weekday: 1, last: true, month: 5 },
             section: 'briefs',
-            item: 'Neckass has put the bin out. It is a holiday. He has been told twice and has said "they might still come."',
+            item: 'Neckass has put the trash out. It is a holiday. He has been told twice and has said "they might still come."',
         },
         {
             on: { month: 6, day: 21 },
@@ -229,7 +229,7 @@
         {
             on: { month: 12, day: 24 },
             section: 'briefs',
-            item: 'Neckass has begun his Christmas shopping. The shops close at five.',
+            item: 'Neckass has begun his Christmas shopping. The stores close at five.',
         },
         {
             on: { month: 12, day: 25 },

@@ -49,8 +49,8 @@
             ],
             letters: [
                 {
-                    body: 'I understand you are starting a paper about my neighbour. I have some material. When would be convenient.',
-                    signature: 'A neighbour',
+                    body: 'I understand you are starting a paper about my neighbor. I have some material. When would be convenient.',
+                    signature: 'A neighbor',
                 },
             ],
         },
@@ -88,14 +88,14 @@
             lead: {
                 headline:
                     'Neckass has bought a hat and been reported to the Gazette as a second neckass',
-                deck: 'A neighbor rang the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
+                deck: 'A neighbor called the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
                 byline: 'From wire reports',
                 correction:
                     "We reported that the hat is new. It is his father's. He has had it since March and worn it since Saturday.",
                 followUp:
                     'Neckass has worn the hat a second day. No further reports of a second man have been received. The neighbor has asked us to say she "still sees it."',
                 classified:
-                    'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the parcel.',
+                    'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the package.',
                 letter: {
                     body: 'I reported the second man. I would like to withdraw the report and keep the observation.',
                     signature: 'Next door',
@@ -126,7 +126,7 @@
                     'FOR SALE: 365 newspapers, unread, stacked inside a door. Buyer collects. Buyer will have to knock; the door does not open all the way.',
                 letter: {
                     body: 'A year. I wanted to say something about the year. He borrowed my ladder in October.',
-                    signature: 'A neighbour',
+                    signature: 'A neighbor',
                 },
             },
             editorial: {
@@ -153,8 +153,8 @@
                 classified:
                     "WANTED: a subject for a newspaper. Two years' experience with the current one. Applicants must do less.",
                 letter: {
-                    body: 'Two years. In that time he has returned one thing to me: the ladder, in the wrong garden.',
-                    signature: 'A former neighbour',
+                    body: 'Two years. In that time he has returned one thing to me: the ladder, to the wrong yard.',
+                    signature: 'A former neighbor',
                 },
             },
             editorial: {
