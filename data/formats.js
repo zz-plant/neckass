@@ -25,7 +25,7 @@
         {
             headline:
                 'Neckass has been "five minutes away" since 2019. He is at home.',
-            deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
+            deck: 'He has said it to eleven people this year. He has not left the house for any of them.',
             byline: 'From wire reports',
             correction:
                 'An earlier edition said Neckass had been "five minutes away" since 2019. At the time of that report he was in the shower.',
@@ -35,7 +35,7 @@
                 'PERSONAL: to the man who was five minutes away — we have gone home.',
             letter: {
                 body: 'He has been five minutes away from my house for four years. I have moved.',
-                signature: 'A former neighbour',
+                signature: 'A former neighbor',
             },
         },
         {
@@ -82,19 +82,19 @@
             classified:
                 'FOR SALE: fridge, full. Owner opens it eleven times a night and reports it empty.',
             letter: {
-                body: 'I live with him. He has stood in our kitchen with the fridge open for six minutes, three times this week, and said "there\'s nothing in here" each time. It is full. I did the shop.',
+                body: 'I live with him. He has stood in our kitchen with the fridge open for six minutes, three times this week, and said "there\'s nothing in here" each time. It is full. I did the shopping.',
                 signature: 'His housemate',
             },
         },
         {
             headline:
                 'Neckass has set three alarms, five minutes apart, and slept through all of them',
-            deck: 'They are labelled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
+            deck: 'They are labeled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
             byline: 'Staff report',
             correction:
-                'We said three alarms. There is a fourth, at 6:30, labelled "ok fine." He got up at 8:10.',
+                'We said three alarms. There is a fourth, at 6:30, labeled "ok fine." He got up at 8:10.',
             followUp:
-                'Neckass has added a fifth alarm, at 6:45, labelled "last one." He has slept through five.',
+                'Neckass has added a fifth alarm, at 6:45, labeled "last one." He has slept through five.',
             classified:
                 'WANTED: neighbor whose alarm does not go off at 5 and get ignored until 6.',
             letter: {
@@ -128,7 +128,7 @@
             followUp:
                 'Neckass has made a folder inside "Later!!" called "Actually later." It has 400 in it.',
             classified:
-                'FOR SALE: folder labelled "Later!!" Contents: 2,000 emails. Buyer must take all.',
+                'FOR SALE: folder labeled "Later!!" Contents: 2,000 emails. Buyer must take all.',
             letter: {
                 body: 'I sent him an email in March. It is in a folder called "Later!!" He told me this as though it were good news.',
                 signature: 'A colleague',
@@ -232,14 +232,14 @@
         {
             headline:
                 'Neckass has been standing in the doorway saying goodbye for fifty minutes',
-            deck: 'He said "anyway, I should go" at 9:10, "right, I\'m off" at 9:30 and "no, really" at 9:50. He left at ten.',
+            deck: '"Anyway, I should go" at 9:10. "Right, I\'m off" at 9:30. "No, really" at 9:50. He left at ten.',
             byline: 'Staff report',
             correction:
                 'We timed the goodbye at fifty minutes. The hosts went to bed at forty. He continued in the hall.',
             followUp:
                 'Neckass has texted the hosts to say he got home fine. He sent it from their driveway.',
             classified:
-                'NOTICE: the goodbye at number 12 is still going. Residents may wish to use the back lane.',
+                'NOTICE: the goodbye at No. 12 is still going. Residents may wish to use the back way.',
             letter: {
                 body: 'He stood in my doorway saying goodbye for fifty-five minutes. I went to bed. He was still saying it. This is the same doorway as the airport story.',
                 signature: 'The same host, again',
@@ -263,17 +263,17 @@
         },
         {
             headline:
-                'Neckass has bought a second charger rather than look behind the sofa',
-            deck: 'The first charger is behind the sofa. He has not looked. He now has three.',
+                'Neckass has bought a second charger rather than look behind the couch',
+            deck: 'The first charger is behind the couch. He has not looked. He now has three.',
             byline: 'Staff report',
             correction:
-                'We said he has three chargers. He has five. Two are behind the sofa.',
+                'We said he has three chargers. He has five. Two are behind the couch.',
             followUp:
-                'Neckass has found the charger behind the sofa while looking for the remote. He has put it back.',
+                'Neckass has found the charger behind the couch while looking for the remote. He has put it back.',
             classified:
-                'WANTED: someone to look behind the sofa. Reward: a charger.',
+                'WANTED: someone to look behind the couch. Reward: a charger.',
             letter: {
-                body: 'I live with him. There are five chargers in the flat. Two are behind the sofa, he knows this, and he has ordered a sixth.',
+                body: 'I live with him. There are five chargers in the apartment. Two are behind the couch. He knows this. He has ordered a sixth.',
                 signature: 'His housemate',
             },
         },
@@ -311,18 +311,18 @@
         },
         {
             headline:
-                'Neckass has answered a question that was asked of someone else',
-            deck: 'The question was put to the person beside him. He answered it. He was wrong.',
+                'Neckass has left a message on "seen" for eleven days so that he can reply "properly"',
+            deck: 'The message asked whether he was coming Saturday. He read it on the 3rd. Saturday was the 6th. He wants to give it a proper reply.',
             byline: 'Staff report',
             correction:
-                'We reported that Neckass answered a question asked of someone else. The person it was asked of had already started answering.',
+                'We said Neckass read the message on the 3rd. His phone says the 3rd. He says he "saw it but didn\'t see it."',
             followUp:
-                'Neckass has been asked a question directly. He said "sorry, was that to me?"',
+                'Neckass has replied. The reply is "sorry, just seeing this!" It is the 14th.',
             classified:
-                'PERSONAL: to whoever answered the question I asked someone else — it was not for you.',
+                'SEEKING: a proper minute. Owner has been meaning to reply since the 3rd and requires one.',
             letter: {
-                body: 'I asked the question. It was addressed to two other people. He answered it, and he was wrong.',
-                signature: 'A member of the audience',
+                body: 'I asked if he was coming Saturday. He read it on Tuesday. The Sunday after, he replied "just seeing this!" I had seen him on Friday. He said nothing.',
+                signature: 'A friend',
             },
         },
         {
@@ -382,7 +382,7 @@
             followUp:
                 'Neckass has bought a battery for the smoke alarm. It is on the counter. The alarm is in the other room, chirping.',
             classified:
-                'NOTICE: the smoke alarm at number 12 needs a battery. Nine days.',
+                'NOTICE: the smoke alarm at No. 12 needs a battery. Nine days.',
             letter: {
                 body: 'I am at 14. My smoke alarm is not chirping. His is. He has knocked twice to ask about mine.',
                 signature: 'Next door',
@@ -493,23 +493,24 @@
             classified:
                 'FOUND: photograph of a specials board. Not the restaurant the owner was in.',
             letter: {
-                body: 'He photographed my specials board on Monday and ordered from it on Friday at a different restaurant. They rang me to ask what a "harvest bowl" was.',
+                body: 'He photographed my specials board on Monday and ordered from it on Friday at a different restaurant. They called to ask what a "harvest bowl" was.',
                 signature: 'The café',
             },
         },
         {
-            headline: 'Neckass has been "just about to leave" for two hours',
-            deck: 'He said it at six, at seven and at eight. At nine he said "I mean it."',
+            headline:
+                'Neckass has sent a nine-minute voice note to say he is running late',
+            deck: 'He sent it at 7:50 from the car. It was played at double speed. He was still late, and it does not say by how much.',
             byline: 'From wire reports',
             correction:
-                'We reported that Neckass has his coat on. He has since taken it off, sat down, and accepted a tea.',
+                'We put the voice note at nine minutes. It was nine minutes and a second note, saying "sorry, long one."',
             followUp:
-                'Neckass left at ten. He has texted from the car to say he "should have gone earlier."',
+                'Neckass has been asked to text next time. He has sent a voice note to say he will.',
             classified:
-                'WANTED: anyone who has seen Neckass leave when he said he was leaving.',
+                'FOUND: a voice note, nine minutes. Contains no time of arrival. Owner may collect by text.',
             letter: {
-                body: 'He has been just about to leave my house since six. It is ten. I offered a tea so that he would have something to finish. He has finished it.',
-                signature: 'The same host, once more',
+                body: 'I listened to the whole thing to find out when he would get here. It does not say. He arrived during it.',
+                signature: 'A friend',
             },
         },
         {
@@ -594,7 +595,7 @@
         {
             headline:
                 'Neckass told the barber "just a little off" and has been given a haircut',
-            deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the till.',
+            deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the register.',
             byline: 'Staff report',
             correction:
                 'We said Neckass has not looked in a mirror. He has, in a shop window, and walked into someone.',
@@ -635,7 +636,7 @@
             classified:
                 'WANTED: anyone who can tell "haha" from "I will call you."',
             letter: {
-                body: 'I texted him to call me urgently. He replied "haha." I texted again. "haha." He rang four hours later to ask what was funny.',
+                body: 'I texted him to call me urgently. He replied "haha." I texted again. "haha." He called four hours later to ask what was funny.',
                 signature: 'His sister, again',
             },
         },
@@ -658,7 +659,7 @@
         {
             headline:
                 'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
-            deck: 'The book is 140 pages. He renews by telephone and says he is "nearly done." The library has stopped asking.',
+            deck: 'The book is 140 pages. He renews by phone and says he is "nearly done." The library has stopped asking.',
             byline: 'Staff report',
             correction:
                 'We reported that Neckass is on page nine. The bookmark is on page nine. The crease is on page four.',
@@ -689,32 +690,32 @@
         },
         {
             headline:
-                'Neckass turned the heating on "just for an hour" in October. It is still on.',
-            deck: 'It has been on since the first cold evening. He says he will "sort it out at the weekend." He has said it on every weekend since.',
+                'Neckass turned the heat on "just for an hour" in October. It is still on.',
+            deck: 'It has been on since the first cold evening. He will "deal with it this weekend." He has said so every weekend since.',
             byline: 'Staff report',
             correction:
-                'We reported that the heating has been on since the first cold evening. It was on before that. He was "testing it."',
+                'We reported that the heat has been on since the first cold evening. It was on before that. He was "testing it."',
             followUp:
-                'Neckass has turned the heating off. He has opened a window "to freshen up" and turned the heating back on.',
+                'Neckass has turned the heat off, opened a window "to freshen up," and turned the heat back on.',
             classified: 'FOR SALE: a thermostat. Works. Owner has set it once.',
             letter: {
-                body: 'I live with him. The heating has been on since October. I have slept with the window open since November. We have not discussed it. He has left a note.',
+                body: 'I live with him. The heat has been on since October. I have slept with the window open since November. We have not discussed it. He has left a note.',
                 signature: 'His housemate',
             },
         },
         {
             headline:
                 'Neckass has described a nap as "resting his eyes" for the fourth time this week',
-            deck: 'He rested his eyes from two until quarter to four, on the sofa, under a blanket, and woke saying he was listening.',
+            deck: 'He rested his eyes from two until 3:45, under a blanket, and woke saying he was listening.',
             byline: 'Staff report',
             correction:
-                'We said Neckass woke at quarter to four. He was woken at quarter to four, by the end of the programme he was listening to.',
+                'We said Neckass woke at 3:45. He was woken at 3:45, by the end of the show he was listening to.',
             followUp:
                 'Neckass has rested his eyes again. It was during the item about resting his eyes, which was being read to him.',
             classified:
                 'LOST: an afternoon. Last seen under a blanket. Owner says he was listening.',
             letter: {
-                body: 'He rested his eyes through my whole account of the thing with the car. When I finished he said "wow." I had not said anything to wow at. I had said the car was fine.',
+                body: 'He rested his eyes through my whole account of the car. When I finished he said "wow." The car was fine. I had said so.',
                 signature: 'A colleague',
             },
         },
@@ -726,34 +727,34 @@
             correction:
                 'We said the caller was let go at 6:50. That was the third "I\'ll let you go." The call ended at 7:05.',
             followUp:
-                'Neckass has rung the caller back to check they got off all right. They had. They were in the middle of it.',
+                'Neckass has called back to check they got off all right. They had. They were in the middle of it.',
             classified:
-                'WANTED: a way off the phone with a man who says "anyway." "Anyway" does not work. We have tried "anyway."',
+                'WANTED: a way off the phone with a man who says "anyway." We have tried "anyway."',
             letter: {
-                body: 'I am his mother. He rang to let me go. I had not rung him. I was in the garden. It was forty minutes.',
+                body: 'I am his mother. He called to let me go. I had not called him. I was in the yard. It was forty minutes.',
                 signature: 'His mother',
             },
         },
         {
             headline:
                 'Neckass has bought a whiteboard to get organized and has written "get organized" on it',
-            deck: 'The whiteboard is in the hall. It has said "get organized" since April, in his handwriting, with a box beside it that is not ticked.',
+            deck: 'It has said "get organized" since April, in his handwriting, with a box beside it. The box is not checked.',
             byline: 'Staff report',
             correction:
                 'We reported one item on the whiteboard. There is a second, underneath, added in June. It says "whiteboard."',
             followUp:
-                'Neckass has ticked the box. He has not got organized. He has said the tick is "for buying the whiteboard."',
+                'Neckass has checked the box. He has not gotten organized. The check is "for buying the whiteboard."',
             classified:
                 'FOR SALE: whiteboard, one item on it. Item included. Pen dried out.',
             letter: {
-                body: 'The whiteboard is in the hall. I have to pass it to leave the house. It has said "get organized" for five months. It is the most organized thing in the house and it is a sentence.',
+                body: 'I pass the whiteboard to leave the house. It has said "get organized" for five months. It is the most organized thing in the house, and it is a sentence.',
                 signature: 'His housemate',
             },
         },
         {
             headline:
                 'Neckass has given directions to a driver who was already on the right road',
-            deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left," and the driver did.',
+            deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left." The driver did.',
             byline: 'From wire reports',
             correction:
                 'We reported that the driver took the second left. There is no second left. The driver took the first and has written in.',
@@ -768,7 +769,7 @@
         },
         {
             headline: 'Neckass has replied "maybe" to an event he is hosting',
-            deck: 'The invitation went out from his account on Monday. He responded to it on Tuesday. The host is listed as "maybe."',
+            deck: 'The invitation went out from his account on Monday. He responded on Tuesday. The host is listed as "maybe."',
             byline: 'Staff report',
             correction:
                 'We reported that Neckass replied "maybe." He has since changed it to "going," then back.',
@@ -793,30 +794,30 @@
             classified:
                 'FOR SALE: board game, complete. Rules included. Rules have been explained to owner; owner would like them back.',
             letter: {
-                body: 'It is my game. I have played it since I was nine. He explained it to me and then asked if I had "got it." I have got it. I have had it for thirty years.',
+                body: 'It is my game. I have played it since I was nine. He explained it and asked if I had "got it." I have had it for thirty years.',
                 signature: 'Next door',
             },
         },
         {
             headline:
                 'Neckass has kept a receipt for everything except the thing he needs to return',
-            deck: 'There are 340 receipts in the drawer, in no order, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
+            deck: 'There are 340 receipts in the drawer, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
             byline: 'Staff report',
             correction:
-                'We put the receipts at 340. It is 340 receipts and one ticket for a car park, which he has also kept.',
+                'We put the receipts at 340. It is 340 receipts and one parking-garage ticket, which he has also kept.',
             followUp:
                 'Neckass has taken the lamp back without the receipt and been offered a credit note. He has put the credit note in the drawer.',
             classified:
                 'FOUND: 340 receipts. None for a lamp. Owner will not throw them away "just in case."',
             letter: {
-                body: 'He asked me to help him find the receipt. We went through the drawer. I now know what he spent on lunch in 2022. He does not know where the lamp receipt is. It is not in the drawer.',
+                body: 'He asked me to help find the receipt. We went through the drawer. I now know what he spent on lunch in 2022. The lamp receipt is not in the drawer.',
                 signature: 'A colleague',
             },
         },
         {
             headline:
                 'Neckass has left a voicemail that says "it\'s me, call me back" and no name',
-            deck: 'It was left at 7:40 a.m. on a work number. The recipient has four people it could be. She has called two.',
+            deck: 'It was left at 7:40 a.m. The recipient has four people it could be. She has called two.',
             byline: 'Staff report',
             correction:
                 'We reported the voicemail was left at 7:40. It was left at 7:40 and again at 7:42, to say "sorry, it\'s me."',
@@ -832,7 +833,7 @@
         {
             headline:
                 'Neckass has watched the first ten minutes of a film four times and calls it "good so far"',
-            deck: 'He starts it after dinner. He is asleep by the title card. He has seen the title card four times and says the film "really gets going."',
+            deck: 'He starts it after dinner and is asleep by the title card. He has seen the title card four times and says it "really gets going."',
             byline: 'Staff report',
             correction:
                 'We said Neckass is asleep by the title card. He is asleep before it. He has seen the studio logo four times.',
@@ -847,39 +848,39 @@
         {
             headline:
                 'Neckass has apologized for being late by explaining that he was not late',
-            deck: 'He arrived at 2:25 for two. He said "sorry, but actually" and set out why the meeting was at half past. It was not.',
+            deck: 'He arrived at 2:25 for two, said "sorry, but actually," and set out why the meeting was at 2:30. It was not.',
             byline: 'From wire reports',
             correction:
                 'We reported that Neckass arrived at 2:25. He was in the building at 2:25. He was in the room at 2:31, with a coffee.',
             followUp:
-                'Neckass has asked that Tuesday\'s meeting be moved to half past, so that he is "not late again." It is a different meeting.',
+                'Neckass has asked that Tuesday\'s meeting be moved to 2:30, so that he is "not late again." It is a different meeting.',
             classified:
                 "NOTICE: the two o'clock is at two. This is not a change. This is a notice.",
             letter: {
-                body: 'I was chairing. He came in at 2:31 and told us the meeting was at half past. It was in the calendar. His calendar. He showed us. It said two.',
+                body: 'I was chairing. He came in at 2:31 and told us the meeting was at 2:30. He showed us his calendar to prove it. It said two.',
                 signature: 'A colleague',
             },
         },
         {
             headline:
                 'Neckass has said "we should do this more often" to people he cancelled on twice',
-            deck: 'The dinner was the third attempt. He cancelled the first two on the day. He said it at the end, with feeling, and has not proposed a date.',
+            deck: 'The dinner was the third attempt; he cancelled the first two on the day. He said it at the end, with feeling. He has not proposed a date.',
             byline: 'Staff report',
             correction:
-                'We said Neckass cancelled the first two dinners on the day. The second was cancelled at the restaurant, by text, from the car park.',
+                'We said Neckass cancelled the first two dinners on the day. The second was cancelled at the restaurant, by text, from the parking lot.',
             followUp:
                 'Neckass has proposed a date for the next dinner. It is a date the others cannot do, which he knew, and he has said "well, we tried."',
             classified:
                 'WANTED: three people free on a Friday. Fourth will confirm on the day, and may not.',
             letter: {
                 body: 'We did it more often. We did it three times. He came once. He said we should do it more often to the two of us who had been there all three times.',
-                signature: 'A former neighbour',
+                signature: 'A former neighbor',
             },
         },
         {
             headline:
                 'Neckass has taken a "quick look" at a colleague\'s spreadsheet and broken it',
-            deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows and the figure is in a different place.',
+            deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows.',
             byline: 'From wire reports',
             correction:
                 'We reported that Neckass sorted one column. He sorted one column, undid it, and sorted a different column. The first is still sorted.',
@@ -888,7 +889,7 @@
             classified:
                 'NOTICE FROM IT: the spreadsheet is not "corrupted." It has been sorted. Please stop sending it to us.',
             letter: {
-                body: 'It was my spreadsheet. I asked him to check one number. He said "quick look." I have the printout from Tuesday, and Tuesday\'s number, and him saying "it should be fine."',
+                body: 'I asked him to check one number. He said "quick look." I have Tuesday\'s printout, Tuesday\'s number, and him saying "it should be fine."',
                 signature: 'A colleague',
             },
         },
@@ -921,7 +922,7 @@
         'The Gazette said Neckass paid. He said "I\'ll get the next one." There has been no next one.',
         'An earlier edition reported that Neckass apologized to the printer. He apologized near it.',
         'The Gazette reported that Neckass remembered. He was reminded twice that morning.',
-        'An item stated that Neckass returned the parcel. He intended to. It is in the car.',
+        'An item stated that Neckass returned the package. He intended to. It is in the car.',
         'The Gazette said Neckass walked. He drove to the walk.',
         'We said Neckass finished the puzzle. One piece is missing and he has stopped mentioning it.',
         'An earlier edition described Neckass as happy to help. He said it. He did not help.',
@@ -932,6 +933,11 @@
         "We reported that Neckass had learned his lesson. He has not. Yesterday's edition should not have said so.",
         'We reported that Neckass was on hold for an hour. The call was answered after four minutes. He was talking.',
         'The Gazette said Neckass had "reached out." He had thought about it.',
+        'The Gazette said Neckass read the message. His phone said so. He disputes his phone.',
+        'We reported that Neckass was "at 80 percent." That was the phone.',
+        'An item said Neckass was "on it." He had opened the email and closed it.',
+        'The Gazette said Neckass had "circled back." He had forwarded the email to himself.',
+        'We reported that Neckass was working from home. He was at home.',
         'Mr. Neckass has asked us to note that he was not late on Tuesday. He was late on Tuesday.',
         "Yesterday's correction was itself incorrect. The shoe was not moved. Nothing has been moved.",
         'An earlier correction described Mr. Neckass as "doing his best." The Gazette has no basis for this and withdraws it.',
@@ -951,7 +957,7 @@
     data.WEATHER = [
         'Sunny, according to Neckass, who has not been outside and is going by the window.',
         'Overcast. Neckass will post "ugh, this weather" in the group chat before noon.',
-        "Mild. Neckass is wearing a coat because he checked yesterday's forecast, and will keep it on.",
+        "Mild. Neckass checked yesterday's forecast and is wearing the coat. He will keep it on.",
         'Rain. Neckass was told twice and will not bring a jacket.',
         'Clear. Neckass says it is "basically nice," which is the best he has said about anything.',
         'Cold. Neckass says he is fine. He is wearing shorts and is not fine.',
@@ -960,16 +966,16 @@
         'Unsettled. Neckass has checked four forecasts and selected the one he preferred.',
         'Bright. Neckass has put his sunglasses on his head and will spend twenty minutes looking for them.',
         'Drizzle. Neckass says it is "not really rain" and will be wet by noon.',
-        'Cool. Neckass has turned the heating on and opened a window.',
+        'Cool. Neckass has turned the heat on and opened a window.',
         'Storms expected. Neckass has parked under the tree.',
         'Snow. Neckass has driven anyway and will call from a hill.',
         'Humid. Neckass has said "it\'s not the heat, it\'s the humidity" to four people who were not asking.',
         'Grey. Neckass has said "well, that\'s the summer over" in each of the last four months.',
         'Pleasant. Neckass has stayed inside and will mention tomorrow that he missed it.',
-        'Frost. Neckass will use a credit card on the windscreen and break the credit card.',
+        'Frost. Neckass will use a credit card on the windshield and break the credit card.',
         'Sun, briefly. Neckass has committed to a barbecue on the strength of it.',
         'Rain easing. Neckass has cancelled and it has stopped.',
-        'Wind. Neckass has left the bin out and will collect it from the neighbor.',
+        'Wind. Neckass has left the trash can out and will collect it from the neighbor.',
         'Warm evening. Neckass proposed sitting outside and went in after four minutes.',
         'Cold snap. Neckass has said "at least it\'s dry." It is not.',
         'Heavy rain. Neckass has an umbrella. It is in the car with the package.',
@@ -986,16 +992,19 @@
         'Bright. Neckass told the forecaster it would be bright. The forecaster had told him, on Tuesday.',
         'Rain all day. Neckass has planned a walk for "when it clears."',
         'Hot. Neckass has been told it is hot and has gone outside to check.',
+        'Rain. Neckass has checked the radar, said "it\'s moving away," and been rained on.',
+        'Clear. Neckass has said "we should get out more" from the couch.',
+        'Heat advisory. Neckass has closed the blinds and turned the fan to face the wall.',
         'Overcast. Neckass was told it would not rain and brought the coat anyway. It rained. He has mentioned this.',
         'Sun. Neckass has said "we should make the most of it" and gone inside to plan how.',
         'Wind. Neckass says it is "picking up." It has been at this speed since Tuesday.',
     ];
 
     // The town's ads that are not about a lead. He is in most of them anyway.
+    // Nothing here restates a lead's own ad; a lead runs its ad the day it runs.
     data.CLASSIFIEDS = [
         'FOUND: set of keys, outside the gym. Owner has never been inside.',
         'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
-        'LOST: forty minutes, to a documentary about octopuses.',
         'FREE TO GOOD HOME: houseplant. Owner has named it and now cannot let it die, so someone else must.',
         'NOTICE FROM IT: the printer is out of paper. It has been out of paper every time. Please check before calling.',
         'SERVICES: will agree with whatever you have already decided. Neckass is a regular.',
@@ -1006,26 +1015,30 @@
         'WANTED: someone to smell some leftovers. They are nine days old. Urgent.',
         'FOR SALE: standing desk, barely used, as the owner sat at it.',
         'FREE: batteries, wrong size. Have been in a car since March.',
+        'FOR SALE: air fryer, used once, for toast.',
+        'WANTED: the end of a sentence beginning "long story short." Began Tuesday.',
+        'FOR SALE: noise-cancelling headphones. Owner talks over them.',
+        'FOR SALE: kettlebell. Has held the door open since 2023.',
+        'LOST: a "proper minute." Owner has been meaning to reply since the 3rd.',
+        'FOR SALE: smart speaker. Was asked for advice. Turned on the lights.',
+        'WANTED: whoever has his charger. It is everyone.',
+        'SERVICES: will explain your movie to you. Have seen the first ten minutes.',
+        'NOTICE: the "quick call" is not quick. See also the "quick question."',
+        'FOR SALE: a planner, 2024. January is full.',
+        'WANTED: a group chat that has produced a plan. Ours has produced a poll, and the poll has produced a second poll.',
         'FOR SALE: umbrella, unused, currently in a car.',
         'LOST: Wednesday. Owner spent it believing it was Tuesday.',
-        'FOR SALE: fan, boxed, bought in a heatwave and opened in October.',
+        'FOR SALE: fan, boxed, bought in a heat wave and opened in October.',
         'LOST: the second earbud. Owner has checked the case four times.',
         'FREE TO GOOD HOME: opinions about octopuses. One documentary, forty minutes.',
         'SEEKING: a second listener for a podcast. The first has gone.',
-        'FOR SALE: shelf. Some screws remain. Sold as seen, and it is not up any more.',
         'WANTED: the name of the film he explained. It was not the one recommended.',
-        'NOTICE: the bin from number 12 is in our garden again.',
+        'NOTICE: the recycling bin from No. 12 is in our yard again.',
         'FREE: half a bag of salad, best before yesterday, described by owner as "probably fine."',
         'LOST: the thread of a conversation, forty minutes in.',
-        'FOUND: sunglasses, on a head. Owner has been looking for twenty minutes.',
-        'WANTED: someone to tell him the haircut is fine. He has looked twice and said nothing.',
-        'FOR SALE: two shoes. They do not match. They have been on a floor for five weeks.',
-        'SEEKING: witnesses to a man holding a door for a full minute.',
         'FOR SALE: the rest of a meal. He said he would just have a bite.',
-        'NOTICE: the tour at two is for the school. It is not for the gentleman at the back.',
         'LOST: the receipt you are going to need. It went past the window.',
         'FOUND: a shirt, being chosen, for one hour. Owner said he was on his way.',
-        'WANTED: anyone who has seen him use the gym bag. Reward: the gym bag.',
     ];
 
     // Letters not tied to a lead. The correspondents recur — his housemate,
@@ -1065,7 +1078,7 @@
             signature: 'The wife of the reader who was present',
         },
         {
-            body: 'I am at 14. The bin is in my garden again. It is the third time. He says it is the wind. It is not windy.',
+            body: 'I am at 14. The recycling bin is in my yard again. It is the third time. He says it is the wind. It is not windy.',
             signature: 'Next door',
         },
         {
@@ -1081,7 +1094,7 @@
             signature: 'A subscriber',
         },
         {
-            body: 'I am his mother. He rang on Sunday. It was a pocket dial. I listened for eleven minutes. He was ordering a sandwich, and he was very polite about it. He sounded well.',
+            body: 'I am his mother. He called on Sunday. It was a pocket dial. I listened for eleven minutes. He was ordering a sandwich, and he was very polite about it. He sounded well.',
             signature: 'His mother',
         },
         {
@@ -1089,11 +1102,11 @@
             signature: 'His housemate',
         },
         {
-            body: 'I run the library. He has had the same book out since March. He renews it by phone, monthly, and each time says he is "nearly done." It is a book about Mars. It is 140 pages.',
+            body: 'I run the library. He has had the same book out since March and renews it by phone, monthly, "nearly done." It is a book about Mars. It is 140 pages.',
             signature: 'The library',
         },
         {
-            body: 'I cut his hair. He says "just a little off" and then describes, for four minutes, a different haircut. I do the one he describes. He says "great." He comes back in five weeks and says "just a little off."',
+            body: 'I cut his hair. He says "just a little off" and then describes, for four minutes, a different haircut. I do that one. He says "great." Five weeks later: "just a little off."',
             signature: 'The barber',
         },
         {
@@ -1105,7 +1118,7 @@
             signature: 'The gym',
         },
         {
-            body: 'I sit next to him at work. He says "quick question" and I have started a timer. The average is thirty-eight minutes. The record is a Wednesday.',
+            body: 'I sit next to him at work. He says "quick question" and I start a timer. The average is thirty-eight minutes. The record is a Wednesday.',
             signature: 'A colleague',
         },
         {
@@ -1117,11 +1130,11 @@
             signature: 'His housemate',
         },
         {
-            body: 'I am his mother. The recipe is not mine. I have never made it. He rang to ask how I make it. I said I don\'t. He said "right, but roughly."',
+            body: 'I am his mother. The recipe is not mine. I have never made it. He called to ask how I make it. I said I don\'t. He said "right, but roughly."',
             signature: 'His mother',
         },
         {
-            body: 'He has been "about to go" from my kitchen since nine. It is eleven. I have washed up around him. He has moved once, to let me at the tap.',
+            body: 'He has been "about to go" from my kitchen since nine. It is eleven. I have done the dishes around him. He has moved once, to let me at the sink.',
             signature: 'A host',
         },
         {
@@ -1129,12 +1142,12 @@
             signature: 'The café',
         },
         {
-            body: 'I was in the seat behind him on the 8:04, the day he was "on the train." He was not on the train. I know because I had his seat, and it was empty, and it is not his seat.',
+            body: 'I was in the seat behind his on the 8:04, the day he was "on the train." His seat was empty. It is not his seat.',
             signature: 'A commuter',
         },
         {
             body: 'I have moved to the other side of the river. He has found the bridge.',
-            signature: 'A former neighbour',
+            signature: 'A former neighbor',
         },
         {
             body: 'He offered to help me move. He arrived after the van, carried a lamp to the van, and told the driver a route. The driver had a route.',
@@ -1143,6 +1156,22 @@
         {
             body: 'I sent the message. It said the meeting had moved to two. He gave it a thumbs up and came at three.',
             signature: 'A colleague',
+        },
+        {
+            body: 'He replied "just seeing this!" to a message I watched him read. I was across the table. He looked up and said "sorry, what?"',
+            signature: 'A friend',
+        },
+        {
+            body: 'He said he was "off his phone." It was face down on the table. He turned it over every time it buzzed and put it back face down, which he described as not looking.',
+            signature: 'A dinner guest',
+        },
+        {
+            body: 'He asked me to "send that thing." I asked which thing. He said "you know." I sent four things. It was none of them. It was a thing I had sent him.',
+            signature: 'A colleague',
+        },
+        {
+            body: 'He told me he had "seen" my message and would reply properly. That was the reply. He sent it as a voice note.',
+            signature: 'His sister',
         },
     ];
 

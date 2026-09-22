@@ -4,7 +4,7 @@ export default [
     {
         headline:
             'Neckass has been "five minutes away" since 2019. He is at home.',
-        deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
+        deck: 'He has said it to eleven people this year. He has not left the house for any of them.',
     },
     {
         headline:
@@ -24,7 +24,7 @@ export default [
     {
         headline:
             'Neckass has set three alarms, five minutes apart, and slept through all of them',
-        deck: 'They are labelled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
+        deck: 'They are labeled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
     },
     {
         headline:
@@ -68,7 +68,7 @@ export default [
     {
         headline:
             'Neckass has been standing in the doorway saying goodbye for fifty minutes',
-        deck: 'He said "anyway, I should go" at 9:10, "right, I\'m off" at 9:30 and "no, really" at 9:50. He left at ten.',
+        deck: '"Anyway, I should go" at 9:10. "Right, I\'m off" at 9:30. "No, really" at 9:50. He left at ten.',
     },
     {
         headline:
@@ -77,8 +77,8 @@ export default [
     },
     {
         headline:
-            'Neckass has bought a second charger rather than look behind the sofa',
-        deck: 'The first charger is behind the sofa. He has not looked. He now has three.',
+            'Neckass has bought a second charger rather than look behind the couch',
+        deck: 'The first charger is behind the couch. He has not looked. He now has three.',
     },
     {
         headline:
@@ -92,8 +92,8 @@ export default [
     },
     {
         headline:
-            'Neckass has answered a question that was asked of someone else',
-        deck: 'The question was put to the person beside him. He answered it. He was wrong.',
+            'Neckass has left a message on "seen" for eleven days so that he can reply "properly"',
+        deck: 'The message asked whether he was coming Saturday. He read it on the 3rd. Saturday was the 6th. He wants to give it a proper reply.',
     },
     {
         headline:
@@ -147,8 +147,9 @@ export default [
         deck: 'The photograph was taken on Monday. He ordered on Friday, from memory, incorrectly.',
     },
     {
-        headline: 'Neckass has been "just about to leave" for two hours',
-        deck: 'He said it at six, at seven and at eight. At nine he said "I mean it."',
+        headline:
+            'Neckass has sent a nine-minute voice note to say he is running late',
+        deck: 'He sent it at 7:50 from the car. It was played at double speed. He was still late, and it does not say by how much.',
     },
     {
         headline: "Neckass's phone has been at one percent since this morning",
@@ -174,7 +175,7 @@ export default [
     {
         headline:
             'Neckass told the barber "just a little off" and has been given a haircut',
-        deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the till.',
+        deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the register.',
     },
     {
         headline:
@@ -194,7 +195,7 @@ export default [
     {
         headline:
             'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
-        deck: 'The book is 140 pages. He renews by telephone and says he is "nearly done." The library has stopped asking.',
+        deck: 'The book is 140 pages. He renews by phone and says he is "nearly done." The library has stopped asking.',
     },
     {
         headline:
@@ -203,13 +204,13 @@ export default [
     },
     {
         headline:
-            'Neckass turned the heating on "just for an hour" in October. It is still on.',
-        deck: 'It has been on since the first cold evening. He says he will "sort it out at the weekend." He has said it on every weekend since.',
+            'Neckass turned the heat on "just for an hour" in October. It is still on.',
+        deck: 'It has been on since the first cold evening. He will "deal with it this weekend." He has said so every weekend since.',
     },
     {
         headline:
             'Neckass has described a nap as "resting his eyes" for the fourth time this week',
-        deck: 'He rested his eyes from two until quarter to four, on the sofa, under a blanket, and woke saying he was listening.',
+        deck: 'He rested his eyes from two until 3:45, under a blanket, and woke saying he was listening.',
     },
     {
         headline:
@@ -219,16 +220,16 @@ export default [
     {
         headline:
             'Neckass has bought a whiteboard to get organized and has written "get organized" on it',
-        deck: 'The whiteboard is in the hall. It has said "get organized" since April, in his handwriting, with a box beside it that is not ticked.',
+        deck: 'It has said "get organized" since April, in his handwriting, with a box beside it. The box is not checked.',
     },
     {
         headline:
             'Neckass has given directions to a driver who was already on the right road',
-        deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left," and the driver did.',
+        deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left." The driver did.',
     },
     {
         headline: 'Neckass has replied "maybe" to an event he is hosting',
-        deck: 'The invitation went out from his account on Monday. He responded to it on Tuesday. The host is listed as "maybe."',
+        deck: 'The invitation went out from his account on Monday. He responded on Tuesday. The host is listed as "maybe."',
     },
     {
         headline:
@@ -238,32 +239,32 @@ export default [
     {
         headline:
             'Neckass has kept a receipt for everything except the thing he needs to return',
-        deck: 'There are 340 receipts in the drawer, in no order, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
+        deck: 'There are 340 receipts in the drawer, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
     },
     {
         headline:
             'Neckass has left a voicemail that says "it\'s me, call me back" and no name',
-        deck: 'It was left at 7:40 a.m. on a work number. The recipient has four people it could be. She has called two.',
+        deck: 'It was left at 7:40 a.m. The recipient has four people it could be. She has called two.',
     },
     {
         headline:
             'Neckass has watched the first ten minutes of a film four times and calls it "good so far"',
-        deck: 'He starts it after dinner. He is asleep by the title card. He has seen the title card four times and says the film "really gets going."',
+        deck: 'He starts it after dinner and is asleep by the title card. He has seen the title card four times and says it "really gets going."',
     },
     {
         headline:
             'Neckass has apologized for being late by explaining that he was not late',
-        deck: 'He arrived at 2:25 for two. He said "sorry, but actually" and set out why the meeting was at half past. It was not.',
+        deck: 'He arrived at 2:25 for two, said "sorry, but actually," and set out why the meeting was at 2:30. It was not.',
     },
     {
         headline:
             'Neckass has said "we should do this more often" to people he cancelled on twice',
-        deck: 'The dinner was the third attempt. He cancelled the first two on the day. He said it at the end, with feeling, and has not proposed a date.',
+        deck: 'The dinner was the third attempt; he cancelled the first two on the day. He said it at the end, with feeling. He has not proposed a date.',
     },
     {
         headline:
             'Neckass has taken a "quick look" at a colleague\'s spreadsheet and broken it',
-        deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows and the figure is in a different place.',
+        deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows.',
     },
 ];
 export const EDITION_LEADS = {
@@ -280,7 +281,7 @@ export const EDITION_LEADS = {
     288: {
         headline:
             'Neckass has bought a hat and been reported to the Gazette as a second neckass',
-        deck: 'A neighbor rang the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
+        deck: 'A neighbor called the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
     },
     366: {
         headline:
