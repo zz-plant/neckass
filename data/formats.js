@@ -405,22 +405,6 @@
         },
         {
             headline:
-                'Neckass has told everyone he is cutting back, while ordering',
-            deck: 'He announced it at the table. He announced it again while the food arrived.',
-            byline: 'From wire reports',
-            correction:
-                'We reported that Neckass announced it twice. Three times. The third was with dessert.',
-            followUp:
-                'Neckass has ordered dessert "to share." He has not shared it.',
-            classified:
-                'WANTED: someone to tell him he has said "I\'m cutting back" while ordering dessert.',
-            letter: {
-                body: 'He has told me he is cutting back while ordering, three times, at my counter.',
-                signature: 'A server',
-            },
-        },
-        {
-            headline:
                 "Neckass has been to the same coffee shop 300 times and does not know the staff's names",
             deck: 'They know his order and his name. He calls all three of them "chief."',
             byline: 'Staff report',
@@ -479,22 +463,6 @@
             letter: {
                 body: 'He agreed with me and then with the man I was arguing with, in the same minute. We have stopped arguing and are both annoyed with him.',
                 signature: 'A former colleague',
-            },
-        },
-        {
-            headline:
-                'Neckass photographed the menu to decide later and ordered without looking at it',
-            deck: 'The photograph was taken on Monday. He ordered on Friday, from memory, incorrectly.',
-            byline: 'From wire reports',
-            correction:
-                'We said he photographed the menu. He photographed the specials board of a different restaurant.',
-            followUp:
-                'Neckass has photographed the correct menu. He has ordered the same wrong thing from memory.',
-            classified:
-                'FOUND: photograph of a specials board. Not the restaurant the owner was in.',
-            letter: {
-                body: 'He photographed my specials board on Monday and ordered from it on Friday at a different restaurant. They called to ask what a "harvest bowl" was.',
-                signature: 'The café',
             },
         },
         {
@@ -606,22 +574,6 @@
             letter: {
                 body: 'I am the barber. He said "just a little off." I took a little off. He has not looked in the mirror in my presence since.',
                 signature: 'The barber',
-            },
-        },
-        {
-            headline:
-                'Neckass volunteered to help and has been standing nearby for an hour',
-            deck: 'He offered at two. He has held one thing, briefly, and put it down.',
-            byline: 'Staff report',
-            correction:
-                'We reported that Neckass held one thing. He held it for a moment and handed it back.',
-            followUp:
-                'Neckass has been thanked for helping. He has said "any time," and it will go the same way any time.',
-            classified:
-                'VOLUNTEER needed. Must be prepared to hold things for longer than a moment.',
-            letter: {
-                body: 'He offered to help me move. He held a lamp for a moment, put it down, and asked where he could be most useful. I said outside.',
-                signature: 'A friend who has moved',
             },
         },
         {
@@ -904,7 +856,6 @@
         'The Gazette reported that Neckass arrived at eight. He arrived at eight, realized he had forgotten his keys, and arrived again at 8:50.',
         'A previous item referred to "Neckass\'s book." It is a library book, due in March. It is now September.',
         'The Gazette stated that Neckass had finished. He had stopped.',
-        'The Gazette described a conversation as brief. It was two hours. Both parties have written in to say so.',
         'We reported that Neckass owns a bicycle. He owns a bicycle he has not ridden since buying it in 2022. It is in the hallway.',
         'An earlier edition quoted Neckass as saying "no worries." There were worries.',
         'The Gazette reported that Neckass fixed the printer. He turned it off and on. It is still broken.',
@@ -976,10 +927,8 @@
         'Sun, briefly. Neckass has committed to a barbecue on the strength of it.',
         'Rain easing. Neckass has cancelled and it has stopped.',
         'Wind. Neckass has left the trash can out and will collect it from the neighbor.',
-        'Warm evening. Neckass proposed sitting outside and went in after four minutes.',
         'Cold snap. Neckass has said "at least it\'s dry." It is not.',
         'Heavy rain. Neckass has an umbrella. It is in the car with the package.',
-        'Sleet. Neckass has gone out in the wrong shoes and will not mention it.',
         'Bright and cold. Neckass has dressed for bright.',
         'Showers. Neckass ran to the car and left the window down.',
         'Sunny intervals. Neckass has planned the whole day around the intervals.',
@@ -1005,9 +954,7 @@
     data.CLASSIFIEDS = [
         'FOUND: set of keys, outside the gym. Owner has never been inside.',
         'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
-        'FREE TO GOOD HOME: houseplant. Owner has named it and now cannot let it die, so someone else must.',
         'NOTICE FROM IT: the printer is out of paper. It has been out of paper every time. Please check before calling.',
-        'SERVICES: will agree with whatever you have already decided. Neckass is a regular.',
         'WANTED: someone who can end a conversation with Neckass. Nobody has yet.',
         'FOR SALE: exercise bike. Currently a coat rack. Coats included.',
         'LOST: one hour, every morning, between the alarm and getting up.',
@@ -1025,14 +972,12 @@
         'SERVICES: will explain your movie to you. Have seen the first ten minutes.',
         'NOTICE: the "quick call" is not quick. See also the "quick question."',
         'FOR SALE: a planner, 2024. January is full.',
-        'WANTED: a group chat that has produced a plan. Ours has produced a poll, and the poll has produced a second poll.',
         'FOR SALE: umbrella, unused, currently in a car.',
         'LOST: Wednesday. Owner spent it believing it was Tuesday.',
         'FOR SALE: fan, boxed, bought in a heat wave and opened in October.',
         'LOST: the second earbud. Owner has checked the case four times.',
         'FREE TO GOOD HOME: opinions about octopuses. One documentary, forty minutes.',
         'SEEKING: a second listener for a podcast. The first has gone.',
-        'WANTED: the name of the film he explained. It was not the one recommended.',
         'NOTICE: the recycling bin from No. 12 is in our yard again.',
         'FREE: half a bag of salad, best before yesterday, described by owner as "probably fine."',
         'LOST: the thread of a conversation, forty minutes in.',
@@ -1156,14 +1101,6 @@
         {
             body: 'I sent the message. It said the meeting had moved to two. He gave it a thumbs up and came at three.',
             signature: 'A colleague',
-        },
-        {
-            body: 'He replied "just seeing this!" to a message I watched him read. I was across the table. He looked up and said "sorry, what?"',
-            signature: 'A friend',
-        },
-        {
-            body: 'He said he was "off his phone." It was face down on the table. He turned it over every time it buzzed and put it back face down, which he described as not looking.',
-            signature: 'A dinner guest',
         },
         {
             body: 'He asked me to "send that thing." I asked which thing. He said "you know." I sent four things. It was none of them. It was a thing I had sent him.',

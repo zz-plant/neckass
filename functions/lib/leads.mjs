@@ -120,11 +120,6 @@ export default [
     },
     {
         headline:
-            'Neckass has told everyone he is cutting back, while ordering',
-        deck: 'He announced it at the table. He announced it again while the food arrived.',
-    },
-    {
-        headline:
             "Neckass has been to the same coffee shop 300 times and does not know the staff's names",
         deck: 'They know his order and his name. He calls all three of them "chief."',
     },
@@ -140,11 +135,6 @@ export default [
         headline:
             'Neckass has agreed with two people who were disagreeing with each other',
         deck: 'He agreed with the first, then the second, in the same conversation. Both noticed.',
-    },
-    {
-        headline:
-            'Neckass photographed the menu to decide later and ordered without looking at it',
-        deck: 'The photograph was taken on Monday. He ordered on Friday, from memory, incorrectly.',
     },
     {
         headline:
@@ -176,11 +166,6 @@ export default [
         headline:
             'Neckass told the barber "just a little off" and has been given a haircut',
         deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the register.',
-    },
-    {
-        headline:
-            'Neckass volunteered to help and has been standing nearby for an hour',
-        deck: 'He offered at two. He has held one thing, briefly, and put it down.',
     },
     {
         headline:
