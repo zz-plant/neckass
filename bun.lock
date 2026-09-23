@@ -7,8 +7,10 @@
       "devDependencies": {
         "@biomejs/biome": "^2.5.8",
         "@playwright/test": "^1.62.1",
+        "@resvg/resvg-wasm": "2.4.0",
         "husky": "^9.1.7",
         "lint-staged": "^17.0.5",
+        "satori": "0.15.2",
         "workers-og": "^0.0.27",
         "wrangler": "^4.134.0",
       },

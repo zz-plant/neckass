@@ -176,8 +176,10 @@ unnoticed. Both scripts read their scene list from `scripts/asset-specs.ts`.
 
 `og-image.png`, `og-about.png`, `og-archive.png` and `og-prompts.png` live at
 the repo root, are 1200x630, and are rendered by `bun run og:generate` from
-`scripts/generate-og.ts`. `assets:check` covers them too, so one command checks
-every generated image.
+`scripts/generate-og.ts` — with the same layout (`functions/lib/card.mjs`),
+renderer (Satori and resvg) and Fraunces as the per-issue `/card.png`, so
+every shared link previews as the same paper. `assets:check` covers them too,
+so one command checks every generated image.
 
 They are PNG deliberately. They used to be SVG, which no major platform renders
 as a link preview, so shared neckass.com links showed no image at all.

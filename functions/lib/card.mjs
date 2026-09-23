@@ -1,0 +1,203 @@
+/**
+ * The social card's layout, shared by the edge (functions/card.png.js, one
+ * card per issue) and scripts/generate-og.ts (the still cards for the
+ * entry, the back issues and the standards).
+ *
+ * A card is read at thumbnail size in a feed, beside a dozen others, by
+ * someone who has not heard of the paper. So it carries, in order of size:
+ * the headline, which is the reason to click; the man it is about, in the
+ * file cut, so the card is recognisably his at a glance; the paper's name;
+ * and, at the foot, what the paper is, in one line. The deck is the
+ * headline's second beat and is set in the ink, not greyed out under it.
+ *
+ * Satori takes an element tree; workers-og would also parse an HTML
+ * string, but its parser splits text at entities and then objects to a
+ * heading with "two children", so the tree is built directly.
+ */
+
+import { CUT_HEIGHT, CUT_SRC, CUT_WIDTH } from './cut.mjs';
+
+export const WIDTH = 1200;
+export const HEIGHT = 630;
+
+// The page's own tokens: the desk, the sheet, the ink, the muted ink, and
+// the ledger teal that carries the cutoff rule.
+const DESK = '#212b28';
+const SHEET = '#efeae0';
+const INK = '#1c1a19';
+const MUTED = '#4e4a42';
+const RULE = '#175049';
+
+export const MOTTO = 'One man, reported daily since Sept. 29, 2024.';
+
+const AP_MONTHS = [
+    'JAN.',
+    'FEB.',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUG.',
+    'SEPT.',
+    'OCT.',
+    'NOV.',
+    'DEC.',
+];
+const WEEKDAYS = [
+    'SUNDAY',
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+];
+
+/** "WEDNESDAY, SEPT. 23, 2026 · NO. 725" */
+export function issueFolio(date, number) {
+    const day = WEEKDAYS[date.getUTCDay()];
+    const month = AP_MONTHS[date.getUTCMonth()];
+    return `${day}, ${month} ${date.getUTCDate()}, ${date.getUTCFullYear()} · NO. ${number}`;
+}
+
+// Long leads take a smaller size so a four-line headline still clears the
+// deck beside the cut. The breakpoints follow the character counts of the
+// leads (50 to 93 characters).
+function headlineSize(text) {
+    const length = text.length;
+    if (length > 84) return 56;
+    if (length > 68) return 64;
+    if (length > 44) return 70;
+    return 80;
+}
+
+const el = (type, style, ...children) => ({
+    type,
+    props: { style, children: children.length === 1 ? children[0] : children },
+});
+
+/**
+ * @param {{ folio: string, headline: string, deck: string }} card
+ *   folio: the right of the top line — the issue's date and number, or the
+ *   page's name.
+ */
+export function cardElement({ folio, headline, deck }) {
+    const small = {
+        fontFamily: 'Fraunces Text',
+        fontSize: 18,
+        letterSpacing: 2.5,
+        color: MUTED,
+    };
+    const cutWidth = 184;
+    const cutHeight = Math.round((cutWidth * CUT_HEIGHT) / CUT_WIDTH);
+    return el(
+        'div',
+        {
+            display: 'flex',
+            width: WIDTH,
+            height: HEIGHT,
+            background: DESK,
+            padding: '28px 32px',
+        },
+        el(
+            'div',
+            {
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+                background: SHEET,
+                padding: '30px 48px 26px',
+                color: INK,
+            },
+            // The nameplate and the folio, closed by the cutoff rule.
+            el(
+                'div',
+                {
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    justifyContent: 'space-between',
+                    paddingBottom: 14,
+                    borderBottom: `5px solid ${RULE}`,
+                },
+                el(
+                    'span',
+                    {
+                        fontFamily: 'Fraunces',
+                        fontSize: 38,
+                        letterSpacing: -0.5,
+                    },
+                    'The Corbin Falls Gazette',
+                ),
+                el('span', small, folio),
+            ),
+            // The lead, and the man it is about.
+            el(
+                'div',
+                { display: 'flex', flex: 1, alignItems: 'stretch' },
+                el(
+                    'div',
+                    {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flex: 1,
+                        justifyContent: 'center',
+                        padding: '18px 0',
+                    },
+                    el(
+                        'div',
+                        {
+                            fontFamily: 'Fraunces',
+                            fontSize: headlineSize(headline),
+                            lineHeight: 1.06,
+                            letterSpacing: -1.2,
+                            textWrap: 'balance',
+                        },
+                        headline,
+                    ),
+                    el(
+                        'div',
+                        {
+                            fontFamily: 'Fraunces Text',
+                            fontSize: 26,
+                            lineHeight: 1.38,
+                            color: INK,
+                            marginTop: 20,
+                            maxWidth: 820,
+                        },
+                        deck,
+                    ),
+                ),
+                el(
+                    'div',
+                    {
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        marginLeft: 36,
+                        paddingBottom: 12,
+                    },
+                    {
+                        type: 'img',
+                        props: {
+                            src: CUT_SRC,
+                            width: cutWidth,
+                            height: cutHeight,
+                        },
+                    },
+                ),
+            ),
+            // The foot: what the paper is, and where.
+            el(
+                'div',
+                {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    paddingTop: 12,
+                    borderTop: '1.5px solid rgba(28,26,25,0.3)',
+                },
+                el('span', small, MOTTO.toUpperCase()),
+                el('span', { ...small, color: INK }, 'NECKASS.COM'),
+            ),
+        ),
+    );
+}

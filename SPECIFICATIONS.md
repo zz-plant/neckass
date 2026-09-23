@@ -45,19 +45,24 @@ following a line number that has since moved.
 - One radius, `--radius: 2px`, on the skip link.
 
 ## Masthead
-Every page opens on one folio line, closed by the cutoff rule.
+Every page opens on one folio line. The inside pages close it with the
+cutoff rule; the front page sets the nameplate under it and closes that.
 
-- The line carries three things: the paper — `.masthead__kicker` **Corbin
-  Falls** at 0.74rem small caps and `.masthead__name` **The Gazette** in
-  Fraunces at 1.04rem — then the date, then the site links. The paper is
-  named for its town, not its subject; "Neckass" appears in the copy as a
-  surname would, which is the point. The name is set at the size of a credit
-  rather than a banner: the reader arrived at neckass.com and does not need
-  telling twice whose page this is, and the lead should be the first thing on
-  the page set large. It is the one thing on the line in the display face,
-  which tells the eye which face the lead below is in.
-- The line closes with a 3px rule in the accent. That rule is the paper's
-  cutoff: everything below it is the news.
+- On the inside pages the line carries three things: the paper —
+  `.masthead__kicker` **Corbin Falls** at 0.74rem small caps and
+  `.masthead__name` **The Gazette** in Fraunces at 1.04rem — then the date,
+  then the site links. The paper is named for its town, not its subject;
+  "Neckass" appears in the copy as a surname would, which is the point.
+- The front page carries the nameplate instead (`.masthead--front`): the
+  folio line holds the date and the site links over a hairline, and under
+  it the `h1` **The Corbin Falls Gazette** is set in Fraunces at up to
+  3.4rem, centred, with `.nameplate__motto` — *One man, reported daily since
+  Sept. 29, 2024.* — in italic beneath. The front page is where a reader
+  lands from a shared link knowing nothing; the name says whose paper it is
+  and the motto says what it covers, in the line before the lead.
+- The masthead closes with a 3px rule in the accent — under the folio line
+  on the inside pages, under the nameplate on the front. That rule is the
+  paper's cutoff: everything below it is the news.
 - `#masthead-date` ships with standing copy — "Published daily · Corbin Falls"
   — so the page reads before, and without, JavaScript, and is replaced on load
   with `<date> · Vol. <roman>, No. <n>`, the date and the volume each in a
@@ -65,9 +70,9 @@ Every page opens on one folio line, closed by the cutoff rule.
   breaks inside itself; on a phone they take a line each and the middot is
   hidden. Volumes turn over on the anniversary of the first edition. Pages
   that are not an issue carry the links alone.
-- Under 1060px the folio line will not hold all three parts, so the name
-  and the site links share the first row and the date takes the second, on
-  its own, directly over the cutoff rule.
+- Under 1060px the inside pages' folio line will not hold all three parts,
+  so the name and the site links share the first row and the date takes the
+  second, on its own, directly over the cutoff rule.
 - Site links are text, not buttons, and the current page is marked with
   `aria-current="page"`, which underlines it in the accent.
 - `#back-issue-notice` is `hidden` on today's issue. When `?issue=YYYY-MM-DD`
@@ -122,6 +127,11 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   per round of its own length, seeded by the round, and issue *n* takes its
   place in the round, so no lead runs twice inside a round. A landmark
   (`data.EDITIONS[n].lead`) is taken instead of the dealt one.
+- **Earlier issues** — `#earlier-list`, in the lead: the three issues
+  before this one, each a link to `/?issue=…` carrying its weekday, number
+  and lead. At ≥760px it sits at the foot of the deck's column, beside the
+  headline; below that it follows the byline. The standing markup links to
+  the back issues, which is what issue 1, with nothing earlier, keeps.
 - **Editorial** — `#editorial`, `hidden` unless the issue is a landmark with
   one: a head, paragraphs, and the editor's signature, under the lead and
   across the page, in two columns at ≥760px.
@@ -141,6 +151,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   *previous* issue's actual lead, from that lead's `correction` field. Then
   any calendar correction, then the rest from `data.CORRECTIONS`. Issue 1 is
   written and runs one correction, which says there is nothing to correct.
+  The retraction ends *See No. n.*, linked to the issue it retracts.
+  Corrections are set in the ink; the notices beside them stay muted.
 - **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
@@ -177,9 +189,14 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   composed per request, `cache-control: public, max-age=3600`. Item titles and
   descriptions are XML-escaped.
 - `functions/card.png.js` serves `/card.png?issue=YYYY-MM-DD` (today's if
-  none): the issue's lead on the sheet, 1200×630 PNG, drawn by Satori and
-  resvg (`workers-og`) with two static cuts of Fraunces fetched from
-  `/fonts/` through the ASSETS binding. `cache-control: public,
+  none): the nameplate, the issue's date and number, the lead and its deck
+  beside the file cut of him, and the motto at the foot, 1200×630 PNG,
+  drawn by Satori and resvg (`workers-og`) with two static cuts of Fraunces
+  fetched from `/fonts/` through the ASSETS binding. The layout is
+  `functions/lib/card.mjs`, which `bun run og:generate` also draws the still
+  cards with (the standing issue, the entry, the back issues, the
+  standards); the cut is `functions/lib/cut.mjs`, the rig flattened to its
+  house pose. `cache-control: public,
   max-age=86400`; 404 before the first edition.
 - `functions/_middleware.js` rewrites `<title>`, the `og:`/`twitter:` title
   and description, `og:image`/`og:image:secure_url`/`twitter:image` (to the
