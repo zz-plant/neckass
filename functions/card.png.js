@@ -2,9 +2,10 @@
  * /card.png?issue=YYYY-MM-DD — the day's front page as a social card.
  *
  * Every share of neckass.com used to preview with the same still image
- * whatever the day's lead was. This draws the card on request: the folio
- * line, the cutoff rule, and the lead of the issue asked for (today's, if
- * none is), set in Fraunces on the same newsprint the page is printed on.
+ * whatever the day's lead was. This draws the card on request: the lead of
+ * the issue asked for (today's, if none is) beside the file cut of him, set
+ * in Fraunces on the same newsprint the page is printed on. The layout is
+ * functions/lib/card.mjs, which the still cards share.
  * The middleware points og:image here, so a shared link previews with the
  * headline that is actually running.
  *
@@ -14,171 +15,8 @@
  */
 
 import { ImageResponse } from 'workers-og';
+import { cardElement, HEIGHT, issueFolio, WIDTH } from './lib/card.mjs';
 import { issueNumber, parseIssueDate, selectLead } from './lib/issue.mjs';
-
-const WIDTH = 1200;
-const HEIGHT = 630;
-
-// The page's own tokens: the desk, the sheet, the ink, the muted ink, and
-// the ledger teal that carries the cutoff rule.
-const DESK = '#212b28';
-const SHEET = '#efeae0';
-const INK = '#1c1a19';
-const MUTED = '#4e4a42';
-const RULE = '#175049';
-
-const DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-});
-
-// Long leads take a smaller size so a four-line headline still clears the
-// deck. The breakpoints follow the character counts in data/formats.js.
-function headlineSize(text) {
-    const length = text.length;
-    if (length > 88) return 52;
-    if (length > 64) return 60;
-    return 68;
-}
-
-function volumeLabel(number) {
-    const numerals = [
-        'I',
-        'II',
-        'III',
-        'IV',
-        'V',
-        'VI',
-        'VII',
-        'VIII',
-        'IX',
-        'X',
-    ];
-    const volume = Math.floor((number - 1) / 365) + 1;
-    return numerals[volume - 1] || String(volume);
-}
-
-// Satori takes an element tree; workers-og would also parse an HTML
-// string, but its parser splits text at entities and then objects to a
-// heading with "two children", so the tree is built directly.
-const el = (type, style, ...children) => ({
-    type,
-    props: { style, children: children.length === 1 ? children[0] : children },
-});
-
-export function cardElement({ number, date, lead }) {
-    const dateLabel = DATE_FORMAT.format(date).toUpperCase();
-    const small = {
-        fontFamily: 'Fraunces Text',
-        fontSize: 19,
-        letterSpacing: 3,
-        color: MUTED,
-    };
-    return el(
-        'div',
-        {
-            display: 'flex',
-            width: WIDTH,
-            height: HEIGHT,
-            background: DESK,
-            padding: '36px 40px',
-        },
-        el(
-            'div',
-            {
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-                background: SHEET,
-                padding: '40px 56px 36px',
-                color: INK,
-            },
-            // The folio line, closed by the cutoff rule.
-            el(
-                'div',
-                {
-                    display: 'flex',
-                    alignItems: 'baseline',
-                    justifyContent: 'space-between',
-                    paddingBottom: 16,
-                    borderBottom: `5px solid ${RULE}`,
-                },
-                el(
-                    'div',
-                    { display: 'flex', alignItems: 'baseline' },
-                    el('span', small, 'CORBIN FALLS'),
-                    el(
-                        'span',
-                        {
-                            fontFamily: 'Fraunces',
-                            fontSize: 30,
-                            marginLeft: 22,
-                        },
-                        'The Gazette',
-                    ),
-                ),
-                el(
-                    'span',
-                    small,
-                    `${dateLabel} · VOL. ${volumeLabel(number)}, NO. ${number}`,
-                ),
-            ),
-            // The lead.
-            el(
-                'div',
-                {
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flex: 1,
-                    justifyContent: 'center',
-                    padding: '20px 0',
-                },
-                el(
-                    'div',
-                    {
-                        fontFamily: 'Fraunces',
-                        fontSize: headlineSize(lead.headline),
-                        lineHeight: 1.1,
-                        letterSpacing: -1,
-                        maxWidth: 1020,
-                    },
-                    lead.headline,
-                ),
-                el(
-                    'div',
-                    {
-                        fontFamily: 'Fraunces Text',
-                        fontSize: 27,
-                        lineHeight: 1.4,
-                        color: MUTED,
-                        marginTop: 26,
-                        maxWidth: 900,
-                    },
-                    lead.deck,
-                ),
-            ),
-            // The foot.
-            el(
-                'div',
-                {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    paddingTop: 14,
-                    borderTop: '1.5px solid rgba(28,26,25,0.3)',
-                },
-                el(
-                    'span',
-                    { ...small, fontSize: 18 },
-                    'THE CORBIN FALLS GAZETTE',
-                ),
-                el('span', { ...small, fontSize: 18 }, 'NECKASS.COM'),
-            ),
-        ),
-    );
-}
 
 let fontsPromise = null;
 function loadFonts(env, request) {
@@ -212,7 +50,12 @@ export async function onRequestGet({ request, env }) {
     if (!lead) return new Response('No such issue', { status: 404 });
 
     const fonts = await loadFonts(env, request);
-    const image = new ImageResponse(cardElement({ number, date, lead }), {
+    const card = {
+        folio: issueFolio(date, number),
+        headline: lead.headline,
+        deck: lead.deck,
+    };
+    const image = new ImageResponse(cardElement(card), {
         width: WIDTH,
         height: HEIGHT,
         fonts,

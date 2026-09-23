@@ -1,126 +1,116 @@
 #!/usr/bin/env bun
 /**
- * generate-og.ts — renders the per-page social preview cards.
+ * generate-og.ts — renders the still social preview cards.
  *
  * These are the images Facebook, X, LinkedIn, Slack and iMessage fetch when
- * someone shares a neckass.com link. They were previously SVG, which none of
- * those platforms render, so every preview came up blank.
+ * someone shares the entry, the back issues or the standards — and the
+ * front page, wherever the edge is not there to draw the day's card. They
+ * are drawn by the same layout as the per-issue card (functions/lib/card.mjs)
+ * with the same renderer, Satori and resvg, in the site's own Fraunces, so a
+ * shared link to any page previews as the same paper.
  *
  * Output goes to the repo root so the URLs stay short and stable. Run with
- * `bun run og:generate`; needs rsvg-convert. Deterministic, so regenerating an
- * unchanged card produces byte-identical output.
- *
- * Only families every renderer resolves are used here — the site's self-hosted
- * Fraunces is not available to rsvg-convert.
+ * `bun run og:generate`. Deterministic, so regenerating an unchanged card
+ * produces byte-identical output.
  */
 
-import { execSync } from 'node:child_process';
-import { existsSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { join } from 'node:path';
+import { initWasm, Resvg } from '@resvg/resvg-wasm';
+import satori from 'satori';
+import { cardElement, HEIGHT, WIDTH } from '../functions/lib/card.mjs';
 
 const ROOT = join(import.meta.dirname ?? __dirname, '..');
 
 /** Facebook/X/LinkedIn all treat 1200x630 as the canonical large-card size. */
-export const OG_WIDTH = 1200;
-export const OG_HEIGHT = 630;
+export const OG_WIDTH = WIDTH;
+export const OG_HEIGHT = HEIGHT;
 /** A card that renders correctly is comfortably above this. */
 export const OG_MIN_BYTES = 25_000;
 
 export type OgCard = {
     /** Output filename at the repo root. */
     file: string;
-    /** Press-red kicker above the headline. */
-    kicker: string;
-    /** Headline, one array entry per rendered line. */
-    headline: string[];
-    /** Supporting line under the headline. */
+    /** Right of the nameplate: the page's name, where an issue has its date. */
+    folio: string;
+    /** The reason to click. */
+    headline: string;
+    /** The headline's second beat. */
     deck: string;
-    /** Small caps footer. */
-    footer: string;
 };
 
 export const OG_CARDS: OgCard[] = [
     {
+        // The standing issue in index.html, for wherever the edge is not
+        // drawing today's card.
         file: 'og-image.png',
-        kicker: 'CORBIN FALLS',
-        headline: [
-            'Neckass has been "five minutes',
-            'away" since 2019. He is at home.',
-        ],
-        deck: 'He has said "five minutes" to eleven people this year.',
-        footer: 'THE CORBIN FALLS GAZETTE · NECKASS.COM',
+        folio: 'PUBLISHED DAILY',
+        headline:
+            'Neckass has been "five minutes away" since 2019. He is at home.',
+        deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
     },
     {
         file: 'og-about.png',
-        kicker: 'REFERENCE',
-        headline: ['Neckass (slang)'],
-        deck: 'The neck almost certainly does not refer to anything.',
-        footer: 'THE CORBIN FALLS GAZETTE · REFERENCE',
+        folio: 'REFERENCE',
+        headline:
+            "Neckass (slang): defined by a dictionary in 2032, accurately, to nobody's satisfaction",
+        deck: 'A person may be foolish without being a neckass, and a neckass need not be especially foolish.',
     },
     {
         file: 'og-archive.png',
-        kicker: 'BACK ISSUES',
-        headline: ['Every edition since', '29 September 2024'],
-        deck: 'None withdrawn. Several corrected. One corrected twice.',
-        footer: 'THE CORBIN FALLS GAZETTE · BACK ISSUES',
+        folio: 'BACK ISSUES',
+        headline:
+            'Every issue since No. 1. None withdrawn. One corrected twice.',
+        deck: 'The founding editorial gave the paper about a month. Each day is listed under the lead it ran.',
     },
     {
         file: 'og-prompts.png',
-        kicker: 'STANDARDS',
-        headline: ['Routine, administrative,', 'and unprecedented neckassery'],
-        deck: 'An adjective is not used where a document will do.',
-        footer: 'THE CORBIN FALLS GAZETTE · STANDARDS',
+        folio: 'STANDARDS',
+        headline:
+            'The Gazette does not file stories where he turned out to be right. It has happened twice.',
+        deck: 'The desk recognizes four kinds of neckassery. "Unprecedented" is used rarely. It has been used twice by mistake.',
     },
 ];
 
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS = 'Helvetica, Arial, sans-serif';
-
-function escapeXml(value: string): string {
-    return value
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+function fonts() {
+    const font = (file: string) => readFileSync(join(ROOT, 'fonts', file));
+    return [
+        {
+            name: 'Fraunces',
+            data: font('fraunces-72pt-bold.ttf'),
+            weight: 700 as const,
+            style: 'normal' as const,
+        },
+        {
+            name: 'Fraunces Text',
+            data: font('fraunces-9pt-regular.ttf'),
+            weight: 400 as const,
+            style: 'normal' as const,
+        },
+    ];
 }
 
-export function buildCard(card: OgCard): string {
-    const kickerWidth = 26 + card.kicker.length * 13;
-    // The deck sits a fixed distance below the last headline line, so a
-    // one-line card closes up instead of leaving a band of empty newsprint.
-    const deckY = 330 + (card.headline.length - 1) * 66 + 78;
-    const headline = card.headline
-        .map(
-            (line, i) =>
-                `<text x="104" y="${330 + i * 66}" font-family="${SERIF}" font-size="56" font-weight="700" fill="#1c1a19">${escapeXml(line)}</text>`,
-        )
-        .join('\n  ');
-
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}" viewBox="0 0 ${OG_WIDTH} ${OG_HEIGHT}">
-  <rect width="${OG_WIDTH}" height="${OG_HEIGHT}" fill="#141a18"/>
-  <rect x="48" y="40" width="${OG_WIDTH - 96}" height="${OG_HEIGHT - 80}" rx="10" fill="#efeae0"/>
-
-  <text x="${OG_WIDTH / 2}" y="132" text-anchor="middle" font-family="${SERIF}" font-size="66" font-weight="700" fill="#1c1a19">The Gazette</text>
-  <text x="${OG_WIDTH / 2}" y="168" text-anchor="middle" font-family="${SANS}" font-size="17" font-weight="600" fill="#4e4a42" letter-spacing="10">CORBIN FALLS</text>
-
-  <line x1="104" y1="200" x2="${OG_WIDTH - 104}" y2="200" stroke="#1c1a19" stroke-width="4"/>
-  <line x1="104" y1="210" x2="${OG_WIDTH - 104}" y2="210" stroke="#1c1a19" stroke-width="1.4"/>
-
-  <rect x="104" y="240" width="${kickerWidth}" height="34" fill="#175049"/>
-  <text x="${104 + kickerWidth / 2}" y="264" text-anchor="middle" font-family="${SANS}" font-size="17" font-weight="700" fill="#f4f0e7" letter-spacing="3">${escapeXml(card.kicker)}</text>
-
-  ${headline}
-
-  <text x="104" y="${deckY}" font-family="${SANS}" font-size="25" fill="#4e4a42">${escapeXml(card.deck)}</text>
-
-  <line x1="104" y1="520" x2="${OG_WIDTH - 104}" y2="520" stroke="#1c1a19" stroke-opacity="0.28" stroke-width="1.4"/>
-  <text x="104" y="552" font-family="${SANS}" font-size="18" fill="#4e4a42" letter-spacing="1.6">${escapeXml(card.footer)}</text>
-</svg>`;
+export async function renderCard(card: OgCard): Promise<Uint8Array> {
+    const svg = await satori(cardElement(card) as never, {
+        width: OG_WIDTH,
+        height: OG_HEIGHT,
+        fonts: fonts(),
+    });
+    return new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
+        .render()
+        .asPng();
 }
 
-function main() {
+async function main() {
     const dryRun = process.argv.includes('--dry-run');
     let ok = 0;
     const problems: string[] = [];
+
+    const require = createRequire(import.meta.url);
+    await initWasm(
+        readFileSync(require.resolve('@resvg/resvg-wasm/index_bg.wasm')),
+    );
 
     for (const card of OG_CARDS) {
         const outPath = join(ROOT, card.file);
@@ -129,13 +119,8 @@ function main() {
             continue;
         }
 
-        const tmp = join(ROOT, `_${card.file}.svg`);
         try {
-            writeFileSync(tmp, buildCard(card));
-            execSync(
-                `rsvg-convert -w ${OG_WIDTH} -h ${OG_HEIGHT} -o "${outPath}" "${tmp}"`,
-                { stdio: 'pipe', timeout: 15000 },
-            );
+            writeFileSync(outPath, await renderCard(card));
             const size = statSync(outPath).size;
             if (size < OG_MIN_BYTES) {
                 problems.push(
@@ -148,10 +133,7 @@ function main() {
                 ok++;
             }
         } catch (e) {
-            const failure = e as { stderr?: string; message?: string };
-            problems.push(`${card.file}: ${failure.stderr || failure.message}`);
-        } finally {
-            if (existsSync(tmp)) unlinkSync(tmp);
+            problems.push(`${card.file}: ${(e as Error).message}`);
         }
     }
 
@@ -162,4 +144,4 @@ function main() {
     }
 }
 
-if (import.meta.main) main();
+if (import.meta.main) await main();

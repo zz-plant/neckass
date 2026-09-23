@@ -247,6 +247,51 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
+    test('the front page leads back into the run', async ({ page }) => {
+        await page.goto(`${BASE_URL}?issue=2025-06-11`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+
+        // The nameplate says what the paper covers.
+        await expect(page.locator('h1')).toHaveText('The Corbin Falls Gazette');
+        await expect(page.locator('.nameplate__motto')).toContainText(
+            'One man',
+        );
+
+        // The three issues before this one, each a link to it, under the
+        // lead that ran.
+        const earlier = page.locator('#earlier-list a');
+        await expect(earlier).toHaveCount(3);
+        const expected = await page.evaluate(
+            (date) =>
+                window.Neckass.issue
+                    .recentIssues(4, window.Neckass.issue.parseIssueDate(date))
+                    .slice(1)
+                    .map((back) => ({
+                        href: `/?issue=${back.issueParam}`,
+                        headline: back.lead.headline,
+                    })),
+            issue.issueParam,
+        );
+        for (const [index, back] of expected.entries()) {
+            await expect(earlier.nth(index)).toHaveAttribute('href', back.href);
+            await expect(earlier.nth(index)).toContainText(back.headline);
+        }
+
+        // The correction retracting yesterday's lead links to yesterday.
+        await expect(
+            page.locator('#corrections-list li').nth(1).locator('a'),
+        ).toHaveAttribute('href', expected[0].href);
+
+        // The first edition has nothing earlier; the way to the archive stays.
+        await page.goto(`${BASE_URL}?issue=2024-09-29`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await expect(page.locator('#earlier-list a')).toHaveAttribute(
+            'href',
+            '/archive.html',
+        );
+    });
+
     test('a landmark issue is written, and the chain runs through it', async ({
         page,
     }) => {

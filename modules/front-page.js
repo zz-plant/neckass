@@ -118,8 +118,31 @@
             li.textContent = brief;
         });
 
+        // The correction that retracts yesterday's lead says which issue it
+        // retracts, and links to it, so the reader can read what was wrong.
+        const earlier = Neckass.issue.recentIssues(4, issue.date).slice(1);
+        const yesterday = earlier[0];
         listInto('#corrections-list', issue.corrections, (li, correction) => {
             li.textContent = correction;
+            if (yesterday && correction === yesterday.lead?.correction) {
+                const link = document.createElement('a');
+                link.href = `/?issue=${yesterday.issueParam}`;
+                link.textContent = `No. ${yesterday.number}`;
+                li.append(' See ', link, '.');
+            }
+        });
+
+        listInto('#earlier-list', earlier, (li, back) => {
+            const link = document.createElement('a');
+            link.href = `/?issue=${back.issueParam}`;
+            const folio = document.createElement('span');
+            folio.className = 'earlier__folio';
+            folio.textContent = `${back.dateLabel.split(',')[0]} · No. ${back.number}`;
+            const head = document.createElement('span');
+            head.className = 'earlier__head';
+            head.textContent = back.lead?.headline || '';
+            link.append(folio, head);
+            li.append(link);
         });
 
         listInto('#notices-list', issue.notices, (li, notice) => {

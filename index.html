@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="alternate" type="application/rss+xml" title="The Corbin Falls Gazette" href="/feed.xml">
-    <meta name="description" content="The Corbin Falls Gazette, published daily since 2024. Local news, corrections, weather, notices, classifieds and letters to the editor.">
+    <meta name="description" content="A daily paper about one man, published in Corbin Falls since Sept. 29, 2024: what he did, the corrections, the weather, the classifieds and the letters.">
     <meta name="color-scheme" content="light dark">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1413">
@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://neckass.com/">
 
     <meta property="og:title" content="The Corbin Falls Gazette">
-    <meta property="og:description" content="The Corbin Falls Gazette, published daily. Local news, corrections, weather, notices, classifieds and letters.">
+    <meta property="og:description" content="A daily paper about one man, published since Sept. 29, 2024. Every issue has a lead, a correction to yesterday&#39;s, and a letter from whoever it happened to.">
     <meta property="og:image" content="https://neckass.com/og-image.png">
     <meta property="og:image:secure_url" content="https://neckass.com/og-image.png">
     <meta property="og:image:alt" content="The front page of The Corbin Falls Gazette">
@@ -32,7 +32,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="The Corbin Falls Gazette">
-    <meta name="twitter:description" content="The Corbin Falls Gazette, published daily. Local news, corrections, weather, notices, classifieds and letters.">
+    <meta name="twitter:description" content="A daily paper about one man, published since Sept. 29, 2024. Every issue has a lead, a correction to yesterday&#39;s, and a letter from whoever it happened to.">
     <meta name="twitter:image" content="https://neckass.com/og-image.png">
     <meta name="twitter:image:alt" content="The front page of The Corbin Falls Gazette">
     <meta name="twitter:url" content="https://neckass.com/">
@@ -70,26 +70,24 @@
 </head>
 <body>
     <a class="skip-link" href="#lead-headline">Skip to the lead item</a>
-    <h1 class="sr-only">The Corbin Falls Gazette</h1>
     <div class="page-shell">
-        <!-- The folio line, the way a paper carries it: who is printing this
-             on the left, what day it is in the middle, where else to go on the
-             right. The lead is the first thing on the page that is set large. -->
-        <header class="masthead">
+        <!-- The front page carries the nameplate; the inside pages carry only
+             the folio line. Under the name is what the paper covers, in one
+             line, for the reader who arrived from a shared link and has not
+             yet been told. -->
+        <header class="masthead masthead--front">
             <div class="masthead__folio">
-                <p class="masthead__plate">
-                    <span class="masthead__kicker">Corbin Falls</span>
-                    <span class="masthead__name">The Gazette</span>
-                </p>
-                <!-- Replaced with the active issue's date and number on load. The
-                     standing value is the paper's first edition, so the page reads
-                     correctly with no JavaScript. -->
+                <!-- Replaced with the active issue's date and number on load. -->
                 <p class="masthead__line" id="masthead-date">Published daily · Corbin Falls</p>
                 <nav class="top-nav" aria-label="Site">
                     <a href="/archive.html">Back issues</a>
                     <a href="/about.html">Reference</a>
                     <a href="/prompts.html">Standards</a>
                 </nav>
+            </div>
+            <div class="nameplate">
+                <h1 class="nameplate__name">The Corbin Falls Gazette</h1>
+                <p class="nameplate__motto">One man, reported daily since Sept. 29, 2024.</p>
             </div>
             <p class="back-issue-notice" id="back-issue-notice" hidden>
                 <span id="back-issue-text"></span>
@@ -108,6 +106,14 @@
                     <h3 class="lead__headline" id="lead-headline">Neckass has been "five minutes away" since 2019. He is at home.</h3>
                     <p class="lead__deck" id="lead-deck">CORBIN FALLS — He has said "five minutes" to eleven people this year. He has not left the house for any of them.</p>
                     <p class="lead__byline" id="lead-byline">By the wire desk</p>
+                    <!-- The three issues before this one, by their leads. Filled
+                         by front-page.js; without it, the way to the archive. -->
+                    <nav class="earlier" aria-labelledby="earlier-title">
+                        <h3 class="section-label" id="earlier-title">Earlier issues</h3>
+                        <ol class="earlier__list" id="earlier-list">
+                            <li><a href="/archive.html"><span class="earlier__head">Every issue since No. 1 is in the back issues.</span></a></li>
+                        </ol>
+                    </nav>
                 </article>
 
                 <!-- Only a landmark issue carries one: the first edition, an
