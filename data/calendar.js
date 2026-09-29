@@ -204,7 +204,7 @@
         {
             on: { special: 'electionDay' },
             section: 'briefs',
-            item: 'Neckass has voted and told the line about it.',
+            item: 'Neckass has voted and asked the poll worker whether he got it right. She said she could not say. He has taken this as a no.',
         },
         {
             on: { special: 'dstEnd' },
@@ -239,7 +239,7 @@
         {
             on: { month: 12, day: 25 },
             section: 'briefs',
-            item: 'Neckass has received a gift he gave someone last year. He has said "oh, nice."',
+            item: 'Neckass has received a gift he gave someone last year. He has said "oh, nice" and asked where they found it.',
         },
         {
             on: { month: 12, day: 31 },
