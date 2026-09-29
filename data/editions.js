@@ -38,14 +38,13 @@
             editorial: {
                 head: 'Why a paper',
                 body: [
-                    'Corbin Falls has a council, a bridge with one lane, a café with four staff, and a man on Orchard Lane who has been five minutes away since 2019. The first three are covered by the notices column. The fourth was not covered by anyone, and it was felt that he should be.',
-                    'This paper will report what he did. It will not say why, because nobody knows, least of all him. It will run corrections, because he will dispute the details and the details will turn out to be wrong in a way that does not help him.',
-                    'We expect to be finished in about a month.',
+                    'On Tuesday a man on Orchard Lane told three people he was five minutes away. He was in his kitchen. On Wednesday he told a fourth. On Thursday he came to this office to ask whether we had "anything on him," and stayed forty minutes supplying it.',
+                    'That is why. He did the thing in front of people and then came in to explain it. This paper will print what he did. He has said he will read it.',
                 ],
                 signature: 'The editor',
             },
             corrections: [
-                'This is the first edition. There is nothing to correct yet. The Gazette expects this to change.',
+                'This is the first edition. Neckass has already come in to dispute it. It had not been printed.',
             ],
             letters: [
                 {
@@ -67,17 +66,17 @@
                 followUp:
                     'Neckass has collected the scarf. He asked again that the paper stop. He was in the office thirty-five minutes, which is an improvement.',
                 classified:
-                    'NOTICE: the gentleman who came to the office to ask that we stop has left his scarf. He may collect it. We will not stop.',
+                    'FOUND: a scarf, left at the Gazette office by a man asking that the paper stop. He has since called to ask whether we have it, and whether we have stopped.',
                 letter: {
-                    body: 'One hundred issues. I have kept every one. I am not sure why. I have kept the scarf too; he left it here first.',
+                    body: 'He left the scarf here first. He came back for it, described it to me, took a different one, and left. The one he described is still on the hook.',
                     signature: 'The café',
                 },
             },
             editorial: {
                 head: 'One hundred',
                 body: [
-                    'The founding editorial of this paper said it expected to be finished in about a month. That was a hundred issues ago. He has not run out.',
-                    'The Gazette has learned two things in that time. The first is that he does something every day. The second is that he will come to the office to say he did not, and describe it in detail on the way out.',
+                    'He came in Friday to ask that the paper stop, with a list of the items he disputed. The list is two pages, in his hand, and dated wrong. He read it to us in full.',
+                    'He then asked whether we wanted to keep it, left it, came back for it, and left it again. It is on the desk. Item nine is about Friday.',
                 ],
                 signature: 'The editor',
             },
@@ -105,9 +104,9 @@
             // paper applied the word to someone else, and took it back.
             corrections: [
                 "A caption in Friday's edition misidentified the bandstand. It is the bandstand in Depot Park, not the one at the school.",
-                "In Saturday's edition the Gazette described a second person as a neckass. The Gazette does not do this. The second person was Neckass, in a hat.",
-                'A reader has asked what the Gazette means by the word. The Gazette means him.',
-                'The Gazette said Neckass had "reached out." He had thought about it.',
+                'We reported a second man on Orchard Lane, in a hat. It was Neckass. He had walked past his own house twice, in the hat, to "see how it looked from the road."',
+                'Neckass was shown the report of a second man and said he had "seen him too." He was wearing the hat at the time.',
+                'We said the hat has been worn since Saturday. It was worn Friday, at dinner, indoors, until he was asked.',
             ],
         },
 
@@ -132,8 +131,8 @@
             editorial: {
                 head: 'One year',
                 body: [
-                    'The Gazette said it expected to be finished in a month. It said so in its first editorial, and it has been asked about it since, mostly by him.',
-                    'A year in, the position is unchanged. He did the thing; we wrote it down. Nobody has been able to say what the thing has in common with the other things, and the paper has stopped trying. Volume II begins tomorrow with the same man.',
+                    'A paper has been on his step every morning for a year. He has stepped on 365 of them. One morning in March he picked it up, read the weather, said "huh," and put it back down, in the place where he steps.',
+                    'He came in Thursday to ask whether there was "an anniversary thing." He suggested a cake, and a photograph, and that the photograph be of him. He said he was five minutes away and would come back for it. It is Friday.',
                 ],
                 signature: 'The editor',
             },
@@ -151,7 +150,7 @@
                 followUp:
                     'Neckass has been told the Gazette is still going. He said "good for them" and asked who was in it.',
                 classified:
-                    "WANTED: a subject for a newspaper. Two years' experience with the current one. Applicants must do less.",
+                    'FOUND: a coat, at the café, left by the man who asked whether the paper was still going. It is the coat he said he did not need.',
                 letter: {
                     body: 'Two years. In that time he has returned one thing to me: the ladder, to the wrong yard.',
                     signature: 'A former neighbor',
@@ -160,8 +159,8 @@
             editorial: {
                 head: 'Two years',
                 body: [
-                    'The founding editorial said a month. The first anniversary editorial declined to make a second prediction. This one declines again.',
-                    'He is well. He was five minutes away from being interviewed for this and is at home. Volume III begins with him, as the other two did.',
+                    'He asked at the café on Monday whether the paper was still going. He asked it holding the paper. He then read the weather aloud to the table, disagreed with it, and went out without the coat.',
+                    'He came in Tuesday to say he had heard it was two years, and to ask whether there would be a photograph. He had brought the hat. He was asked to come back at three. He is five minutes away.',
                 ],
                 signature: 'The editor',
             },
