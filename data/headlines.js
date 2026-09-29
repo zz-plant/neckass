@@ -49,7 +49,7 @@
         'Neckass has sent a screenshot of a text to the person who sent the text',
         'Neckass has said "is it only Tuesday" to three people. It was Wednesday.',
         'Neckass sent a three-page agenda for a "low-stakes hang"',
-        'Neckass ordered fries on the side of a salad he did not eat',
+        'Neckass ordered the salad "to be good" and ate the fries of the man beside him',
         "Neckass's habit tracker records one habit: opening the habit tracker",
         'Neckass has responded "maybe" to his own birthday',
         'Neckass bought a succulent because "you can\'t kill them." Nine days.',

@@ -489,7 +489,7 @@
             correction:
                 'We reported the phone at one percent. It died during the conversation about the charger.',
             followUp:
-                'Neckass has charged the phone to 100 percent overnight and left it on the counter.',
+                'Neckass has charged the phone to 100 percent overnight and has spent the day at 100, saying he does not want to use it up.',
             classified:
                 'LOST: a phone at one percent. It is somewhere in the house and it is now at zero.',
             letter: {
@@ -938,7 +938,7 @@
         'Rain. Neckass has said "it\'ll pass." It will, in November.',
         'Clear and cold. Neckass has called it "the good kind of cold." He is inside.',
         'Showers. Neckass is carrying the umbrella. It is closed. He is wet.',
-        'Bright. Neckass told the forecaster it would be bright. The forecaster had told him, on Tuesday.',
+        'Bright. Neckass predicted this on Tuesday, having read it in the forecast.',
         'Rain all day. Neckass has planned a walk for "when it clears."',
         'Hot. Neckass has been told it is hot and has gone outside to check.',
         'Rain. Neckass has checked the radar, said "it\'s moving away," and been rained on.',
@@ -961,7 +961,7 @@
         'NOTICE: this column no longer accepts ads from Neckass. He placed nine last week, all "WANTED: motivation."',
         'WANTED: someone to smell some leftovers. They are nine days old. Urgent.',
         'FOR SALE: standing desk, barely used, as the owner sat at it.',
-        'FREE: batteries, wrong size. Have been in a car since March.',
+        'FREE: batteries, wrong size, bought "for the remote." The remote takes the other kind.',
         'FOR SALE: air fryer, used once, for toast.',
         'WANTED: the end of a sentence beginning "long story short." Began Tuesday.',
         'FOR SALE: noise-cancelling headphones. Owner talks over them.',
@@ -972,7 +972,7 @@
         'SERVICES: will explain your movie to you. Have seen the first ten minutes.',
         'NOTICE: the "quick call" is not quick. See also the "quick question."',
         'FOR SALE: a planner, 2024. January is full.',
-        'FOR SALE: umbrella, unused, currently in a car.',
+        'FOUND: an umbrella, open, in a hallway, indoors. Owner says it was raining earlier.',
         'LOST: Wednesday. Owner spent it believing it was Tuesday.',
         'FOR SALE: fan, boxed, bought in a heat wave and opened in October.',
         'LOST: the second earbud. Owner has checked the case four times.',
@@ -1087,7 +1087,7 @@
             signature: 'The café',
         },
         {
-            body: 'I was in the seat behind his on the 8:04, the day he was "on the train." His seat was empty. It is not his seat.',
+            body: 'I ride the 8:04 every day. He says he is on it. I know everyone on it, including the man who is always asleep, and I have never seen him.',
             signature: 'A commuter',
         },
         {
