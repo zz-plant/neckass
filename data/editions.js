@@ -21,13 +21,13 @@
             tag: 'First edition',
             lead: {
                 headline:
-                    'Neckass has said he will "get into running." It is the fourth September he has said it.',
+                    'Neckass said he will "get into running." It is the fourth September he has said it.',
                 deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
                 byline: 'Staff report',
                 correction:
                     'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
                 followUp:
-                    'Neckass has run. He ran to the end of Orchard Lane and walked back, and has described the walk back as "the cool-down."',
+                    'Neckass went for a run. He ran to the end of Orchard Lane and walked back, and has described the walk back as "the cool-down."',
                 classified:
                     'FOR SALE: running shoes, three pairs, all one size. Boxes included, one empty.',
                 letter: {
@@ -58,13 +58,13 @@
             tag: 'Hundredth issue',
             lead: {
                 headline:
-                    'Neckass has told the Gazette that being in it every day is "a lot." He has read four of them.',
+                    'Neckass told the Gazette that being in it every day is "a lot." He has read four of them.',
                 deck: 'He came to the office Friday to ask that the paper stop. He stayed forty minutes. He has appeared in one hundred issues and read four, one of them twice.',
                 byline: 'Staff report',
                 correction:
                     'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
                 followUp:
-                    'Neckass has collected the scarf. He asked again that the paper stop. He was in the office thirty-five minutes, which is an improvement.',
+                    'Neckass collected the scarf. He asked again that the paper stop. He was in the office thirty-five minutes, which is an improvement.',
                 classified:
                     'FOUND: a scarf, left at the Gazette office by a man asking that the paper stop. He has since called to ask whether we have it, and whether we have stopped.',
                 letter: {
@@ -86,13 +86,13 @@
             tag: 'The hat',
             lead: {
                 headline:
-                    'Neckass has bought a hat and been reported to the Gazette as a second neckass',
+                    'Neckass bought a hat and was reported to the Gazette as a second neckass',
                 deck: 'A neighbor called the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
                 byline: 'From wire reports',
                 correction:
                     "We reported that the hat is new. It is his father's. He has had it since March and worn it since Saturday.",
                 followUp:
-                    'Neckass has worn the hat a second day. No further reports of a second man have been received. The neighbor has asked us to say she "still sees it."',
+                    'Neckass wore the hat a second day. No further reports of a second man have been received. The neighbor has asked us to say she "still sees it."',
                 classified:
                     'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the package.',
                 letter: {
@@ -120,9 +120,9 @@
                 correction:
                     'We reported that Neckass steps over the paper. He steps on it.',
                 followUp:
-                    'Neckass has picked up one of the 365 papers. It was a Tuesday from March. He has read the weather.',
+                    'Neckass picked up one of the 365 papers. It was a Tuesday from March. He has read the weather.',
                 classified:
-                    'FOR SALE: 365 newspapers, unread, stacked inside a door. Buyer collects. Buyer will have to knock; the door does not open all the way.',
+                    'FOR SALE: 365 newspapers, unread, stacked inside a door. Pickup only. Buyer will have to knock; the door does not open all the way.',
                 letter: {
                     body: 'A year. I wanted to say something about the year. He borrowed my ladder in October.',
                     signature: 'A neighbor',
@@ -142,7 +142,7 @@
             tag: 'Second anniversary',
             lead: {
                 headline:
-                    'Neckass has asked whether the Gazette is "still going." This is the 731st issue.',
+                    'Neckass asked whether the Gazette is "still going." This is the 731st issue.',
                 deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
                 byline: 'From wire reports',
                 correction:
