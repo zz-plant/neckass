@@ -316,8 +316,9 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(second.corrections[1]).toBe(first.lead.correction);
         expect(second.editorial).toBeNull();
 
-        // An ordinary issue carries no editorial.
-        await page.goto(BASE_URL);
+        // An ordinary issue carries no editorial. No. 2 is one; today is
+        // not always (on an anniversary the front page is a landmark).
+        await page.goto(`${BASE_URL}?issue=2024-09-30`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
         await expect(page.locator('#editorial')).toBeHidden();
     });

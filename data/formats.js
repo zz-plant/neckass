@@ -140,7 +140,7 @@
             deck: 'He said "basically never," then described a "grippy, mineral" red he had "on a Tuesday, as one does."',
             byline: 'From wire reports',
             correction:
-                'We said Neckass "basically never drinks." He has asked us to note that he said "basically," and to include the vintage.',
+                'We said Neckass "basically never drinks." He said "basically." He then named the vintage.',
             followUp:
                 'Neckass\'s doctor has written "drinks" on the file. He has asked to see the file, and to add a vintage.',
             classified: 'FREE: advice about wine. One fact, repeated.',
@@ -209,8 +209,8 @@
             classified:
                 'WANTED: a definition of "neckass." Will accept "you know."',
             letter: {
-                body: 'In forty years I never managed to define "neckass." Your paper has not either, in seven hundred issues. I find that reassuring.',
-                signature: 'A retired lexicographer',
+                body: 'I asked him what a neckass is. He said "you know." I said I did not. He said "well, exactly."',
+                signature: 'A new colleague',
             },
         },
         {
@@ -849,10 +849,10 @@
     ];
 
     // Standalone corrections, drawn alongside the routine one and the one
-    // chained to yesterday's lead. Two shapes: the paper conceding it
-    // overstated him ("we reported that he cooked; he assembled"), and the
-    // paper answering him — he writes in, and the correction column is where
-    // it declines. Corrections use the honorific; the news pages do not.
+    // chained to yesterday's lead. The paper concedes it overstated him ("we
+    // reported that he cooked; he assembled") and the retracted detail is
+    // something he did. The joke is never the paper's posture; he is the
+    // one doing the thing, including when the thing is disputing the item.
     data.CORRECTIONS = [
         'The Gazette reported that Neckass arrived at eight. He arrived at eight, realized he had forgotten his keys, and arrived again at 8:50.',
         'A previous item referred to "Neckass\'s book." It is a library book, due in March. It is now September.',
@@ -882,7 +882,7 @@
         'The Gazette said Neckass had tidied. He had moved things to a different room.',
         'We said Neckass declined. He did not reply, which he considers declining.',
         'An item reported Neckass as looking into it. He has opened one tab.',
-        "We reported that Neckass had learned his lesson. He has not. Yesterday's edition should not have said so.",
+        'We reported that Neckass had learned his lesson. He said so. He has since done it again, and said so again.',
         'We reported that Neckass was on hold for an hour. The call was answered after four minutes. He was talking.',
         'The Gazette said Neckass had "reached out." He had thought about it.',
         'The Gazette said Neckass read the message. His phone said so. He disputes his phone.',
@@ -890,18 +890,18 @@
         'An item said Neckass was "on it." He had opened the email and closed it.',
         'The Gazette said Neckass had "circled back." He had forwarded the email to himself.',
         'We reported that Neckass was working from home. He was at home.',
-        'Mr. Neckass has asked us to note that he was not late on Tuesday. He was late on Tuesday.',
-        "Yesterday's correction was itself incorrect. The shoe was not moved. Nothing has been moved.",
-        'An earlier correction described Mr. Neckass as "doing his best." The Gazette has no basis for this and withdraws it.',
-        'The Gazette reported that Mr. Neckass "had a point." On reflection, he did not.',
-        'We reported that Mr. Neckass was unavailable for comment. He was available. He commented for forty minutes. None of it was usable.',
-        'In Thursday\'s edition we described Mr. Neckass as having "moved on." He has since brought it up.',
-        'Mr. Neckass has asked us to correct the spelling of his name. It is spelled the way he spells it. We have checked with his mother.',
-        'A correction on Monday said the item was one shoe, not two. It is two shoes. We are confident this time.',
-        'Mr. Neckass has written to say he did read the terms and conditions. His letter runs to four pages and does not say what they were.',
-        'We described the tour as a school tour. It was a school tour. Mr. Neckass has asked us to say he was "with a school," and we have declined.',
-        'The Gazette said Mr. Neckass "declined to elaborate." He elaborated. We declined to print it.',
-        'Mr. Neckass has asked that the correction of the 4th be corrected. The correction of the 4th stands.',
+        'We reported that Neckass was late on Tuesday. He was late on Tuesday, and on Wednesday, when he came in to dispute it.',
+        'We reported that Neckass moved the shoe. He picked it up, looked at it, and put it down where it was.',
+        'We described Neckass as "doing his best." He was doing the crossword.',
+        'We reported that Neckass "had a point." It was someone else\'s, made earlier in the meeting, while he was getting coffee.',
+        'We reported that Neckass was unavailable for comment. He was available. He commented for forty minutes, twelve of them about parking.',
+        'We described Neckass as having "moved on." He has since brought it up, twice, to say he had.',
+        "We spelled Neckass's name the way he spelled it on the form. He spelled it a second way further down the form. His mother has confirmed the first.",
+        'We reported one shoe on the floor. There are two. He put the second one there after reading the item, "so it made sense."',
+        'Neckass has written to say he did read the terms and conditions. The letter is four pages and does not say what they were.',
+        'We described the tour as a school tour. It was. Neckass has since said he was "with a school," and named one. It is the one he went to.',
+        'We said Neckass "declined to elaborate." He elaborated, for twenty minutes, in the lot, to the reporter\'s closed car window.',
+        'Neckass has asked that the correction of the 4th be corrected. Asked what was wrong with it, he said he was "getting to that." That was the 9th.',
     ];
 
     // A forecast, and what he will do about it. Sometimes he is right, which
@@ -996,20 +996,20 @@
             signature: 'IT',
         },
         {
-            body: 'Your item said Tuesday. It was Wednesday. Neckass told you Tuesday because he did not know what day it was.',
+            body: 'He told me it was Tuesday, with confidence. It was Wednesday. He then told me my calendar was wrong.',
             signature: 'A reader who was present',
         },
         {
-            body: 'You describe Neckass as "doing too much." He is doing one thing, slowly.',
+            body: 'He says he is doing too much. He is doing one thing, slowly, and stopping to tell me about it.',
             signature: 'A colleague',
         },
         {
-            body: 'I was the second listener of the podcast. It was a misclick. Please stop counting me.',
+            body: 'I was the second listener of the podcast. It was a misclick. He has since messaged to ask what I thought of episode two.',
             signature: 'Name withheld',
         },
         {
-            body: "Monday's correction was wrong. Tuesday's correction of it was also wrong. I no longer read the news, only the corrections.",
-            signature: 'A subscriber of long standing',
+            body: 'He rang my bell to ask whether I had seen his cat. The cat was on his shoulder. He said "not that one."',
+            signature: 'Next door',
         },
         {
             body: 'The octopus documentary was on my account. He watched forty minutes of it and now corrects me about octopuses. I have a degree in this.',
@@ -1020,24 +1020,24 @@
             signature: 'The café',
         },
         {
-            body: 'Your correspondent who "was present" is my husband, and he was not present.',
-            signature: 'The wife of the reader who was present',
+            body: 'He asked to borrow an egg. I said yes. He asked how many I had. I have not seen the carton since.',
+            signature: 'A neighbor',
         },
         {
             body: 'I am at 14. The recycling bin is in my yard again. It is the third time. He says it is the wind. It is not windy.',
             signature: 'Next door',
         },
         {
-            body: 'Your paper reported that he had learned his lesson. Who told you that.',
-            signature: 'Everyone who knows him',
+            body: 'He told me he had learned his lesson. I asked which one. He said "the main one."',
+            signature: 'A colleague',
         },
         {
             body: "I sold him a fan in July. He brought it back in October, still boxed, to return it. It was July's fan.",
             signature: 'A shopkeeper',
         },
         {
-            body: 'I have read this paper for seven hundred issues hoping for one item in which he does the thing he said he would. I will keep reading.',
-            signature: 'A subscriber',
+            body: 'He offered to water my plants while I was away. I was away nine days. He watered them on the first and the ninth. The ninth was for the photograph.',
+            signature: 'A neighbor',
         },
         {
             body: 'I am his mother. He called on Sunday. It was a pocket dial. I listened for eleven minutes. He was ordering a sandwich, and he was very polite about it. He sounded well.',
@@ -1060,7 +1060,7 @@
             signature: 'The town clerk',
         },
         {
-            body: 'Your item said he was "at the gym." I run the gym. He was in the lot. He is often in the lot. He has a good spot.',
+            body: 'He says he goes to the gym. I run the gym. He was in the lot. He is often in the lot. He has a good spot.',
             signature: 'The gym',
         },
         {
