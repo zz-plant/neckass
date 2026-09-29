@@ -96,7 +96,7 @@
             followUp:
                 'Neckass has added a fifth alarm, at 6:45, labeled "last one." He has slept through five.',
             classified:
-                'WANTED: neighbor whose alarm does not go off at 5 and get ignored until 6.',
+                'WANTED: earplugs, heavy duty. Alarms next door go at 5:30, 5:35 and 5:40, and nobody wakes.',
             letter: {
                 body: 'I am next door at 14. His alarms go at 5:30, 5:35, 5:40 and 6:30. Mine goes at seven. I have been up at 5:30 for a year.',
                 signature: 'Next door',
@@ -140,7 +140,7 @@
             deck: 'He said "basically never," then described a "grippy, mineral" red he had "on a Tuesday, as one does."',
             byline: 'From wire reports',
             correction:
-                'We quoted Neckass describing a red as "grippy, mineral." He said "grippy, minerally."',
+                'We said Neckass "basically never drinks." He has asked us to note that he said "basically," and to include the vintage.',
             followUp:
                 'Neckass\'s doctor has written "drinks" on the file. He has asked to see the file, and to add a vintage.',
             classified: 'FREE: advice about wine. One fact, repeated.',
@@ -157,7 +157,7 @@
             correction:
                 'We reported two visits to the gym. One was to cancel. He left with a second membership.',
             followUp:
-                'Neckass has been to the gym a third time. He used the vending machine and left.',
+                'Neckass has been to the gym a third time. He reached the vending machine and has asked whether that counts as two.',
             classified:
                 'FOR SALE: gym bag, unused. Matching membership available.',
             letter: {
@@ -200,7 +200,7 @@
         {
             headline:
                 'Asked what a neckass is, Neckass said "you know, a neckass"',
-            deck: 'Asked again, he said it more slowly.',
+            deck: 'Asked again, he said it more slowly, then nodded, as if that settled it.',
             byline: 'From wire reports',
             correction:
                 'We reported that Neckass said it more slowly the second time. He said it louder.',
@@ -301,7 +301,7 @@
             correction:
                 'We said he explained the ending. He explained the ending of a different film.',
             followUp:
-                'The person who recommended the film has watched the one Neckass described instead. It was not the one they recommended. It was fine.',
+                'The person who recommended the film has watched the one Neckass described instead. It was not the one they recommended. It was better. He has been told and has said he knew.',
             classified:
                 'SEEKING: the person who recommended the film. He would like to explain it to you.',
             letter: {
@@ -395,7 +395,7 @@
             correction:
                 'We said nine books. There is a tenth, about finishing things, with a bookmark on page one.',
             followUp:
-                'Neckass has bought an eleventh book. He has read the back of it and told two people about it.',
+                'Neckass has bought an eleventh book, about reading more. He has read the back and told two people it changed his life.',
             classified:
                 'FOR SALE: nine books, page one creased. Pages two onward as new.',
             letter: {
@@ -455,7 +455,8 @@
                 'Neckass has agreed with two people who were disagreeing with each other',
             deck: 'He agreed with the first, then the second, in the same conversation. Both noticed.',
             byline: 'Staff report',
-            correction: 'We said both parties noticed. All four did.',
+            correction:
+                'We said both parties noticed. A third person, present throughout, also noticed, and was agreed with, briefly.',
             followUp:
                 'Neckass has been asked which of the two he agreed with. He said "both had a point." Both have stopped speaking to him.',
             classified:
@@ -566,7 +567,7 @@
             deck: 'He said "that\'s great" in the chair, and "yeah, no, great" at the register.',
             byline: 'Staff report',
             correction:
-                'We said Neckass has not looked in a mirror. He has, in a shop window, and walked into someone.',
+                'We reported that Neckass said "that\'s great" twice. He said it three times. The third was to the mirror, and quieter.',
             followUp:
                 'Neckass has worn a hat for a day and said the hat is "a look."',
             classified:
@@ -825,7 +826,7 @@
             classified:
                 'WANTED: three people free on a Friday. Fourth will confirm on the day, and may not.',
             letter: {
-                body: 'We did it more often. We did it three times. He came once. He said we should do it more often to the two of us who had been there all three times.',
+                body: 'He cancelled twice, came the third time, and told us at the end that we should do this more often. We have done it three times. He was at one.',
                 signature: 'A former neighbor',
             },
         },
@@ -982,7 +983,7 @@
         'FREE: half a bag of salad, best before yesterday, described by owner as "probably fine."',
         'LOST: the thread of a conversation, forty minutes in.',
         'FOR SALE: the rest of a meal. He said he would just have a bite.',
-        'LOST: the receipt you are going to need. It went past the window.',
+        'LOST: the receipt you will need. It was in the bag you threw away.',
         'FOUND: a shirt, being chosen, for one hour. Owner said he was on his way.',
     ];
 

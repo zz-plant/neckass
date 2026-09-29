@@ -58,7 +58,7 @@ export default [
     },
     {
         headline: 'Asked what a neckass is, Neckass said "you know, a neckass"',
-        deck: 'Asked again, he said it more slowly.',
+        deck: 'Asked again, he said it more slowly, then nodded, as if that settled it.',
     },
     {
         headline:
