@@ -383,6 +383,10 @@ a:not(.top-nav a):hover {
     padding-left: 1.15em;
 }
 
+ol.about-list {
+    list-style: decimal;
+}
+
 .about-list li::marker {
     color: var(--muted);
 }

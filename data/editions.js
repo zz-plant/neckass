@@ -104,7 +104,7 @@
             // paper applied the word to someone else, and took it back.
             corrections: [
                 "A caption in Friday's edition misidentified the bandstand. It is the bandstand in Depot Park, not the one at the school.",
-                'We reported a second man on Orchard Lane, in a hat. It was Neckass. He had walked past his own house twice, in the hat, to "see how it looked from the road."',
+                'We reported a second neckass on Orchard Lane, in a hat. There is one. He had walked past his own house twice, in the hat, to "see how it looked from the road."',
                 'Neckass was shown the report of a second man and said he had "seen him too." He was wearing the hat at the time.',
                 'We said the hat has been worn since Saturday. It was worn Friday, at dinner, indoors, until he was asked.',
             ],
