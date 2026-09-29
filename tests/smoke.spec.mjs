@@ -525,7 +525,7 @@ test.describe('The Corbin Falls Gazette', () => {
         const page = await request.get(`${EDGE_URL}?issue=2025-01-06`);
         expect(page.ok()).toBe(true);
         const html = await page.text();
-        expect(html).toContain('<title>Neckass has told the Gazette');
+        expect(html).toContain('<title>Neckass told the Gazette');
         expect(html).toContain(
             '<meta property="og:image" content="https://neckass.com/card.png?issue=2025-01-06">',
         );

@@ -34,7 +34,7 @@
         {
             on: { weekday: 0 },
             section: 'briefs',
-            item: 'Neckass has said Sunday is "for resetting." He has reset by watching nine episodes of a show he says he does not like.',
+            item: 'Neckass said Sunday is "for resetting." He has reset by watching nine episodes of a show he says he does not like.',
         },
 
         // ---- The council: first and third Tuesday ----------------------
@@ -63,19 +63,19 @@
         {
             on: { special: 'lastDayOfMonth' },
             section: 'briefs',
-            item: 'Neckass has said he will start on the first. It is the last day of the month. He has said it on each of them.',
+            item: 'Neckass said he will start on the first. It is the last day of the month. He has said it on each of them.',
         },
         {
             on: { special: 'friday13' },
             section: 'briefs',
-            item: 'Neckass has said he is "not superstitious" and has not left the house.',
+            item: 'Neckass said he is "not superstitious" and has not left the house.',
         },
 
         // ---- The year -------------------------------------------------
         {
             on: { month: 1, day: 1 },
             section: 'briefs',
-            item: 'Neckass has announced his resolutions for {year}. They are last year’s, with the year changed.',
+            item: 'Neckass announced his resolutions for {year}. They are last year’s, with the year changed.',
         },
         {
             on: { month: 1, day: 1 },
@@ -85,7 +85,7 @@
         {
             on: { month: 1, day: 2 },
             section: 'briefs',
-            item: 'Neckass has described January 1 as "a practice day" and started the resolutions again from today.',
+            item: 'Neckass described January 1 as "a practice day" and started the resolutions again from today.',
         },
         {
             on: { month: 2, day: 14 },
@@ -95,7 +95,7 @@
         {
             on: { special: 'leapDay' },
             section: 'briefs',
-            item: 'Neckass has said he is "technically only nine." He was not born on a leap day. Nobody had asked.',
+            item: 'Neckass said he is "technically only nine." He was not born on a leap day. Nobody had asked.',
         },
         {
             on: { special: 'birthday' },
@@ -118,7 +118,7 @@
         {
             on: { special: 'dstStart' },
             section: 'briefs',
-            item: 'The clocks went forward overnight. Neckass has changed one clock. It was the one on the oven, which was already right.',
+            item: 'The clocks went forward overnight. Neckass changed one clock. It was the one on the oven, which was already right.',
         },
         {
             on: { dayAfter: { special: 'dstStart' } },
@@ -128,17 +128,17 @@
         {
             on: { month: 3, day: 20 },
             section: 'briefs',
-            item: 'Neckass has declared it spring. It is 39 degrees. He is in shorts.',
+            item: 'Neckass declared it spring. It is 39 degrees. He is in shorts.',
         },
         {
             on: { month: 4, day: 1 },
             section: 'briefs',
-            item: 'Neckass has attempted an April Fool’s joke on the office. He explained it first.',
+            item: 'Neckass attempted an April Fool’s joke on the office. He explained it first.',
         },
         {
             on: { month: 4, day: 15 },
             section: 'briefs',
-            item: 'Neckass has filed his taxes at 11:52 p.m. He has described this as "early, for me."',
+            item: 'Neckass filed his taxes at 11:52 p.m. He has described this as "early, for me."',
         },
         {
             on: { weekday: 1, last: true, month: 5 },
@@ -148,12 +148,12 @@
         {
             on: { weekday: 1, last: true, month: 5 },
             section: 'briefs',
-            item: 'Neckass has put the trash out. It is a holiday. He has been told twice and has said "they might still come."',
+            item: 'Neckass put the trash out. It is a holiday. He has been told twice and has said "they might still come."',
         },
         {
             on: { month: 6, day: 21 },
             section: 'briefs',
-            item: 'Neckass has said "the nights are drawing in now." It is the longest day of the year.',
+            item: 'Neckass said "the days are already getting shorter." It is the longest day of the year.',
         },
         {
             on: { month: 7, day: 4 },
@@ -173,7 +173,7 @@
         {
             on: { weekday: 1, nth: [1], month: 9 },
             section: 'briefs',
-            item: 'Neckass has said "well, that’s the summer over." He said it on July 9 as well.',
+            item: 'Neckass said "well, summer’s over." He said it on July 9 as well.',
         },
         {
             on: { special: 'anniversary' },
@@ -189,7 +189,7 @@
         {
             on: { month: 10, day: 31 },
             section: 'briefs',
-            item: 'Neckass has answered the door to trick-or-treaters with nothing in the house. He has offered a banana and been declined.',
+            item: 'Neckass answered the door to trick-or-treaters with nothing in the house. He has offered a banana and been declined.',
         },
         {
             on: { month: 10, day: 31 },
@@ -204,12 +204,12 @@
         {
             on: { special: 'electionDay' },
             section: 'briefs',
-            item: 'Neckass has voted and asked the poll worker whether he got it right. She said she could not say. He has taken this as a no.',
+            item: 'Neckass voted and asked the poll worker whether he got it right. She said she could not say. He has taken this as a no.',
         },
         {
             on: { special: 'dstEnd' },
             section: 'briefs',
-            item: 'The clocks went back overnight. Neckass has told four people about the extra hour and spent it looking for the manual for the car clock.',
+            item: 'The clocks went back overnight. Neckass told four people about the extra hour and spent it looking for the manual for the car clock.',
         },
         {
             on: { special: 'thanksgiving' },
@@ -229,7 +229,7 @@
         {
             on: { month: 12, day: 24 },
             section: 'briefs',
-            item: 'Neckass has begun his Christmas shopping. The stores close at five.',
+            item: 'Neckass began his Christmas shopping. The stores close at five.',
         },
         {
             on: { month: 12, day: 25 },
@@ -239,12 +239,12 @@
         {
             on: { month: 12, day: 25 },
             section: 'briefs',
-            item: 'Neckass has received a gift he gave someone last year. He has said "oh, nice" and asked where they found it.',
+            item: 'Neckass received a gift he gave someone last year. He has said "oh, nice" and asked where they found it.',
         },
         {
             on: { month: 12, day: 31 },
             section: 'briefs',
-            item: 'Neckass has said {year} was "a building year" and that {lastYear} was too.',
+            item: 'Neckass said {year} was "a building year" and that {lastYear} was too.',
         },
     ];
 })();
