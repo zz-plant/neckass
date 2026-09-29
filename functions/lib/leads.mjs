@@ -115,8 +115,9 @@ export default [
         deck: 'It needs a battery. He describes the chirping as "on and off." It is on.',
     },
     {
-        headline: 'Neckass has read the first page of nine books this year',
-        deck: 'He owns nine books bought this year. Page one of each is creased. No page two is.',
+        headline:
+            'Neckass has requested $3 on Cash App from a friend he owes $40',
+        deck: 'The note on the request says "gas." The friend was driving. The $40 has been owed since the Fourth of July.',
     },
     {
         headline:
@@ -173,14 +174,13 @@ export default [
         deck: 'He was not reading it. He called four hours later, after a second message.',
     },
     {
-        headline:
-            'Neckass has been quietly following the wrong group around a museum',
-        deck: 'He joined at the entrance. It was a school group. He listened for forty minutes.',
+        headline: 'Neckass reneged in spades and has blamed his partner',
+        deck: 'He cut with a heart while holding the queen of hearts. The table caught it on the next trick. He asked his partner why she led a heart.',
     },
     {
         headline:
-            'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
-        deck: 'The book is 140 pages. He renews by phone and says he is "nearly done." The library has stopped asking.',
+            'Neckass brought store-bought potato salad to the cookout in a bowl from home',
+        deck: "He took the lid off at the curb, put it in his mother's bowl, and added paprika. He told four people it was his recipe. The receipt was in the bag.",
     },
     {
         headline:
@@ -204,8 +204,8 @@ export default [
     },
     {
         headline:
-            'Neckass has bought a whiteboard to get organized and has written "get organized" on it',
-        deck: 'It has said "get organized" since April, in his handwriting, with a box beside it. The box is not checked.',
+            'Neckass took the aux and has played the first thirty seconds of eleven songs',
+        deck: 'He asked for the aux at 9:40 and said he had "a vibe." He skipped every song he chose, including one he said was "about to go crazy." It did not go.',
     },
     {
         headline:
@@ -217,9 +217,8 @@ export default [
         deck: 'The invitation went out from his account on Monday. He responded on Tuesday. The host is listed as "maybe."',
     },
     {
-        headline:
-            'Neckass has explained the rules of a game to the person who owns the game',
-        deck: 'They had played it 200 times. He had played it once, on Tuesday, and lost. He explained for eleven minutes and got two rules wrong.',
+        headline: 'Neckass has explained 2K to the person who owns the console',
+        deck: 'His cousin has played it every night since 2019. Neckass had played once, on Tuesday, and lost by 40. He explained for eleven minutes and got the buttons wrong.',
     },
     {
         headline:

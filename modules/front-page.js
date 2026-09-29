@@ -160,7 +160,7 @@
         listInto('#letters-list', issue.letters, (li, letter) => {
             const body = document.createElement('p');
             body.className = 'letter-body';
-            body.textContent = `Sir — ${letter.body}`;
+            body.textContent = letter.body;
             const signature = document.createElement('p');
             signature.className = 'letter-signature';
             signature.textContent = `— ${letter.signature}`;

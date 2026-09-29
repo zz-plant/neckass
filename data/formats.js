@@ -78,12 +78,12 @@
             correction:
                 'Eleven openings, not twelve: he has since gone back for the twelfth and eaten a slice of cheese standing up.',
             followUp:
-                'The fridge is full again after a shop. He has opened it twice since and said there is nothing in it.',
+                'The fridge is full again after a grocery run. He has opened it twice since and said there is nothing in it.',
             classified:
                 'FOR SALE: fridge, full. Owner opens it eleven times a night and reports it empty.',
             letter: {
                 body: 'The fridge has been open six minutes, three times this week, and each time he says "there\'s nothing in here." It is full. I did the shopping.',
-                signature: 'His housemate',
+                signature: 'His roommate',
             },
         },
         {
@@ -273,7 +273,7 @@
                 'WANTED: someone to look behind the couch. Reward: a charger.',
             letter: {
                 body: 'There are five chargers in the apartment. Two are behind the couch. He knows this. He has ordered a sixth.',
-                signature: 'His housemate',
+                signature: 'His roommate',
             },
         },
         {
@@ -388,18 +388,19 @@
             },
         },
         {
-            headline: 'Neckass has read the first page of nine books this year',
-            deck: 'He owns nine books bought this year. Page one of each is creased. No page two is.',
-            byline: 'From wire reports',
+            headline:
+                'Neckass has requested $3 on Cash App from a friend he owes $40',
+            deck: 'The note on the request says "gas." The friend was driving. The $40 has been owed since the Fourth of July.',
+            byline: 'Staff report',
             correction:
-                'Ten books, not nine. The tenth, about finishing things, has a bookmark on page one.',
+                'We reported the request was for $3. It was $3.50. The note says "gas + tip."',
             followUp:
-                'Neckass has bought an eleventh book, about reading more. He has read the back and told two people it changed his life.',
+                'Neckass has paid back $5 of the $40, with the note "we even?"',
             classified:
-                'FOR SALE: nine books, page one creased. Pages two onward as new.',
+                'SEEKING: $40, owed since July 4. Will accept payment in any form except a request.',
             letter: {
-                body: 'I gave him nine books. He has creased nine first pages. I would like the books back.',
-                signature: 'The lender of the books',
+                body: 'He owes me $40. On Tuesday I got a request from him for $3, "gas." He was in my passenger seat. I was driving. It was my gas.',
+                signature: 'A friend, $40 down',
             },
         },
         {
@@ -446,7 +447,7 @@
                 'LOST: four screws. The shelf is up. Do not tell the owner.',
             letter: {
                 body: 'The shelf came down on Sunday. There were six screws left over, not four. I would like this printed.',
-                signature: 'His housemate',
+                signature: 'His roommate',
             },
         },
         {
@@ -556,7 +557,7 @@
                 'FOUND: one shoe, middle of a floor. Owner has cleaned around it for five weeks.',
             letter: {
                 body: 'The shoes have been there five weeks. I moved one, to see. He moved it back.',
-                signature: 'His housemate',
+                signature: 'His roommate',
             },
         },
         {
@@ -592,35 +593,34 @@
             },
         },
         {
-            headline:
-                'Neckass has been quietly following the wrong group around a museum',
-            deck: 'He joined at the entrance. It was a school group. He listened for forty minutes.',
+            headline: 'Neckass reneged in spades and has blamed his partner',
+            deck: 'He cut with a heart while holding the queen of hearts. The table caught it on the next trick. He asked his partner why she led a heart.',
             byline: 'Staff report',
             correction:
-                'Forty minutes, and one question, about the Romans, on a tour about the Victorians.',
+                'We reported that Neckass reneged once. He reneged twice. The second time was while explaining the first.',
             followUp:
-                'Neckass wrote to the museum about the Romans. The museum replied that the tour was about the Victorians and that he was not on it.',
+                'Neckass has asked for a rematch with a new partner. He has asked the same partner.',
             classified:
-                'NOTICE: the museum would like to know who the adult at the back of the school tour was.',
+                'WANTED: spades partner. Must be able to count to thirteen. Current partner counts to eleven and has opinions about the other two.',
             letter: {
-                body: 'I teach at the primary. I was leading the tour. The man at the back asked a question about the Romans. He was not with us. The children have asked whether he is coming next time.',
-                signature: 'A teacher at the primary',
+                body: 'I have been his partner since 2014. He talks across the table, he slaps every card, and on Saturday he reneged and asked me why I led a heart. I did not lead a heart.',
+                signature: 'His spades partner, since 2014, for now',
             },
         },
         {
             headline:
-                'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
-            deck: 'The book is 140 pages. He renews by phone and says he is "nearly done." The library has stopped asking.',
+                'Neckass brought store-bought potato salad to the cookout in a bowl from home',
+            deck: "He took the lid off at the curb, put it in his mother's bowl, and added paprika. He told four people it was his recipe. The receipt was in the bag.",
             byline: 'Staff report',
             correction:
-                'Page nine has the bookmark. The crease is on page four.',
+                'We reported that Neckass added paprika. He added raisins. Nobody has eaten it.',
             followUp:
-                'The library book went back. A second book about Mars went out, and the first was "a bit long."',
+                'Neckass has been asked to bring ice to the next cookout. He has asked what kind.',
             classified:
-                'WANTED: anyone who has finished a book about Mars, to say how it ends. 140 pages. Owner is on page nine.',
+                "FOUND: a bowl of potato salad, untouched, at Saturday's cookout on Mill Street. The bowl belongs to his mother, who would like it back. The potato salad can stay.",
             letter: {
-                body: 'I run the library. He renews it by phone, monthly, and each time says he is nearly done. I have started saying "good" in a way he has not noticed.',
-                signature: 'The library',
+                body: 'I am his auntie. I know every potato salad in this family by sight. That one came from the store on Route 9, he put raisins in it, and he looked me in my face.',
+                signature: 'His auntie',
             },
         },
         {
@@ -651,7 +651,7 @@
             classified: 'FOR SALE: a thermostat. Works. Owner has set it once.',
             letter: {
                 body: 'The heat has been on since October. I have slept with the window open since November. We have not discussed it. He has left a note.',
-                signature: 'His housemate',
+                signature: 'His roommate',
             },
         },
         {
@@ -688,18 +688,18 @@
         },
         {
             headline:
-                'Neckass has bought a whiteboard to get organized and has written "get organized" on it',
-            deck: 'It has said "get organized" since April, in his handwriting, with a box beside it. The box is not checked.',
-            byline: 'Staff report',
+                'Neckass took the aux and has played the first thirty seconds of eleven songs',
+            deck: 'He asked for the aux at 9:40 and said he had "a vibe." He skipped every song he chose, including one he said was "about to go crazy." It did not go.',
+            byline: 'From wire reports',
             correction:
-                'The whiteboard has two items. The second, underneath, added in June, says "whiteboard."',
+                'We said eleven songs. It was twelve. The twelfth was a voice note he played by accident, to the whole car.',
             followUp:
-                'The box is checked. He has not gotten organized. The check is "for buying the whiteboard."',
+                'Neckass has been given the aux back on the condition that he does not touch it. He has asked if he can queue.',
             classified:
-                'FOR SALE: whiteboard, one item on it. Item included. Pen dried out.',
+                "WANTED: someone to hold the aux at Saturday's function. Neckass is attending.",
             letter: {
-                body: 'I pass the whiteboard to leave the house. It has said "get organized" for five months. It is the most organized thing in the house, and it is a sentence.',
-                signature: 'His housemate',
+                body: 'It was my car. He asked for the aux for one song. He played the start of eleven, said "wait, wait, this one," and then it was his voice note. We all heard it. It was to his barber, rescheduling.',
+                signature: 'The driver',
             },
         },
         {
@@ -735,18 +735,18 @@
         },
         {
             headline:
-                'Neckass has explained the rules of a game to the person who owns the game',
-            deck: 'They had played it 200 times. He had played it once, on Tuesday, and lost. He explained for eleven minutes and got two rules wrong.',
-            byline: 'Staff report',
+                'Neckass has explained 2K to the person who owns the console',
+            deck: 'His cousin has played it every night since 2019. Neckass had played once, on Tuesday, and lost by 40. He explained for eleven minutes and got the buttons wrong.',
+            byline: 'From wire reports',
             correction:
-                'Three rules were wrong, not two. The third was the object of the game.',
+                'We said he got the buttons wrong. He got the buttons wrong and held the controller upside down.',
             followUp:
-                'A second game, under his own rules, was lost. He called the rules "a bit off."',
+                'Neckass has played a second game, on his own settings, and lost by 52. He has said the controller "has a delay."',
             classified:
-                'FOR SALE: board game, complete. Rules included. Rules have been explained to owner; owner would like them back.',
+                'FOR SALE: second controller, lightly used, blamed for two losses.',
             letter: {
-                body: 'It is my game. I have played it since I was nine. He explained it and asked if I had "got it." I have had it for thirty years.',
-                signature: 'Next door',
+                body: 'It is my console. I have played since I was nine. He picked up the controller, explained the game to me for eleven minutes, and asked if I had "got it." Then he lost by 40 on rookie.',
+                signature: 'His cousin',
             },
         },
         {
@@ -975,17 +975,17 @@
         'LOST: Wednesday. Owner spent it believing it was Tuesday.',
         'FOR SALE: fan, boxed, bought in a heat wave and opened in October.',
         'LOST: the second earbud. Owner has checked the case four times.',
-        'FREE TO GOOD HOME: opinions about octopuses. One documentary, forty minutes.',
+        'FOR SALE: slides, socks attached. Owner wore them to a wedding and called it "business casual."',
         'SEEKING: a second listener for a podcast. The first has gone.',
         'NOTICE: the recycling bin from No. 12 is in our yard again.',
         'FREE: half a bag of salad, best before yesterday, described by owner as "probably fine."',
-        'LOST: the thread of a conversation, forty minutes in.',
+        'SERVICES: will tell you your lineup is fine. It is not. $5.',
         'FOR SALE: the rest of a meal. He said he would just have a bite.',
         'LOST: the receipt you will need. It was in the bag you threw away.',
-        'FOUND: a shirt, being chosen, for one hour. Owner said he was on his way.',
+        "NOTICE: Saturday's function is BYOB. This means bring your own. It does not mean bring a cup and stand by the cooler.",
     ];
 
-    // Letters not tied to a lead. The correspondents recur — his housemate,
+    // Letters not tied to a lead. The correspondents recur — his roommate,
     // his mother, next door, the café — and are signed by what they are to
     // him, not by name. The paper has one subject; the rest are witnesses.
     data.LETTERS = [
@@ -1010,8 +1010,8 @@
             signature: 'Next door',
         },
         {
-            body: 'The octopus documentary was on my account. He watched forty minutes of it and now corrects me about octopuses. I have a degree in this.',
-            signature: 'A former friend',
+            body: 'I am in the group chat. He sends a TikTok, then, a minute later, "this is literally you." It is never me. It is usually him.',
+            signature: 'The group chat',
         },
         {
             body: 'I own the café. There are four of us. None of us is called chief. One of us has a badge that says Kai, in capitals, at eye level.',
@@ -1043,15 +1043,15 @@
         },
         {
             body: 'I live with him. He has started leaving me notes. The latest says "we should talk about the kitchen." We share the kitchen. I was in it when he wrote the note.',
-            signature: 'His housemate',
+            signature: 'His roommate',
         },
         {
-            body: 'I run the library. He has had the same book out since March and renews it by phone, monthly, "nearly done." It is a book about Mars. It is 140 pages.',
-            signature: 'The library',
+            body: 'He called next at the court on Sunday. When it was his turn he said his knee was "acting up" and sat in his car with the AC on until we finished. Then he said "good run."',
+            signature: 'The court on Mill Street, Sundays',
         },
         {
-            body: 'I cut his hair. He says "just a little off" and then describes, for four minutes, a different haircut. I do that one. He says "great." Five weeks later: "just a little off."',
-            signature: 'The barber',
+            body: 'He came into the shop with a picture of a man with a different head. I did what I could. He has posted it and tagged me, and the whole shop has seen it, and so has the man in the picture.',
+            signature: 'The barbershop',
         },
         {
             body: 'I am the town clerk. He has come to the counter four times this year to ask what the form is for. It is the form he brought.',
@@ -1066,12 +1066,12 @@
             signature: 'A colleague',
         },
         {
-            body: 'He was on my walking tour on Sunday. He was not on my walking tour. He was walking near it and joined in the questions.',
-            signature: 'The historical society',
+            body: 'He borrowed my hoodie in March. I have seen it three times since, all on his Instagram. He tagged the brand.',
+            signature: 'His cousin',
         },
         {
             body: "He told me the recipe was his grandmother's. It is on the back of the packet. I have the packet.",
-            signature: 'His housemate',
+            signature: 'His roommate',
         },
         {
             body: 'I am his mother. The recipe is not mine. I have never made it. He called to ask how I make it. I said I don\'t. He said "right, but roughly."',
