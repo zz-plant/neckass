@@ -83,7 +83,7 @@ export default [
     {
         headline:
             'Neckass arrived at the restaurant an hour early and waited outside',
-        deck: 'He had the time wrong and did not check. He stood outside for an hour in the rain.',
+        deck: 'He had not checked the time. He stood outside for an hour. It rained.',
     },
     {
         headline:

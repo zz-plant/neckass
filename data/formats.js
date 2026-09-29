@@ -279,7 +279,7 @@
         {
             headline:
                 'Neckass arrived at the restaurant an hour early and waited outside',
-            deck: 'He had the time wrong and did not check. He stood outside for an hour in the rain.',
+            deck: 'He had not checked the time. He stood outside for an hour. It rained.',
             byline: 'From wire reports',
             correction:
                 'The restaurant was the wrong one. He waited outside it for an hour.',
@@ -855,7 +855,7 @@
         'The Gazette reported that Neckass arrived at eight. He arrived at eight, realized he had forgotten his keys, and arrived again at 8:50.',
         'A previous item referred to "Neckass\'s book." It is a library book, due in March. It is now September.',
         'The Gazette stated that Neckass had finished. He had stopped.',
-        'We reported that Neckass owns a bicycle. He owns a bicycle he has not ridden since buying it in 2022. It is in the hallway.',
+        'We reported that Neckass owns a bicycle. He owns a hallway with a bicycle in it.',
         'An earlier edition quoted Neckass as saying "no worries." There were worries.',
         'The Gazette reported that Neckass fixed the printer. He turned it off and on. It is still broken.',
         'A photograph on Monday was captioned "Neckass, thinking." He was looking at his phone.',
@@ -874,7 +874,7 @@
         'The Gazette reported that Neckass remembered. He was reminded twice that morning.',
         'An item stated that Neckass returned the package. He intended to. It is in the car.',
         'The Gazette said Neckass walked. He drove to the walk.',
-        'We said Neckass finished the puzzle. One piece is missing and he has stopped mentioning it.',
+        'We said Neckass finished the puzzle. One piece is missing. He has stopped mentioning it.',
         'An earlier edition described Neckass as happy to help. He said it. He did not help.',
         'We reported that Neckass understood. He nodded.',
         'The Gazette said Neckass had tidied. He had moved things to a different room.',
@@ -907,13 +907,13 @@
     data.WEATHER = [
         'Sunny, according to Neckass, who has not been outside and is going by the window.',
         'Overcast, and "ugh, this weather" in the group chat by noon.',
-        "Mild. The coat is on because yesterday's forecast said cold, and it is staying on.",
+        "Mild. He has dressed for yesterday's forecast.",
         'Rain, twice announced, and no jacket.',
         'Clear, or "basically nice," which is his highest rating.',
         'Cold. "Fine," in shorts.',
-        'Wind, and a picnic that will be moved indoors once the food has left.',
+        'Wind. The picnic will move indoors after the food does.',
         'Fog, and a man walking confidently away from where he is going.',
-        'Unsettled in three forecasts and sunny in the fourth, which is the one he read out.',
+        'Unsettled, according to three forecasts. He read out the fourth.',
         'Bright. The sunglasses are on his head. The search will take twenty minutes.',
         'Drizzle, "not really rain," and wet through by noon.',
         'Cool, with the heat on and a window open.',
@@ -932,7 +932,7 @@
         'Showers. He ran to the car and left the window down.',
         'Sunny intervals, around which the whole day has been planned.',
         'Clear night. Told to look up, he looked at his phone.',
-        'Ice. Told to take it slowly, he is in the driveway.',
+        'Ice. Told to take it slowly, he is taking it slowly, on his back, in the driveway.',
         'Unremarkable. "At least it\'s not raining," four times, to the same person.',
         'Rain, and "it\'ll pass." It will, in November.',
         'Clear and cold, "the good kind," from inside.',
@@ -940,11 +940,11 @@
         'Bright. Neckass predicted this on Tuesday, having read it in the forecast.',
         'Rain all day, and a walk planned for "when it clears."',
         'Hot. Told so, he went outside to check.',
-        'Rain. "It\'s moving away," he said of the radar, from under the rain.',
+        'Rain. "It\'s moving away," he said, checking the radar in the rain.',
         'Clear. "We should get out more," from the couch.',
         'Heat advisory. Blinds closed, fan facing the wall.',
         'Overcast, no rain forecast, coat brought anyway. It rained. He has mentioned this.',
-        'Sun. "We should make the most of it," said indoors, while planning how.',
+        'Sun. "We should make the most of it," he said, and went inside to plan how.',
         'Wind, "picking up," at the speed it has held since Tuesday.',
     ];
 
@@ -953,13 +953,13 @@
     data.CLASSIFIEDS = [
         'FOUND: set of keys, outside the gym. Owner has never been inside.',
         'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
-        'NOTICE FROM IT: the printer is out of paper. It has been out of paper every time. Please check before calling.',
+        'NOTICE FROM IT: before calling about the printer, please check the paper. It has been the paper every time.',
         'WANTED: someone who can end a conversation with Neckass. Nobody has yet.',
         'FOR SALE: exercise bike. Currently a coat rack. Coats included.',
         'LOST: one hour, every morning, between the alarm and getting up.',
         'NOTICE: this column no longer accepts ads from Neckass. He placed nine last week, all "WANTED: motivation."',
         'WANTED: someone to smell some leftovers. They are nine days old. Urgent.',
-        'FOR SALE: standing desk, barely used, as the owner sat at it.',
+        'FOR SALE: standing desk. Sat at.',
         'FREE: batteries, wrong size, bought "for the remote." The remote takes the other kind.',
         'FOR SALE: air fryer, used once, for toast.',
         'WANTED: the end of a sentence beginning "long story short." Began Tuesday.',
@@ -1030,7 +1030,7 @@
             signature: 'A colleague',
         },
         {
-            body: "I sold him a fan in July. He brought it back in October, still boxed, to return it. It was July's fan.",
+            body: 'I sold him a fan in July. He returned it in October, still in the box, because it had turned cold.',
             signature: 'A shopkeeper',
         },
         {
@@ -1086,7 +1086,7 @@
             signature: 'The café',
         },
         {
-            body: 'I ride the 8:04 every day. He says he is on it. I know everyone on it, including the man who is always asleep, and I have never seen him.',
+            body: 'I know everyone on the 8:04, including the man who is always asleep. He says he is on it. I have never seen him.',
             signature: 'A commuter',
         },
         {
