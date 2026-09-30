@@ -59,6 +59,44 @@
         list.closest('section')?.removeAttribute('hidden');
     }
 
+    function monthAnchor(date) {
+        return `month-${Neckass.issue.toIssueParam(date).slice(0, 7)}`;
+    }
+
+    // The run is two years long and growing, so the months are indexed at
+    // the top: a line per year, newest first, each month a link to its head.
+    function monthIndex(months) {
+        const list = document.querySelector('#archive-months');
+        if (!list) return;
+        const years = new Map();
+        for (const [, issues] of months) {
+            const { date } = issues[0];
+            const year = date.getFullYear();
+            if (!years.has(year)) years.set(year, []);
+            years.get(year).push(date);
+        }
+        list.replaceChildren(
+            ...[...years].map(([year, dates]) => {
+                const li = document.createElement('li');
+                const label = document.createElement('span');
+                label.className = 'archive-year';
+                label.textContent = String(year);
+                li.append(
+                    label,
+                    ...dates.map((date) => {
+                        const link = document.createElement('a');
+                        link.href = `#${monthAnchor(date)}`;
+                        link.textContent =
+                            Neckass.issue.AP_MONTHS[date.getMonth()];
+                        return link;
+                    }),
+                );
+                return li;
+            }),
+        );
+        list.closest('nav')?.removeAttribute('hidden');
+    }
+
     function init() {
         const host = document.querySelector('#archive-run');
         if (!host) return;
@@ -75,10 +113,13 @@
             months.get(key).push(issue);
         }
 
+        monthIndex(months);
+
         host.replaceChildren(
             ...[...months].map(([month, list], monthIndex) => {
                 const section = document.createElement('section');
                 section.className = 'archive-month';
+                section.id = monthAnchor(list[0].date);
                 const head = document.createElement('h2');
                 head.className = 'section-label';
                 head.textContent = month;

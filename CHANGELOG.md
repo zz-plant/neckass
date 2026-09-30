@@ -17,7 +17,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A print stylesheet: ink on white, the broadsheet's columns whatever the sheet's width, nothing that only makes sense on a screen.
 - The smoke suite runs the Pages Functions under `wrangler pages dev` alongside the static server and checks the card is a real PNG and the tags point at it.
 
+### Fixed
+- Leads could repeat where two rounds of the pool met: No. 52 and No. 53 ran the same story, and 24 leads came back inside a fortnight. The opening of each round is now kept clear of the last round's closing leads, in the page and at the edge. Past issues whose opening lead collided now carry a different one.
+- The entry and the standards hang their heads in the margin at ≥900px, as specified; the grid columns were set but the block was never made a grid.
+
 ### Changed
+- The lead headline links to the issue's own date, so the page a reader shares is the paper they read. The nameplate links home on every page.
+- The archive opens with a month index under *Of note*; the run was 30 screens long on a desktop and 70 on a phone.
 - The paper has no newsroom. The named staff writers, the editor and the managing editor are gone from the bylines, the editorials and the colophon, which reads *Editor-in-chief: vacant. Wire desk: unattended. Corrections: ongoing.* Leads are filed by *Staff report* or *From wire reports*.
 - An editorial pass over every pool. Briefs that described without turning were rewritten to turn, or cut, and a dozen were added about what people do now: the message left on "seen," the thumbs-up to bad news, the voice note at double speed, the long reply deleted for "ok," the camera off "for bandwidth." Two leads were replaced — three ran the same joke about not leaving — with the nine-minute voice note and the eleven days on "seen." Decks and letters that took three sentences to land were cut to the one that lands. The classifieds pool lost the eight ads that only restated a lead's own ad and gained twelve. The paper stops saying bin, flat, satnav, windscreen, programme, car park and "at the weekend" in a town with a Route 9.
 - A cull. Eighteen briefs that described without turning, or ran the same joke as another brief, three leads with no second beat (cutting back while ordering, standing nearby to help, the photographed menu), a correction, two forecasts, four ads and two letters. Every pool is still several times its deal.

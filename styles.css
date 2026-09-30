@@ -180,14 +180,14 @@ a {
 /* Prose links previously fell through to the browser default, which put
    #0000EE next to a warm newsprint palette. Anything that is already styled
    as a control opts out. */
-a:not(.top-nav a) {
+a:not(.top-nav a, .masthead__plate a, .lead__headline a) {
     color: var(--link);
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
 }
 
-a:not(.top-nav a):hover {
+a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
     color: var(--link-hover);
 }
 
@@ -237,6 +237,13 @@ a:not(.top-nav a):hover {
     white-space: nowrap;
 }
 
+/* The nameplate goes home, as a paper's name does on every site. It keeps
+   the plate's two inks rather than the link colour. */
+.masthead__plate a {
+    color: inherit;
+    text-decoration: none;
+}
+
 .masthead__kicker {
     color: var(--muted);
 }
@@ -255,6 +262,12 @@ a:not(.top-nav a):hover {
     letter-spacing: 0;
     text-transform: none;
     color: var(--text);
+}
+
+.masthead__plate a:hover .masthead__name {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 2px;
 }
 
 .masthead__line {
@@ -360,6 +373,41 @@ a:not(.top-nav a):hover {
 
 .archive-landmarks .about-list {
     margin-top: 0;
+}
+
+/* The month index: the year in the folio's small caps, then the months as
+   plain links on one line, the way a bound volume's spine lists them. */
+.archive-months {
+    margin-top: 22px;
+}
+
+.archive-years {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    max-width: none;
+}
+
+.archive-years li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
+    padding: 5px 0;
+    max-width: none;
+    margin-top: 0;
+}
+
+.archive-year {
+    min-width: 3.4em;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.archive-month {
+    scroll-margin-top: 16px;
 }
 
 #archive-run {
@@ -517,6 +565,20 @@ a:focus-visible {
     color: var(--ink-display);
     max-width: 24ch;
     text-wrap: balance;
+}
+
+/* The headline links to the issue's own date. It prints in ink like any
+   headline and only shows it is a link under the pointer. */
+.lead__headline a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.lead__headline a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
 }
 
 /* The deck is set in the display face at its text size. In the body sans
@@ -934,6 +996,7 @@ a:focus-visible {
    heads — the archive, the 404 — stays in one column. */
 @media (min-width: 900px) {
     .seo-copy:has(> .section-label) {
+        display: grid;
         grid-template-columns: 200px minmax(0, 68ch);
         column-gap: 36px;
         align-items: start;

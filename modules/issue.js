@@ -139,19 +139,45 @@
     // inside one, which a draw from the whole pool every day could not
     // promise — with forty-odd leads the same one came round within a
     // fortnight often enough for the archive to show it.
+    //
+    // Each round is its own shuffle, so a round could open on the lead the
+    // last one closed on: No. 52 and No. 53 ran the same story. A lead from
+    // the last `seam` places of the round before is moved out of the first
+    // `seam` places of this one, so the same lead is always more than
+    // `seam` days apart. The tail of a round is never moved, which is what
+    // lets the previous round be read without fixing it first.
+    function shuffledRound(round, size) {
+        const rng = createRng(round * 2654435761 + 1);
+        const order = Array.from({ length: size }, (_, index) => index);
+        for (let i = order.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(rng() * (i + 1));
+            [order[i], order[j]] = [order[j], order[i]];
+        }
+        return order;
+    }
+
+    function roundOrder(round, size) {
+        const order = shuffledRound(round, size);
+        const seam = Math.min(14, Math.floor(size / 4));
+        if (round === 0 || seam === 0) return order;
+        const closing = new Set(shuffledRound(round - 1, size).slice(-seam));
+        let spare = seam;
+        for (let i = 0; i < seam; i += 1) {
+            if (!closing.has(order[i])) continue;
+            while (closing.has(order[spare])) spare += 1;
+            [order[i], order[spare]] = [order[spare], order[i]];
+            spare += 1;
+        }
+        return order;
+    }
+
     function selectLead(number, leads, editions = Neckass.data?.EDITIONS) {
         const written = editions?.[number]?.lead;
         if (written) return written;
         if (!Array.isArray(leads) || !leads.length) return null;
         const round = Math.floor((number - 1) / leads.length);
         const place = (number - 1) % leads.length;
-        const rng = createRng(round * 2654435761 + 1);
-        const order = leads.map((_, index) => index);
-        for (let i = order.length - 1; i > 0; i -= 1) {
-            const j = Math.floor(rng() * (i + 1));
-            [order[i], order[j]] = [order[j], order[i]];
-        }
-        return leads[order[place]] || null;
+        return leads[roundOrder(round, leads.length)[place]] || null;
     }
 
     // The earliest issues are shorter. He had done less. The briefs column
@@ -305,6 +331,7 @@
 
     Neckass.issue = {
         FIRST_EDITION,
+        AP_MONTHS,
         composeIssue,
         issueNumber,
         selectLead,

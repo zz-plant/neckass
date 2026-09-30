@@ -30,8 +30,8 @@
         <header class="masthead">
             <div class="masthead__folio">
                 <p class="masthead__plate">
-                    <span class="masthead__kicker">Corbin Falls</span>
-                    <span class="masthead__name">The Gazette</span>
+                    <a href="/"><span class="masthead__kicker">Corbin Falls</span>
+                    <span class="masthead__name">The Gazette</span></a>
                 </p>
                 <nav class="top-nav" aria-label="Site">
                     <a href="/">Today</a>
@@ -52,6 +52,14 @@
                     <h2 class="section-label" id="landmarks-title">Of note</h2>
                     <ul class="about-list" id="archive-landmarks"></ul>
                 </section>
+
+                <!-- Filled by modules/archive-list.js: a line per year, a link per
+                     month, so a reader can get to last spring without scrolling
+                     through the whole run. -->
+                <nav class="archive-months" aria-labelledby="months-title" hidden>
+                    <h2 class="section-label" id="months-title">By month</h2>
+                    <ul class="archive-years" id="archive-months"></ul>
+                </nav>
 
                 <div id="archive-run">
                     <ul class="archive-list">

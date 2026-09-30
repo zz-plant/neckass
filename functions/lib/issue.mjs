@@ -32,21 +32,41 @@ function createRng(seed) {
     };
 }
 
-// Dealt in rounds of the pool's length, each round its own shuffle; see
-// modules/issue.js, which this must match.
+// Dealt in rounds of the pool's length, each round its own shuffle, with the
+// seam between rounds kept clear of repeats; see modules/issue.js, which this
+// must match.
+function shuffledRound(round, size) {
+    const rng = createRng(round * 2654435761 + 1);
+    const order = Array.from({ length: size }, (_, index) => index);
+    for (let i = order.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(rng() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+    }
+    return order;
+}
+
+function roundOrder(round, size) {
+    const order = shuffledRound(round, size);
+    const seam = Math.min(14, Math.floor(size / 4));
+    if (round === 0 || seam === 0) return order;
+    const closing = new Set(shuffledRound(round - 1, size).slice(-seam));
+    let spare = seam;
+    for (let i = 0; i < seam; i += 1) {
+        if (!closing.has(order[i])) continue;
+        while (closing.has(order[spare])) spare += 1;
+        [order[i], order[spare]] = [order[spare], order[i]];
+        spare += 1;
+    }
+    return order;
+}
+
 export function selectLead(number) {
     const written = EDITION_LEADS[number];
     if (written) return written;
     if (!LEADS.length) return null;
     const round = Math.floor((number - 1) / LEADS.length);
     const place = (number - 1) % LEADS.length;
-    const rng = createRng(round * 2654435761 + 1);
-    const order = LEADS.map((_, index) => index);
-    for (let i = order.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(rng() * (i + 1));
-        [order[i], order[j]] = [order[j], order[i]];
-    }
-    return LEADS[order[place]] || null;
+    return LEADS[roundOrder(round, LEADS.length)[place]] || null;
 }
 
 export function issueParam(date) {
