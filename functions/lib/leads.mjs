@@ -12,8 +12,7 @@ export default [
         deck: 'The plan is one page. The page says "ten-year plan." There is nothing else on it.',
     },
     {
-        headline:
-            'Neckass has agreed to be best man in an email he has not read',
+        headline: 'Neckass agreed to be best man in an email he has not read',
         deck: 'The wedding is Saturday. He has told the groom he is free a different Saturday.',
     },
     {
@@ -23,7 +22,7 @@ export default [
     },
     {
         headline:
-            'Neckass has set three alarms, five minutes apart, and slept through all of them',
+            'Neckass set three alarms, five minutes apart, and slept through all of them',
         deck: 'They are labeled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
     },
     {
@@ -33,7 +32,7 @@ export default [
     },
     {
         headline:
-            'Neckass has declared inbox zero. He has a second inbox with 2,000 in it.',
+            'Neckass declared inbox zero. He has a second inbox with 2,000 in it.',
         deck: 'He moved the emails to a folder called "Later." Later has 2,000 emails.',
     },
     {
@@ -44,7 +43,7 @@ export default [
     {
         headline:
             'Neckass has paid for a gym membership since 2013 and has been to the gym twice',
-        deck: 'That is $4,100 for two visits. One of them was to ask about cancelling.',
+        deck: 'That is $4,100 for two visits. One of them was to ask about canceling.',
     },
     {
         headline:
@@ -58,11 +57,11 @@ export default [
     },
     {
         headline: 'Asked what a neckass is, Neckass said "you know, a neckass"',
-        deck: 'Asked again, he said it more slowly.',
+        deck: 'Asked again, he said it more slowly, then nodded, as if that settled it.',
     },
     {
         headline:
-            'Neckass has told the same story at the same table for the third year running',
+            'Neckass has told the same story at the same table for the third year in a row',
         deck: 'It is the story about the airport. Everyone at the table has heard it at this table, from him, twice before.',
     },
     {
@@ -77,23 +76,23 @@ export default [
     },
     {
         headline:
-            'Neckass has bought a second charger rather than look behind the couch',
+            'Neckass bought a second charger rather than look behind the couch',
         deck: 'The first charger is behind the couch. He has not looked. He now has three.',
     },
     {
         headline:
             'Neckass arrived at the restaurant an hour early and waited outside',
-        deck: 'He had the time wrong and did not check. He stood outside for an hour in the rain.',
+        deck: 'He had not checked the time. He stood outside for an hour. It rained.',
     },
     {
         headline:
-            'Neckass has explained the plot of a film to the person who recommended it',
+            'Neckass explained the plot of a film to the person who recommended it',
         deck: 'They recommended it on Tuesday. He explained it to them on Thursday, in full, including the end.',
     },
     {
         headline:
-            'Neckass has left a message on "seen" for eleven days so that he can reply "properly"',
-        deck: 'The message asked whether he was coming Saturday. He read it on the 3rd. Saturday was the 6th. He wants to give it a proper reply.',
+            'Neckass has left a message on "seen" for eleven days so that he can give it a real reply',
+        deck: 'The message asked whether he was coming Saturday. He read it on the 3rd. Saturday was the 6th. He wants to sit down and really reply.',
     },
     {
         headline:
@@ -115,8 +114,8 @@ export default [
         deck: 'It needs a battery. He describes the chirping as "on and off." It is on.',
     },
     {
-        headline: 'Neckass has read the first page of nine books this year',
-        deck: 'He owns nine books bought this year. Page one of each is creased. No page two is.',
+        headline: 'Neckass requested $3 on Cash App from a friend he owes $40',
+        deck: 'The note on the request says "gas." The friend was driving. The $40 has been owed since the Fourth of July.',
     },
     {
         headline:
@@ -128,17 +127,17 @@ export default [
         deck: 'The task is to call his mother. It takes ten minutes. He describes it as "a whole thing."',
     },
     {
-        headline: 'Neckass has assembled the shelf and has four screws left',
+        headline: 'Neckass assembled the shelf and has four screws left',
         deck: 'The instructions account for every screw. The shelf is up. He is not going to think about it.',
     },
     {
         headline:
-            'Neckass has agreed with two people who were disagreeing with each other',
+            'Neckass agreed with two people who were disagreeing with each other',
         deck: 'He agreed with the first, then the second, in the same conversation. Both noticed.',
     },
     {
         headline:
-            'Neckass has sent a nine-minute voice note to say he is running late',
+            'Neckass sent a nine-minute voice note to say he was running late',
         deck: 'He sent it at 7:50 from the car. It was played at double speed. He was still late, and it does not say by how much.',
     },
     {
@@ -146,7 +145,7 @@ export default [
         deck: 'He has been told. He said "it\'s fine, it lasts." It lasted until 10:40.',
     },
     {
-        headline: 'Neckass has recommended a restaurant he has not been to',
+        headline: 'Neckass recommended a restaurant he has not been to',
         deck: 'He recommended it warmly and at length. He has driven past it.',
     },
     {
@@ -159,7 +158,7 @@ export default [
         deck: 'They were not walking toward the door. They are now, because he is holding it.',
     },
     {
-        headline: 'Neckass has cleaned around the object rather than move it',
+        headline: 'Neckass cleaned around the object rather than move it',
         deck: 'The object is a shoe. It has been in the middle of the floor for five weeks. The floor around it is clean.',
     },
     {
@@ -173,18 +172,17 @@ export default [
         deck: 'He was not reading it. He called four hours later, after a second message.',
     },
     {
-        headline:
-            'Neckass has been quietly following the wrong group around a museum',
-        deck: 'He joined at the entrance. It was a school group. He listened for forty minutes.',
+        headline: 'Neckass reneged in spades and has blamed his partner',
+        deck: 'He cut with a heart while holding the queen of hearts. The table caught it on the next trick. He asked his partner why she led a heart.',
     },
     {
         headline:
-            'Neckass has renewed a library book about Mars for the seventh month. He is on page nine.',
-        deck: 'The book is 140 pages. He renews by phone and says he is "nearly done." The library has stopped asking.',
+            'Neckass brought store-bought potato salad to the cookout in a bowl from home',
+        deck: "He took the lid off at the curb, put it in his mother's bowl, and added paprika. He told four people it was his recipe. The receipt was in the bag.",
     },
     {
         headline:
-            'Neckass has told a joke to a table that heard it from him, at the same table, the week before',
+            'Neckass told a joke to a table that heard it from him, at the same table, the week before',
         deck: 'He said "stop me if you\'ve heard this." Four people said they had. He did not stop.',
     },
     {
@@ -199,36 +197,35 @@ export default [
     },
     {
         headline:
-            'Neckass has said "I\'ll let you go" to a caller who was trying to go',
+            'Neckass said "I\'ll let you go" to a caller who was trying to go',
         deck: 'The caller said they had to go at 6:10. Neckass let them go at 6:50, after letting them go twice more.',
     },
     {
         headline:
-            'Neckass has bought a whiteboard to get organized and has written "get organized" on it',
-        deck: 'It has said "get organized" since April, in his handwriting, with a box beside it. The box is not checked.',
+            'Neckass took the aux and has played the first thirty seconds of eleven songs',
+        deck: 'He asked for the aux at 9:40 and said he had "a vibe." He skipped every song he chose, including one he said was "about to go crazy." It did not go.',
     },
     {
         headline:
-            'Neckass has given directions to a driver who was already on the right road',
+            'Neckass gave directions to a driver who was already on the right road',
         deck: 'The driver asked if this was Route 9. It was. Neckass said "you want to go back the way you came and take the second left." The driver did.',
     },
     {
-        headline: 'Neckass has replied "maybe" to an event he is hosting',
+        headline: 'Neckass replied "maybe" to an event he is hosting',
         deck: 'The invitation went out from his account on Monday. He responded on Tuesday. The host is listed as "maybe."',
     },
     {
-        headline:
-            'Neckass has explained the rules of a game to the person who owns the game',
-        deck: 'They had played it 200 times. He had played it once, on Tuesday, and lost. He explained for eleven minutes and got two rules wrong.',
+        headline: 'Neckass explained 2K to the person who owns the console',
+        deck: 'His cousin has played it every night since 2019. Neckass had played once, on Tuesday, and lost by 40. He explained for eleven minutes and got the buttons wrong.',
     },
     {
         headline:
-            'Neckass has kept a receipt for everything except the thing he needs to return',
+            'Neckass kept a receipt for everything except the thing he needed to return',
         deck: 'There are 340 receipts in the drawer, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
     },
     {
         headline:
-            'Neckass has left a voicemail that says "it\'s me, call me back" and no name',
+            'Neckass left a voicemail that says "it\'s me, call me back" and no name',
         deck: 'It was left at 7:40 a.m. The recipient has four people it could be. She has called two.',
     },
     {
@@ -238,34 +235,34 @@ export default [
     },
     {
         headline:
-            'Neckass has apologized for being late by explaining that he was not late',
+            'Neckass apologized for being late by explaining that he was not late',
         deck: 'He arrived at 2:25 for two, said "sorry, but actually," and set out why the meeting was at 2:30. It was not.',
     },
     {
         headline:
-            'Neckass has said "we should do this more often" to people he cancelled on twice',
-        deck: 'The dinner was the third attempt; he cancelled the first two on the day. He said it at the end, with feeling. He has not proposed a date.',
+            'Neckass said "we should do this more often" to people he canceled on twice',
+        deck: 'The dinner was the third attempt; he canceled the first two the day of. He said it at the end, with feeling. He has not proposed a date.',
     },
     {
         headline:
-            'Neckass has taken a "quick look" at a colleague\'s spreadsheet and broken it',
+            'Neckass took a "quick look" at a colleague\'s spreadsheet and broke it',
         deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows.',
     },
 ];
 export const EDITION_LEADS = {
     1: {
         headline:
-            'Neckass has said he will "get into running." It is the fourth September he has said it.',
+            'Neckass said he will "get into running." It is the fourth September he has said it.',
         deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
     },
     100: {
         headline:
-            'Neckass has told the Gazette that being in it every day is "a lot." He has read four of them.',
+            'Neckass told the Gazette that being in it every day is "a lot." He has read four of them.',
         deck: 'He came to the office Friday to ask that the paper stop. He stayed forty minutes. He has appeared in one hundred issues and read four, one of them twice.',
     },
     288: {
         headline:
-            'Neckass has bought a hat and been reported to the Gazette as a second neckass',
+            'Neckass bought a hat and was reported to the Gazette as a second neckass',
         deck: 'A neighbor called the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
     },
     366: {
@@ -275,7 +272,7 @@ export const EDITION_LEADS = {
     },
     731: {
         headline:
-            'Neckass has asked whether the Gazette is "still going." This is the 731st issue.',
+            'Neckass asked whether the Gazette is "still going." This is the 731st issue.',
         deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
     },
 };

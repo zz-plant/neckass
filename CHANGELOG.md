@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Added
+- The front page carries a nameplate: *The Corbin Falls Gazette* set large, as the page's visible `h1`, with the motto *One man, reported daily since Sept. 29, 2024.* under it. A reader arriving from a shared link was given a credit-size name and no statement of what the paper covers.
+- *Earlier issues* in the lead: the three issues before this one, by their leads, each a link to the issue. On the broadsheet it fills the foot of the deck's column, which ran blank beside the headline.
+- The correction retracting yesterday's lead ends *See No. n.*, linked to the issue it retracts.
+
+### Changed
+- The social card sets the nameplate, the lead a size larger, the deck in the ink rather than grey, the file cut of him beside it, and the motto at the foot. The folio no longer runs into the paper's name.
+- The still cards (`og-image.png`, `og-about.png`, `og-archive.png`, `og-prompts.png`) are drawn by the per-issue card's layout and renderer in Fraunces, not by `rsvg-convert` in Georgia and Helvetica, and lead with a line from the page they share rather than its title.
+- The lead headline runs to 3.75rem on the broadsheet, and the corrections take the ink.
+
 ### Removed
 - The wire: the headline shuffler under the issue, with its Previous/Next, four action buttons, three share links, history list, on-device generator (`llm.js`, `data/llm-beats.js`), agent API and `html-to-image` export. Half the JavaScript on the page served a feature the paper had replaced. The page loads seven scripts, none handling input, and ends on the colophon.
 - `neckass-demo.gif`, which showed the shuffler.

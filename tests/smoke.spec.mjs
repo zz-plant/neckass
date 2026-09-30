@@ -252,6 +252,51 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
+    test('the front page leads back into the run', async ({ page }) => {
+        await page.goto(`${BASE_URL}?issue=2025-06-11`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+
+        // The nameplate says what the paper covers.
+        await expect(page.locator('h1')).toHaveText('The Corbin Falls Gazette');
+        await expect(page.locator('.nameplate__motto')).toContainText(
+            'One man',
+        );
+
+        // The three issues before this one, each a link to it, under the
+        // lead that ran.
+        const earlier = page.locator('#earlier-list a');
+        await expect(earlier).toHaveCount(3);
+        const expected = await page.evaluate(
+            (date) =>
+                window.Neckass.issue
+                    .recentIssues(4, window.Neckass.issue.parseIssueDate(date))
+                    .slice(1)
+                    .map((back) => ({
+                        href: `/?issue=${back.issueParam}`,
+                        headline: back.lead.headline,
+                    })),
+            issue.issueParam,
+        );
+        for (const [index, back] of expected.entries()) {
+            await expect(earlier.nth(index)).toHaveAttribute('href', back.href);
+            await expect(earlier.nth(index)).toContainText(back.headline);
+        }
+
+        // The correction retracting yesterday's lead links to yesterday.
+        await expect(
+            page.locator('#corrections-list li').nth(1).locator('a'),
+        ).toHaveAttribute('href', expected[0].href);
+
+        // The first edition has nothing earlier; the way to the archive stays.
+        await page.goto(`${BASE_URL}?issue=2024-09-29`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await expect(page.locator('#earlier-list a')).toHaveAttribute(
+            'href',
+            '/archive.html',
+        );
+    });
+
     test('a landmark issue is written, and the chain runs through it', async ({
         page,
     }) => {
@@ -276,8 +321,9 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(second.corrections[1]).toBe(first.lead.correction);
         expect(second.editorial).toBeNull();
 
-        // An ordinary issue carries no editorial.
-        await page.goto(BASE_URL);
+        // An ordinary issue carries no editorial. No. 2 is one; today is
+        // not always (on an anniversary the front page is a landmark).
+        await page.goto(`${BASE_URL}?issue=2024-09-30`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
         await expect(page.locator('#editorial')).toBeHidden();
     });
@@ -516,7 +562,7 @@ test.describe('The Corbin Falls Gazette', () => {
         const page = await request.get(`${EDGE_URL}?issue=2025-01-06`);
         expect(page.ok()).toBe(true);
         const html = await page.text();
-        expect(html).toContain('<title>Neckass has told the Gazette');
+        expect(html).toContain('<title>Neckass told the Gazette');
         expect(html).toContain(
             '<meta property="og:image" content="https://neckass.com/card.png?issue=2025-01-06">',
         );
@@ -555,10 +601,10 @@ test.describe('The Corbin Falls Gazette', () => {
                 page.locator('link[rel="apple-touch-icon"]'),
             ).toHaveCount(1);
             await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
-            // The nameplate goes home.
+            // The inside pages' plate goes home; the front page is home.
             await expect(
                 page.locator('.masthead__plate a[href="/"]'),
-            ).toHaveCount(1);
+            ).toHaveCount(path ? 1 : 0);
         }
     });
 });

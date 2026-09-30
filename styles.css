@@ -285,6 +285,49 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
     white-space: nowrap;
 }
 
+/* ---- The nameplate ---------------------------------------------------
+   The front page only. The inside pages carry the credit-size folio line;
+   the front page is where a reader lands from a shared link knowing nothing,
+   so it says whose paper this is at a size that gets read and, under it,
+   in one line, what the paper covers. The folio line sits above it, the
+   cutoff rule below. */
+.masthead--front .masthead__folio {
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 7px;
+}
+
+.masthead--front .masthead__line {
+    order: 0;
+    flex-basis: auto;
+}
+
+.nameplate {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 18px 0 14px;
+    border-bottom: 3px solid var(--accent-rule);
+    text-align: center;
+}
+
+.nameplate__name {
+    font-family: var(--headline-font);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink-display);
+    text-wrap: balance;
+}
+
+.nameplate__motto {
+    font-family: var(--headline-font);
+    font-style: italic;
+    font-size: clamp(0.94rem, 1.4vw, 1.08rem);
+    color: var(--muted);
+    text-wrap: balance;
+}
+
 .top-nav {
     display: flex;
     align-items: baseline;
@@ -351,6 +394,10 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
 .about-list {
     list-style: disc;
     padding-left: 1.15em;
+}
+
+ol.about-list {
+    list-style: decimal;
 }
 
 .about-list li::marker {
@@ -559,7 +606,7 @@ a:focus-visible {
 
 .lead__headline {
     font-family: var(--headline-font);
-    font-size: clamp(2rem, 4.9vw, 3.3rem);
+    font-size: clamp(2rem, 5.2vw, 3.75rem);
     line-height: 1.11;
     letter-spacing: -0.015em;
     color: var(--ink-display);
@@ -600,6 +647,61 @@ a:focus-visible {
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: var(--muted);
+}
+
+/* The three issues before this one, by their leads. On the broadsheet they
+   fill the foot of the deck's column beside the headline, which otherwise
+   ran blank; on a phone they follow the byline. Each is a link to the
+   issue, and the headline is the link text. */
+.earlier {
+    margin-top: 22px;
+}
+
+.earlier__list {
+    list-style: none;
+    display: grid;
+}
+
+.earlier__list li + li {
+    border-top: 1px solid var(--border);
+}
+
+.earlier__list li a {
+    display: grid;
+    gap: 2px;
+    padding: 8px 0;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.earlier__list li:first-child a {
+    padding-top: 0;
+}
+
+.earlier__list li:last-child a {
+    padding-bottom: 0;
+}
+
+.earlier__folio {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.earlier__head {
+    font-family: var(--headline-font);
+    font-weight: 700;
+    font-size: 1.02rem;
+    line-height: 1.25;
+    text-wrap: pretty;
+}
+
+.earlier__list li a:hover .earlier__head {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 /* The editorial. Only a landmark issue carries one, under the lead and
@@ -764,6 +866,13 @@ a:focus-visible {
 .corrections li::before,
 .notices li::before {
     content: "\2014\00a0";
+}
+
+/* The corrections are the paper's running record, and the one retracting
+   yesterday's lead is the best thing on the page. They take the ink; the
+   notices, which are the town's and not his, stay muted. */
+.corrections li {
+    color: var(--text);
 }
 
 .weather-body {
@@ -942,13 +1051,13 @@ a:focus-visible {
         grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
         /* The deck takes the height it needs; the byline follows it rather
            than dropping to the foot of the headline beside it. */
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto auto 1fr;
         column-gap: 34px;
     }
 
     .lead__headline {
         grid-column: 1;
-        grid-row: 1 / span 2;
+        grid-row: 1 / span 3;
         border-right: 1px solid var(--border);
         padding-right: 34px;
         min-height: 100%;
@@ -965,6 +1074,12 @@ a:focus-visible {
         grid-row: 2;
         align-self: start;
         margin-top: 12px;
+    }
+
+    .earlier {
+        grid-column: 2;
+        grid-row: 3;
+        align-self: end;
     }
 
     .front-page__columns {
