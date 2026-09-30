@@ -81,8 +81,9 @@
                 const label = document.createElement('span');
                 label.className = 'archive-year';
                 label.textContent = String(year);
-                li.append(
-                    label,
+                const links = document.createElement('span');
+                links.className = 'archive-year__months';
+                links.append(
                     ...dates.map((date) => {
                         const link = document.createElement('a');
                         link.href = `#${monthAnchor(date)}`;
@@ -91,6 +92,7 @@
                         return link;
                     }),
                 );
+                li.append(label, links);
                 return li;
             }),
         );

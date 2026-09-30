@@ -310,10 +310,14 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
     text-align: center;
 }
 
+/* The name runs on one line at every width, as a nameplate does: the
+   setting needs about 0.86 of the viewport at 7.4vw, which the sheet has
+   down to a 320px phone. At 1.9rem it broke in two on a phone and cost the
+   lead a line above the fold. */
 .nameplate__name {
     font-family: var(--headline-font);
     font-weight: 700;
-    font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+    font-size: clamp(1.4rem, 7.4vw, 3.4rem);
     line-height: 1;
     letter-spacing: -0.02em;
     color: var(--ink-display);
@@ -436,17 +440,24 @@ ol.about-list {
 }
 
 .archive-years li {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 3.4em minmax(0, 1fr);
     align-items: baseline;
-    gap: 4px 14px;
+    column-gap: 14px;
     padding: 5px 0;
     max-width: none;
     margin-top: 0;
 }
 
+/* The months wrap inside their own column, so a year's second line starts
+   under its first month rather than under the year. */
+.archive-year__months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+}
+
 .archive-year {
-    min-width: 3.4em;
     font-size: 0.7rem;
     letter-spacing: 0.12em;
     color: var(--muted);
@@ -690,11 +701,14 @@ a:focus-visible {
     font-variant-numeric: tabular-nums;
 }
 
+/* Set as an index, not as news: the regular cut a step under the deck, so
+   yesterday's leads do not outweigh today's under it or the briefs beside
+   it. In bold they drew more of the eye on a phone than the lead did. */
 .earlier__head {
     font-family: var(--headline-font);
-    font-weight: 700;
-    font-size: 1.02rem;
-    line-height: 1.25;
+    font-weight: 400;
+    font-size: 0.92rem;
+    line-height: 1.3;
     text-wrap: pretty;
 }
 

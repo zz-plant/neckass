@@ -56,7 +56,7 @@ cutoff rule; the front page sets the nameplate under it and closes that.
 - The front page carries the nameplate instead (`.masthead--front`): the
   folio line holds the date and the site links over a hairline, and under
   it the `h1` **The Corbin Falls Gazette** is set in Fraunces at up to
-  3.4rem, centred, with `.nameplate__motto` — *One man, reported daily since
+  3.4rem, centred, on one line at every width (7.4vw below the cap), with `.nameplate__motto` — *One man, reported daily since
   Sept. 29, 2024.* — in italic beneath. The front page is where a reader
   lands from a shared link knowing nothing; the name says whose paper it is
   and the motto says what it covers, in the line before the lead.
@@ -141,7 +141,9 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **Earlier issues** — `#earlier-list`, in the lead: the three issues
   before this one, each a link to `/?issue=…` carrying its weekday, number
   and lead. At ≥760px it sits at the foot of the deck's column, beside the
-  headline; below that it follows the byline. The standing markup links to
+  headline; below that it follows the byline. The leads are set in the
+  regular cut a step under the deck, as an index rather than as news, so
+  they do not outweigh today's lead. The standing markup links to
   the back issues, which is what issue 1, with nothing earlier, keeps.
 - **Editorial** — `#editorial`, `hidden` unless the issue is a landmark with
   one: a head, paragraphs, and the editor's signature, under the lead and
@@ -191,7 +193,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   (`#archive-landmarks`), oldest first.
 - *By month* (`#archive-months`) follows: a line per year, newest first,
   each month in AP style linking to its head in the run
-  (`#month-YYYY-MM`).
+  (`#month-YYYY-MM`). The months wrap in their own column beside the
+  year.
 - The list is derived from the calendar, not stored, and stops at issue 1;
   `issue.recentIssues()` returns the whole run with each lead and tag.
 - Rows take the ink; the lead underlines in the accent on hover. Two
