@@ -89,7 +89,11 @@
         document.title = `The Corbin Falls Gazette · No. ${issue.number}`;
 
         if (issue.lead) {
-            textInto('#lead-headline', issue.lead.headline);
+            textInto('#lead-link', issue.lead.headline);
+            // The headline is the issue's permalink: "/" is a different
+            // paper tomorrow, and this one is what the reader meant to send.
+            const link = document.querySelector('#lead-link');
+            if (link) link.href = `/?issue=${issue.issueParam}`;
             textInto('#lead-deck', `${issue.dateline} — ${issue.lead.deck}`);
             textInto('#lead-byline', issue.lead.byline);
         }

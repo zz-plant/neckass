@@ -75,6 +75,9 @@ cutoff rule; the front page sets the nameplate under it and closes that.
   second, on its own, directly over the cutoff rule.
 - Site links are text, not buttons, and the current page is marked with
   `aria-current="page"`, which underlines it in the accent.
+- On the inside pages the folio line's plate is a link to `/`, in the
+  plate's own inks; the name underlines in the accent on hover. The front
+  page is home and its nameplate is not a link.
 - `#back-issue-notice` is `hidden` on today's issue. When `?issue=YYYY-MM-DD`
   resolves to a past date it is revealed, names the issue being read, and
   offers a link back to today. A date past today is an issue that has not
@@ -123,10 +126,18 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   headline, and opens on a wire dateline, `CORBIN FALLS, Sept. 5 —`, in AP
   month style. Bylines are staff names from the colophon, or "Staff report" /
   "From wire reports".
+- **The headline is the issue's permalink** — `#lead-link`, inside
+  `#lead-headline`, points at `/?issue=YYYY-MM-DD` for the issue on the page,
+  today's included, since `/` is a different paper tomorrow. It prints in
+  ink and underlines in the accent only on hover.
 - **Lead selection** — leads are dealt in rounds: the pool is shuffled once
   per round of its own length, seeded by the round, and issue *n* takes its
-  place in the round, so no lead runs twice inside a round. A landmark
-  (`data.EDITIONS[n].lead`) is taken instead of the dealt one.
+  place in the round, so no lead runs twice inside a round. Where two
+  rounds meet, a lead from the last quarter-pool places (at most 14) of one
+  round is moved out of the same number of opening places of the next, so a
+  lead never returns within that many days; the tail of a round is never
+  moved. A landmark (`data.EDITIONS[n].lead`) is taken instead of the dealt
+  one.
 - **Earlier issues** — `#earlier-list`, in the lead: the three issues
   before this one, each a link to `/?issue=…` carrying its weekday, number
   and lead. At ≥760px it sits at the foot of the deck's column, beside the
@@ -178,6 +189,9 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   `.archive-tag` under the lead.
 - The landmark editions are listed first under *Of note*
   (`#archive-landmarks`), oldest first.
+- *By month* (`#archive-months`) follows: a line per year, newest first,
+  each month in AP style linking to its head in the run
+  (`#month-YYYY-MM`).
 - The list is derived from the calendar, not stored, and stops at issue 1;
   `issue.recentIssues()` returns the whole run with each lead and tag.
 - Rows take the ink; the lead underlines in the accent on hover. Two

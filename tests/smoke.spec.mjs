@@ -233,6 +233,11 @@ test.describe('The Corbin Falls Gazette', () => {
 
         const issue = await page.evaluate(() => window.Neckass.currentIssue);
         expect(issue.issueParam).toBe('2025-06-11');
+        // The headline is the issue's permalink.
+        await expect(page.locator('#lead-headline a')).toHaveAttribute(
+            'href',
+            '/?issue=2025-06-11',
+        );
 
         await expect(page.locator('#masthead-date')).toContainText(
             `No. ${issue.number}`,
@@ -377,6 +382,26 @@ test.describe('The Corbin Falls Gazette', () => {
         for (const distinct of result.rounds) {
             expect(distinct).toBe(result.size);
         }
+
+        // Each round is its own shuffle, so the seam between two rounds is
+        // where a lead could run twice in a row. It must not come back
+        // inside a quarter of the pool (a fortnight at most).
+        const seam = await page.evaluate(() => {
+            const { issue, data } = window.Neckass;
+            const size = data.LEADS.length;
+            const last = new Map();
+            let closest = Number.POSITIVE_INFINITY;
+            for (let number = 1; number <= size * 12; number += 1) {
+                if (data.EDITIONS[number]) continue;
+                const { headline } = issue.selectLead(number, data.LEADS);
+                if (last.has(headline)) {
+                    closest = Math.min(closest, number - last.get(headline));
+                }
+                last.set(headline, number);
+            }
+            return { closest, required: Math.min(14, Math.floor(size / 4)) };
+        });
+        expect(seam.closest).toBeGreaterThan(seam.required);
         // Every lead carries everything the paper prints about it.
         const incomplete = await page.evaluate(
             () =>
@@ -404,6 +429,18 @@ test.describe('The Corbin Falls Gazette', () => {
         const links = page.locator('a[href*="?issue="]');
         await expect(links.first()).toBeVisible();
         expect(await links.count()).toBeGreaterThan(5);
+
+        // The month index reaches every month in the run.
+        const months = await page.evaluate(() => ({
+            links: [...document.querySelectorAll('#archive-months a')].map(
+                (a) => a.getAttribute('href'),
+            ),
+            sections: document.querySelectorAll('.archive-month').length,
+        }));
+        expect(months.links.length).toBe(months.sections);
+        for (const href of months.links) {
+            await expect(page.locator(href)).toHaveCount(1);
+        }
 
         // Follow one and confirm it renders the issue it advertised.
         const href = await links.nth(3).getAttribute('href');
@@ -564,6 +601,10 @@ test.describe('The Corbin Falls Gazette', () => {
                 page.locator('link[rel="apple-touch-icon"]'),
             ).toHaveCount(1);
             await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
+            // The inside pages' plate goes home; the front page is home.
+            await expect(
+                page.locator('.masthead__plate a[href="/"]'),
+            ).toHaveCount(path ? 1 : 0);
         }
     });
 });
