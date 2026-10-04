@@ -11,6 +11,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The correction retracting yesterday's lead ends *See No. n.*, linked to the issue it retracts.
 
 ### Changed
+- The copy stops restating the navigation: the colophon carries the staff line, *Letters may be edited.* and the clipping link (the folio and the site links carry the rest), the earlier-issues fallback is the bare link, and the back issues, standards and 404 pages end on their content instead of a second set of site links.
 - The social card sets the nameplate, the lead a size larger, the deck in the ink rather than grey, the file cut of him beside it, and the motto at the foot. The folio no longer runs into the paper's name.
 - The still cards (`og-image.png`, `og-about.png`, `og-archive.png`, `og-prompts.png`) are drawn by the per-issue card's layout and renderer in Fraunces, not by `rsvg-convert` in Georgia and Helvetica, and lead with a line from the page they share rather than its title.
 - The lead headline runs to 3.75rem on the broadsheet, and the corrections take the ink.
