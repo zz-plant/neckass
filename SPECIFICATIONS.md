@@ -143,8 +143,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   and lead. At ≥760px it sits at the foot of the deck's column, beside the
   headline; below that it follows the byline. The leads are set in the
   regular cut a step under the deck, as an index rather than as news, so
-  they do not outweigh today's lead. The standing markup links to
-  the back issues, which is what issue 1, with nothing earlier, keeps.
+  they do not outweigh today's lead. The standing markup is a single link
+  labelled *Back issues*, which is what issue 1, with nothing earlier, keeps.
 - **Editorial** — `#editorial`, `hidden` unless the issue is a landmark with
   one: a head, paragraphs, and the editor's signature, under the lead and
   across the page, in two columns at ≥760px.
@@ -171,9 +171,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   forecaster's note about him follows in `#weather-line`.
 - **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`.
 - **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday), then one dealt from `data.LETTERS`. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces: it is the one place on the page where someone other than the paper is speaking.
-- **Colophon** — the staff line (vacant, unattended, ongoing), the paper's
-  note, and links to the back issues, the issue's clipping (`#colophon-card`, `/card.png?issue=…`) and
-  the entry.
+- **Colophon** — the staff line (vacant, unattended, ongoing), the note
+  (*Letters may be edited.*) and the issue's clipping (`#colophon-card`,
+  `/card.png?issue=…`). The folio line already carries the site links; the
+  colophon does not repeat them.
 - Calendar items take the place of dealt ones, so no section changes size
   on a dated day. Pool depth is load-bearing: each pool must stay several
   times its deal size or a reader returning on consecutive days sees the
