@@ -19,6 +19,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Removed
 - The wire: the headline shuffler under the issue, with its Previous/Next, four action buttons, three share links, history list, on-device generator (`llm.js`, `data/llm-beats.js`), agent API and `html-to-image` export. Half the JavaScript on the page served a feature the paper had replaced. The page loads seven scripts, none handling input, and ends on the colophon.
 - `neckass-demo.gif`, which showed the shuffler.
+- Dead code the defluff pass turned up: the ornament cut, which no page used; the `WebApplication` schema block on the front page, which restated the `WebSite` schema; the unused `Neckass.issue.FIRST_EDITION` export; and markup hooks with no rules behind them (`history-card` on the four reading pages, the `box--notices`, `-corrections` and `-letters` modifiers).
 
 ### Added
 - Landmark editions (`data/editions.js`): the first edition, the hundredth, No. 288 (the hat), and the two anniversaries are written rather than dealt, each with its own lead so the corrections chain runs through it, and most with an editorial, which only a landmark prints. The entry's citations link to the issues they cite, and the issues contain what is cited. A date past today gets today's paper and a line saying when the one asked for goes to press.

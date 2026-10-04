@@ -14,7 +14,6 @@ sheet.
 | --- | --- | --- |
 | `neckass.svg` | The file cut. A man, mid-explanation. | `--tilt`, `--arm-near`, `--forearm-near`, `--arm-far`, `--forearm-far`, `--leg-near`, `--leg-far` — all angles. Zero on every joint stands him to attention, arms at the sides. |
 | `weather.svg` | The sky, in four layers. | `--sun`, `--cloud`, `--rain`, `--wind` — `1` shows a layer, `0` hides it. With `--cloud: 0` the sun moves to the middle of the box rather than hanging in the corner. |
-| `ornament.svg` | The dingus between departments. | `--flourish: 0` drops the side leaves, leaving the centre lozenge as an end mark. |
 | `press.svg` | A screw press. | `--lever` (angle of the bar; `0` is at rest, straight out), `--sheet: 0` clears the paper off the bed. |
 
 Each box is cut to the pose the file ships in, so the drawing sits centred with

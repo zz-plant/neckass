@@ -330,7 +330,6 @@
     }
 
     Neckass.issue = {
-        FIRST_EDITION,
         AP_MONTHS,
         composeIssue,
         issueNumber,
