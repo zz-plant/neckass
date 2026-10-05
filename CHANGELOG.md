@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Changed
+- One copy of the data and of the issue arithmetic. `data/*.js` and `modules/issue.js` are plain ES modules imported by both the browser and the edge, so the feed and the card cannot drift from the page: they run the same code. `functions/lib/issue.mjs` is now a thin UTC adapter over the shared module, and the pages load one `<script type="module">` whose import graph replaces the seven-script load order. The browser and the edge run the same clock-dependent arithmetic on their own dates: local for the reader, UTC for the Worker.
+- The social card's layout and renderer are one function (`renderCardPng` in `functions/lib/card.mjs`), shared by the edge and the still cards; the edge card is drawn with Satori and resvg directly instead of `workers-og`.
+
+### Removed
+- `file://` support, which the previous data format existed to provide. The pages are ES modules and are served over HTTP (`bun run serve`).
+- The build-time extraction of the leads (`scripts/build-feed-data.ts`, `functions/lib/leads.mjs`) and the drift check around it: the edge imports the data directly.
+- The smoke test asserting worker and browser agree on the lead (same module now), the weather-cut layer test, and the icon-set test.
+- `husky` and `lint-staged`; Biome via `bun run lint` and CI remains the gate.
+- In `scripts/check-assets.ts`, the color-type, bit-depth and `source.svg` checks; the validator now checks what a committed deterministic generator can actually violate: existence, dimensions, minimum size.
+
 ### Added
 - Standing matters: the witnesses with open files. Next door files on the 14th of each month about the recycling bin and the Gazette walks the letter back on the 15th; the package is reported on the 2nd, the $35 on the 4th, the hoodie on the 8th; his mother writes on Mother's Day and counts her reading in issues. Every count is computed from the issue's date, so a back issue carries the number as of that issue: read two months of the 14th and the bin letter has counted itself up. Calendar rules may set `from: 'YYYY-MM-DD'` and do not run before it.
 - The front page carries a nameplate: *The Corbin Falls Gazette* set large, as the page's visible `h1`, with the motto *One man, reported daily since Sept. 29, 2024.* under it. A reader arriving from a shared link was given a credit-size name and no statement of what the paper covers.
@@ -19,7 +30,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The lead headline runs to 3.75rem on the broadsheet, and the corrections take the ink.
 
 ### Removed
-- The wire: the headline shuffler under the issue, with its Previous/Next, four action buttons, three share links, history list, on-device generator (`llm.js`, `data/llm-beats.js`), agent API and `html-to-image` export. Half the JavaScript on the page served a feature the paper had replaced. The page loads seven scripts, none handling input, and ends on the colophon.
+- The wire: the headline shuffler under the issue, with its Previous/Next, four action buttons, three share links, history list, on-device generator (`llm.js`, `data/llm-beats.js`), agent API and `html-to-image` export. Half the JavaScript on the page served a feature the paper had replaced. The page loads one script, which handles no input, and ends on the colophon.
 - `neckass-demo.gif`, which showed the shuffler.
 - Dead code the defluff pass turned up: the ornament cut, which no page used; the `WebApplication` schema block on the front page, which restated the `WebSite` schema; the unused `Neckass.issue.FIRST_EDITION` export; and markup hooks with no rules behind them (`history-card` on the four reading pages, the `box--notices`, `-corrections` and `-letters` modifiers).
 

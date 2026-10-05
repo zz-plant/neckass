@@ -218,7 +218,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - `functions/card.png.js` serves `/card.png?issue=YYYY-MM-DD` (today's if
   none): the nameplate, the issue's date and number, the lead and its deck
   beside the file cut of him, and the motto at the foot, 1200×630 PNG,
-  drawn by Satori and resvg (`workers-og`) with two static cuts of Fraunces
+  drawn by Satori and resvg with two static cuts of Fraunces
   fetched from `/fonts/` through the ASSETS binding. The layout is
   `functions/lib/card.mjs`, which `bun run og:generate` also draws the still
   cards with (the standing issue, the entry, the back issues, the
@@ -230,11 +230,9 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   card for the same issue) and the image alt tags, on the front page only,
   so a shared link previews with the headline actually running in the text
   and in the picture.
-- All three compose the lead through `functions/lib/issue.mjs`, which
-  mirrors the arithmetic in `modules/issue.js`, including the landmark
-  leads. The leads are extracted to `functions/lib/leads.mjs` by `bun run
-  feed:build`; `bun run feed:check` fails on drift and a smoke test asserts
-  both runtimes select the same lead. The smoke suite runs the functions
+- All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
+  adapter over `modules/issue.js` — the same module the browser runs, so the
+  runtimes cannot disagree about a lead. The smoke suite runs the functions
   under `wrangler pages dev` (`bun run edge`, port 8800) and checks the card
   is a real PNG and the tags point at it.
 

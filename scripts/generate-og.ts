@@ -5,9 +5,9 @@
  * These are the images Facebook, X, LinkedIn, Slack and iMessage fetch when
  * someone shares the entry, the back issues or the standards — and the
  * front page, wherever the edge is not there to draw the day's card. They
- * are drawn by the same layout as the per-issue card (functions/lib/card.mjs)
- * with the same renderer, Satori and resvg, in the site's own Fraunces, so a
- * shared link to any page previews as the same paper.
+ * are drawn by the same layout and the same renderCardPng as the per-issue
+ * card (functions/card.png.js), in the site's own Fraunces, so a shared
+ * link to any page previews as the same paper.
  *
  * Output goes to the repo root so the URLs stay short and stable. Run with
  * `bun run og:generate`. Deterministic, so regenerating an unchanged card
@@ -17,9 +17,13 @@
 import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
-import { initWasm, Resvg } from '@resvg/resvg-wasm';
-import satori from 'satori';
-import { cardElement, HEIGHT, WIDTH } from '../functions/lib/card.mjs';
+import {
+    cardElement,
+    HEIGHT,
+    initCardRenderer,
+    renderCardPng,
+    WIDTH,
+} from '../functions/lib/card.mjs';
 
 const ROOT = join(import.meta.dirname ?? __dirname, '..');
 
@@ -91,26 +95,22 @@ function fonts() {
     ];
 }
 
-export async function renderCard(card: OgCard): Promise<Uint8Array> {
-    const svg = await satori(cardElement(card) as never, {
-        width: OG_WIDTH,
-        height: OG_HEIGHT,
-        fonts: fonts(),
-    });
-    return new Resvg(svg, { fitTo: { mode: 'width', value: OG_WIDTH } })
-        .render()
-        .asPng();
-}
-
 async function main() {
     const dryRun = process.argv.includes('--dry-run');
     let ok = 0;
     const problems: string[] = [];
 
-    const require = createRequire(import.meta.url);
-    await initWasm(
-        readFileSync(require.resolve('@resvg/resvg-wasm/index_bg.wasm')),
-    );
+    if (!dryRun) {
+        const require = createRequire(import.meta.url);
+        await initCardRenderer({
+            yogaWasm: readFileSync(
+                require.resolve('yoga-wasm-web/dist/yoga.wasm'),
+            ),
+            resvgWasm: readFileSync(
+                require.resolve('@resvg/resvg-wasm/index_bg.wasm'),
+            ),
+        });
+    }
 
     for (const card of OG_CARDS) {
         const outPath = join(ROOT, card.file);
@@ -120,7 +120,14 @@ async function main() {
         }
 
         try {
-            writeFileSync(outPath, await renderCard(card));
+            writeFileSync(
+                outPath,
+                await renderCardPng(cardElement(card), {
+                    width: OG_WIDTH,
+                    height: OG_HEIGHT,
+                    fonts: fonts(),
+                }),
+            );
             const size = statSync(outPath).size;
             if (size < OG_MIN_BYTES) {
                 problems.push(
