@@ -21,7 +21,16 @@ following a line number that has since moved.
 - **The calendar (`data/calendar.js`, `modules/calendar.js`)** runs dated
   items — the council's Tuesday, the clocks, his birthday, Thanksgiving —
   in place of a dealt item on the days they happen, and every lead carries a
-  follow-up brief that runs the next morning.
+  follow-up brief that runs the next morning. A rule may carry
+  `from: 'YYYY-MM-DD'` and does not run before it. The standing matters
+  are serials: witnesses with open files (the package, the $35, the
+  hoodie, the bin) file monthly on the day of the month the grudge began,
+  the counts in their items computed from the issue's date out of
+  `data.FEUDS`, so a back issue carries the number as of that issue and
+  the archive is the ledger; the day after next door's bin letter the
+  paper prints a standing correction confirming one fact and declining to
+  check the wind. His mother files on Mother's Day and counts her reading
+  in issues.
 - **The page has no interactive half.** It loads seven scripts, none of
   which handle input, and ends on the colophon. The only URL parameter is
   `?issue=`.
@@ -170,7 +179,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
 - **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`.
-- **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday), then one dealt from `data.LETTERS`. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces: it is the one place on the page where someone other than the paper is speaking.
+- **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday and on Mother's Day; next door files her monthly bin letter on the 14th), then one dealt from `data.LETTERS`. A serial letter fills the section's size, so a witness files once per issue. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces: it is the one place on the page where someone other than the paper is speaking.
 - **Colophon** — the staff line (vacant, unattended, ongoing), the note
   (*Letters may be edited.*) and the issue's clipping (`#colophon-card`,
   `/card.png?issue=…`). The folio line already carries the site links; the

@@ -225,6 +225,65 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(checked.counts).toEqual([7, 3, 2, 5]);
     });
 
+    test('standing matters compound with the run', async ({ page }) => {
+        await page.goto(BASE_URL);
+        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+
+        // The recurring witnesses keep files, and the counts in them are
+        // functions of the issue's date: a back issue carries the number
+        // as of that issue, so the archive is the ledger.
+        const checked = await page.evaluate(() => {
+            const { issue } = window.Neckass;
+            const compose = (value) =>
+                issue.composeIssue(issue.parseIssueDate(value));
+            const october = compose('2026-10-14');
+            return {
+                firstBin: compose('2025-10-14').letters[1]?.body,
+                octoberBin: october.letters[1]?.body,
+                novemberBin: compose('2026-11-14').letters[1]?.body,
+                before: compose('2025-09-14').letters.map((l) => l.body),
+                binCorrection: compose('2026-10-15').corrections[2],
+                package: compose('2026-05-02').briefs,
+                hoodie: compose('2026-05-08').classifieds,
+                debt: compose('2026-08-04').letters[1],
+                mother: compose('2025-05-11').letters[1],
+                counts: [
+                    october.letters.length,
+                    compose('2026-10-15').corrections.length,
+                    compose('2026-05-02').briefs.length,
+                    compose('2026-05-08').classifieds.length,
+                ],
+            };
+        });
+
+        // Next door files on the 14th of each month and keeps count.
+        expect(checked.firstBin).toBe(
+            'I am at 14. This is letter number 1 about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
+        );
+        expect(checked.octoberBin).toMatch(/letter number 13/);
+        expect(checked.novemberBin).toMatch(/letter number 14/);
+        // The count only ever goes up, and the serial does not run in
+        // issues that predate the grudge.
+        for (const body of checked.before) {
+            expect(body).not.toMatch(/This is letter number/);
+        }
+        // The day after the letter, the paper walks it back, monthly.
+        expect(checked.binCorrection).toMatch(/The wind remains unverified/);
+        expect(checked.package.join('\n')).toMatch(
+            /going out this week" for \d+ days/,
+        );
+        expect(checked.hoodie.join('\n')).toMatch(/now \d+ days out/);
+        expect(checked.debt?.body).toMatch(/outstanding for \d+ days/);
+        expect(checked.debt?.signature).toBe(
+            'The friend from the Fourth, $35 down',
+        );
+        // His mother counts her reading in issues: 2025-05-11 is No. 225.
+        expect(checked.mother?.body).toMatch(/225 issues of it/);
+
+        // A standing matter takes the place of a dealt item; sizes hold.
+        expect(checked.counts).toEqual([2, 4, 7, 5]);
+    });
+
     test('a back issue loads from its URL and offers the way back', async ({
         page,
     }) => {

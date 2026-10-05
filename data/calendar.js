@@ -12,8 +12,11 @@
     // reports on Tuesday's council meeting.
     //
     // Placeholders: {age}, {ageLess2}, {years} and {yearsWord} (of the
-    // paper), {year}, {lastYear}. A rule marked `unlessWritten` stands down
-    // on a landmark issue (data/editions.js), whose lead covers the day.
+    // paper), {year}, {lastYear}. A rule may set `from: 'YYYY-MM-DD'` and
+    // does not run before it. The standing matters at the foot of the file
+    // also fill {id.days}, {id.months} and {id.count} from data.FEUDS. A
+    // rule marked `unlessWritten` stands down on a landmark issue
+    // (data/editions.js), whose lead covers the day.
     data.CALENDAR = [
         // ---- The week -------------------------------------------------
         {
@@ -246,5 +249,67 @@
             section: 'briefs',
             item: 'Neckass said {year} was "a building year" and that {lastYear} was too.',
         },
+
+        // ---- Standing matters ------------------------------------------
+        // The witnesses with open files. Each serial files on the day of
+        // the month its grudge began, and every count in it is computed
+        // from the issue's date: a back issue carries the number as of
+        // that issue, so the archive is the ledger. Read the 14th of two
+        // different months and next door's bin letter has counted itself
+        // up. A serial begins a month after the grudge, so its first
+        // filing is count 1 and it never runs in an issue that predates
+        // the grudge.
+        {
+            on: { day: 2, from: '2026-04-02' },
+            section: 'briefs',
+            item: 'The package, on the passenger seat since March, has now been "going out this week" for {package.days} days.',
+        },
+        {
+            on: { day: 4, from: '2026-08-04' },
+            section: 'letters',
+            item: {
+                body: 'The $35 that remains of the $40 from the Fourth of July has been outstanding for {debt.days} days. The $5 came back with the note "we even?" I have kept the note.',
+                signature: 'The friend from the Fourth, $35 down',
+            },
+        },
+        {
+            on: { day: 8, from: '2026-04-08' },
+            section: 'classifieds',
+            item: 'WANTED: hoodie, gray, borrowed in March, now {hoodie.days} days out and appearing on Instagram, where the brand is credited and the owner is not.',
+        },
+        {
+            on: { day: 14, from: '2025-10-14' },
+            section: 'letters',
+            item: {
+                body: 'I am at 14. This is letter number {bin.count} about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
+                signature: 'Next door',
+            },
+        },
+        {
+            on: { day: 15, from: '2025-10-15' },
+            section: 'corrections',
+            item: 'The Gazette printed next door’s letter of the 14th about the bin and has confirmed one fact in it, the address, 14. The wind remains unverified, and the bin has not moved.',
+        },
+        {
+            on: { weekday: 0, nth: [2], month: 5 },
+            section: 'letters',
+            item: {
+                body: 'I am his mother. He called Saturday, the day before Mother’s Day, to say he would call Sunday. I have read this paper every day since the first one, {ma.count} issues of it. It is how I know about the shoes.',
+                signature: 'His mother',
+            },
+        },
     ];
+
+    // The standing matters' start dates. `days` is the days since
+    // `since`; a `months` feud also fills `months`, and its `count` is
+    // the monthly filings to date; a `days` feud fills `count` as the
+    // days plus one, which for the paper's first edition is the issue
+    // number. See modules/calendar.js for the arithmetic.
+    data.FEUDS = {
+        package: { since: '2026-03-02' },
+        hoodie: { since: '2026-03-08' },
+        debt: { since: '2026-07-04' },
+        bin: { since: '2025-09-14', unit: 'months' },
+        ma: { since: '2024-09-29', unit: 'days' },
+    };
 })();

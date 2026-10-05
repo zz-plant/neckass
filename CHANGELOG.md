@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 ### Added
+- Standing matters: the witnesses with open files. Next door files on the 14th of each month about the recycling bin and the Gazette walks the letter back on the 15th; the package is reported on the 2nd, the $35 on the 4th, the hoodie on the 8th; his mother writes on Mother's Day and counts her reading in issues. Every count is computed from the issue's date, so a back issue carries the number as of that issue: read two months of the 14th and the bin letter has counted itself up. Calendar rules may set `from: 'YYYY-MM-DD'` and do not run before it.
 - The front page carries a nameplate: *The Corbin Falls Gazette* set large, as the page's visible `h1`, with the motto *One man, reported daily since Sept. 29, 2024.* under it. A reader arriving from a shared link was given a credit-size name and no statement of what the paper covers.
 - *Earlier issues* in the lead: the three issues before this one, by their leads, each a link to the issue. On the broadsheet it fills the foot of the deck's column, which ran blank beside the headline.
 - The correction retracting yesterday's lead ends *See No. n.*, linked to the issue it retracts.
