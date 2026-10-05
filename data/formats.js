@@ -157,7 +157,7 @@
             correction:
                 'The visit "to ask about canceling" ended with a second membership.',
             followUp:
-                'On his third visit to the gym Neckass reached the vending machine and has asked whether that counts as two.',
+                'On his third visit to the gym Neckass reached the vending machine and sent the group a photograph of the weights.',
             classified:
                 'FOR SALE: gym bag, unused. Matching membership available.',
             letter: {
@@ -708,7 +708,7 @@
             correction:
                 'There is no second left. The driver took the first and has written in.',
             followUp:
-                'The driver found Route 9. They were on it. Neckass was told and said "well, they got there."',
+                'Told that the driver had found Route 9, which they had been on all along, Neckass said "well, they got there."',
             classified:
                 'WANTED: the driver who was on Route 9 on Tuesday. You were on Route 9. We are sorry.',
             letter: {
@@ -770,7 +770,7 @@
             correction:
                 'The voicemail was left at 7:40 and again at 7:42, to say "sorry, it\'s me."',
             followUp:
-                'The wrong man called back. They spoke for twenty minutes. Neither has said what about.',
+                'The wrong man called back, and they spoke for twenty minutes, about which neither has said.',
             classified:
                 'WANTED: "me." Left a voicemail Tuesday, 7:40. Please ring the office and say who you are. Do not say "it\'s me."',
             letter: {
@@ -909,7 +909,7 @@
         'Clear, or "basically nice," which is his highest rating.',
         'Cold. "Fine," in shorts.',
         'Wind. The picnic will move indoors after the food does.',
-        'Fog, and a man walking confidently away from where he is going.',
+        'Fog, and a man walking quickly away from where he is going.',
         'Unsettled, according to three forecasts. He read out the fourth.',
         'Bright. The sunglasses are on his head. The search will take twenty minutes.',
         'Drizzle, "not really rain," and wet through by noon.',

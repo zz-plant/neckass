@@ -71,6 +71,17 @@
 
     function matches(spec, date) {
         if (!spec) return false;
+        // A serial does not run in issues that predate it.
+        if (spec.from !== undefined) {
+            const [year, month, day] = String(spec.from).split('-').map(Number);
+            const begins = new Date(year, month - 1, day);
+            const stamp = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+            );
+            if (stamp.getTime() < begins.getTime()) return false;
+        }
         if (spec.dayAfter) {
             return matches(spec.dayAfter, new Date(date.getTime() - DAY_MS));
         }
@@ -105,6 +116,41 @@
         'ten',
     ];
 
+    // The standing matters (data.FEUDS): each is a grudge with a start
+    // date, and its counters are computed from the issue's date, so a
+    // back issue carries the number as of that issue. `{id}.days` is
+    // always the days since; a `months` feud also fills `{id}.months`,
+    // and its `{id}.count` is the monthly filings to date, which holds
+    // because a monthly serial begins one month after its grudge; a
+    // `days` feud fills `{id}.count` as the days plus one, which for
+    // the paper's first edition is the issue number itself.
+    function feudFills(date) {
+        const out = {};
+        const feuds = Neckass.data?.FEUDS || {};
+        for (const [id, feud] of Object.entries(feuds)) {
+            const [year, month, day] = String(feud.since)
+                .split('-')
+                .map(Number);
+            const days = Math.floor(
+                (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
+                    Date.UTC(year, month - 1, day)) /
+                    DAY_MS,
+            );
+            out[`${id}.days`] = days;
+            if (feud.unit === 'months') {
+                let months =
+                    (date.getFullYear() - year) * 12 +
+                    (date.getMonth() - (month - 1));
+                if (date.getDate() < day) months -= 1;
+                out[`${id}.months`] = months;
+                out[`${id}.count`] = months;
+            } else if (feud.unit === 'days') {
+                out[`${id}.count`] = days + 1;
+            }
+        }
+        return out;
+    }
+
     // What the placeholders in an item resolve to on this date.
     function fills(date) {
         const year = date.getFullYear();
@@ -122,11 +168,12 @@
                 String(year - FIRST_EDITION.year),
             year,
             lastYear: year - 1,
+            ...feudFills(date),
         };
     }
 
     function fill(text, values) {
-        return String(text).replace(/\{(\w+)\}/g, (match, key) =>
+        return String(text).replace(/\{([\w.]+)\}/g, (match, key) =>
             key in values ? String(values[key]) : match,
         );
     }
