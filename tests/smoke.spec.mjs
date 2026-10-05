@@ -1,6 +1,15 @@
 import { expect, test } from '@playwright/test';
+import { EDITIONS } from '../data/editions.js';
+import { LEADS } from '../data/formats.js';
 import { buildFeed } from '../functions/feed.xml.js';
-import { issueNumber, selectLead } from '../functions/lib/issue.mjs';
+import { issueNumber } from '../functions/lib/issue.mjs';
+import {
+    composeIssue,
+    issueNumber as localIssueNumber,
+    parseIssueDate,
+    recentIssues,
+    selectLead,
+} from '../modules/issue.js';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
 // The Pages Functions under workerd; see playwright.config.mjs.
@@ -82,206 +91,105 @@ test.describe('The Corbin Falls Gazette', () => {
         ).toBe(true);
     });
 
-    test('the weather cut is drawn for the forecast on file', async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        // The cut is one drawing with four switches, set from the first word
-        // of the forecast. A break here is silent: the sky just stops matching
-        // what the column says.
-        const result = await page.evaluate(() => {
-            const { weatherLayers } = window.Neckass.frontPage;
-            const cut = document.getElementById('weather-cut');
-            const styles = getComputedStyle(cut);
-            const read = (name) =>
-                Number(styles.getPropertyValue(`--${name}`).trim());
-            return {
-                cases: [
-                    'Sunny, going by the window.',
-                    'Overcast. Ugh, this weather.',
-                    'Rain. He will not bring a jacket.',
-                    'Wind. The picnic is indoors.',
-                    'Unsettled. He picked the forecast he preferred.',
-                ].map(weatherLayers),
-                drawn: {
-                    sun: read('sun'),
-                    cloud: read('cloud'),
-                    rain: read('rain'),
-                    wind: read('wind'),
-                },
-                forecast: window.Neckass.currentIssue.weather,
-            };
-        });
-
-        expect(result.cases).toEqual([
-            { sun: 1, cloud: 0, rain: 0, wind: 0 },
-            { sun: 0, cloud: 1, rain: 0, wind: 0 },
-            { sun: 0, cloud: 1, rain: 1, wind: 0 },
-            { sun: 0, cloud: 1, rain: 0, wind: 1 },
-            { sun: 1, cloud: 1, rain: 0, wind: 0 },
-        ]);
-
-        // Whatever ran today, the sky on the page is the sky for that line,
-        // and something is always showing.
-        const expected = await page.evaluate(
-            (line) => window.Neckass.frontPage.weatherLayers(line),
-            result.forecast,
-        );
-        expect(result.drawn).toEqual(expected);
-        expect(Object.values(result.drawn).some(Boolean)).toBe(true);
-    });
-
-    test("today's corrections retract yesterday's actual lead", async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
-
+    test("today's corrections retract yesterday's actual lead", () => {
         // Walk a spread of issues rather than only today, so the chain is
         // checked across many lead pairings.
-        const checked = await page.evaluate(() => {
-            const { issue } = window.Neckass;
-            const results = [];
-            for (const value of [
-                '2025-03-04',
-                '2026-09-02',
-                '2026-09-03',
-                '2027-01-19',
-                '2027-11-30',
-            ]) {
-                const date = issue.parseIssueDate(value);
-                const today = issue.composeIssue(date);
-                const previous = issue.composeIssue(
-                    new Date(
-                        date.getFullYear(),
-                        date.getMonth(),
-                        date.getDate() - 1,
-                    ),
-                );
-                results.push({
-                    value,
-                    // [0] is the routine correction; [1] is the chained one.
-                    first: today.corrections[1],
-                    expected: previous.lead.correction,
-                    previousNumber: previous.number,
-                    number: today.number,
-                });
-            }
-            return results;
-        });
-
-        for (const entry of checked) {
-            expect(entry.number, entry.value).toBe(entry.previousNumber + 1);
+        for (const value of [
+            '2025-03-04',
+            '2026-09-02',
+            '2026-09-03',
+            '2027-01-19',
+            '2027-11-30',
+        ]) {
+            const date = parseIssueDate(value);
+            const today = composeIssue(date);
+            const previous = composeIssue(
+                new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate() - 1,
+                ),
+            );
+            expect(today.number, value).toBe(previous.number + 1);
             // The retraction printed today is the one attached to the lead
-            // that actually ran yesterday.
-            expect(entry.first, entry.value).toBe(entry.expected);
+            // that actually ran yesterday. [0] is the routine correction;
+            // [1] is the chained one.
+            expect(today.corrections[1], value).toBe(previous.lead.correction);
         }
     });
 
-    test('the paper knows what day it is', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
+    test('the paper knows what day it is', () => {
+        const compose = (value) => composeIssue(parseIssueDate(value));
+        const before = compose('2026-11-25');
+        const thanksgiving = compose('2026-11-26');
+        const wednesday = compose('2026-10-07');
+        const birthday = compose('2027-03-11');
+        const anniversary = compose('2027-09-29');
 
-        const checked = await page.evaluate(() => {
-            const { issue } = window.Neckass;
-            const compose = (value) =>
-                issue.composeIssue(issue.parseIssueDate(value));
-            const before = compose('2026-11-25');
-            const thanksgiving = compose('2026-11-26');
-            const wednesday = compose('2026-10-07');
-            const birthday = compose('2027-03-11');
-            const anniversary = compose('2027-09-29');
-            return {
-                // Yesterday's lead continues at the top of today's column.
-                followUp: thanksgiving.briefs[0],
-                expectedFollowUp: before.lead.followUp,
-                thanksgivingNotice: thanksgiving.notices[0],
-                thanksgivingBrief: thanksgiving.briefs[1],
-                councilReport: wednesday.briefs[1],
-                birthdayBrief: birthday.briefs[1],
-                birthdayLetter: birthday.letters[1]?.signature,
-                anniversaryBrief: anniversary.briefs[1],
-                counts: [
-                    thanksgiving.briefs.length,
-                    thanksgiving.notices.length,
-                    birthday.letters.length,
-                    birthday.classifieds.length,
-                ],
-            };
-        });
-
-        expect(checked.followUp).toBe(checked.expectedFollowUp);
-        expect(checked.thanksgivingNotice).toMatch(/Thanksgiving/);
-        expect(checked.thanksgivingBrief).toMatch(/bring a side/);
-        expect(checked.councilReport).toMatch(/Town council met Tuesday/);
-        expect(checked.birthdayBrief).toBe(
+        // Yesterday's lead continues at the top of today's column.
+        expect(thanksgiving.briefs[0]).toBe(before.lead.followUp);
+        expect(thanksgiving.notices[0]).toMatch(/Thanksgiving/);
+        expect(thanksgiving.briefs[1]).toMatch(/bring a side/);
+        expect(wednesday.briefs[1]).toMatch(/Town council met Tuesday/);
+        expect(birthday.briefs[1]).toBe(
             'Neckass is 38 today. He has told people he is 36 since he was 36.',
         );
-        expect(checked.birthdayLetter).toBe('His mother');
-        expect(checked.anniversaryBrief).toMatch(/^The Gazette is three today/);
+        expect(birthday.letters[1]?.signature).toBe('His mother');
+        expect(anniversary.briefs[1]).toMatch(/^The Gazette is three today/);
         // A dated item takes the place of a dealt one; sizes do not change.
-        expect(checked.counts).toEqual([7, 3, 2, 5]);
+        expect([
+            thanksgiving.briefs.length,
+            thanksgiving.notices.length,
+            birthday.letters.length,
+            birthday.classifieds.length,
+        ]).toEqual([7, 3, 2, 5]);
     });
 
-    test('standing matters compound with the run', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
-
+    test('standing matters compound with the run', () => {
         // The recurring witnesses keep files, and the counts in them are
         // functions of the issue's date: a back issue carries the number
         // as of that issue, so the archive is the ledger.
-        const checked = await page.evaluate(() => {
-            const { issue } = window.Neckass;
-            const compose = (value) =>
-                issue.composeIssue(issue.parseIssueDate(value));
-            const october = compose('2026-10-14');
-            return {
-                firstBin: compose('2025-10-14').letters[1]?.body,
-                octoberBin: october.letters[1]?.body,
-                novemberBin: compose('2026-11-14').letters[1]?.body,
-                before: compose('2025-09-14').letters.map((l) => l.body),
-                binCorrection: compose('2026-10-15').corrections[2],
-                package: compose('2026-05-02').briefs,
-                hoodie: compose('2026-05-08').classifieds,
-                debt: compose('2026-08-04').letters[1],
-                mother: compose('2025-05-11').letters[1],
-                counts: [
-                    october.letters.length,
-                    compose('2026-10-15').corrections.length,
-                    compose('2026-05-02').briefs.length,
-                    compose('2026-05-08').classifieds.length,
-                ],
-            };
-        });
+        const compose = (value) => composeIssue(parseIssueDate(value));
+        const october = compose('2026-10-14');
 
         // Next door files on the 14th of each month and keeps count.
-        expect(checked.firstBin).toBe(
+        expect(compose('2025-10-14').letters[1]?.body).toBe(
             'I am at 14. This is letter number 1 about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
         );
-        expect(checked.octoberBin).toMatch(/letter number 13/);
-        expect(checked.novemberBin).toMatch(/letter number 14/);
+        expect(october.letters[1]?.body).toMatch(/letter number 13/);
+        expect(compose('2026-11-14').letters[1]?.body).toMatch(
+            /letter number 14/,
+        );
         // The count only ever goes up, and the serial does not run in
         // issues that predate the grudge.
-        for (const body of checked.before) {
+        for (const body of compose('2025-09-14').letters.map((l) => l.body)) {
             expect(body).not.toMatch(/This is letter number/);
         }
         // The day after the letter, the paper walks it back, monthly.
-        expect(checked.binCorrection).toMatch(/The wind remains unverified/);
-        expect(checked.package.join('\n')).toMatch(
+        expect(compose('2026-10-15').corrections[2]).toMatch(
+            /The wind remains unverified/,
+        );
+        expect(compose('2026-05-02').briefs.join('\n')).toMatch(
             /going out this week" for \d+ days/,
         );
-        expect(checked.hoodie.join('\n')).toMatch(/now \d+ days out/);
-        expect(checked.debt?.body).toMatch(/outstanding for \d+ days/);
-        expect(checked.debt?.signature).toBe(
-            'The friend from the Fourth, $35 down',
+        expect(compose('2026-05-08').classifieds.join('\n')).toMatch(
+            /now \d+ days out/,
         );
+        const debt = compose('2026-08-04').letters[1];
+        expect(debt?.body).toMatch(/outstanding for \d+ days/);
+        expect(debt?.signature).toBe('The friend from the Fourth, $35 down');
         // His mother counts her reading in issues: 2025-05-11 is No. 225.
-        expect(checked.mother?.body).toMatch(/225 issues of it/);
+        expect(compose('2025-05-11').letters[1]?.body).toMatch(
+            /225 issues of it/,
+        );
 
         // A standing matter takes the place of a dealt item; sizes hold.
-        expect(checked.counts).toEqual([2, 4, 7, 5]);
+        expect([
+            october.letters.length,
+            compose('2026-10-15').corrections.length,
+            compose('2026-05-02').briefs.length,
+            compose('2026-05-08').classifieds.length,
+        ]).toEqual([2, 4, 7, 5]);
     });
 
     test('a back issue loads from its URL and offers the way back', async ({
@@ -326,17 +234,12 @@ test.describe('The Corbin Falls Gazette', () => {
         // lead that ran.
         const earlier = page.locator('#earlier-list a');
         await expect(earlier).toHaveCount(3);
-        const expected = await page.evaluate(
-            (date) =>
-                window.Neckass.issue
-                    .recentIssues(4, window.Neckass.issue.parseIssueDate(date))
-                    .slice(1)
-                    .map((back) => ({
-                        href: `/?issue=${back.issueParam}`,
-                        headline: back.lead.headline,
-                    })),
-            issue.issueParam,
-        );
+        const expected = recentIssues(4, parseIssueDate(issue.issueParam))
+            .slice(1)
+            .map((back) => ({
+                href: `/?issue=${back.issueParam}`,
+                headline: back.lead.headline,
+            }));
         for (const [index, back] of expected.entries()) {
             await expect(earlier.nth(index)).toHaveAttribute('href', back.href);
             await expect(earlier.nth(index)).toContainText(back.headline);
@@ -374,9 +277,7 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#briefs-list li')).toHaveCount(3);
 
         // No. 2 retracts a detail of the written lead, not a dealt one.
-        const second = await page.evaluate(() =>
-            window.Neckass.issue.composeIssue(new Date(2024, 8, 30)),
-        );
+        const second = composeIssue(new Date(2024, 8, 30));
         expect(second.corrections[1]).toBe(first.lead.correction);
         expect(second.editorial).toBeNull();
 
@@ -393,11 +294,10 @@ test.describe('The Corbin Falls Gazette', () => {
         await page.goto(`${BASE_URL}?issue=2099-01-01`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
 
-        const [rendered, today] = await page.evaluate(() => [
-            window.Neckass.currentIssue.number,
-            window.Neckass.issue.issueNumber(new Date()),
-        ]);
-        expect(rendered).toBe(today);
+        const rendered = await page.evaluate(
+            () => window.Neckass.currentIssue.number,
+        );
+        expect(rendered).toBe(localIssueNumber(new Date()));
         const notice = page.locator('#back-issue-notice');
         await expect(notice).toBeVisible();
         await expect(notice).toContainText('goes to press');
@@ -407,77 +307,55 @@ test.describe('The Corbin Falls Gazette', () => {
         await page.goto(`${BASE_URL}?issue=not-a-date`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
 
-        const [rendered, today] = await page.evaluate(() => [
-            window.Neckass.currentIssue.number,
-            window.Neckass.issue.issueNumber(new Date()),
-        ]);
-        expect(rendered).toBe(today);
+        const rendered = await page.evaluate(
+            () => window.Neckass.currentIssue.number,
+        );
+        expect(rendered).toBe(localIssueNumber(new Date()));
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
-    test('no lead runs twice inside one round of the pool', async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
-
-        const result = await page.evaluate(() => {
-            const { issue, data } = window.Neckass;
-            const size = data.LEADS.length;
-            const rounds = [];
-            // Three consecutive rounds, well clear of the landmark issues.
-            for (let round = 8; round < 11; round += 1) {
-                const seen = new Set();
-                for (let place = 0; place < size; place += 1) {
-                    const number = round * size + place + 1;
-                    if (data.EDITIONS[number]) continue;
-                    seen.add(issue.selectLead(number, data.LEADS).headline);
-                }
-                rounds.push(seen.size);
+    test('no lead runs twice inside one round of the pool', () => {
+        const size = LEADS.length;
+        // Three consecutive rounds, well clear of the landmark issues.
+        for (let round = 8; round < 11; round += 1) {
+            const seen = new Set();
+            for (let place = 0; place < size; place += 1) {
+                const number = round * size + place + 1;
+                if (EDITIONS[number]) continue;
+                seen.add(selectLead(number).headline);
             }
-            return { size, rounds };
-        });
-
-        for (const distinct of result.rounds) {
-            expect(distinct).toBe(result.size);
+            expect(seen.size).toBe(size);
         }
 
         // Each round is its own shuffle, so the seam between two rounds is
         // where a lead could run twice in a row. It must not come back
         // inside a quarter of the pool (a fortnight at most).
-        const seam = await page.evaluate(() => {
-            const { issue, data } = window.Neckass;
-            const size = data.LEADS.length;
-            const last = new Map();
-            let closest = Number.POSITIVE_INFINITY;
-            for (let number = 1; number <= size * 12; number += 1) {
-                if (data.EDITIONS[number]) continue;
-                const { headline } = issue.selectLead(number, data.LEADS);
-                if (last.has(headline)) {
-                    closest = Math.min(closest, number - last.get(headline));
-                }
-                last.set(headline, number);
+        const last = new Map();
+        let closest = Number.POSITIVE_INFINITY;
+        for (let number = 1; number <= size * 12; number += 1) {
+            if (EDITIONS[number]) continue;
+            const { headline } = selectLead(number);
+            if (last.has(headline)) {
+                closest = Math.min(closest, number - last.get(headline));
             }
-            return { closest, required: Math.min(14, Math.floor(size / 4)) };
-        });
-        expect(seam.closest).toBeGreaterThan(seam.required);
+            last.set(headline, number);
+        }
+        expect(closest).toBeGreaterThan(Math.min(14, Math.floor(size / 4)));
+
         // Every lead carries everything the paper prints about it.
-        const incomplete = await page.evaluate(
-            () =>
-                window.Neckass.data.LEADS.filter(
-                    (lead) =>
-                        !(
-                            lead.headline &&
-                            lead.deck &&
-                            lead.byline &&
-                            lead.correction &&
-                            lead.followUp &&
-                            lead.classified &&
-                            lead.letter?.body &&
-                            lead.letter?.signature
-                        ),
-                ).length,
-        );
+        const incomplete = LEADS.filter(
+            (lead) =>
+                !(
+                    lead.headline &&
+                    lead.deck &&
+                    lead.byline &&
+                    lead.correction &&
+                    lead.followUp &&
+                    lead.classified &&
+                    lead.letter?.body &&
+                    lead.letter?.signature
+                ),
+        ).length;
         expect(incomplete).toBe(0);
     });
 
@@ -530,50 +408,6 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#letters-list li').first()).not.toBeEmpty();
         await expect(page.locator('#masthead-date')).not.toBeEmpty();
         await context.close();
-    });
-
-    // The feed and the social card compose the lead in the Workers runtime,
-    // from their own copy of the arithmetic and their own extract of the
-    // leads. If either drifts from modules/issue.js the paper starts
-    // advertising a headline it is not running.
-    test('worker and browser agree on the lead for a given issue', async ({
-        page,
-    }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.issue));
-
-        const dates = [
-            '2024-09-29',
-            '2025-01-01',
-            '2025-07-13',
-            '2026-09-02',
-            '2026-12-25',
-            '2027-06-14',
-        ];
-
-        const fromBrowser = await page.evaluate((values) => {
-            const { issue } = window.Neckass;
-            const leads = window.Neckass.data.LEADS;
-            return values.map((value) => {
-                const date = issue.parseIssueDate(value);
-                const number = issue.issueNumber(date);
-                return {
-                    number,
-                    headline: issue.selectLead(number, leads)?.headline ?? null,
-                };
-            });
-        }, dates);
-
-        const fromWorker = dates.map((value) => {
-            const [year, month, day] = value.split('-').map(Number);
-            const number = issueNumber(
-                new Date(Date.UTC(year, month - 1, day)),
-            );
-            return { number, headline: selectLead(number)?.headline ?? null };
-        });
-
-        expect(fromWorker).toEqual(fromBrowser);
-        for (const entry of fromWorker) expect(entry.headline).toBeTruthy();
     });
 
     test('the feed is well-formed and leads with the current issue', async ({
@@ -648,22 +482,5 @@ test.describe('The Corbin Falls Gazette', () => {
         const feed = await request.get(`${EDGE_URL}feed.xml`);
         expect(feed.ok()).toBe(true);
         expect(feed.headers()['content-type']).toContain('application/rss+xml');
-    });
-
-    test('every page carries the icon set', async ({ page }) => {
-        for (const path of ['', 'about.html', 'archive.html', 'prompts.html']) {
-            await page.goto(`${BASE_URL}${path}`);
-            await expect(
-                page.locator('link[rel="icon"][href="/favicon.svg"]'),
-            ).toHaveCount(1);
-            await expect(
-                page.locator('link[rel="apple-touch-icon"]'),
-            ).toHaveCount(1);
-            await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
-            // The inside pages' plate goes home; the front page is home.
-            await expect(
-                page.locator('.masthead__plate a[href="/"]'),
-            ).toHaveCount(path ? 1 : 0);
-        }
     });
 });

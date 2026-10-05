@@ -17,28 +17,29 @@ reading.
 - **Continuous.** Today's paper retracts a detail of yesterday's lead and
   runs the next thing he did. It knows what day it is: the council's
   Tuesday, the clocks, his birthday, the paper's own anniversary.
-- **Static-first.** Works from `file://` or any static host. Two Cloudflare
-  Pages Functions add what a file cannot: the RSS feed and a social card
-  drawn per issue.
+- **Static-first.** The browser and the edge import the same ES modules;
+  any static host serves it. Two Cloudflare Pages Functions add what a file
+  cannot: the RSS feed and a social card drawn per issue.
 
 ## Quick start
 1. Clone the repository.
-2. Open `index.html` in a modern browser.
+2. `bun run serve`, then open `http://127.0.0.1:8001/`.
 3. Come back tomorrow.
 
 ## Requirements
 - **Runtime:** any modern browser (no build pipeline required).
-- **Optional smoke tests:** [Bun](https://bun.sh) (Playwright is a dev dependency installed via `bun install`).
+- **Serving:** [Bun](https://bun.sh) for the local server and the smoke tests
+  (Playwright is a dev dependency installed via `bun install`).
 
-If tooling blocks `file://` URLs, run:
+The modules are ES modules, so the pages are served over HTTP:
 
 ```bash
 bun run serve
 ```
 
-Then open `http://127.0.0.1:8001/`. To run the edge functions as well (the
-feed, the card, the middleware), `bun run edge` serves the same tree through
-`wrangler pages dev` on `http://127.0.0.1:8800/`.
+That serves the site on `http://127.0.0.1:8001/`. To run the edge functions
+as well (the feed, the card, the middleware), `bun run edge` serves the same
+tree through `wrangler pages dev` on `http://127.0.0.1:8800/`.
 
 ## Pages
 - `index.html` — today's front page. `/?issue=YYYY-MM-DD` is any past one.
@@ -83,25 +84,21 @@ cannot:
 - `functions/feed.xml.js` — builds the RSS feed for the last 30 issues on
   request. No store and no cron: issues come from the calendar.
 - `functions/card.png.js` — draws the issue's lead on the sheet as a PNG, on
-  request, with Satori and resvg (`workers-og`). About 150 ms; no browser.
+  request, with Satori and resvg. About 150 ms; no browser.
 - `functions/_middleware.js` — rewrites the front page's title and
   social-card tags to the active issue's lead, and points the image tags at
   the card for the same issue, so a shared link previews with the headline
   that is actually running.
 
-All three compose the lead through `functions/lib/issue.mjs`, which mirrors the
-arithmetic in `modules/issue.js`. The Workers runtime forbids evaluating the
-browser data files, so the leads are extracted to `functions/lib/leads.mjs` by
-`bun run feed:build`. `bun run feed:check` fails if that extract has drifted,
-and a smoke test asserts the two runtimes pick the same lead for a spread of
-dates.
+All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
+adapter over `modules/issue.js` — the same module the browser runs, so both
+runtimes pick the same lead by construction.
 
 ## Smoke tests
 A Playwright suite covers what a reader opens: today's issue renders whole,
 a back issue loads from the archive, the corrections chain points at the
 lead it claims to, the calendar runs on its days, the landmarks are written,
-both runtimes pick the same lead, and the
-edge serves the feed and a real card. It starts the static server and
+and the edge serves the feed and a real card. It starts the static server and
 `wrangler pages dev` itself.
 
 ```bash

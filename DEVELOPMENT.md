@@ -4,15 +4,11 @@ This guide is for maintainers, contributors, and coding agents changing implemen
 
 ## Local development
 - No build step required.
-- Primary flow: open `index.html` in a modern browser.
-- If your tooling requires HTTP (screenshots/automation):
+- Primary flow: `bun run serve`, then open `http://127.0.0.1:8001/`. The
+  browser code is ES modules, so the pages are served over HTTP.
 
-```bash
-bun run serve
-```
-
-Then open `http://127.0.0.1:8001/`. The edge functions — the feed, the
-card, the middleware — only run under workerd:
+The edge functions — the feed, the card, the middleware — only run under
+workerd:
 
 ```bash
 bun run edge
@@ -20,61 +16,59 @@ bun run edge
 
 serves the same tree through `wrangler pages dev` on `http://127.0.0.1:8800/`.
 
-## Why the data files are classic scripts, not JSON or ESM
+## Why the code is ES modules, shared by both runtimes
 
-`data/*.js` are IIFEs that assign onto `window.Neckass.data`, and every module
-is a plain `<script defer>` rather than an ES module. This is deliberate, and
-it buys one thing: **the site opens from `file://`**. Nothing in the browser
-path calls `fetch`, so `open index.html` works with no server. JSON data would
-need a fetch and ESM needs a module graph; both are blocked by CORS on
-`file://`, and both would break that.
+`data/*.js` and the issue arithmetic are plain ES modules. The browser loads
+them through one `<script type="module">` per page, whose import graph is
+statically analyzed; the Pages Functions import the same files directly.
+There is one copy of each pool and of the lead-selection arithmetic, so the
+feed and the card cannot drift from the page: they run the same code by
+construction.
 
-The cost is paid in three places, and it is the price of that feature:
+This shape was chosen over the earlier one (classic scripts assigning onto
+`window`, with a generated copy of the leads and a mirrored copy of the
+arithmetic for the edge). That layout existed to let the site open from
+`file://`; it cost a build-time extraction script (`scripts/
+build-feed-data.ts`), a generated data file (`functions/lib/leads.mjs`), a
+drift check, and a test that pinned the mirror. Dropping `file://` support
+removed all of it. If you need to open a page from disk, run `bun run serve`
+first.
 
-- Load order in `index.html` *is* the dependency graph. A module that reads
-  `Neckass.foo` must be listed after the one that assigns it.
-- The Workers runtime cannot read an IIFE that assigns to `window`, and it
-  forbids `eval`, so `scripts/build-feed-data.ts` runs `data/formats.js` and
-  `data/editions.js` in a `node:vm` sandbox at build time and writes
-  `functions/lib/leads.mjs`. Run `bun run feed:build` after editing leads or
-  landmarks; `bun run feed:check` fails on drift.
-- `functions/lib/issue.mjs` hand-mirrors the epoch, the RNG, the round
-  dealing and the landmark lookup from `modules/issue.js`. The smoke test
-  *worker and browser agree on the lead for a given issue* pins the two
-  together across six dates, one of them a landmark, and will fail if either
-  side moves.
-
-If `file://` support is ever dropped, all three costs go with it: the data
-becomes JSON, both runtimes import it, and the sandbox, the generator, the
-check and the drift test are all deleted.
+The one intentional difference between the runtimes is the clock: the
+browser composes issues on the reader's local date, so the masthead matches
+the paper on their table; the edge runs on UTC, the only clock a Worker has.
+`modules/issue.js` holds the runtime-agnostic arithmetic (the epoch, the
+RNG, the round dealing, landmark lookup); `functions/lib/issue.mjs` is a
+thin adapter that applies it to UTC dates.
 
 ## Architecture overview
 
 ### The front page
-`index.html` loads, in this order, and the order is the dependency graph:
+`index.html` loads one ES module, and the imports are the dependency graph:
 
-1. `data/headlines.js` — the briefs pool (`data.HEADLINES`).
-2. `data/formats.js` — every other pool: `LEADS` (each with deck,
-   correction, follow-up, classified, letter), `CORRECTIONS`,
-   `ROUTINE_CORRECTIONS`, `NOTICES`, `WEATHER`, `CLASSIFIEDS`, `LETTERS`,
-   `COLOPHON`.
-3. `data/editions.js` — the landmark issues, keyed by number.
-4. `data/calendar.js` — what runs on which day.
-5. `modules/calendar.js` — matches the calendar against a date.
-6. `modules/issue.js` — composes an issue from a date. `selectLead` is pure
+1. `modules/front-page.js` — the entry point. It imports:
+2. `modules/issue.js` — composes an issue from a date. `selectLead` is pure
    in the issue number, so any issue can name any other issue's lead; that
-   is what lets today correct and continue yesterday.
-7. `modules/front-page.js` — swaps the standing issue in the markup for the
-   composed one, sets the title, the weather cut's layers, the
-   editorial, the clipping link and the back-issue notice.
+   is what lets today correct and continue yesterday. It imports:
+3. `data/formats.js` — `LEADS` (each with deck, correction, follow-up,
+   classified, letter), `CORRECTIONS`, `ROUTINE_CORRECTIONS`, `NOTICES`,
+   `WEATHER`, `CLASSIFIEDS`, `LETTERS`; `data/headlines.js` — the briefs
+   pool (`HEADLINES`); `data/editions.js` — the landmark issues, keyed by
+   number; and:
+4. `modules/calendar.js` — matches the calendar against a date. It imports:
+5. `data/calendar.js` — what runs on which day.
+
+`front-page.js` swaps the standing issue in the markup for the composed one,
+sets the title, the weather cut's layers, the editorial, the clipping link
+and the back-issue notice, and publishes the composed issue as
+`window.Neckass.currentIssue`.
 
 There is no bootstrap, no state, no storage and no input handling. The page
 ends when `front-page.js` has rendered.
 
 ### The archive
-`archive.html` loads the same data and `modules/issue.js`, then
-`modules/archive-list.js`, which lists the whole run from
-`issue.recentIssues()`.
+`archive.html` loads `modules/archive-list.js`, which imports the same
+`modules/issue.js` and lists the whole run from `recentIssues()`.
 
 ### Data and assets
 - `data/` — see above. Pool sizes are load-bearing; see the comments in
@@ -84,15 +78,19 @@ ends when `front-page.js` has rendered.
   `<img>` and pose when inlined. The weather cut is inlined in
   `index.html`; `assets/cuts/README.md` lists every property.
 - `fonts/` — Fraunces as a variable woff2 for the browser, and two static
-  TrueType cuts for the card renderer at the edge.
+  TrueType cuts for the card renderer.
 
 ### Edge
 - `functions/feed.xml.js` — RSS for the last 30 issues, per request.
-- `functions/card.png.js` — the issue's social card, drawn with `workers-og`.
+- `functions/card.png.js` — the issue's social card, drawn with Satori and
+  resvg.
 - `functions/_middleware.js` — per-issue title, description and image tags
   on the front page.
-- `functions/lib/issue.mjs` — the issue arithmetic, mirrored from
-  `modules/issue.js`; `functions/lib/leads.mjs` — generated.
+- `functions/lib/issue.mjs` — UTC date adapters over `modules/issue.js`.
+- `functions/lib/card.mjs` — the card's layout and the one renderer
+  (`renderCardPng`) shared with `scripts/generate-og.ts`; `initCardRenderer`
+  loads the WebAssembly engines once per runtime, from imported modules on
+  the edge and from files in the build script.
 
 ## Source-of-truth hierarchy
 1. `SPECIFICATIONS.md` for user-facing behavior and accessibility.
@@ -119,9 +117,9 @@ bun run test:smoke
 
 Playwright starts `bun run serve` and `bun run edge` itself. The suite covers
 what a reader opens (the issue, a back issue, the archive, no-JS), the
-arithmetic (the corrections chain, the calendar, the landmarks, no repeats
-inside a round, both runtimes agreeing) and the edge (the feed, the card, the
-rewritten tags).
+arithmetic — run directly against `modules/issue.js`, without a browser —
+(the corrections chain, the calendar, the landmarks, no repeats inside a
+round) and the edge (the feed, the card, the rewritten tags).
 
 ## UI change requirements
 - Include screenshot(s) for visible changes.

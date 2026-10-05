@@ -10,11 +10,17 @@
  * and, at the foot, what the paper is, in one line. The deck is the
  * headline's second beat and is set in the ink, not greyed out under it.
  *
- * Satori takes an element tree; workers-og would also parse an HTML
- * string, but its parser splits text at entities and then objects to a
- * heading with "two children", so the tree is built directly.
+ * Satori takes an element tree rather than an HTML string, whose parser
+ * splits text at entities and then objects to a heading with "two
+ * children", so the tree is built directly. The same renderCardPng serves
+ * the edge (functions/card.png.js) and the still cards
+ * (scripts/generate-og.ts); the engines are loaded once per runtime by
+ * initCardRenderer, from whatever source the runtime can read.
  */
 
+import { initWasm, Resvg } from '@resvg/resvg-wasm';
+import satori, { init as satoriInit } from 'satori/wasm';
+import initYoga from 'yoga-wasm-web';
 import { CUT_HEIGHT, CUT_SRC, CUT_WIDTH } from './cut.mjs';
 
 export const WIDTH = 1200;
@@ -76,6 +82,32 @@ const el = (type, style, ...children) => ({
     type,
     props: { style, children: children.length === 1 ? children[0] : children },
 });
+
+// The layout engine (yoga, which satori drives) and the rasterizer
+// (resvg) are WebAssembly, and each runtime loads them differently: the
+// edge imports the compiled modules, the build script reads the files.
+// Either way, once per isolate.
+let rendererReady = null;
+export function initCardRenderer({ yogaWasm, resvgWasm }) {
+    if (!rendererReady) {
+        rendererReady = (async () => {
+            satoriInit(await initYoga(yogaWasm));
+            await initWasm(resvgWasm);
+        })().catch((error) => {
+            rendererReady = null;
+            throw error;
+        });
+    }
+    return rendererReady;
+}
+
+/** Render a card element to PNG bytes. */
+export async function renderCardPng(element, { width, height, fonts }) {
+    const svg = await satori(element, { width, height, fonts });
+    return new Resvg(svg, { fitTo: { mode: 'width', value: width } })
+        .render()
+        .asPng();
+}
 
 /**
  * @param {{ folio: string, headline: string, deck: string }} card
