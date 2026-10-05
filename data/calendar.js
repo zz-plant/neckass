@@ -54,7 +54,7 @@
         {
             on: { dayAfter: { weekday: 2, nth: [1, 3] } },
             section: 'briefs',
-            item: 'Town council met Tuesday. Public comment was limited to three minutes. Neckass spoke for eleven, on an item not on the agenda. The item is now on next month’s agenda.',
+            item: 'Town council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item not on the agenda, which is now on next month’s agenda.',
         },
         {
             on: { dayAfter: { weekday: 2, nth: [1, 3] } },
@@ -66,7 +66,7 @@
         {
             on: { special: 'lastDayOfMonth' },
             section: 'briefs',
-            item: 'Neckass said he will start on the first. It is the last day of the month. He has said it on each of them.',
+            item: 'Neckass said he will start on the first, as he has said on the last day of every month so far.',
         },
         {
             on: { special: 'friday13' },
@@ -98,7 +98,7 @@
         {
             on: { special: 'leapDay' },
             section: 'briefs',
-            item: 'Neckass said he is "technically only nine." He was not born on a leap day. Nobody had asked.',
+            item: 'Neckass, who was not born on a leap day and had not been asked, said he is "technically only nine."',
         },
         {
             on: { special: 'birthday' },
@@ -131,7 +131,7 @@
         {
             on: { month: 3, day: 20 },
             section: 'briefs',
-            item: 'Neckass declared it spring. It is 39 degrees. He is in shorts.',
+            item: 'Neckass, in shorts at 39 degrees, has declared it spring.',
         },
         {
             on: { month: 4, day: 1 },
@@ -151,7 +151,7 @@
         {
             on: { weekday: 1, last: true, month: 5 },
             section: 'briefs',
-            item: 'Neckass put the trash out. It is a holiday. He has been told twice and has said "they might still come."',
+            item: 'Neckass, who has been told twice that there is no collection on the holiday, put the trash out and has said "they might still come."',
         },
         {
             on: { month: 6, day: 21 },
@@ -207,7 +207,7 @@
         {
             on: { special: 'electionDay' },
             section: 'briefs',
-            item: 'Neckass voted and asked the poll worker whether he got it right. She said she could not say. He has taken this as a no.',
+            item: 'Neckass, having voted, asked the poll worker whether he had gotten it right and was told she could not say, which he has taken as a no.',
         },
         {
             on: { special: 'dstEnd' },
