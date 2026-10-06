@@ -15,7 +15,7 @@ export const EDITIONS = {
         tag: 'First edition',
         lead: {
             headline:
-                'Neckass said he will "get into running." It is the fourth September he has said it.',
+                'Neckass said he would "get into running." It is the fourth September he has said it.',
             deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
             byline: 'Staff report',
             correction:
@@ -136,7 +136,7 @@ export const EDITIONS = {
         tag: 'Second anniversary',
         lead: {
             headline:
-                'Neckass asked whether the Gazette is "still going." This is the 731st issue.',
+                'Neckass asked whether the Gazette was "still going." This is the 731st issue.',
             deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
             byline: 'From wire reports',
             correction:

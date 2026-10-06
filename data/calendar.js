@@ -21,7 +21,7 @@ export const CALENDAR = [
     {
         on: { weekday: 5 },
         section: 'briefs',
-        item: 'Neckass has said "is it Friday already." He has said it on each of the last four Fridays and one Thursday.',
+        item: 'Neckass has said "is it Friday already?" He has said it on each of the last four Fridays and one Thursday.',
     },
     {
         on: { weekday: 6 },
@@ -38,29 +38,29 @@ export const CALENDAR = [
     {
         on: { weekday: 1, nth: [1, 3] },
         section: 'notices',
-        item: 'Town council meets Tuesday at 7 p.m. in the council chamber. Public comment is limited to three minutes per speaker. The agenda is posted at the town office.',
+        item: 'The town council meets Tuesday at 7 p.m. in the council chamber. Public comment is limited to three minutes per speaker. The agenda is posted at the town office.',
     },
     {
         on: { weekday: 2, nth: [1, 3] },
         section: 'notices',
-        item: 'Town council meets tonight at 7 p.m. in the council chamber. Public comment is limited to three minutes per speaker.',
+        item: 'The town council meets tonight at 7 p.m. in the council chamber. Public comment is limited to three minutes per speaker.',
     },
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
         section: 'briefs',
-        item: 'Town council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item not on the agenda, which is now on next month’s agenda.',
+        item: "The town council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item not on the agenda, which is now on next month's agenda.",
     },
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
         section: 'corrections',
-        item: 'An item on Tuesday’s council meeting gave the length of public comment as three minutes. That is the limit. The comment ran eleven.',
+        item: "An item on Tuesday's council meeting gave the length of public comment as three minutes. That is the limit. The comment ran eleven.",
     },
 
     // ---- The month ------------------------------------------------
     {
         on: { special: 'lastDayOfMonth' },
         section: 'briefs',
-        item: 'Neckass said he will start on the first, as he has said on the last day of every month so far.',
+        item: 'Neckass said he would start on the first, as he has said on the last day of every month so far.',
     },
     {
         on: { special: 'friday13' },
@@ -72,17 +72,17 @@ export const CALENDAR = [
     {
         on: { month: 1, day: 1 },
         section: 'briefs',
-        item: 'Neckass announced his resolutions for {year}. They are last year’s, with the year changed.',
+        item: "Neckass announced his resolutions for {year}. They are last year's, with the year changed.",
     },
     {
         on: { month: 1, day: 1 },
         section: 'notices',
-        item: 'Town offices are closed today for New Year’s Day. Trash and recycling collection move one day later this week.',
+        item: "Town offices are closed today for New Year's Day. Trash and recycling collection moves one day later this week.",
     },
     {
         on: { month: 1, day: 2 },
         section: 'briefs',
-        item: 'Neckass described January 1 as "a practice day" and started the resolutions again from today.',
+        item: 'Neckass described Jan. 1 as "a practice day" and started the resolutions over today.',
     },
     {
         on: { month: 2, day: 14 },
@@ -130,7 +130,7 @@ export const CALENDAR = [
     {
         on: { month: 4, day: 1 },
         section: 'briefs',
-        item: 'Neckass attempted an April Fool’s joke on the office. He explained it first.',
+        item: "Neckass attempted an April Fools' joke on the office. He explained it first.",
     },
     {
         on: { month: 4, day: 15 },
@@ -170,7 +170,7 @@ export const CALENDAR = [
     {
         on: { weekday: 1, nth: [1], month: 9 },
         section: 'briefs',
-        item: 'Neckass said "well, summer’s over." He said it on July 9 as well.',
+        item: 'Neckass said "well, summer\'s over." He said it on July 9 as well.',
     },
     {
         on: { special: 'anniversary' },
@@ -181,7 +181,7 @@ export const CALENDAR = [
         on: { special: 'anniversary' },
         unlessWritten: true,
         section: 'briefs',
-        item: 'The Gazette is {yearsWord} today. Neckass has said "is it," and asked whether the paper had ever covered him.',
+        item: 'The Gazette is {yearsWord} today. Neckass has said "is it?" and asked whether the paper had ever covered him.',
     },
     {
         on: { month: 10, day: 31 },
@@ -231,7 +231,7 @@ export const CALENDAR = [
     {
         on: { month: 12, day: 25 },
         section: 'notices',
-        item: 'The Gazette is published today as on every day. The office is closed.',
+        item: 'The Gazette is published today, as it is every day. The office is closed.',
     },
     {
         on: { month: 12, day: 25 },
@@ -282,13 +282,13 @@ export const CALENDAR = [
     {
         on: { day: 15, from: '2025-10-15' },
         section: 'corrections',
-        item: 'The Gazette printed next door’s letter of the 14th about the bin and has confirmed one fact in it, the address, 14. The wind remains unverified, and the bin has not moved.',
+        item: "The Gazette printed next door's letter of the 14th about the bin and has confirmed one fact in it, the address, 14. The wind remains unverified, and the bin has not moved.",
     },
     {
         on: { weekday: 0, nth: [2], month: 5 },
         section: 'letters',
         item: {
-            body: 'I am his mother. He called Saturday, the day before Mother’s Day, to say he would call Sunday. I have read this paper every day since the first one, {ma.count} issues of it. It is how I know about the shoes.',
+            body: "I am his mother. He called Saturday, the day before Mother's Day, to say he would call Sunday. I have read this paper every day since the first one, {ma.count} issues of it. It is how I know about the shoes.",
             signature: 'His mother',
         },
     },
