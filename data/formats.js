@@ -69,7 +69,7 @@ export const LEADS = [
         deck: 'He is not hungry. Asked what he was looking for, he said "just seeing."',
         byline: 'Staff report',
         correction:
-            'Eleven openings, not twelve: he has since gone back for the twelfth and eaten a slice of cheese standing up.',
+            'Twelve openings, not eleven: he has since gone back for the twelfth and eaten a slice of cheese standing up.',
         followUp:
             'The fridge is full again after a grocery run. He has opened it twice since and said there is nothing in it.',
         classified:
@@ -89,9 +89,9 @@ export const LEADS = [
         followUp:
             'A fifth alarm, at 6:45, labeled "last one." He has slept through five.',
         classified:
-            'WANTED: earplugs, heavy duty. Alarms next door go at 5:30, 5:35 and 5:40, and nobody wakes.',
+            'WANTED: earplugs, heavy-duty. Alarms next door go at 5:30, 5:35, and 5:40, and nobody wakes.',
         letter: {
-            body: 'I am next door at 14. His alarms go at 5:30, 5:35, 5:40 and 6:30. Mine goes at seven. I have been up at 5:30 for a year.',
+            body: 'I am next door at 14. His alarms go at 5:30, 5:35, 5:40, and 6:30. Mine goes at seven. I have been up at 5:30 for a year.',
             signature: 'Next door',
         },
     },
@@ -121,7 +121,7 @@ export const LEADS = [
         followUp:
             'Inside "Later!!" there is now a folder called "Actually later." It has 400 in it.',
         classified:
-            'FOR SALE: folder labeled "Later!!" Contents: 2,000 emails. Buyer must take all.',
+            'FOR SALE: email folder, labeled "Later" with two exclamation marks. Contents: 2,000 emails. Buyer must take all.',
         letter: {
             body: 'I sent him an email in March. It is in a folder called "Later!!" He told me this as though it were good news.',
             signature: 'A colleague',
@@ -129,7 +129,7 @@ export const LEADS = [
     },
     {
         headline:
-            'Neckass told his doctor he "basically never drinks" using a sommelier\'s vocabulary',
+            'Neckass told his doctor he "basically never drinks," using a sommelier\'s vocabulary',
         deck: 'He said "basically never," then described a "grippy, mineral" red he had "on a Tuesday, as one does."',
         byline: 'From wire reports',
         correction:
@@ -150,7 +150,7 @@ export const LEADS = [
         correction:
             'The visit "to ask about canceling" ended with a second membership.',
         followUp:
-            'On his third visit to the gym Neckass reached the vending machine and sent the group a photograph of the weights.',
+            'On his third visit to the gym, Neckass reached the vending machine and sent the group a photograph of the weights.',
         classified: 'FOR SALE: gym bag, unused. Matching membership available.',
         letter: {
             body: 'He came in to cancel. He left with a second membership and a towel. I have done this job for nine years.',
@@ -320,7 +320,7 @@ export const LEADS = [
         correction:
             'The package has been in the car since March and through two car washes.',
         followUp:
-            'Past the post office, with the package on the seat, he found it open. "Next time."',
+            'Neckass drove past the post office with the package on the seat. The post office was open. "Next time."',
         classified:
             'FOUND: package addressed to the post office, on a passenger seat.',
         letter: {
@@ -395,11 +395,11 @@ export const LEADS = [
         deck: 'They know his order and his name. He calls all three of them "chief."',
         byline: 'Staff report',
         correction:
-            'We said three staff. One of them is called Chief. He does not know this, and it does not count.',
+            'Four staff, not three. He calls the fourth "boss." She owns the café.',
         followUp:
             'Told the barista\'s name is Kai, Neckass said "thanks, chief."',
         classified:
-            'NOTICE: the coffee shop wishes to inform the gentleman that we are not all called chief.',
+            'NOTICE: we at the coffee shop wish to inform the gentleman that we are not all called chief.',
         letter: {
             body: 'He calls me chief. I am wearing a name badge.',
             signature: 'Kai, the café',
@@ -412,7 +412,7 @@ export const LEADS = [
         correction:
             'Forty-one times, not forty: he moved it again while reading the item.',
         followUp:
-            'He called his mother. It took nine minutes. "Not that bad, actually," and next week\'s call moved to the week after.',
+            'He called his mother. It took nine minutes. "Not that bad, actually," he said, and moved next week\'s call to the week after.',
         classified:
             'REMINDER: call your mother. This notice was placed by her.',
         letter: {
@@ -459,7 +459,7 @@ export const LEADS = [
         correction:
             'The voice note was nine minutes plus a second note, saying "sorry, long one."',
         followUp:
-            'Asked to text next time, Neckass sent a voice note to say he will.',
+            'Asked to text next time, Neckass sent a voice note to say he would.',
         classified:
             'FOUND: a voice note, nine minutes. Contains no time of arrival. Owner can claim it by text.',
         letter: {
@@ -490,7 +490,7 @@ export const LEADS = [
         followUp:
             'Neckass went to the restaurant he recommended. He did not like it, and told the people he recommended it to that they "must have gone on a bad night."',
         classified:
-            'WANTED: a review of this restaurant from someone who has been inside. — the restaurant',
+            'WANTED: a review of this restaurant from someone who has been inside. — The restaurant',
         letter: {
             body: 'He has recommended my restaurant to four people. He has never been in. I would like him to come in, and also not to.',
             signature: 'A restaurateur',
@@ -572,7 +572,7 @@ export const LEADS = [
         },
     },
     {
-        headline: 'Neckass reneged in spades and has blamed his partner',
+        headline: 'Neckass reneged in spades and blamed his partner',
         deck: 'He cut with a heart while holding the queen of hearts. The table caught it on the next trick. He asked his partner why she led a heart.',
         byline: 'Staff report',
         correction:
@@ -589,7 +589,7 @@ export const LEADS = [
     {
         headline:
             'Neckass brought store-bought potato salad to the cookout in a bowl from home',
-        deck: "He took the lid off at the curb, put it in his mother's bowl, and added paprika. He told four people it was his recipe. The receipt was in the bag.",
+        deck: "He took the lid off at the curb, tipped the salad into his mother's bowl, and added paprika. He told four people it was his recipe. The receipt was in the bag.",
         byline: 'Staff report',
         correction:
             'We reported that Neckass added paprika. He added raisins. Nobody has eaten it.',
@@ -641,7 +641,7 @@ export const LEADS = [
         correction:
             'He was woken at 3:45 by the end of the show he was listening to.',
         followUp:
-            'Eyes rested again, during the item about resting his eyes, which was being read to him.',
+            'He rested his eyes again during the item about resting his eyes, which was being read to him.',
         classified:
             'LOST: an afternoon. Last seen under a blanket. Owner says he was listening.',
         letter: {
@@ -733,9 +733,9 @@ export const LEADS = [
         deck: 'There are 340 receipts in the drawer, going back to 2021. The one for the lamp is not among them. The lamp is in the car.',
         byline: 'Staff report',
         correction:
-            '340 receipts and one parking-garage ticket, which he has also kept.',
+            'The drawer holds 340 receipts and one parking-garage ticket, which he has also kept.',
         followUp:
-            'The lamp went back without the receipt, for a credit note. The credit note went in the drawer.',
+            'The lamp went back without the receipt, for store credit. The credit slip went in the drawer.',
         classified:
             'FOUND: 340 receipts. None for a lamp. Owner will not throw them away "just in case."',
         letter: {
@@ -751,9 +751,9 @@ export const LEADS = [
         correction:
             'The voicemail was left at 7:40 and again at 7:42, to say "sorry, it\'s me."',
         followUp:
-            'The wrong man called back, and they spoke for twenty minutes, about which neither has said.',
+            'The wrong man called back. They spoke for twenty minutes, about what neither will say.',
         classified:
-            'WANTED: "me." Left a voicemail Tuesday, 7:40. Please ring the office and say who you are. Do not say "it\'s me."',
+            'WANTED: "me." Left a voicemail Tuesday, 7:40. Please call the office and say who you are. Do not say "it\'s me."',
         letter: {
             body: 'I got the voicemail. I have four people it could be. I called two. It was neither. I have decided it can wait, which is what he decided about my message in March.',
             signature: 'A friend, on her fifth call',
@@ -844,7 +844,7 @@ export const CORRECTIONS = [
     'A Tuesday item said Neckass had left. He had gone to the car and come back.',
     'The Gazette described Neckass as "on his way." He was choosing a shirt.',
     'We reported that Neckass cooked. He assembled.',
-    'The Gazette said Neckass replied. He reacted with a thumbs up.',
+    'The Gazette said Neckass replied. He reacted with a thumbs-up.',
     'An item said Neckass listened. He waited.',
     'We reported that Neckass had canceled. He did not attend and did not say so.',
     'The Gazette said Neckass paid. He said "I\'ll get the next one." There has been no next one.',
@@ -956,7 +956,7 @@ export const CLASSIFIEDS = [
     'FOR SALE: slides, socks attached. Owner wore them to a wedding and called it "business casual."',
     'SEEKING: a second listener for a podcast. The first has gone.',
     'NOTICE: the recycling bin from No. 12 is in our yard again.',
-    'FREE: half a bag of salad, best before yesterday, described by owner as "probably fine."',
+    'FREE: half a bag of salad, best by yesterday, described by owner as "probably fine."',
     'SERVICES: will tell you your lineup is fine. It is not. $5.',
     'FOR SALE: the rest of a meal. He said he would just have a bite.',
     'LOST: the receipt you will need. It was in the bag you threw away.',
@@ -1061,7 +1061,7 @@ export const LETTERS = [
     },
     {
         body: 'He ordered "the usual." He has been in twice. Neither time was the same. We gave him a coffee. He said "perfect."',
-        signature: 'The café',
+        signature: 'The diner on Route 9',
     },
     {
         body: 'I know everyone on the 8:04, including the man who is always asleep. He says he is on it. I have never seen him.',
@@ -1076,7 +1076,7 @@ export const LETTERS = [
         signature: 'The friend who moved',
     },
     {
-        body: 'I sent the message. It said the meeting had moved to two. He gave it a thumbs up and came at three.',
+        body: 'I sent the message. It said the meeting had moved to two. He gave it a thumbs-up and came at three.',
         signature: 'A colleague',
     },
     {
@@ -1100,11 +1100,11 @@ export const NOTICES = [
     'The Mill Street bridge is reduced to one lane through the end of the month.',
     'Flu clinics run Saturdays in September at the community center, 9 a.m. to noon. No appointment needed.',
     'Water service on Orchard Lane will be interrupted Wednesday from 9 a.m. to approximately 2 p.m.',
-    'The farmers market continues Saturdays through October 25, 8 a.m. to 1 p.m., in the station lot.',
+    'The farmers market continues Saturdays through Oct. 25, 8 a.m. to 1 p.m., in the station lot.',
     'The planning board hearing on the Orchard Lane application is Thursday at 6:30 p.m.',
     'Yard waste drop-off at the depot is free for residents on the second Saturday of the month.',
     "The high school's fall concert is Friday at 7 p.m. in the auditorium. Admission by donation.",
-    'Overnight parking restrictions resume November 1.',
+    'Overnight parking restrictions resume Nov. 1.',
     'The community center pool closes for annual maintenance from the 14th to the 21st.',
     "Absentee ballot applications for the November election are available at the town clerk's office.",
     "The historical society's walking tour departs from the bandstand Sunday at 2 p.m., weather permitting.",
@@ -1113,9 +1113,9 @@ export const NOTICES = [
     'Bulk item pickup requires a sticker, available at the town office for $10.',
     "The senior center's Tuesday lunch is now $6. Reservations by Monday noon.",
     'Storm drain cleaning is under way on the north side. Please keep vehicles clear of marked drains.',
-    "The library's used book sale runs Friday and Saturday in the lower level.",
+    "The library's used-book sale runs Friday and Saturday in the lower level.",
     'Volunteers are needed for the river cleanup on the 20th. Gloves and bags provided.',
-    'The tax office reminds residents that the second installment is due October 1.',
+    'The tax office reminds residents that the second installment is due Oct. 1.',
     'Little League registration for the spring season opens online Monday.',
 ];
 
@@ -1125,7 +1125,7 @@ export const NOTICES = [
 export const ROUTINE_CORRECTIONS = [
     "Because of an editing error, an article in Thursday's edition misstated the location of the book sale. It is the library, not the library annex.",
     "A caption in Monday's edition misidentified the street shown. It is Mill Street, not Mill Road.",
-    'An article on the school board meeting gave an incorrect vote count. The measure passed 5-2, not 4-3.',
+    'An article on the school board meeting gave an incorrect vote count. The measure passed 5–2, not 4–3.',
     'A listing in the community calendar gave the wrong start time for the farmers market. It opens at 8 a.m.',
     "An obituary in Tuesday's edition misspelled the surname of a survivor. She is Margaret Kowalczyk.",
     "Because of a production error, a photograph in Wednesday's edition ran without a credit. It was a file photograph.",

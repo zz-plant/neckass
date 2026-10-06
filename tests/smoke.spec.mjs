@@ -15,6 +15,9 @@ const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
 // The Pages Functions under workerd; see playwright.config.mjs.
 const EDGE_URL = process.env.PLAYWRIGHT_EDGE_URL || 'http://127.0.0.1:8800/';
 
+// A brief ends on a period; the same item as a headline does not.
+const unpunctuated = (text) => text.replace(/\.("?)$/, '$1');
+
 test.describe('The Corbin Falls Gazette', () => {
     // The issue is the product. These cover what a reader actually opens:
     // that today's paper renders, that a back issue loads from the archive,
@@ -76,9 +79,12 @@ test.describe('The Corbin Falls Gazette', () => {
             ).toBe(items.length);
         }
 
-        // The lead must not also be running as a brief.
+        // The lead must not also be running as a brief, where it would be
+        // the same sentence with a closing period.
         const briefs = await page.locator('#briefs-list li').allInnerTexts();
-        expect(briefs).not.toContain(issue.lead.headline);
+        expect(briefs.map(unpunctuated)).not.toContain(
+            unpunctuated(issue.lead.headline),
+        );
 
         // The lead's own classified and letter run in the same issue.
         const ads = await page.locator('#classifieds-list li').allInnerTexts();
@@ -130,7 +136,7 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(thanksgiving.briefs[0]).toBe(before.lead.followUp);
         expect(thanksgiving.notices[0]).toMatch(/Thanksgiving/);
         expect(thanksgiving.briefs[1]).toMatch(/bring a side/);
-        expect(wednesday.briefs[1]).toMatch(/Town council met Tuesday/);
+        expect(wednesday.briefs[1]).toMatch(/The town council met Tuesday/);
         expect(birthday.briefs[1]).toBe(
             'Neckass is 38 today. He has told people he is 36 since he was 36.',
         );
@@ -312,6 +318,25 @@ test.describe('The Corbin Falls Gazette', () => {
         );
         expect(rendered).toBe(localIssueNumber(new Date()));
         await expect(page.locator('#back-issue-notice')).toBeHidden();
+    });
+
+    test('a lead never runs again as a brief in its own issue', () => {
+        // Some leads are also in the briefs pool, set as a sentence. Two
+        // rounds of the pool give every lead at least one turn.
+        const start = parseIssueDate('2026-01-01');
+        for (let offset = 0; offset < LEADS.length * 2; offset += 1) {
+            const issue = composeIssue(
+                new Date(
+                    start.getFullYear(),
+                    start.getMonth(),
+                    start.getDate() + offset,
+                ),
+            );
+            expect(
+                issue.briefs.map(unpunctuated),
+                issue.issueParam,
+            ).not.toContain(unpunctuated(issue.lead.headline));
+        }
     });
 
     test('no lead runs twice inside one round of the pool', () => {

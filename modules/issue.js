@@ -203,6 +203,12 @@ export function selectLead(number) {
     return LEADS[roundOrder(round, LEADS.length)[place]] || null;
 }
 
+// A brief is set as a sentence and a headline is not, so a brief ends
+// on a period its headline lacks. They are compared without it.
+function unpunctuated(text) {
+    return String(text).replace(/\.("?)$/, '$1');
+}
+
 // The earliest issues are shorter. He had done less. The briefs column
 // grows one item every six weeks or so until it reaches its full seven,
 // and for the first two months the letters page carries one letter.
@@ -231,7 +237,7 @@ export function composeIssue(date = new Date()) {
     // Briefs come from the headline catalogue, minus anything already
     // running as the lead in longer form.
     const briefPool = HEADLINES.filter(
-        (item) => !lead || item !== lead.headline,
+        (item) => !lead || unpunctuated(item) !== unpunctuated(lead.headline),
     );
 
     const dateLabel = dateFormatter.format(date);
