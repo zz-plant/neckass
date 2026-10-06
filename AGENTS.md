@@ -25,7 +25,7 @@ complexity. The front page is the product.
 1. Preserve spec-compliant behavior and accessibility.
 2. Prefer small, targeted edits over broad refactors.
 3. Keep no-build/static-host compatibility: the browser and edge import the same ES modules; no bundler.
-4. Keep the paper's voice: flat, specific, past tense, numbers and names, no adjectives where a fact will do.
+4. Keep the paper's voice: flat, specific, past tense, sourced like a wire story, numbers and names, no adjectives where a fact will do.
 
 ## Local testing
 - `bun run serve` (static, :8001); the pages are ES modules, so open them over HTTP.
