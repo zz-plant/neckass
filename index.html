@@ -3,50 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>The Corbin Falls Gazette</title>
+    <title>The Gazette</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="/favicon.ico" sizes="32x32">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="alternate" type="application/rss+xml" title="The Corbin Falls Gazette" href="/feed.xml">
-    <meta name="description" content="A daily paper about one man, published in Corbin Falls since Sept. 29, 2024: what he did, the corrections, the weather, the classifieds, and the letters.">
+    <link rel="alternate" type="application/rss+xml" title="The Gazette" href="/feed.xml">
+    <meta name="description" content="A daily paper about one man, published since Sept. 29, 2024: what he did, the corrections, the weather, the classifieds, and the letters.">
     <meta name="color-scheme" content="light dark">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1413">
     <meta name="theme-color" content="#212b28">
     <link rel="canonical" href="https://neckass.com/">
 
-    <meta property="og:title" content="The Corbin Falls Gazette">
+    <meta property="og:title" content="The Gazette">
     <meta property="og:description" content="A daily paper about one man, published since Sept. 29, 2024. Every issue has a lead, a correction to yesterday&#39;s, and a letter from whoever it happened to.">
     <meta property="og:image" content="https://neckass.com/og-image.png">
     <meta property="og:image:secure_url" content="https://neckass.com/og-image.png">
-    <meta property="og:image:alt" content="The front page of The Corbin Falls Gazette">
+    <meta property="og:image:alt" content="The front page of The Gazette">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://neckass.com/">
-    <meta property="og:site_name" content="The Corbin Falls Gazette">
+    <meta property="og:site_name" content="The Gazette">
     <meta property="og:locale" content="en_US">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="The Corbin Falls Gazette">
+    <meta name="twitter:title" content="The Gazette">
     <meta name="twitter:description" content="A daily paper about one man, published since Sept. 29, 2024. Every issue has a lead, a correction to yesterday&#39;s, and a letter from whoever it happened to.">
     <meta name="twitter:image" content="https://neckass.com/og-image.png">
-    <meta name="twitter:image:alt" content="The front page of The Corbin Falls Gazette">
+    <meta name="twitter:image:alt" content="The front page of The Gazette">
     <meta name="twitter:url" content="https://neckass.com/">
 
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@type": "WebSite",
-            "name": "The Corbin Falls Gazette",
+            "name": "The Gazette",
             "url": "https://neckass.com/",
-            "description": "The Corbin Falls Gazette, published daily since 2024.",
+            "description": "The Gazette, published daily since 2024.",
             "publisher": {
                 "@type": "Organization",
-                "name": "The Corbin Falls Gazette"
+                "name": "The Gazette"
             }
         }
     </script>
@@ -61,7 +61,7 @@
         <header class="masthead masthead--front">
             <div class="masthead__folio">
                 <!-- Replaced with the active issue's date and number on load. -->
-                <p class="masthead__line" id="masthead-date">Published daily · Corbin Falls</p>
+                <p class="masthead__line" id="masthead-date">Published daily</p>
                 <nav class="top-nav" aria-label="Site">
                     <a href="/archive.html">Back issues</a>
                     <a href="/about.html">Reference</a>
@@ -69,7 +69,7 @@
                 </nav>
             </div>
             <div class="nameplate">
-                <h1 class="nameplate__name">The Corbin Falls Gazette</h1>
+                <h1 class="nameplate__name">The Gazette</h1>
                 <p class="nameplate__motto">One man, reported daily since Sept. 29, 2024.</p>
             </div>
             <p class="back-issue-notice" id="back-issue-notice" hidden>
@@ -87,7 +87,7 @@
 
                 <article class="lead">
                     <h3 class="lead__headline" id="lead-headline"><a href="/" id="lead-link">Neckass has been "five minutes away" since 2019. He is at home.</a></h3>
-                    <p class="lead__deck" id="lead-deck">CORBIN FALLS — He has said "five minutes" to eleven people this year. He has not left the house for any of them.</p>
+                    <p class="lead__deck" id="lead-deck">He has said "five minutes" to eleven people this year. He has not left the house for any of them.</p>
                     <p class="lead__byline" id="lead-byline">From wire reports</p>
                     <!-- The three issues before this one, by their leads. Filled
                          by front-page.js; without it, the way to the archive. -->
@@ -124,28 +124,77 @@
                         </ul>
 
                         <figure class="cut">
-                            <img src="assets/cuts/neckass.svg" width="182" height="278" alt="Line-cut of a man standing with one hand raised, explaining." loading="lazy">
-                            <figcaption><b>FILE</b> — Neckass, explaining. The Gazette has one cut of him and has not needed a second.</figcaption>
+                            <!-- The same drawing as assets/cuts/neckass.svg, inline so the
+                                 desk can pose it: front-page.js sets each joint from the
+                                 lead's pose (data/poses.js). Unposed, it is the house pose. -->
+                            <svg class="cut-figure" id="cut-figure" viewBox="0 0 182 278" width="182" height="278" role="img" aria-label="Line-cut of a man standing with one hand raised, explaining.">
+                                <g transform="translate(-24 -6)">
+                                    <g class="joint-leg-far">
+                                        <path class="part" d="M102 150 h24 l-5 116 h-17 z" />
+                                        <path class="part" d="M104 262 h17 l12 10 q-3 5 -12 5 h-18 z" />
+                                        <path class="hatch" d="M110 184 v66" />
+                                    </g>
+                                    <g class="joint-leg-near">
+                                        <path class="part" d="M74 150 h24 l-3 116 h-17 z" />
+                                        <path class="part" d="M75 262 h17 l-11 10 q-4 5 -13 5 h-5 z" />
+                                        <path class="hatch" d="M82 184 v66" />
+                                    </g>
+                                    <!-- hips, over the top of both legs -->
+                                    <path class="part" d="M70 138 h60 l2 26 q-32 7 -64 0 z" />
+
+                                    <g class="joint-arm-far">
+                                        <g class="joint-forearm-far">
+                                            <path class="part" d="M121 118 h17 l-3 48 h-12 z" />
+                                            <path class="part" d="M121 162 q-5 8 -3 16 q3 9 12 7 q7 -2 6 -12 l-1 -11 z" />
+                                            <path class="detail" d="M126 170 v9 M132 169 v9" />
+                                        </g>
+                                        <path class="part" d="M121 74 h18 l-2 52 h-15 z" />
+                                    </g>
+
+                                    <g class="joint-arm-near">
+                                        <g class="joint-forearm-near">
+                                            <path class="part" d="M62 118 h17 l-3 48 h-12 z" />
+                                            <path class="part" d="M62 162 q-5 8 -3 16 q3 9 12 7 q7 -2 6 -12 l-1 -11 z" />
+                                            <path class="detail" d="M67 170 v9 M73 169 v9" />
+                                        </g>
+                                        <path class="part" d="M61 74 h18 l-2 52 h-15 z" />
+                                    </g>
+
+                                    <!-- torso -->
+                                    <path class="part" d="M68 78 q32 -13 64 0 l2 68 q-34 9 -68 0 z" />
+                                    <path class="detail" d="M100 82 v62" />
+                                    <path class="detail" d="M86 76 l14 11 l14 -11" />
+                                    <circle class="solid" cx="100" cy="104" r="2" />
+                                    <circle class="solid" cx="100" cy="126" r="2" />
+                                    <path class="hatch" d="M113 100 l16 3 M112 114 l17 3 M112 128 l17 3" />
+                                    <path class="detail" d="M71 155 h58" />
+                                    <path class="solid" d="M94 150 h12 v10 h-12 z" />
+
+                                    <g class="joint-head">
+                                        <path class="part" d="M93 54 h14 v18 h-14 z" />
+                                        <ellipse class="part" cx="100" cy="40" rx="18" ry="21" />
+                                        <path class="solid" d="M82 38 q1 -25 18 -25 q17 0 18 25 q-5 -13 -18 -13 q-13 0 -18 13 z" />
+                                        <path class="detail" d="M118 41 q5 3 0 8" />
+                                        <circle class="solid" cx="93" cy="41" r="1.9" />
+                                        <circle class="solid" cx="107" cy="41" r="1.9" />
+                                        <path class="detail" d="M100 41 v9 l-4 2" />
+                                        <path class="detail" d="M94 56 q6 3 12 0" />
+                                        <path class="hatch" d="M87 47 l-3 5 M113 47 l3 5" />
+                                    </g>
+                                </g>
+                            </svg>
+                            <figcaption><b>FILE</b> — <span id="cut-caption">Neckass, explaining.</span> The Gazette has one cut of him and has not needed a second.</figcaption>
                         </figure>
                     </section>
 
                     <div class="column column--side">
-                        <section class="box" aria-labelledby="notices-title">
-                            <h3 class="section-label" id="notices-title">Notices</h3>
-                            <ul class="notices" id="notices-list">
-                                <li>The town council meets Tuesday at 7 p.m. in the council chamber. The agenda is posted at the town office.</li>
-                                <li>The Mill Street bridge is reduced to one lane through the end of the month.</li>
-                                <li>Recycling collection moves to Thursday this week because of the holiday.</li>
-                            </ul>
-                        </section>
-
                         <section class="box" aria-labelledby="corrections-title">
                             <h3 class="section-label" id="corrections-title">Corrections</h3>
                             <ul class="corrections" id="corrections-list">
-                                <li>A caption in Monday's edition misidentified the street shown. It is Mill Street, not Mill Road.</li>
                                 <li>An earlier edition called Neckass's plan a plan. It is three words on a page. The Gazette regrets the error.</li>
                                 <li>The Gazette stated that Neckass had finished. He had stopped.</li>
                                 <li>We described Neckass's apology as an apology. It was the sentence "well, sorry you feel that way."</li>
+                                <li>An earlier edition quoted Neckass as saying "no worries." There were worries.</li>
                             </ul>
                         </section>
 

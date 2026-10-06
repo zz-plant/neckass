@@ -3,9 +3,10 @@
  *
  * Every share of neckass.com used to preview with the same still image
  * whatever the day's lead was. This draws the card on request: the lead of
- * the issue asked for (today's, if none is) beside the file cut of him, set
- * in Fraunces on the same newsprint the page is printed on. The layout and
- * the renderer are functions/lib/card.mjs, which the still cards share.
+ * the issue asked for (today's, if none is) beside the file cut of him,
+ * posed as the front page poses it that day, set in Fraunces on the same
+ * newsprint the page is printed on. The layout and the renderer are
+ * functions/lib/card.mjs, which the still cards share.
  * The middleware points og:image here, so a shared link previews with the
  * headline that is actually running.
  *
@@ -26,7 +27,12 @@ import {
     renderCardPng,
     WIDTH,
 } from './lib/card.mjs';
-import { issueNumber, parseIssueDate, selectLead } from './lib/issue.mjs';
+import {
+    issueNumber,
+    parseIssueDate,
+    poseOf,
+    selectLead,
+} from './lib/issue.mjs';
 
 const rendererReady = initCardRenderer({ yogaWasm, resvgWasm });
 
@@ -67,6 +73,7 @@ export async function onRequestGet({ request, env }) {
         folio: issueFolio(date, number),
         headline: lead.headline,
         deck: lead.deck,
+        pose: poseOf(lead),
     };
     const png = await renderCardPng(cardElement(card), {
         width: WIDTH,

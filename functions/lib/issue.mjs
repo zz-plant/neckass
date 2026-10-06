@@ -5,7 +5,7 @@
  * file the browser runs, imported directly.
  */
 
-import { dayIndex, selectLead } from '../../modules/issue.js';
+import { dayIndex, poseOf, selectLead } from '../../modules/issue.js';
 
 export function issueNumber(date) {
     return (
@@ -36,4 +36,4 @@ export function parseIssueDate(value) {
     return date;
 }
 
-export { selectLead };
+export { poseOf, selectLead };

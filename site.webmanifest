@@ -1,7 +1,7 @@
 {
-  "name": "The Corbin Falls Gazette",
+  "name": "The Gazette",
   "short_name": "The Gazette",
-  "description": "The Corbin Falls Gazette, published daily.",
+  "description": "The Gazette, published daily.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#212b28",

@@ -17,6 +17,7 @@
 import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
+import { POSES } from '../data/poses.js';
 import {
     cardElement,
     HEIGHT,
@@ -42,6 +43,8 @@ export type OgCard = {
     headline: string;
     /** The headline's second beat. */
     deck: string;
+    /** How the file cut stands beside it (data/poses.js). */
+    pose: keyof typeof POSES;
 };
 
 export const OG_CARDS: OgCard[] = [
@@ -53,6 +56,8 @@ export const OG_CARDS: OgCard[] = [
         headline:
             'Neckass has been "five minutes away" since 2019. He is at home.',
         deck: 'He has said "five minutes" to eleven people this year. He has not left the house for any of them.',
+        // The pose that lead carries in data/formats.js.
+        pose: 'phone',
     },
     {
         file: 'og-about.png',
@@ -60,6 +65,7 @@ export const OG_CARDS: OgCard[] = [
         headline:
             "Neckass (slang): defined by a dictionary in 2032, accurately, to nobody's satisfaction",
         deck: 'A person may be foolish without being a neckass, and a neckass need not be especially foolish.',
+        pose: 'shrug',
     },
     {
         file: 'og-archive.png',
@@ -67,6 +73,7 @@ export const OG_CARDS: OgCard[] = [
         headline:
             'Every issue since No. 1. None withdrawn. One corrected twice.',
         deck: 'The founding editorial gave the paper about a month. Each day is listed under the lead it ran.',
+        pose: 'explaining',
     },
     {
         file: 'og-prompts.png',
@@ -74,6 +81,7 @@ export const OG_CARDS: OgCard[] = [
         headline:
             'The Gazette does not file stories where he turned out to be right. It has happened twice.',
         deck: 'The desk recognizes four kinds of neckassery. "Unprecedented" is used rarely. It has been used twice by mistake.',
+        pose: 'defense',
     },
 ];
 
@@ -122,11 +130,14 @@ async function main() {
         try {
             writeFileSync(
                 outPath,
-                await renderCardPng(cardElement(card), {
-                    width: OG_WIDTH,
-                    height: OG_HEIGHT,
-                    fonts: fonts(),
-                }),
+                await renderCardPng(
+                    cardElement({ ...card, pose: POSES[card.pose] }),
+                    {
+                        width: OG_WIDTH,
+                        height: OG_HEIGHT,
+                        fonts: fonts(),
+                    },
+                ),
             );
             const size = statSync(outPath).size;
             if (size < OG_MIN_BYTES) {

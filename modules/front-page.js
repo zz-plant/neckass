@@ -88,11 +88,35 @@ function setWeatherCut(line) {
     }
 }
 
+// The file cut is the rig from assets/cuts/neckass.svg, inlined; each joint
+// turns on a custom property. The lead names the pose (data/poses.js), and
+// the cutline and the alt text say what it is.
+const JOINTS = {
+    tilt: '--tilt',
+    armNear: '--arm-near',
+    forearmNear: '--forearm-near',
+    armFar: '--arm-far',
+    forearmFar: '--forearm-far',
+    legNear: '--leg-near',
+    legFar: '--leg-far',
+};
+
+function setCutPose(pose) {
+    const cut = document.getElementById('cut-figure');
+    if (!cut || !pose) return;
+
+    for (const [joint, angle] of Object.entries(pose.joints)) {
+        if (JOINTS[joint]) cut.style.setProperty(JOINTS[joint], `${angle}deg`);
+    }
+    cut.setAttribute('aria-label', pose.alt);
+    textInto('#cut-caption', pose.caption);
+}
+
 function renderIssue(issue) {
     if (!issue) return;
 
     mastheadInto('#masthead-date', issue.mastheadLine);
-    document.title = `The Corbin Falls Gazette · No. ${issue.number}`;
+    document.title = `The Gazette · No. ${issue.number}`;
 
     if (issue.lead) {
         textInto('#lead-link', issue.lead.headline);
@@ -100,7 +124,7 @@ function renderIssue(issue) {
         // paper tomorrow, and this one is what the reader meant to send.
         const link = document.querySelector('#lead-link');
         if (link) link.href = `/?issue=${issue.issueParam}`;
-        textInto('#lead-deck', `${issue.dateline} — ${issue.lead.deck}`);
+        textInto('#lead-deck', issue.lead.deck);
         textInto('#lead-byline', issue.lead.byline);
     }
 
@@ -124,6 +148,7 @@ function renderIssue(issue) {
     listInto('#briefs-list', issue.briefs, (li, brief) => {
         li.textContent = brief;
     });
+    setCutPose(issue.pose);
 
     // The correction that retracts yesterday's lead says which issue it
     // retracts, and links to it, so the reader can read what was wrong.
@@ -150,10 +175,6 @@ function renderIssue(issue) {
         head.textContent = back.lead?.headline || '';
         link.append(folio, head);
         li.append(link);
-    });
-
-    listInto('#notices-list', issue.notices, (li, notice) => {
-        li.textContent = notice;
     });
 
     textInto('#weather-numbers', issue.weatherNumbers);

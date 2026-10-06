@@ -36,19 +36,9 @@ export const CALENDAR = [
 
     // ---- The council: first and third Tuesday ----------------------
     {
-        on: { weekday: 1, nth: [1, 3] },
-        section: 'notices',
-        item: 'The town council meets Tuesday at 7 p.m. in the council chamber. Public comment is limited to three minutes per speaker. The agenda is posted at the town office.',
-    },
-    {
-        on: { weekday: 2, nth: [1, 3] },
-        section: 'notices',
-        item: 'The town council meets tonight at 7 p.m. in the council chamber. Public comment is limited to three minutes per speaker.',
-    },
-    {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
         section: 'briefs',
-        item: "The town council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item not on the agenda, which is now on next month's agenda.",
+        item: "The council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item not on the agenda, which is now on next month's agenda.",
     },
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
@@ -75,11 +65,6 @@ export const CALENDAR = [
         item: "Neckass announced his resolutions for {year}. They are last year's, with the year changed.",
     },
     {
-        on: { month: 1, day: 1 },
-        section: 'notices',
-        item: "Town offices are closed today for New Year's Day. Trash and recycling collection moves one day later this week.",
-    },
-    {
         on: { month: 1, day: 2 },
         section: 'briefs',
         item: 'Neckass described Jan. 1 as "a practice day" and started the resolutions over today.',
@@ -102,7 +87,7 @@ export const CALENDAR = [
     {
         on: { special: 'birthday' },
         section: 'classifieds',
-        item: 'PERSONAL: happy birthday to the man at 12 Orchard Lane, from the people at 14, who would like the recycling bin back.',
+        item: 'PERSONAL: happy birthday to the man at No. 12, from the people at 14, who would like the recycling bin back.',
     },
     {
         on: { special: 'birthday' },
@@ -139,11 +124,6 @@ export const CALENDAR = [
     },
     {
         on: { weekday: 1, last: true, month: 5 },
-        section: 'notices',
-        item: 'Town offices are closed today for Memorial Day. Trash collection moves to Tuesday this week.',
-    },
-    {
-        on: { weekday: 1, last: true, month: 5 },
         section: 'briefs',
         item: 'Neckass, who has been told twice that there is no collection on the holiday, put the trash out and has said "they might still come."',
     },
@@ -153,29 +133,14 @@ export const CALENDAR = [
         item: 'Neckass said "the days are already getting shorter." It is the longest day of the year.',
     },
     {
-        on: { month: 7, day: 4 },
-        section: 'notices',
-        item: 'The Independence Day fireworks begin at dusk at Depot Park. The bandstand lot closes to vehicles at 6 p.m.',
-    },
-    {
         on: { dayAfter: { month: 7, day: 4 } },
         section: 'briefs',
         item: 'Neckass explained the fireworks to the people beside him as they went off. He was wrong about the green ones.',
     },
     {
         on: { weekday: 1, nth: [1], month: 9 },
-        section: 'notices',
-        item: 'Town offices are closed today for Labor Day. Recycling collection moves to Thursday this week.',
-    },
-    {
-        on: { weekday: 1, nth: [1], month: 9 },
         section: 'briefs',
         item: 'Neckass said "well, summer\'s over." He said it on July 9 as well.',
-    },
-    {
-        on: { special: 'anniversary' },
-        section: 'notices',
-        item: 'The Gazette was first published on this day in 2024. The first edition is in the back issues.',
     },
     {
         on: { special: 'anniversary' },
@@ -195,11 +160,6 @@ export const CALENDAR = [
     },
     {
         on: { special: 'electionDay' },
-        section: 'notices',
-        item: 'Polls are open today from 7 a.m. to 8 p.m. at the community center. Bring identification.',
-    },
-    {
-        on: { special: 'electionDay' },
         section: 'briefs',
         item: 'Neckass, having voted, asked the poll worker whether he had gotten it right and was told she could not say, which he has taken as a no.',
     },
@@ -207,11 +167,6 @@ export const CALENDAR = [
         on: { special: 'dstEnd' },
         section: 'briefs',
         item: 'The clocks went back overnight. Neckass told four people about the extra hour and spent it looking for the manual for the car clock.',
-    },
-    {
-        on: { special: 'thanksgiving' },
-        section: 'notices',
-        item: 'Town offices are closed Thursday and Friday for Thanksgiving. Recycling collection moves to Saturday.',
     },
     {
         on: { special: 'thanksgiving' },
@@ -227,11 +182,6 @@ export const CALENDAR = [
         on: { month: 12, day: 24 },
         section: 'briefs',
         item: 'Neckass began his Christmas shopping. The stores close at five.',
-    },
-    {
-        on: { month: 12, day: 25 },
-        section: 'notices',
-        item: 'The Gazette is published today, as it is every day. The office is closed.',
     },
     {
         on: { month: 12, day: 25 },

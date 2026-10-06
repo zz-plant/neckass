@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { EDITIONS } from '../data/editions.js';
 import { LEADS } from '../data/formats.js';
+import { POSES } from '../data/poses.js';
 import { buildFeed } from '../functions/feed.xml.js';
+import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
 import { issueNumber } from '../functions/lib/issue.mjs';
 import {
     composeIssue,
@@ -18,7 +21,56 @@ const EDGE_URL = process.env.PLAYWRIGHT_EDGE_URL || 'http://127.0.0.1:8800/';
 // A brief ends on a period; the same item as a headline does not.
 const unpunctuated = (text) => text.replace(/\.("?)$/, '$1');
 
-test.describe('The Corbin Falls Gazette', () => {
+const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
+
+// The rig's joints by the name the CSS gives them and the name a pose does.
+const RIG_JOINTS = {
+    head: ['--tilt', 'tilt'],
+    'arm-near': ['--arm-near', 'armNear'],
+    'forearm-near': ['--forearm-near', 'forearmNear'],
+    'arm-far': ['--arm-far', 'armFar'],
+    'forearm-far': ['--forearm-far', 'forearmFar'],
+    'leg-near': ['--leg-near', 'legNear'],
+    'leg-far': ['--leg-far', 'legFar'],
+};
+
+// A drawing's shapes in order, reduced to their geometry.
+function shapesOf(svg) {
+    return [...svg.matchAll(/<(path|circle|ellipse)\b([^>]*)>/g)].map(
+        ([, tag, attrs]) =>
+            [
+                tag,
+                ...['d', 'cx', 'cy', 'r', 'rx', 'ry'].map(
+                    (name) =>
+                        attrs.match(new RegExp(`\\b${name}="([^"]*)"`))?.[1],
+                ),
+            ]
+                .filter(Boolean)
+                .join(' '),
+    );
+}
+
+// Each joint's pivot and house angle from a stylesheet's rules, keyed by
+// the pose's name for the joint.
+function rigOf(css) {
+    const rig = {};
+    for (const [joint, [property, key]] of Object.entries(RIG_JOINTS)) {
+        const rule = css.match(
+            new RegExp(`\\.joint-${joint}\\s*\\{([^}]*)\\}`),
+        )?.[1];
+        const origin = rule?.match(/transform-origin:\s*(\d+)px (\d+)px/);
+        const fallback = rule?.match(
+            new RegExp(`var\\(${property},\\s*(-?\\d+)deg\\)`),
+        );
+        rig[key] = {
+            origin: origin && [Number(origin[1]), Number(origin[2])],
+            house: fallback && Number(fallback[1]),
+        };
+    }
+    return rig;
+}
+
+test.describe('The Gazette', () => {
     // The issue is the product. These cover what a reader actually opens:
     // that today's paper renders, that a back issue loads from the archive,
     // and that the corrections chain points at the lead it claims to.
@@ -35,11 +87,7 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#lead-headline')).toHaveText(
             issue.lead.headline,
         );
-        // Wire form: the deck opens on a dateline.
-        await expect(page.locator('#lead-deck')).toHaveText(
-            `${issue.dateline} — ${issue.lead.deck}`,
-        );
-        expect(issue.dateline).toMatch(/^CORBIN FALLS, [A-Z][a-z.]+ \d{1,2}$/);
+        await expect(page.locator('#lead-deck')).toHaveText(issue.lead.deck);
         await expect(page.locator('#lead-byline')).toHaveText(
             issue.lead.byline,
         );
@@ -51,18 +99,23 @@ test.describe('The Corbin Falls Gazette', () => {
         expect(issue.weatherNumbers).toMatch(
             /^High -?\d+°, low -?\d+°\. Winds [NESW]{1,2} \d+ mph\. Sunset \d{1,2}:\d{2} p\.m\.$/,
         );
+        // The file cut takes the lead's pose, and the cutline says which.
+        expect(issue.pose).toEqual(POSES[issue.lead.pose]);
+        const cut = page.locator('#cut-figure');
+        await expect(page.locator('#cut-caption')).toHaveText(
+            issue.pose.caption,
+        );
+        await expect(cut).toHaveAttribute('aria-label', issue.pose.alt);
+        expect(
+            await cut.evaluate((node) =>
+                node.style.getPropertyValue('--arm-far'),
+            ),
+        ).toBe(`${issue.pose.joints.armFar}deg`);
 
         // Every section is dealt at its documented size. A pool that empties
         // would silently shorten one of these.
         await expect(page.locator('#briefs-list li')).toHaveCount(7);
         await expect(page.locator('#corrections-list li')).toHaveCount(4);
-        await expect(page.locator('#notices-list li')).toHaveCount(3);
-        // The first correction is the dull one and never mentions him.
-        const firstCorrection = await page
-            .locator('#corrections-list li')
-            .first()
-            .innerText();
-        expect(firstCorrection).not.toMatch(/Neckass/);
         await expect(page.locator('#classifieds-list li')).toHaveCount(5);
         await expect(page.locator('#letters-list li')).toHaveCount(2);
 
@@ -118,9 +171,8 @@ test.describe('The Corbin Falls Gazette', () => {
             );
             expect(today.number, value).toBe(previous.number + 1);
             // The retraction printed today is the one attached to the lead
-            // that actually ran yesterday. [0] is the routine correction;
-            // [1] is the chained one.
-            expect(today.corrections[1], value).toBe(previous.lead.correction);
+            // that actually ran yesterday, first in the box.
+            expect(today.corrections[0], value).toBe(previous.lead.correction);
         }
     });
 
@@ -134,9 +186,8 @@ test.describe('The Corbin Falls Gazette', () => {
 
         // Yesterday's lead continues at the top of today's column.
         expect(thanksgiving.briefs[0]).toBe(before.lead.followUp);
-        expect(thanksgiving.notices[0]).toMatch(/Thanksgiving/);
         expect(thanksgiving.briefs[1]).toMatch(/bring a side/);
-        expect(wednesday.briefs[1]).toMatch(/The town council met Tuesday/);
+        expect(wednesday.briefs[1]).toMatch(/The council met Tuesday/);
         expect(birthday.briefs[1]).toBe(
             'Neckass is 38 today. He has told people he is 36 since he was 36.',
         );
@@ -145,10 +196,9 @@ test.describe('The Corbin Falls Gazette', () => {
         // A dated item takes the place of a dealt one; sizes do not change.
         expect([
             thanksgiving.briefs.length,
-            thanksgiving.notices.length,
             birthday.letters.length,
             birthday.classifieds.length,
-        ]).toEqual([7, 3, 2, 5]);
+        ]).toEqual([7, 2, 5]);
     });
 
     test('standing matters compound with the run', () => {
@@ -172,7 +222,7 @@ test.describe('The Corbin Falls Gazette', () => {
             expect(body).not.toMatch(/This is letter number/);
         }
         // The day after the letter, the paper walks it back, monthly.
-        expect(compose('2026-10-15').corrections[2]).toMatch(
+        expect(compose('2026-10-15').corrections[1]).toMatch(
             /The wind remains unverified/,
         );
         expect(compose('2026-05-02').briefs.join('\n')).toMatch(
@@ -231,7 +281,7 @@ test.describe('The Corbin Falls Gazette', () => {
         const issue = await page.evaluate(() => window.Neckass.currentIssue);
 
         // The nameplate says what the paper covers.
-        await expect(page.locator('h1')).toHaveText('The Corbin Falls Gazette');
+        await expect(page.locator('h1')).toHaveText('The Gazette');
         await expect(page.locator('.nameplate__motto')).toContainText(
             'One man',
         );
@@ -253,7 +303,7 @@ test.describe('The Corbin Falls Gazette', () => {
 
         // The correction retracting yesterday's lead links to yesterday.
         await expect(
-            page.locator('#corrections-list li').nth(1).locator('a'),
+            page.locator('#corrections-list li').first().locator('a'),
         ).toHaveAttribute('href', expected[0].href);
 
         // The first edition has nothing earlier; the way to the archive stays.
@@ -284,7 +334,7 @@ test.describe('The Corbin Falls Gazette', () => {
 
         // No. 2 retracts a detail of the written lead, not a dealt one.
         const second = composeIssue(new Date(2024, 8, 30));
-        expect(second.corrections[1]).toBe(first.lead.correction);
+        expect(second.corrections[0]).toBe(first.lead.correction);
         expect(second.editorial).toBeNull();
 
         // An ordinary issue carries no editorial. No. 2 is one; today is
@@ -367,10 +417,15 @@ test.describe('The Corbin Falls Gazette', () => {
         }
         expect(closest).toBeGreaterThan(Math.min(14, Math.floor(size / 4)));
 
-        // Every lead carries everything the paper prints about it.
-        const incomplete = LEADS.filter(
+        // Every lead carries everything the paper prints about it, and a
+        // pose the file cut has.
+        const incomplete = [
+            ...LEADS,
+            ...Object.values(EDITIONS).map((edition) => edition.lead),
+        ].filter(
             (lead) =>
                 !(
+                    POSES[lead.pose] &&
                     lead.headline &&
                     lead.deck &&
                     lead.byline &&
@@ -415,6 +470,37 @@ test.describe('The Corbin Falls Gazette', () => {
         await expect(page.locator('#lead-headline')).toHaveText(
             issue.lead.headline,
         );
+    });
+
+    test('the file cut is one drawing wherever it is drawn', () => {
+        // The rig, the front page's inlined copy and the card's flattened
+        // copy are three copies of the same parts. A part changed in one
+        // and not the others would stand differently in each.
+        const rig = read('../assets/cuts/neckass.svg');
+        const inline = read('../index.html').match(
+            /<svg class="cut-figure"[\s\S]*?<\/svg>/,
+        )[0];
+        const card = atob(cutSrc(POSES.explaining.joints).split(',')[1]);
+        const shapes = shapesOf(rig);
+        expect(shapes.length).toBeGreaterThan(20);
+        expect(shapesOf(inline)).toEqual(shapes);
+        expect(shapesOf(card)).toEqual(shapes);
+
+        // The joints turn on the same pivots, and unposed they stand in
+        // the house pose, which is the pose a lead naming none is given.
+        const fromRig = rigOf(rig);
+        const fromPage = rigOf(read('../styles.css'));
+        for (const [joint, origin] of Object.entries(JOINT_ORIGINS)) {
+            const house = POSES.explaining.joints[joint];
+            expect(fromRig[joint], joint).toEqual({ origin, house });
+            expect(fromPage[joint], joint).toEqual({ origin, house });
+        }
+        // Every pose sets every joint, so none falls back mid-pose.
+        for (const [name, pose] of Object.entries(POSES)) {
+            expect(Object.keys(pose.joints).sort(), name).toEqual(
+                Object.keys(JOINT_ORIGINS).sort(),
+            );
+        }
     });
 
     test('the issue reads without JavaScript', async ({ browser }) => {

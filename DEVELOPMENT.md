@@ -51,16 +51,16 @@ thin adapter that applies it to UTC dates.
    in the issue number, so any issue can name any other issue's lead; that
    is what lets today correct and continue yesterday. It imports:
 3. `data/formats.js` — `LEADS` (each with deck, correction, follow-up,
-   classified, letter), `CORRECTIONS`, `ROUTINE_CORRECTIONS`, `NOTICES`,
-   `WEATHER`, `CLASSIFIEDS`, `LETTERS`; `data/headlines.js` — the briefs
-   pool (`HEADLINES`); `data/editions.js` — the landmark issues, keyed by
-   number; and:
+   classified, letter, pose), `CORRECTIONS`, `WEATHER`, `CLASSIFIEDS`,
+   `LETTERS`; `data/poses.js` — the file cut's poses (`POSES`);
+   `data/headlines.js` — the briefs pool (`HEADLINES`); `data/editions.js` —
+   the landmark issues, keyed by number; and:
 4. `modules/calendar.js` — matches the calendar against a date. It imports:
 5. `data/calendar.js` — what runs on which day.
 
 `front-page.js` swaps the standing issue in the markup for the composed one,
-sets the title, the weather cut's layers, the editorial, the clipping link
-and the back-issue notice, and publishes the composed issue as
+sets the title, the file cut's pose, the weather cut's layers, the
+editorial, the clipping link and the back-issue notice, and publishes the composed issue as
 `window.Neckass.currentIssue`.
 
 There is no bootstrap, no state, no storage and no input handling. The page
@@ -75,8 +75,9 @@ ends when `front-page.js` has rendered.
   `data/formats.js`.
 - `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and
   layers are CSS custom properties with fallbacks, so the files work as plain
-  `<img>` and pose when inlined. The weather cut is inlined in
-  `index.html`; `assets/cuts/README.md` lists every property.
+  `<img>` and pose when inlined. The file cut and the weather cut are
+  inlined in `index.html`, styled in `styles.css`; `assets/cuts/README.md`
+  lists every property, and `data/poses.js` holds the file cut's poses.
 - `fonts/` — Fraunces as a variable woff2 for the browser, and two static
   TrueType cuts for the card renderer.
 
@@ -87,6 +88,9 @@ ends when `front-page.js` has rendered.
 - `functions/_middleware.js` — per-issue title, description and image tags
   on the front page.
 - `functions/lib/issue.mjs` — UTC date adapters over `modules/issue.js`.
+- `functions/lib/cut.mjs` — the file cut flattened for the card, in any
+  pose. A smoke test holds it, the rig and the front page's copy to the same
+  parts, pivots and house pose.
 - `functions/lib/card.mjs` — the card's layout and the one renderer
   (`renderCardPng`) shared with `scripts/generate-og.ts`; `initCardRenderer`
   loads the WebAssembly engines once per runtime, from imported modules on
@@ -98,11 +102,11 @@ ends when `front-page.js` has rendered.
 3. Contributor/maintainer docs (`README`, `CONTRIBUTING`, this file).
 
 ## Validation checklist (manual)
-1. Today's issue renders whole: lead, seven briefs, three notices, four
-   corrections, weather, five classifieds, two letters, the colophon.
+1. Today's issue renders whole: lead, seven briefs, four corrections,
+   weather, five classifieds, two letters, the colophon.
 2. `/?issue=2024-09-29` is the first edition, with its editorial and one
    correction; `/?issue=2026-09-29` is the second anniversary.
-3. The first brief continues yesterday's lead and the second correction
+3. The first brief continues yesterday's lead and the first correction
    retracts a detail of it.
 4. `bun run edge`, then `/card.png` is a PNG of today's lead and `view-source:/`
    carries `og:image` pointing at it.
