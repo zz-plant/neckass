@@ -26,7 +26,7 @@ export const CALENDAR = [
     {
         on: { weekday: 6 },
         section: 'briefs',
-        item: 'Neckass has gone to the farmers market "for a look" and bought a plant. It is the fourth plant. The first three are on the windowsill, and they are not well.',
+        item: 'Neckass has gone to the farmers market "for a look" and bought a plant. It is the fourth plant. The first three are on the windowsill and are not expected to recover.',
     },
     {
         on: { weekday: 0 },
@@ -38,7 +38,7 @@ export const CALENDAR = [
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
         section: 'briefs',
-        item: "The council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item not on the agenda, which is now on next month's agenda.",
+        item: "The council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item that was not on the agenda and is now on next month's.",
     },
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
@@ -100,7 +100,7 @@ export const CALENDAR = [
     {
         on: { special: 'dstStart' },
         section: 'briefs',
-        item: 'The clocks went forward overnight. Neckass changed one clock. It was the one on the oven, which was already right.',
+        item: 'The clocks went forward overnight. Neckass changed one clock. It was the oven clock, which was already right.',
     },
     {
         on: { dayAfter: { special: 'dstStart' } },
