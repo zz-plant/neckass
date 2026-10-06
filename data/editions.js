@@ -18,10 +18,11 @@ export const EDITIONS = {
                 'Neckass said he would "get into running." It is the fourth September he has said it.',
             deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
             byline: 'Staff report',
+            pose: 'explaining',
             correction:
                 'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
             followUp:
-                'Neckass went for a run. He ran to the end of Orchard Lane and walked back, and has described the walk back as "the cool-down."',
+                'Neckass went for a run. He ran to the end of the street and walked back, and has described the walk back as "the cool-down."',
             classified:
                 'FOR SALE: running shoes, three pairs, all one size. Boxes included, one empty.',
             letter: {
@@ -32,7 +33,7 @@ export const EDITIONS = {
         editorial: {
             head: 'Why a paper',
             body: [
-                'On Tuesday a man on Orchard Lane told three people he was five minutes away. He was in his kitchen. On Wednesday he told a fourth. On Thursday he came to this office to ask whether we had "anything on him," and stayed forty minutes supplying it.',
+                'On Tuesday a man told three people he was five minutes away. He was in his kitchen. On Wednesday he told a fourth. On Thursday he came to this office to ask whether we had "anything on him," and stayed forty minutes supplying it.',
                 'That is why. He did the thing in front of people and then came in to explain it. This paper will print what he did. He has said he will read it.',
             ],
             signature: 'The editor',
@@ -55,6 +56,7 @@ export const EDITIONS = {
                 'Neckass told the Gazette that being in it every day is "a lot." He has read four of them.',
             deck: 'He came to the office Friday to ask that the paper stop. He stayed forty minutes. He has appeared in one hundred issues and read four, one of them twice.',
             byline: 'Staff report',
+            pose: 'defense',
             correction:
                 'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
             followUp:
@@ -81,8 +83,9 @@ export const EDITIONS = {
         lead: {
             headline:
                 'Neckass bought a hat and was reported to the Gazette as a second neckass',
-            deck: 'A neighbor called the desk Saturday to say there was a man in a hat on Orchard Lane "doing all the same things." It was the same man. The hat is new.',
+            deck: 'A neighbor called the desk Saturday to say there was a man in a hat on her street "doing all the same things." It was the same man. The hat is new.',
             byline: 'From wire reports',
+            pose: 'satisfied',
             correction:
                 "We reported that the hat is new. It is his father's. He has had it since March and worn it since Saturday.",
             followUp:
@@ -97,8 +100,7 @@ export const EDITIONS = {
         // The entry cites this issue for its corrections: the one day the
         // paper applied the word to someone else, and took it back.
         corrections: [
-            "A caption in Friday's edition misidentified the bandstand. It is the bandstand in Depot Park, not the one at the school.",
-            'We reported a second neckass on Orchard Lane, in a hat. There is one. He had walked past his own house twice, in the hat, to "see how it looked from the road."',
+            'We reported a second neckass, in a hat. There is one. He had walked past his own house twice, in the hat, to "see how it looked from the road."',
             'Neckass was shown the report of a second man and said he had "seen him too." He was wearing the hat at the time.',
             'We said the hat has been worn since Saturday. It was worn Friday, at dinner, indoors, until he was asked.',
         ],
@@ -111,6 +113,7 @@ export const EDITIONS = {
                 'Neckass has been in the paper every day for a year and has not noticed',
             deck: 'Asked about it, he said he had "been meaning to read it." The paper is delivered to his door. He steps over it.',
             byline: 'From wire reports',
+            pose: 'shrug',
             correction:
                 'We reported that Neckass steps over the paper. He steps on it.',
             followUp:
@@ -139,6 +142,7 @@ export const EDITIONS = {
                 'Neckass asked whether the Gazette was "still going." This is the 731st issue.',
             deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
             byline: 'From wire reports',
+            pose: 'considering',
             correction:
                 'We reported that Neckass was holding a copy of the paper. He was holding it, and reading his phone.',
             followUp:

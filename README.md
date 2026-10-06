@@ -1,8 +1,8 @@
-# The Corbin Falls Gazette
+# The Gazette
 
-A static daily newspaper about a fictional Neckass, the one man in a small
-town who is news. One issue per day, composed from its own date, so two
-readers on the same day read the same paper and every past day has an issue.
+A static daily newspaper about a fictional Neckass, the one man who is news.
+One issue per day, composed from its own date, so two readers on the same
+day read the same paper and every past day has an issue.
 No build system, no backend, no account, nothing stored.
 
 **Live at [neckass.com](https://neckass.com)** · Open `index.html` and you are

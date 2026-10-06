@@ -15,10 +15,10 @@ complexity. The front page is the product.
   and one `<script type="module">` whose import graph is the dependency
   chain.
 - `styles.css` — all visual/layout styling, including the inlined cuts' and print.
-- `data/` — the pools (`formats.js`, `headlines.js`), the landmark issues (`editions.js`), the calendar (`calendar.js`). Plain ES modules, imported by both the browser and the edge.
+- `data/` — the pools (`formats.js`, `headlines.js`), the landmark issues (`editions.js`), the calendar (`calendar.js`), the file cut's poses (`poses.js`). Plain ES modules, imported by both the browser and the edge.
 - `modules/issue.js` — the issue arithmetic and composition, shared by both runtimes; `modules/calendar.js` — matches dated items; `modules/front-page.js` — renders the front page; `modules/archive-list.js` — the archive.
 - `functions/` — Cloudflare Pages Functions: the feed, the social card, the middleware; `lib/issue.mjs` is a UTC adapter over `modules/issue.js`, `lib/card.mjs` holds the card layout and its one renderer.
-- `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`.
+- `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`. The file cut has three copies (the rig, the front page's inline one, `functions/lib/cut.mjs`); change all three together, and the smoke test checks that you did.
 - `fonts/` — Fraunces: variable woff2 for the page, two static TTFs for the card.
 
 ## Change priorities
@@ -33,7 +33,7 @@ complexity. The front page is the product.
 - `bun run lint`, `bun run assets:check`, `bun run test:smoke` before merge.
 
 ## When changing content
-- A lead needs all seven fields: headline, deck, byline, correction, followUp, classified, letter.
+- A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it.
 - Dated items go on the calendar, not in the pools.
 - Regenerate the still cards after changing the card layout or copy: `bun run og:generate`.
 
@@ -41,6 +41,9 @@ complexity. The front page is the product.
 - Capture a screenshot with available browser tooling.
 
 ## Guardrails
+- The paper is not placed anywhere: no town name, no named streets or
+  roads, no dateline, no civic notices. It is The Gazette, and it covers
+  one man.
 - Do not add inline scripts for behavior changes.
 - Do not add input handling to the front page. It is a paper.
 - Avoid introducing dependencies for straightforward DOM work.

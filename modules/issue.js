@@ -17,11 +17,10 @@ import {
     CORRECTIONS,
     LEADS,
     LETTERS,
-    NOTICES,
-    ROUTINE_CORRECTIONS,
     WEATHER,
 } from '../data/formats.js';
 import { HEADLINES } from '../data/headlines.js';
+import { POSES } from '../data/poses.js';
 import { itemsFor as calendarItemsFor } from './calendar.js';
 
 export const FIRST_EDITION = Date.UTC(2024, 8, 29);
@@ -103,8 +102,7 @@ function volumeLabel(number) {
     return numerals[volume - 1] || String(volume);
 }
 
-// Wire-service dateline: "CORBIN FALLS, Sept. 5". AP abbreviates the
-// long months and spells out March through July.
+// AP abbreviates the long months and spells out March through July.
 export const AP_MONTHS = [
     'Jan.',
     'Feb.',
@@ -119,11 +117,7 @@ export const AP_MONTHS = [
     'Nov.',
     'Dec.',
 ];
-function datelineFor(date) {
-    return `CORBIN FALLS, ${AP_MONTHS[date.getMonth()]} ${date.getDate()}`;
-}
-
-// A plausible forecast for a northern temperate town, seeded like the
+// A plausible forecast for a northern temperate climate, seeded like the
 // rest of the issue. Temperatures follow a seasonal curve with a little
 // day-to-day noise, so consecutive days are similar and July is warm.
 function weatherFor(date, rng) {
@@ -136,7 +130,7 @@ function weatherFor(date, rng) {
     const wind = dirs[Math.floor(rng() * dirs.length)];
     const speed = 3 + Math.floor(rng() * 12);
     // Clock time including daylight saving, so June sets at 8:30 and
-    // December at 4:30, which is what a northern town actually sees.
+    // December at 4:30, which is what a northern latitude actually sees.
     const sunsetHour =
         18.5 + 2 * Math.sin(((dayOfYear - 80) / 365) * Math.PI * 2);
     const h = Math.floor(sunsetHour);
@@ -203,6 +197,12 @@ export function selectLead(number) {
     return LEADS[roundOrder(round, LEADS.length)[place]] || null;
 }
 
+// How the file cut stands for a lead: the pose it names, or the house
+// pose if it names none the cut has.
+export function poseOf(lead) {
+    return POSES[lead?.pose] || POSES.explaining;
+}
+
 // A brief is set as a sentence and a headline is not, so a brief ends
 // on a period its headline lacks. They are compared without it.
 function unpunctuated(text) {
@@ -241,7 +241,6 @@ export function composeIssue(date = new Date()) {
     );
 
     const dateLabel = dateFormatter.format(date);
-    const routineCorrection = deal(ROUTINE_CORRECTIONS, 1, rng)[0];
 
     // Yesterday's lead continues at the top of today's column: he has
     // done the next thing. With the correction beneath it, a reader
@@ -267,11 +266,9 @@ export function composeIssue(date = new Date()) {
     const letters = lettersCount(number);
     const fixedBriefs = [followUp, ...dated('briefs')].filter(Boolean);
     const fixedCorrections = [
-        routineCorrection,
         chainedCorrection,
         ...dated('corrections'),
     ].filter(Boolean);
-    const fixedNotices = dated('notices');
     const fixedClassifieds = [lead?.classified, ...dated('classifieds')].filter(
         Boolean,
     );
@@ -282,21 +279,20 @@ export function composeIssue(date = new Date()) {
         dateLabel,
         volume: volumeLabel(number),
         mastheadLine: `${dateLabel} · Vol. ${volumeLabel(number)}, No. ${number}`,
-        dateline: datelineFor(date),
         issueParam: toIssueParam(date),
         lead,
+        pose: poseOf(lead),
         editorial: null,
         tag: null,
         briefs: [
             ...fixedBriefs,
             ...dealAfter(briefPool, briefsCount(number), fixedBriefs),
         ],
-        // The dull one first, then yesterday's retraction, then the rest.
+        // Yesterday's retraction first, then the rest.
         corrections: [
             ...fixedCorrections,
             ...dealAfter(CORRECTIONS, 4, fixedCorrections),
         ],
-        notices: [...fixedNotices, ...dealAfter(NOTICES, 3, fixedNotices)],
         weatherNumbers: weatherFor(date, rng),
         weather: deal(WEATHER, 1, rng)[0] || '',
         // The lead's own classified and letter run alongside it, so the

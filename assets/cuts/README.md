@@ -12,7 +12,7 @@ sheet.
 
 | File | What it is | Properties |
 | --- | --- | --- |
-| `neckass.svg` | The file cut. A man, mid-explanation. | `--tilt`, `--arm-near`, `--forearm-near`, `--arm-far`, `--forearm-far`, `--leg-near`, `--leg-far` — all angles. Zero on every joint stands him to attention, arms at the sides. |
+| `neckass.svg` | The file cut. A man, mid-explanation. | `--tilt`, `--arm-near`, `--forearm-near`, `--arm-far`, `--forearm-far`, `--leg-near`, `--leg-far` — all angles. Zero on every joint stands him to attention, arms at the sides; positive turns a joint clockwise as drawn. |
 | `weather.svg` | The sky, in four layers. | `--sun`, `--cloud`, `--rain`, `--wind` — `1` shows a layer, `0` hides it. With `--cloud: 0` the sun moves to the middle of the box rather than hanging in the corner. |
 | `press.svg` | A screw press. | `--lever` (angle of the bar; `0` is at rest, straight out), `--sheet: 0` clears the paper off the bed. |
 
@@ -36,18 +36,21 @@ Inline the file, or reference it from a sprite, and set the properties on it:
 }
 ```
 
-Poses that work, as a starting point:
+The paper's poses are `data/poses.js`: ten of them, each a full set of joint
+angles with the caption and alt text that go with it. Every lead names one.
+The arms are drawn behind the torso and the head, so a hand brought in front
+of either disappears; a pose that reads keeps its hands out at the sides or
+up by the ear.
 
-| | `--arm-far` / `--forearm-far` | `--arm-near` / `--forearm-near` | rest |
-| --- | --- | --- | --- |
-| House pose | `-22deg` / `-122deg` | `7deg` / `9deg` | — |
-| At attention | `0` / `0` | `0` / `0` | `--tilt: 0deg` |
-| Both hands up | `-22deg` / `-122deg` | `22deg` / `122deg` | — |
-| Pointing | `-96deg` / `8deg` | — | `--tilt: -8deg` |
-| Shrug | `-58deg` / `-96deg` | `58deg` / `96deg` | `--tilt: 5deg` |
-| Walking off | `20deg` / `0` | `-18deg` / `0` | `--leg-near: -20deg; --leg-far: 18deg` |
+The file cut on the front page is inlined this way, with its styles in
+`styles.css` under `.cut-figure`: `modules/front-page.js` sets the lead's
+pose on its joints and the pose's caption in the cutline. The social card
+can read neither CSS nor custom properties, so `functions/lib/cut.mjs` draws
+the same parts with each rotation written in, in whichever pose it is given.
+That is three copies of one drawing; change them together. The smoke test
+compares their parts, pivots and house pose, and fails if they differ.
 
-The weather cut on the front page is inlined this way: `modules/front-page.js`
+The weather cut on the front page is inlined the same way: `modules/front-page.js`
 reads the forecast on file and sets the sky's four layer switches from it.
 That copy of the drawing lives in `index.html`; this is the source it was
 taken from, so change both together.

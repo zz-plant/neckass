@@ -6,7 +6,8 @@
  * A card is read at thumbnail size in a feed, beside a dozen others, by
  * someone who has not heard of the paper. So it carries, in order of size:
  * the headline, which is the reason to click; the man it is about, in the
- * file cut, so the card is recognisably his at a glance; the paper's name;
+ * file cut, posed for the lead as the page poses it, so the card is
+ * recognisably his at a glance; the paper's name;
  * and, at the foot, what the paper is, in one line. The deck is the
  * headline's second beat and is set in the ink, not greyed out under it.
  *
@@ -21,7 +22,8 @@
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import satori, { init as satoriInit } from 'satori/wasm';
 import initYoga from 'yoga-wasm-web';
-import { CUT_HEIGHT, CUT_SRC, CUT_WIDTH } from './cut.mjs';
+import { POSES } from '../../data/poses.js';
+import { CUT_HEIGHT, CUT_WIDTH, cutSrc, PAD } from './cut.mjs';
 
 export const WIDTH = 1200;
 export const HEIGHT = 630;
@@ -110,19 +112,29 @@ export async function renderCardPng(element, { width, height, fonts }) {
 }
 
 /**
- * @param {{ folio: string, headline: string, deck: string }} card
+ * @param {{ folio: string, headline: string, deck: string, pose?: object }} card
  *   folio: the right of the top line — the issue's date and number, or the
- *   page's name.
+ *   page's name. pose: an entry of data/poses.js; the house pose if none.
  */
-export function cardElement({ folio, headline, deck }) {
+export function cardElement({
+    folio,
+    headline,
+    deck,
+    pose = POSES.explaining,
+}) {
     const small = {
         fontFamily: 'Fraunces Text',
         fontSize: 18,
         letterSpacing: 2.5,
         color: MUTED,
     };
-    const cutWidth = 184;
-    const cutHeight = Math.round((cutWidth * CUT_HEIGHT) / CUT_WIDTH);
+    // The cut is set so the man is 184px wide whatever his pose. Its image
+    // carries PAD around him for a thrown limb, and the negative margins
+    // give that room back, so he stands where the house pose stands and
+    // an arm pointing out reaches into the sheet's margin.
+    const scale = 184 / CUT_WIDTH;
+    const cutWidth = Math.round((CUT_WIDTH + PAD.left + PAD.right) * scale);
+    const cutHeight = Math.round((CUT_HEIGHT + PAD.top + PAD.bottom) * scale);
     return el(
         'div',
         {
@@ -159,7 +171,7 @@ export function cardElement({ folio, headline, deck }) {
                         fontSize: 38,
                         letterSpacing: -0.5,
                     },
-                    'The Corbin Falls Gazette',
+                    'The Gazette',
                 ),
                 el('span', small, folio),
             ),
@@ -205,13 +217,14 @@ export function cardElement({ folio, headline, deck }) {
                     {
                         display: 'flex',
                         alignItems: 'flex-end',
-                        marginLeft: 36,
+                        marginLeft: 36 - Math.round(PAD.left * scale),
+                        marginRight: -Math.round(PAD.right * scale),
                         paddingBottom: 12,
                     },
                     {
                         type: 'img',
                         props: {
-                            src: CUT_SRC,
+                            src: cutSrc(pose.joints),
                             width: cutWidth,
                             height: cutHeight,
                         },

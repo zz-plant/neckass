@@ -77,7 +77,7 @@ export async function onRequest(context) {
     const lead = selectLead(number);
     if (!lead) return response;
 
-    const title = `${lead.headline} | The Corbin Falls Gazette, No. ${number}`;
+    const title = `${lead.headline} | The Gazette, No. ${number}`;
     return new HTMLRewriter()
         .on('title', new TitleRewriter(title))
         .on(
@@ -86,7 +86,7 @@ export async function onRequest(context) {
                 title,
                 description: lead.deck,
                 image: `${SITE}/card.png?issue=${issueParam(date)}`,
-                alt: `The front page of The Corbin Falls Gazette, No. ${number}: ${lead.headline}`,
+                alt: `The front page of The Gazette, No. ${number}: ${lead.headline}`,
             }),
         )
         .transform(response);

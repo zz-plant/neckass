@@ -26,7 +26,7 @@
        ink — a paper sets its nameplate in what is already on the press.
 
        The second colour is a ledger teal, the register this paper files
-       in: corrections, notices, the town clerk. It carries the cutoff
+       in: the corrections, the back issues. It carries the cutoff
        rule and the links. The ground
        under the sheet is that teal taken down to near-black, so the page
        runs on two colour families rather than three unrelated ones. */
@@ -242,14 +242,6 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
 .masthead__plate a {
     color: inherit;
     text-decoration: none;
-}
-
-.masthead__kicker {
-    color: var(--muted);
-}
-
-.masthead__kicker::after {
-    content: " · ";
 }
 
 /* The name is the one thing on the folio line set in the display face,
@@ -762,8 +754,8 @@ a:focus-visible {
     }
 }
 
-/* A cut and its cutline. The briefs column runs shorter than the notices
-   beside it, which is the hole a paper fills with a picture. */
+/* A cut and its cutline, at the foot of the briefs column: the paper's one
+   picture of him. */
 .cut {
     margin-top: 22px;
     padding-top: 18px;
@@ -777,6 +769,82 @@ a:focus-visible {
 .cut img {
     width: 124px;
     height: auto;
+}
+
+/* The file cut, inlined from assets/cuts/neckass.svg so it can be posed.
+   Each joint turns on a custom property that modules/front-page.js sets
+   from the lead's pose (data/poses.js); the fallbacks are the house pose,
+   so the standing issue has him explaining. The origins are the rig's.
+
+   A pose throws a limb past the drawing's box — the shrug a fifth of its
+   width to the left, the arm pointing as far to the right, the wave over
+   the top — so the box keeps that much margin and the limb draws into it
+   (`overflow: visible`) rather than over the column rule or the cutline.
+   The inks are the page's, so the cut follows the theme and the print
+   sheet like the type does. */
+.cut-figure {
+    --cut-width: 124px;
+    width: var(--cut-width);
+    height: auto;
+    margin: calc(var(--cut-width) * 0.17) calc(var(--cut-width) * 0.18) 0
+        calc(var(--cut-width) * 0.2);
+    overflow: visible;
+}
+
+.cut-figure .part {
+    fill: var(--surface);
+    stroke: var(--text);
+    stroke-width: 3;
+    stroke-linejoin: round;
+}
+
+.cut-figure .solid {
+    fill: var(--text);
+}
+
+.cut-figure .detail,
+.cut-figure .hatch {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.cut-figure .hatch {
+    stroke-width: 1.4;
+    opacity: 0.7;
+}
+
+.cut-figure [class^="joint-"] {
+    transform-box: view-box;
+}
+.cut-figure .joint-head {
+    transform-origin: 100px 66px;
+    transform: rotate(var(--tilt, -4deg));
+}
+.cut-figure .joint-arm-near {
+    transform-origin: 70px 80px;
+    transform: rotate(var(--arm-near, 7deg));
+}
+.cut-figure .joint-forearm-near {
+    transform-origin: 70px 124px;
+    transform: rotate(var(--forearm-near, 9deg));
+}
+.cut-figure .joint-arm-far {
+    transform-origin: 130px 80px;
+    transform: rotate(var(--arm-far, -22deg));
+}
+.cut-figure .joint-forearm-far {
+    transform-origin: 130px 124px;
+    transform: rotate(var(--forearm-far, -122deg));
+}
+.cut-figure .joint-leg-near {
+    transform-origin: 88px 156px;
+    transform: rotate(var(--leg-near, 2deg));
+}
+.cut-figure .joint-leg-far {
+    transform-origin: 112px 156px;
+    transform: rotate(var(--leg-far, -3deg));
 }
 
 .cut figcaption {
@@ -799,6 +867,10 @@ a:focus-visible {
 @media (min-width: 1000px) {
     .cut img {
         width: 158px;
+    }
+
+    .cut-figure {
+        --cut-width: 158px;
     }
 }
 
@@ -836,7 +908,6 @@ a:focus-visible {
 
 .briefs,
 .corrections,
-.notices,
 .classifieds,
 .letters {
     list-style: none;
@@ -862,31 +933,23 @@ a:focus-visible {
     padding-bottom: 0;
 }
 
-.corrections,
-.notices {
+.corrections {
     gap: 10px;
 }
 
-.corrections li,
-.notices li {
+/* The corrections are the paper's running record, and the one retracting
+   yesterday's lead is the best thing on the page. They take the ink. */
+.corrections li {
     font-size: 0.88rem;
     text-wrap: pretty;
     line-height: 1.45;
-    color: var(--muted);
+    color: var(--text);
     padding-left: 14px;
     text-indent: -14px;
 }
 
-.corrections li::before,
-.notices li::before {
+.corrections li::before {
     content: "\2014\00a0";
-}
-
-/* The corrections are the paper's running record, and the one retracting
-   yesterday's lead is the best thing on the page. They take the ink; the
-   notices, which are the town's and not his, stay muted. */
-.corrections li {
-    color: var(--text);
 }
 
 .weather-body {
@@ -1041,17 +1104,9 @@ a:focus-visible {
         align-items: start;
     }
 
-    .box--weather {
-        grid-column: 1 / -1;
-    }
-
     .box--classifieds {
         border-right: 1px solid var(--border);
         padding-right: 28px;
-    }
-
-    .weather-body {
-        max-width: 46ch;
     }
 }
 
