@@ -167,8 +167,9 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   across the page, in two columns at ≥760px.
 - **Briefs** — `#briefs-list`, seven items. The first is the *previous*
   issue's lead's `followUp` — he has done the next thing — then any calendar
-  briefs for the date, then items dealt from `data.HEADLINES`, minus anything
-  already running as the lead. The earliest issues are shorter: the column
+  briefs for the date, then items dealt from `data.HEADLINES`, which holds
+  no lead's headline: the lead tells that story, and a brief would repeat
+  it on another morning. The earliest issues are shorter: the column
   grows from three to seven over the first year (`briefsCount`).
 - **Corrections** — `#corrections-list`, four entries. The first retracts a
   detail of the *previous* issue's actual lead, from that lead's `correction`
@@ -185,10 +186,18 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   (*Letters may be edited.*) and the issue's clipping (`#colophon-card`,
   `/card.png?issue=…`). The folio line already carries the site links; the
   colophon does not repeat them.
+- **Section dealing** — briefs, corrections, classifieds, letters and the
+  forecaster's note are dealt in rounds of their pools, like the leads, at a
+  fixed number of places a day (`DEALS` in `modules/issue.js`: six, three,
+  four, one, one). Each pool is split once into four quarters, and every
+  round runs the quarters in order, each reshuffled, so an item does not
+  return until three quarters of its pool have run, and a day straddling
+  two rounds cannot deal one item twice. A day that needs fewer items
+  (a calendar item, a short early issue) skips the rest of its places.
 - Calendar items take the place of dealt ones, so no section changes size
-  on a dated day. Pool depth is load-bearing: each pool must stay several
-  times its deal size or a reader returning on consecutive days sees the
-  same paper.
+  on a dated day. Pool depth is load-bearing: each pool must be at least
+  four times its places a day, and the deeper it is the longer an item
+  stays away; the smoke test holds every pooled item to more than ten days.
 - **Print** — `@media print` sets ink on white, drops the desk, the shadow,
   the site links, the back-issue notice and the clipping link, and keeps the
   broadsheet's columns whatever the sheet's width (the ≥760px queries also
