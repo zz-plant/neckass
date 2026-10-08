@@ -10,8 +10,9 @@
 Self-hosted on purpose. The stylesheet previously pulled Fraunces and Inter from
 Google Fonts with an `@import`, which blocks rendering behind a second network
 round trip and sends every visitor's IP to a third party — at odds with the
-"runs on-device" claim in the README. The body face is now a system stack, so
-this is the only font file the site ships.
+"runs on-device" claim in the README. Fraunces now sets every sentence of
+the paper; the wire's apparatus uses the system monospace and the reference
+entry the system sans, so this is the only font file the site ships.
 
 To refresh, request the CSS with a browser user-agent and take the `latin`
 subset URL:
