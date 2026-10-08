@@ -25,7 +25,7 @@ export const LEADS = [
         byline: 'From wire reports',
         pose: 'phone',
         correction:
-            'An earlier edition said Neckass had been "five minutes away" since 2019. At the time of that report he was in the shower.',
+            'Neckass has been "five minutes away" since November 2018, not 2019, as reported.',
         followUp:
             'Neckass, who the Gazette reported yesterday had been "five minutes away" since 2019, left the house. He was five minutes away from three places and went to a fourth.',
         classified:
@@ -146,7 +146,8 @@ export const LEADS = [
             'Neckass had the red he described to his doctor on a Monday, not a Tuesday. He had the other bottle Tuesday.',
         followUp:
             'His doctor declined to discuss a patient. According to the patient, the doctor wrote "drinks" on the file, and he asked to see it, and to add a vintage.',
-        classified: 'FREE: advice about wine. One fact, repeated.',
+        classified:
+            'FREE: advice about wine, from a man who basically never drinks.',
         letter: {
             body: 'He told me he basically never drinks and then described a red I had not heard of, with a vintage. I am his doctor. I wrote down "drinks."',
             signature: 'His doctor',
@@ -192,7 +193,7 @@ export const LEADS = [
         byline: 'From wire reports',
         pose: 'considering',
         correction:
-            'He did not read the terms in full. He scrolled to the bottom in full. He read the first line.',
+            'He did not read the terms in full. He scrolled them in full.',
         followUp:
             'An update to the terms and conditions arrived Tuesday. He agreed to it from the lock screen.',
         classified:
@@ -456,7 +457,7 @@ export const LEADS = [
         correction:
             'Six screws were left over, not four. The shelf came down Sunday with the books on it. No one was hurt.',
         followUp:
-            'The shelf is back up with the six screws. Four are left over.',
+            'The shelf is back up. Of the six screws, four are left over.',
         classified:
             'LOST: four screws. The shelf is up. Do not tell the owner.',
         letter: {
@@ -889,7 +890,7 @@ export const CORRECTIONS = [
     'The Gazette stated that Neckass had finished. He had stopped.',
     'Because of a reporting error, Neckass was described as owning a bicycle. He owns a hallway with a bicycle in it.',
     'An earlier edition quoted Neckass as saying "no worries." There were worries.',
-    'The Gazette reported that Neckass fixed the printer. He turned it off and on. It is still broken.',
+    'The Gazette reported that Neckass fixed the printer. He turned it off and on, and IT put in paper.',
     'A photograph on Monday was captioned "Neckass, thinking." He was looking at his phone.',
     'The Gazette wrote that Neckass "woke early." He woke, and did not get up, for one hour and ten minutes.',
     'We described Neckass\'s apology as an apology. It was the sentence "well, sorry you feel that way."',
@@ -907,7 +908,7 @@ export const CORRECTIONS = [
     'An item stated that Neckass returned the package. He intended to. It is in the car.',
     'Neckass walked, a Sunday item said. He drove to the walk.',
     'We said Neckass finished the puzzle. One piece is missing. He has stopped mentioning it.',
-    'An earlier edition described Neckass as happy to help. He said it. He did not help.',
+    'An earlier edition described Neckass as happy to help. He was happy.',
     'An article overstated what Neckass understood. He nodded.',
     'For "Neckass cleaned up," read "Neckass moved things to a different room."',
     'We said Neckass declined. He did not reply, which he considers declining.',
@@ -918,7 +919,7 @@ export const CORRECTIONS = [
     'The Gazette said Neckass read the message. His phone said so. He disputes his phone.',
     'A caption gave Neckass as "at 80 percent." That was the phone.',
     'An item said Neckass was "on it." He had opened the email and closed it.',
-    'The Gazette said Neckass had "circled back." He had forwarded the email to himself.',
+    "We described Neckass's notes from the meeting as notes. They are the date, underlined.",
     'An item had Neckass working from home. He was at home.',
     'Neckass disputes that he was late Tuesday. He was, and Wednesday too, when he came in to dispute it.',
     'The shoe was not moved, as reported. Neckass picked it up, looked at it, and put it down where it was.',
@@ -938,7 +939,7 @@ export const CORRECTIONS = [
 // the forecaster minds more.
 export const WEATHER = [
     'Sunny, according to Neckass, who has not been outside and is going by the window.',
-    'Overcast, and "ugh, this weather" in the group chat by noon.',
+    'Overcast, and a photo of it in the group chat, captioned "ugh."',
     "Mild. He has dressed for yesterday's forecast.",
     'Rain, twice announced, and no jacket.',
     'Clear, or "basically nice," which is his highest rating.',
@@ -948,7 +949,7 @@ export const WEATHER = [
     'Unsettled, according to three forecasts. He read out the fourth.',
     'Bright. The sunglasses are on his head. The search will take twenty minutes.',
     'Drizzle, "not really rain," and wet through by noon.',
-    'Cool, with the heat on and a window open.',
+    'Cool, and a jacket carried all day "in case," then left on the train.',
     'Storms expected. The car is under the tree.',
     'Snow. He drove anyway. The call will come from a hill.',
     'Humid. "It\'s not the heat, it\'s the humidity," to four people, none of whom asked.',
@@ -974,7 +975,7 @@ export const WEATHER = [
     'Hot. Told so, he went outside to check.',
     'Rain. "It\'s moving away," he said, checking the radar in the rain.',
     'Clear. "We should get out more," from the couch.',
-    'Heat advisory. Blinds closed, fan facing the wall.',
+    'Heat advisory. He has picked today for the run.',
     'Overcast, no rain forecast, coat brought anyway. It rained. He has mentioned this.',
     'Sun. "We should make the most of it," he said, and went inside to plan how.',
     'Wind, "picking up," at the speed it has held since Tuesday.',
@@ -986,7 +987,7 @@ export const CLASSIFIEDS = [
     'FOUND: set of keys, outside the gym. Owner has never been inside.',
     'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
     'NOTICE FROM IT: before calling about the printer, please check the paper. It has been the paper every time.',
-    'WANTED: someone who can end a conversation with Neckass. Nobody has yet.',
+    'WANTED: someone who can end a conversation with Neckass. Previous applicants are still in it.',
     'FOR SALE: exercise bike. Currently a coat rack. Coats included.',
     'LOST: one hour, every morning, between the alarm and getting up.',
     'NOTICE: this column no longer accepts ads from Neckass. He placed nine last week, all "WANTED: motivation."',
@@ -1001,11 +1002,11 @@ export const CLASSIFIEDS = [
     'FOR SALE: smart speaker. Was asked for advice. Turned on the lights.',
     'WANTED: whoever has his charger. It is everyone.',
     'SERVICES: will explain your movie to you. Have seen the first ten minutes.',
-    'NOTICE: the "quick call" is not quick. See also the "quick question."',
+    'NOTICE FROM HR: "quick call" is no longer a calendar category. Please book these as half days.',
     'FOR SALE: a planner, 2024. January is full.',
     'FOUND: an umbrella, open, in a hallway, indoors. Owner says it was raining earlier.',
     'LOST: Wednesday. Owner spent it believing it was Tuesday.',
-    'FOR SALE: fan, boxed, bought in a heat wave and opened in October.',
+    'FOR SALE: snow shovel, bought in the first snow of the year, once it had stopped.',
     'LOST: the second earbud. Owner has checked the case four times.',
     'FOR SALE: slides, socks attached. Owner wore them to a wedding and called it "business casual."',
     'SEEKING: a second listener for a podcast. The first has gone.',
@@ -1013,7 +1014,7 @@ export const CLASSIFIEDS = [
     'FREE: half a bag of salad, best by yesterday, described by owner as "probably fine."',
     'SERVICES: will tell you your lineup is fine. It is not. $5.',
     'FOR SALE: the rest of a meal. He said he would just have a bite.',
-    'LOST: the receipt you will need. It was in the bag you threw away.',
+    'LOST: a receipt, needed Tuesday. It was in the bag he threw away Monday, to tidy up.',
     "NOTICE: Saturday's function is BYOB. This means bring your own. It does not mean bring a cup and stand by the cooler.",
     'IN MEMORIAM: Doug, a sourdough starter, April 3–9, 2020. Fed six times, photographed nine.',
     'FOUND: 23 food containers and four lids, none of which fit. Owner says they are "a set."',
@@ -1050,7 +1051,7 @@ export const LETTERS = [
         signature: 'IT',
     },
     {
-        body: 'Tuesday, he said, with confidence. It was Wednesday. He then told me my calendar was wrong.',
+        body: 'He told me the shop closes at six. It was 6:05. He tried the door, read the sign, and told me the sign was wrong.',
         signature: 'A reader who was present',
     },
     {
