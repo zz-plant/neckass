@@ -8,7 +8,8 @@ their own — `<img src="assets/cuts/neckass.svg">` — with no CSS at all.
 Ink and paper are properties too. `--ink` is the line, `--paper` the fill
 behind it; the fallbacks follow `prefers-color-scheme`, which is how the site
 switches. Set `--paper` to whatever the cut is sitting on if that is not the
-sheet.
+sheet. The weather cut has two more, `--ink-sun` for the sun's disc and
+`--ink-sky` for the rain, with the page's weather inks as fallbacks.
 
 | File | What it is | Properties |
 | --- | --- | --- |

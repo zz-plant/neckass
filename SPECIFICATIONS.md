@@ -46,7 +46,13 @@ following a line number that has since moved.
   (`fonts/fraunces-latin-var.woff2`, `font-display: swap`) and used through
   `--headline-font`; body copy uses the system stack in `--font`.
 - CSS root variables define the newsprint palette, radius and shadow; `body` uses the `--bg`/`--text` aliases over `--surface-1`/`--text-primary`. A `prefers-color-scheme: dark` block redefines the tokens.
-- The palette is newsprint, ink and one second colour: groundwood stock at `--surface-2` on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it. `--accent` is a ledger teal, carried by the cutoff rule under the masthead (`--accent-rule`, a step down from the links in the dark theme so a 3px line does not glow) and by links. In the dark theme the ground sits a full step under the plate (`--sheet-edge` gives the plate a faint outline) and `--font-smoothing` switches to greyscale antialiasing.
+- The palette is newsprint, ink and spot colours, each with one job: groundwood stock at `--surface-2` on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it.
+  - `--accent` is a ledger teal, the record. It carries the cutoff rule under the masthead (`--accent-rule`, a step down from the links in the dark theme so a 3px line does not glow), the links, and the issue folios in *Earlier issues* and the back issues.
+  - `--ink-rubric` is a rubricator's red, for the corrections and the red-letter issues: the heads of Corrections, the editorial and *Of note* (`.section-label--rubric`), the dash before each correction, and the landmark tags in the back issues.
+  - `--ink-sun` and `--ink-sky` are the weather's inks. They fill the sun's disc and the rain in the weather cut and print nowhere else.
+  - A screen is an ink at a tint: `--screen-ledger` (18% teal) behind the back-issue notice, and `--screen-sun` behind selected text, as a highlighter.
+
+  Text in the rubric holds 4.5:1 on the stock and on the dark plate. In the dark theme the ground sits a full step under the plate (`--sheet-edge` gives the plate a faint outline) and `--font-smoothing` switches to greyscale antialiasing.
 - Fraunces is used for the lead, page titles, the briefs, the deck, the letters, the editorial's head, the archive's leads, and the name on the folio line. The optical-size axis picks the cut for each size; the subset carries no italic, so nothing set in it relies on `<em>`.
 
 ### Layout grid & spacing
@@ -88,7 +94,8 @@ cutoff rule; the front page sets the nameplate under it and closes that.
   page is home and its nameplate is not a link.
 - `#back-issue-notice` is `hidden` on today's issue. When `?issue=YYYY-MM-DD`
   resolves to a past date it is revealed, names the issue being read, and
-  offers a link back to today. A date past today is an issue that has not
+  offers a link back to today. It hangs from the cutoff rule on a screen of
+  the ledger teal. A date past today is an issue that has not
   gone to press: the reader gets today's paper and the notice says when the
   one they asked for is due, without the link.
 
@@ -103,7 +110,8 @@ The page has one vocabulary of horizontal rules, and it means something:
   head close under it and the copy close under that, so each department
   starts on one line and the heads of two columns side by side draw one rule
   across the fold. The lead and the lower row carry no rules of their own;
-  the heads' rules are the divisions.
+  the heads' rules are the divisions. The rubric's departments print the
+  head and its rule in `--ink-rubric`; every other head is in the ink.
 - **1px `--border-strong`** — a division inside a department, the colophon.
 - **1px `--border`** — between items in a list, and the column rules.
 
@@ -133,7 +141,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **The weather cut** — the same drawing as `assets/cuts/weather.svg`, inlined
   in the weather box so its layers can be switched. `frontPage.weatherLayers()`
   maps the first word of the forecast to `--sun`, `--cloud`, `--rain` and
-  `--wind`; anything it does not recognise gets sun and cloud.
+  `--wind`; anything it does not recognise gets sun and cloud. The sun's disc
+  is filled with `--ink-sun` and the rain is drawn in `--ink-sky`, under the
+  same ink line as the rest of the cut; the cloud keeps the sheet, since it
+  covers the sun.
 - **The press** — `assets/cuts/press.svg`, on the 404 page.
 
 ## The issue (front page)
@@ -157,7 +168,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   one.
 - **Earlier issues** — `#earlier-list`, in the lead: the three issues
   before this one, each a link to `/?issue=…` carrying its weekday, number
-  and lead. At ≥760px it sits at the foot of the deck's column, beside the
+  and lead. The folio is in the ledger teal, the lead in the ink. At ≥760px it sits at the foot of the deck's column, beside the
   headline; below that it follows the byline. The leads are set in the
   regular cut a step under the deck, as an index rather than as news, so
   they do not outweigh today's lead. The standing markup is a single link
@@ -176,7 +187,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   field. Then any calendar correction, then the rest from `data.CORRECTIONS`.
   Issue 1 is written and runs one correction, which says there is nothing to
   correct. The retraction ends *See No. n.*, linked to the issue it retracts.
-  Corrections are set in the ink.
+  Corrections are set in the ink; the head, its rule, and the dash before
+  each are in the rubric.
 - **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
@@ -198,7 +210,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   on a dated day. Pool depth is load-bearing: each pool must be at least
   four times its places a day, and the deeper it is the longer an item
   stays away; the smoke test holds every pooled item to more than ten days.
-- **Print** — `@media print` sets ink on white, drops the desk, the shadow,
+- **Print** — `@media print` sets ink on white, with every spot colour
+  printed black and the sun's disc left white; it drops the desk, the shadow,
   the site links, the back-issue notice and the clipping link, and keeps the
   broadsheet's columns whatever the sheet's width (the ≥760px queries also
   match print).
@@ -217,8 +230,11 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   year.
 - The list is derived from the calendar, not stored, and stops at issue 1;
   `issue.recentIssues()` returns the whole run with each lead and tag.
-- Rows take the ink; the lead underlines in the accent on hover. Two
-  columns at ≥760px, one on a phone.
+- The folio takes the ledger teal and the lead the ink, which underlines in
+  the accent on hover. A landmark's tag is in the rubric; the current issue's
+  (`.archive-tag--current`) is in the teal, since today is not a red-letter
+  day. *Of note* takes the rubric on its head and its bullets. Two columns at
+  ≥760px, one on a phone.
 - Without JavaScript the page still explains the archive and links to today.
 
 ## Edge functions (Cloudflare Pages)

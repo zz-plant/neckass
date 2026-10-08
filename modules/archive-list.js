@@ -35,7 +35,9 @@ function issueRow(issue, isCurrent) {
     const tag = isCurrent ? 'Current issue' : issue.tag;
     if (tag) {
         const note = document.createElement('span');
-        note.className = 'archive-tag';
+        note.className = isCurrent
+            ? 'archive-tag archive-tag--current'
+            : 'archive-tag';
         note.textContent = tag;
         li.append(note);
     }
