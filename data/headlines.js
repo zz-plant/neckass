@@ -16,41 +16,35 @@
 //
 // These run in the briefs column beside the follow-ups and the
 // calendar's briefs, so each is set as a sentence and ends on a period,
-// inside a closing quote. Where an item doubles as a lead's headline,
-// the headline drops the period and issue.js matches the two without it.
+// inside a closing quote. None repeats a lead's headline: the lead
+// tells that story at length, and the brief would be the same sentence
+// on some other morning.
 //
 // Not every item is the same joke. "He said he would and did not" is one
 // engine; the others are the world answering back (the newsletter asking
 // why), a bystander (the cat who was never in the room), escalation
 // inside the sentence (47 tabs, 46 reopened), and the wrong criterion
 // (four stars, citing parking). About a fifth do not open with his name,
-// so a column of seven does not read as the same word seven times. The
-// first entry doubles as the no-JavaScript fallback.
+// so a column of seven does not read as the same word seven times.
 //
 // A sentence can run. Serial verbs and a fact buried in a clause read
 // more like the wire than a stack of short beats; the short sentence is
 // for the turn, and it lands harder for being the only one.
 export const HEADLINES = [
-    'Neckass has been "five minutes away" since 2019. He is at home.',
     'Neckass says he read the room. Everyone in the room says he did not.',
-    'A review of Neckass\'s ten-year plan found it consists of the words "ten-year plan."',
     '"That was a joke," Neckass said, and then explained it, for six minutes, to the person it was about.',
     'Neckass\'s "quick question" lasted forty minutes and had three parts, according to a colleague who timed it.',
-    'Neckass wrote "no rush" and followed up eleven minutes later.',
-    'Asked what a neckass is, Neckass said "you know, a neckass."',
-    'Neckass read the terms and conditions in full, understood none of them, and agreed.',
-    'Neckass agreed to be best man in an email he has not read.',
+    'Neckass wrote "no rush" and followed up four minutes later.',
     'Neckass set a 5 a.m. alarm "for future me." Future him turned it off at 5.',
     "Since 2021, Neckass's group chat has produced 11,000 images and no plans, a review by the Gazette found.",
     'Neckass called his own foul in pickup and then disputed it.',
     'Neckass said he would circle back. That was in March.',
     'For the ninth week in a row, Neckass meal-prepped Sunday and ordered takeout Monday.',
-    'Neckass muted the group chat and has checked it at ninety-second intervals since.',
     'Neckass wrote "per my last email." There was no last email.',
     'Neckass has 14,000 unread emails and describes his inbox as "under control."',
     'Neckass selected "remind me tomorrow" for the 412th consecutive day.',
     "Neckass's podcast has one listener. He has checked the number nine times today.",
-    'Neckass said "run it back" and lost by eleven more.',
+    'Neckass said "run it back" and lost by twelve more.',
     'Neckass began a victory dance at 20–18 in a game to 21 and was still dancing at 20–21, according to his cousin, who won. He said the dance was "for the next game."',
     'Neckass has proposed coffee "sometime" to the same person since 2022.',
     'Neckass sent "quick call?" and, told to text, sent a voice note. Eleven minutes.',
@@ -79,12 +73,10 @@ export const HEADLINES = [
     'Neckass gave the restaurant four stars, citing parking.',
     'Neckass paused his walk to check his step count and did not resume.',
     "Neckass's digital detox was documented in fourteen posts.",
-    'Neckass told his doctor he "basically never drinks," using a sommelier\'s vocabulary.',
     'Neckass watched "one more episode" at 2 a.m. and stopped at 5.',
     'Everyone interviewed by the Gazette agreed Neckass is "doing too much." None could say what.',
     'Neckass was asked whether the neck in Neckass refers to anything. He touched his neck.',
     'Neckass said "long story short" and spoke for twenty minutes.',
-    "Neckass's out-of-office reply has been active for eleven weeks. Neckass is at his desk.",
     'Neckass ate leftovers he described as "still good." They were nine days old, according to the date on the lid.',
     'Neckass put a document somewhere safe in 2024. It is still somewhere safe.',
     'Neckass told a story everyone at the table had heard, was told so as he began, and finished.',
@@ -143,7 +135,7 @@ export const HEADLINES = [
     'Neckass asked a self-checkout to hang on a second.',
     'Neckass gave a tourist directions and then followed them, to check.',
     'Neckass said "you too" to the pilot.',
-    'Neckass pressed the elevator button eleven times and told a stranger it helps.',
+    'Neckass pressed the elevator button seven times and told a stranger it helps.',
     'Neckass told the story of how they met to the person he met. Her version is shorter.',
     'Neckass was right about the shortcut. The car is on a sidewalk.',
     'Nobody who was there has forgiven Neckass for insisting the restaurant was on the left, which it was.',

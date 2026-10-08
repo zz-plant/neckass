@@ -52,19 +52,6 @@ function createRng(seed) {
     };
 }
 
-// Deal `count` items off a list without repeats inside one issue. Rotating
-// the start by the seed as well as shuffling stops the same few entries
-// from monopolising the short sections on consecutive days.
-function deal(list, count, rng) {
-    if (!Array.isArray(list) || !list.length) return [];
-    const pool = list.slice();
-    for (let i = pool.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(rng() * (i + 1));
-        [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    return pool.slice(0, Math.min(count, pool.length));
-}
-
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -163,14 +150,20 @@ export function toIssueParam(date) {
 // `seam` places of this one, so the same lead is always more than
 // `seam` days apart. The tail of a round is never moved, which is what
 // lets the previous round be read without fixing it first.
-function shuffledRound(round, size) {
-    const rng = createRng(round * 2654435761 + 1);
-    const order = Array.from({ length: size }, (_, index) => index);
-    for (let i = order.length - 1; i > 0; i -= 1) {
+function shuffle(list, rng) {
+    for (let i = list.length - 1; i > 0; i -= 1) {
         const j = Math.floor(rng() * (i + 1));
-        [order[i], order[j]] = [order[j], order[i]];
+        [list[i], list[j]] = [list[j], list[i]];
     }
-    return order;
+    return list;
+}
+
+function places(size) {
+    return Array.from({ length: size }, (_, index) => index);
+}
+
+function shuffledRound(round, size) {
+    return shuffle(places(size), createRng(round * 2654435761 + 1));
 }
 
 function roundOrder(round, size) {
@@ -197,16 +190,64 @@ export function selectLead(number) {
     return LEADS[roundOrder(round, LEADS.length)[place]] || null;
 }
 
+// The other sections are dealt in rounds too, so a classified a reader
+// saw on Monday does not run again until most of its pool has. Each
+// section is one stream through the rounds of its pool, `perIssue`
+// places a day: issue n reads from place (n - 1) × perIssue on and takes
+// as many as the day leaves room for. A place a short day does not take
+// is skipped, and its item waits for the next round.
+//
+// A seam would keep an item out of the next round's first fortnight of
+// places, which at four classifieds a day is three days. So a section's
+// round is not a fresh shuffle of the pool. The pool is split once, by a
+// shuffle of its own, into four quarters, and every round runs the
+// quarters in the same order, each shuffled afresh. An item comes round
+// in the same quarter every time, so it never runs again until three
+// quarters of its pool have run. That also means a day straddling two
+// rounds takes the last quarter of one and the first of the next, which
+// share nothing, so no issue deals an item twice.
+export const DEALS = {
+    briefs: { pool: HEADLINES, perIssue: 6, salt: 1 },
+    corrections: { pool: CORRECTIONS, perIssue: 3, salt: 2 },
+    classifieds: { pool: CLASSIFIEDS, perIssue: 4, salt: 3 },
+    letters: { pool: LETTERS, perIssue: 1, salt: 4 },
+    weather: { pool: WEATHER, perIssue: 1, salt: 5 },
+};
+
+const QUARTERS = 4;
+
+function quarteredRound(round, size, salt) {
+    const split = shuffle(places(size), createRng(salt * 0x85ebca6b + 7));
+    const rng = createRng(round * 2654435761 + 1 + salt * 0x85ebca6b);
+    const order = [];
+    for (let quarter = 0; quarter < QUARTERS; quarter += 1) {
+        const from = Math.floor((quarter * size) / QUARTERS);
+        const to = Math.floor(((quarter + 1) * size) / QUARTERS);
+        order.push(...shuffle(split.slice(from, to), rng));
+    }
+    return order;
+}
+
+function dealFor(section, number, count = DEALS[section].perIssue) {
+    const { pool, perIssue, salt } = DEALS[section];
+    const items = [];
+    let round = -1;
+    let order = [];
+    for (let offset = 0; offset < Math.min(count, perIssue); offset += 1) {
+        const place = (number - 1) * perIssue + offset;
+        if (Math.floor(place / pool.length) !== round) {
+            round = Math.floor(place / pool.length);
+            order = quarteredRound(round, pool.length, salt);
+        }
+        items.push(pool[order[place % pool.length]]);
+    }
+    return items;
+}
+
 // How the file cut stands for a lead: the pose it names, or the house
 // pose if it names none the cut has.
 export function poseOf(lead) {
     return POSES[lead?.pose] || POSES.explaining;
-}
-
-// A brief is set as a sentence and a headline is not, so a brief ends
-// on a period its headline lacks. They are compared without it.
-function unpunctuated(text) {
-    return String(text).replace(/\.("?)$/, '$1');
 }
 
 // The earliest issues are shorter. He had done less. The briefs column
@@ -221,8 +262,8 @@ function lettersCount(number) {
 
 export function composeIssue(date = new Date()) {
     const number = issueNumber(date);
-    // A stream of its own, so selectLead above stays reproducible in
-    // isolation.
+    // The forecast's numbers are the one thing drawn fresh each day: they
+    // follow the season, not a pool.
     const rng = createRng(number * 2654435761 + 1);
 
     const lead = selectLead(number);
@@ -233,12 +274,6 @@ export function composeIssue(date = new Date()) {
     // nothing to correct.
     const previousLead = number > 1 ? selectLead(number - 1) : null;
     const chainedCorrection = previousLead?.correction || null;
-
-    // Briefs come from the headline catalogue, minus anything already
-    // running as the lead in longer form.
-    const briefPool = HEADLINES.filter(
-        (item) => !lead || unpunctuated(item) !== unpunctuated(lead.headline),
-    );
 
     const dateLabel = dateFormatter.format(date);
 
@@ -254,14 +289,10 @@ export function composeIssue(date = new Date()) {
         written: Boolean(EDITIONS[number]?.lead),
     });
     const dated = (section) => onCalendar[section] || [];
-    // Deal `count` from `pool`, less the items already set for the
-    // section, and never fewer than zero.
-    const dealAfter = (pool, count, fixed, exclude = []) =>
-        deal(
-            pool.filter((item) => !exclude.includes(item)),
-            Math.max(0, count - fixed.length),
-            rng,
-        );
+    // Deal the section's size, less the items already set for it, and
+    // never fewer than zero.
+    const dealAfter = (section, count, fixed) =>
+        dealFor(section, number, Math.max(0, count - fixed.length));
 
     const letters = lettersCount(number);
     const fixedBriefs = [followUp, ...dated('briefs')].filter(Boolean);
@@ -286,25 +317,25 @@ export function composeIssue(date = new Date()) {
         tag: null,
         briefs: [
             ...fixedBriefs,
-            ...dealAfter(briefPool, briefsCount(number), fixedBriefs),
+            ...dealAfter('briefs', briefsCount(number), fixedBriefs),
         ],
         // Yesterday's retraction first, then the rest.
         corrections: [
             ...fixedCorrections,
-            ...dealAfter(CORRECTIONS, 4, fixedCorrections),
+            ...dealAfter('corrections', 4, fixedCorrections),
         ],
         weatherNumbers: weatherFor(date, rng),
-        weather: deal(WEATHER, 1, rng)[0] || '',
+        weather: dealFor('weather', number)[0] || '',
         // The lead's own classified and letter run alongside it, so the
         // page compounds: the item, then the ad, then the person he did
         // it to. The rest are dealt from the general pools.
         classifieds: [
             ...fixedClassifieds,
-            ...dealAfter(CLASSIFIEDS, 5, fixedClassifieds),
+            ...dealAfter('classifieds', 5, fixedClassifieds),
         ],
         letters: [
             ...fixedLetters,
-            ...dealAfter(LETTERS, letters, fixedLetters),
+            ...dealAfter('letters', letters, fixedLetters),
         ],
     };
 

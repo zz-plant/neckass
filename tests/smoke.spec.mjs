@@ -2,12 +2,14 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { EDITIONS } from '../data/editions.js';
 import { LEADS } from '../data/formats.js';
+import { HEADLINES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { buildFeed } from '../functions/feed.xml.js';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
 import { issueNumber } from '../functions/lib/issue.mjs';
 import {
     composeIssue,
+    DEALS,
     issueNumber as localIssueNumber,
     parseIssueDate,
     recentIssues,
@@ -370,22 +372,54 @@ test.describe('The Gazette', () => {
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
-    test('a lead never runs again as a brief in its own issue', () => {
-        // Some leads are also in the briefs pool, set as a sentence. Two
-        // rounds of the pool give every lead at least one turn.
-        const start = parseIssueDate('2026-01-01');
-        for (let offset = 0; offset < LEADS.length * 2; offset += 1) {
-            const issue = composeIssue(
+    test('no lead is also a brief', () => {
+        // The lead tells the story at length; the same sentence in the
+        // briefs column on another morning would be the paper repeating
+        // itself.
+        const leads = new Set(
+            [
+                ...LEADS,
+                ...Object.values(EDITIONS).map((edition) => edition.lead),
+            ]
+                .filter(Boolean)
+                .map((lead) => unpunctuated(lead.headline)),
+        );
+        expect(
+            HEADLINES.filter((item) => leads.has(unpunctuated(item))),
+        ).toEqual([]);
+    });
+
+    test('a dealt item does not come back inside ten days', () => {
+        // Two years of issues. Only pooled items are tracked: the
+        // calendar's weekly items come back every seven days on purpose.
+        const start = parseIssueDate('2025-01-01');
+        const issues = Array.from({ length: 730 }, (_, offset) =>
+            composeIssue(
                 new Date(
                     start.getFullYear(),
                     start.getMonth(),
                     start.getDate() + offset,
                 ),
-            );
-            expect(
-                issue.briefs.map(unpunctuated),
-                issue.issueParam,
-            ).not.toContain(unpunctuated(issue.lead.headline));
+            ),
+        );
+        for (const [section, { pool, perIssue }] of Object.entries(DEALS)) {
+            // A day takes no more than a quarter of its pool, or the
+            // quarters could not keep a day's items apart.
+            expect(pool.length, section).toBeGreaterThanOrEqual(4 * perIssue);
+            const pooled = new Set(pool.map((item) => JSON.stringify(item)));
+            const last = new Map();
+            let closest = Number.POSITIVE_INFINITY;
+            issues.forEach((issue, day) => {
+                for (const item of [issue[section]].flat()) {
+                    const key = JSON.stringify(item);
+                    if (!pooled.has(key)) continue;
+                    if (last.has(key)) {
+                        closest = Math.min(closest, day - last.get(key));
+                    }
+                    last.set(key, day);
+                }
+            });
+            expect(closest, section).toBeGreaterThan(10);
         }
     });
 
