@@ -11,6 +11,7 @@
  * the headline too.
  */
 
+import { composeIssue } from '../modules/issue.js';
 import {
     issueNumber,
     issueParam,
@@ -60,6 +61,57 @@ class TitleRewriter {
     }
 }
 
+const escapeHtml = (text) =>
+    String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+// HTMLRewriter reads a handler's `text` property as a callback, so the
+// string is kept under another name.
+class TextRewriter {
+    constructor(content) {
+        this.content = content;
+    }
+
+    element(element) {
+        element.setInnerContent(this.content);
+    }
+}
+
+// The folio line in the same two spans front-page.js writes, so a phone
+// breaks it at the middot here too and the script's swap changes nothing.
+class MastheadRewriter {
+    constructor(line) {
+        this.line = line;
+    }
+
+    element(element) {
+        const parts = this.line.split(' · ');
+        if (parts.length !== 2) {
+            element.setInnerContent(this.line);
+            return;
+        }
+        element.setInnerContent(
+            `<span>${escapeHtml(parts[0])}</span><span class="masthead__sep"> · </span><span>${escapeHtml(parts[1])}</span>`,
+            { html: true },
+        );
+    }
+}
+
+class LeadLinkRewriter {
+    constructor(headline, href) {
+        this.headline = headline;
+        this.href = href;
+    }
+
+    element(element) {
+        element.setAttribute('href', this.href);
+        element.setInnerContent(this.headline);
+    }
+}
+
 export async function onRequest(context) {
     const { request, next } = context;
     const url = new URL(request.url);
@@ -78,8 +130,21 @@ export async function onRequest(context) {
     if (!lead) return response;
 
     const title = `${lead.headline} | The Gazette, No. ${number}`;
+    // The standing issue in the markup is a different day's paper, and its
+    // folio line is one line where today's is two on a phone. Writing
+    // today's masthead and lead here keeps front-page.js from moving the
+    // page when it swaps in the same issue. A Worker's clock is UTC, so a
+    // reader whose local date differs still gets their own day's swap.
+    const issue = composeIssue(date);
     return new HTMLRewriter()
         .on('title', new TitleRewriter(title))
+        .on('#masthead-date', new MastheadRewriter(issue.mastheadLine))
+        .on(
+            '#lead-link',
+            new LeadLinkRewriter(lead.headline, `/?issue=${issueParam(date)}`),
+        )
+        .on('#lead-deck', new TextRewriter(lead.deck))
+        .on('#lead-byline', new TextRewriter(lead.byline))
         .on(
             'meta',
             new MetaRewriter({

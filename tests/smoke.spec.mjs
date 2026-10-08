@@ -614,6 +614,40 @@ test.describe('The Gazette', () => {
         ).toHaveAttribute('href', '/feed.xml');
     });
 
+    test('the edge writes the masthead and lead of the issue into the page', async ({
+        request,
+        page,
+    }) => {
+        // The markup carries a standing issue whose folio line is one line;
+        // today's is two on a phone. The edge writes the asked-for issue's
+        // masthead and lead so the script's swap does not move the page.
+        const issue = composeIssue(parseIssueDate('2025-06-11'));
+        const [day, volume] = issue.mastheadLine.split(' · ');
+        const response = await request.get(`${EDGE_URL}?issue=2025-06-11`);
+        expect(response.ok()).toBe(true);
+        const html = await response.text();
+        expect(html).toContain(
+            `<p class="masthead__line" id="masthead-date"><span>${day}</span><span class="masthead__sep"> · </span><span>${volume}</span></p>`,
+        );
+        expect(html).toContain(
+            `<a href="/?issue=2025-06-11" id="lead-link">${issue.lead.headline
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')}</a>`,
+        );
+
+        // After the script runs, the folio line and the lead read the same.
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto(`${EDGE_URL}?issue=2025-06-11`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await expect(page.locator('#masthead-date')).toHaveText(
+            issue.mastheadLine,
+        );
+        await expect(page.locator('#lead-link')).toHaveText(
+            issue.lead.headline,
+        );
+    });
+
     test('the edge draws a card for the issue and points the share tags at it', async ({
         request,
     }) => {
