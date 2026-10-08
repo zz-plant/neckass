@@ -50,12 +50,19 @@ const server = Bun.serve({
         const path = resolveWithinRoot(pathname);
         if (!path) return new Response('Forbidden', { status: 403 });
 
-        const file = Bun.file(path);
+        // Cloudflare Pages serves /archive from archive.html; match it so the
+        // extensionless links the pages use resolve locally too.
+        let file = Bun.file(path);
+        let servedPath = path;
+        if (!(await file.exists()) && !contentTypeFor(path)) {
+            servedPath = `${path}.html`;
+            file = Bun.file(servedPath);
+        }
         if (!(await file.exists())) {
             return new Response('Not Found', { status: 404 });
         }
 
-        const type = contentTypeFor(path);
+        const type = contentTypeFor(servedPath);
         return new Response(file, {
             headers: {
                 'cache-control': 'no-store',
