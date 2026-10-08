@@ -93,14 +93,14 @@ export const CALENDAR = [
         on: { special: 'birthday' },
         section: 'letters',
         item: {
-            body: 'I am his mother. He is {age} today. I was there. He tells people he was born in a snowstorm. It was mild. He was late.',
+            body: 'I am his mother. He is {age} today, and I was there. He tells people he was born in a snowstorm. It was mild, and he was late.',
             signature: 'His mother',
         },
     },
     {
         on: { special: 'dstStart' },
         section: 'briefs',
-        item: 'The clocks went forward overnight. Neckass changed one clock. It was the oven clock, which was already right.',
+        item: 'The clocks went forward overnight. Neckass changed one clock, the oven clock, which was already right.',
     },
     {
         on: { dayAfter: { special: 'dstStart' } },

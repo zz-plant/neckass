@@ -48,7 +48,7 @@ export const LEADS = [
         classified:
             'FOUND: a ten-year plan. One page, three words. Owner can pick it up.',
         letter: {
-            body: 'He showed me the plan. It says "ten-year plan." I asked what it was. He said "the plan."',
+            body: 'He showed me the plan, which says "ten-year plan." I asked what it was. He said "the plan."',
             signature: 'His manager',
         },
     },
@@ -64,7 +64,7 @@ export const LEADS = [
         classified:
             'WANTED: a best man for Saturday. The current one believes it is a different Saturday.',
         letter: {
-            body: 'Neckass has told everyone he is my best man. I have not asked him. I have not set a date. I am not engaged.',
+            body: 'Neckass has told everyone he is my best man. I have not asked him or set a date, and I am not engaged.',
             signature: 'The groom, apparently',
         },
     },
@@ -105,7 +105,7 @@ export const LEADS = [
     {
         headline:
             'Neckass muted the group chat and has checked it at ninety-second intervals since',
-        deck: 'Muting stopped the notifications. It did not stop him. He has opened the chat 400 times today, according to his phone.',
+        deck: 'Muting stopped the notifications, though not him. According to his phone, he has opened the chat 400 times today.',
         byline: 'Staff report',
         pose: 'phone',
         correction:
@@ -214,7 +214,7 @@ export const LEADS = [
         classified:
             'WANTED: a definition of "neckass." Will accept "you know."',
         letter: {
-            body: 'I asked him what a neckass is. He said "you know." I said I did not. He said "well, exactly."',
+            body: 'I asked him what a neckass is. He said "you know," and when I said I did not, he said "well, exactly."',
             signature: 'A new colleague',
         },
     },
@@ -238,7 +238,7 @@ export const LEADS = [
     {
         headline:
             'Neckass has been standing in the doorway saying goodbye for fifty minutes',
-        deck: '"Anyway, I should go" at 9:10. "Right, I\'m off" at 9:30. "No, really" at 9:50. He left at ten.',
+        deck: 'He said "anyway, I should go" at 9:10, "right, I\'m off" at 9:30, and "no, really" at 9:50. He left at ten.',
         byline: 'Staff report',
         pose: 'leaving',
         correction:
@@ -248,7 +248,7 @@ export const LEADS = [
         classified:
             'NOTICE: the goodbye at No. 12 is still going. Residents may wish to use the back way.',
         letter: {
-            body: 'He stood in my doorway saying goodbye for fifty-five minutes. I went to bed. He was still saying it. This is the same doorway as the airport story.',
+            body: 'He stood in my doorway saying goodbye for fifty-five minutes. I went to bed, and he was still saying it. This is the same doorway as the airport story.',
             signature: 'The same host, again',
         },
     },
@@ -265,14 +265,14 @@ export const LEADS = [
         classified:
             'LOST: access to an account. The password was correct, then wrong, then the same one with a 1 on it.',
         letter: {
-            body: 'I am the IT desk. He reset it to the old one, was told no, and added a 1. I watched him do it. I did not stop him. I wanted to see.',
+            body: 'I am the IT desk. He reset it to the old one, was told no, and added a 1. I watched him do it, and did not stop him, because I wanted to see.',
             signature: 'IT, again',
         },
     },
     {
         headline:
             'Neckass bought a second charger rather than look behind the couch',
-        deck: 'The first charger is behind the couch. He has not looked. He now has three.',
+        deck: 'The first charger is behind the couch, where he has not looked. He now has three.',
         byline: 'Staff report',
         pose: 'shrug',
         correction: 'Five chargers, not three. Two are behind the couch.',
@@ -281,14 +281,14 @@ export const LEADS = [
         classified:
             'WANTED: someone to look behind the couch. Reward: a charger.',
         letter: {
-            body: 'There are five chargers in the apartment. Two are behind the couch. He knows this. He has ordered a sixth.',
+            body: 'There are five chargers in the apartment, two of them behind the couch, which he knows. He has ordered a sixth.',
             signature: 'His roommate',
         },
     },
     {
         headline:
             'Neckass arrived at the restaurant an hour early and waited outside',
-        deck: 'He had not checked the time. He stood outside for an hour. It rained.',
+        deck: 'He had not checked the time, and stood outside for an hour in the rain.',
         byline: 'From wire reports',
         pose: 'standingBy',
         correction:
@@ -326,7 +326,8 @@ export const LEADS = [
         pose: 'phone',
         correction:
             'His phone says he read the message on the 3rd. He says he "saw it but didn\'t see it."',
-        followUp: '"Sorry, just seeing this!" is the reply. It is the 14th.',
+        followUp:
+            '"Sorry, just seeing this!" is the reply, and it is the 14th.',
         classified:
             'SEEKING: a minute to sit down and really reply. Owner has been meaning to since the 3rd.',
         letter: {
@@ -371,7 +372,7 @@ export const LEADS = [
     {
         headline:
             'Neckass asked the group to pick a restaurant and rejected all six',
-        deck: 'He asked at noon. Six were proposed. At seven he suggested the first one.',
+        deck: 'He asked at noon, and six were proposed. At seven he suggested the first one.',
         byline: 'From wire reports',
         pose: 'considering',
         correction:
@@ -381,7 +382,7 @@ export const LEADS = [
         classified:
             'SEEKING: seven restaurant suggestions. Will reject all and choose the first.',
         letter: {
-            body: 'I suggested the first restaurant at noon. He said no. At seven he suggested it to me as his own idea. We went. It was fine.',
+            body: 'I suggested the first restaurant at noon, and he said no. At seven he suggested it to me as his own idea. We went, and it was fine.',
             signature: 'A friend',
         },
     },
@@ -397,7 +398,7 @@ export const LEADS = [
         classified:
             'NOTICE: the smoke alarm at No. 12 needs a battery. Nine days.',
         letter: {
-            body: 'I am at 14. My smoke alarm is not chirping. His is. He has knocked twice to ask about mine.',
+            body: 'I am at 14. My smoke alarm is not chirping, but his is, and he has knocked twice to ask about mine.',
             signature: 'Next door',
         },
     },
@@ -407,12 +408,12 @@ export const LEADS = [
         byline: 'Staff report',
         pose: 'phone',
         correction:
-            'We reported the request was for $3. It was $3.50. The note says "gas + tip."',
+            'We reported the request was for $3. It was $3.50, and the note says "gas + tip."',
         followUp: 'Neckass paid back $5 of the $40, with the note "we even?"',
         classified:
             'SEEKING: $40, owed since July 4. Will accept payment in any form except a request.',
         letter: {
-            body: 'He owes me $40. On Tuesday I got a request from him for $3, "gas." He was in my passenger seat. I was driving. It was my gas.',
+            body: 'He owes me $40. On Tuesday I got a request from him for $3, "gas," from the passenger seat while I was driving. It was my gas.',
             signature: 'A friend, $40 down',
         },
     },
@@ -423,7 +424,7 @@ export const LEADS = [
         byline: 'Staff report',
         pose: 'leaving',
         correction:
-            'Four staff, not three. He calls the fourth "boss." She owns the café.',
+            'Four staff, not three: he calls the fourth "boss," and she owns the café.',
         followUp:
             'Told the barista\'s name is Kai, Neckass said "thanks, chief."',
         classified:
@@ -435,13 +436,13 @@ export const LEADS = [
     },
     {
         headline: 'Neckass has moved one task to tomorrow forty times',
-        deck: 'The task is to call his mother. It takes ten minutes. He describes it as "a whole thing."',
+        deck: 'The task is to call his mother, which takes ten minutes. He describes it as "a whole thing."',
         byline: 'Staff report',
         pose: 'considering',
         correction:
             'Forty-one times, not forty: he moved it again while reading the item.',
         followUp:
-            'He called his mother. It took nine minutes. "Not that bad, actually," he said, and moved next week\'s call to the week after.',
+            'He called his mother, and it took nine minutes. "Not that bad, actually," he said, and moved next week\'s call to the week after.',
         classified:
             'REMINDER: call your mother. This notice was placed by her.',
         letter: {
@@ -501,7 +502,7 @@ export const LEADS = [
     },
     {
         headline: "Neckass's phone has been at one percent since this morning",
-        deck: 'He has been told. He said "it\'s fine, it lasts." It lasted until 10:40.',
+        deck: 'He has been told, and he said "it\'s fine, it lasts." It lasted until 10:40.',
         byline: 'From wire reports',
         pose: 'phone',
         correction: 'The phone died during the conversation about the charger.',
@@ -574,7 +575,7 @@ export const LEADS = [
         classified:
             'FOUND: one shoe, middle of a floor. Owner has cleaned around it for five weeks.',
         letter: {
-            body: 'The shoes have been there five weeks. I moved one, to see. He moved it back.',
+            body: 'The shoes have been there five weeks. I moved one, to see, and he moved it back.',
             signature: 'His roommate',
         },
     },
@@ -589,7 +590,7 @@ export const LEADS = [
         followUp: 'Neckass wore a hat for a day and called the hat "a look."',
         classified: 'WANTED: a barber prepared to ignore "just a little off."',
         letter: {
-            body: 'I am the barber. He said "just a little off." I took a little off. He has not looked in the mirror in my presence since.',
+            body: 'I am the barber. He said "just a little off," so I took a little off. He has not looked in the mirror in my presence since.',
             signature: 'The barber',
         },
     },
@@ -606,7 +607,7 @@ export const LEADS = [
         classified:
             'WANTED: anyone who can tell "haha" from "I will call you."',
         letter: {
-            body: 'I texted him to call me urgently. He replied "haha." I texted again. "haha." He called four hours later to ask what was funny.',
+            body: 'I texted him to call me urgently. He replied "haha." I texted again and got another "haha." He called four hours later to ask what was funny.',
             signature: 'His sister, again',
         },
     },
@@ -633,7 +634,7 @@ export const LEADS = [
         byline: 'Staff report',
         pose: 'defense',
         correction:
-            'We reported that Neckass added paprika. He added raisins. Nobody has eaten it.',
+            'We reported that Neckass added paprika. He added raisins, and nobody has eaten it.',
         followUp:
             'Neckass has been asked to bring ice to the next cookout. He has asked what kind.',
         classified:
@@ -656,7 +657,7 @@ export const LEADS = [
         classified:
             'SEEKING: a table that has not heard the one about the parrot. Will travel.',
         letter: {
-            body: 'I was at the table. He said "stop me if you\'ve heard this." We tried. There is no stopping it. It is a joke about a parrot and it is not a good one.',
+            body: 'I was at the table when he said "stop me if you\'ve heard this," and we tried. There is no stopping it. It is a joke about a parrot, and it is not a good one.',
             signature: 'A dinner guest',
         },
     },
@@ -689,7 +690,7 @@ export const LEADS = [
         classified:
             'LOST: an afternoon. Last seen under a blanket. Owner says he was listening.',
         letter: {
-            body: 'He rested his eyes through my whole account of the car. When I finished he said "wow." The car was fine. I had said so.',
+            body: 'He rested his eyes through my whole account of the car. When I finished he said "wow," and the car was fine. I had said so.',
             signature: 'A colleague',
         },
     },
@@ -706,7 +707,7 @@ export const LEADS = [
         classified:
             'WANTED: a way off the phone with a man who says "anyway." We have tried "anyway."',
         letter: {
-            body: 'I am his mother. He called to let me go. I had not called him. I was in the yard. It was forty minutes.',
+            body: 'I am his mother. He called to let me go, though I had not called him. I was in the yard, and it was forty minutes.',
             signature: 'His mother',
         },
     },
@@ -717,13 +718,13 @@ export const LEADS = [
         byline: 'From wire reports',
         pose: 'phone',
         correction:
-            'We said eleven songs. It was twelve. The twelfth was a voice note he played by accident, to the whole car.',
+            'We said eleven songs. It was twelve, and the twelfth was a voice note he played by accident, to the whole car.',
         followUp:
             'Neckass has been given the aux back on the condition that he does not touch it. He has asked if he can queue.',
         classified:
             "WANTED: someone to hold the aux at Saturday's function. Neckass is attending.",
         letter: {
-            body: 'It was my car. He asked for the aux for one song. He played the start of eleven, said "wait, wait, this one," and then it was his voice note. We all heard it. It was to his barber, rescheduling.',
+            body: 'It was my car. He asked for the aux for one song, played the start of eleven, and said "wait, wait, this one." Then it was his voice note, which we all heard. It was to his barber, rescheduling.',
             signature: 'The driver',
         },
     },
@@ -740,7 +741,7 @@ export const LEADS = [
         classified:
             'WANTED: the driver who was on the highway on Tuesday. You were on the highway. We are sorry.',
         letter: {
-            body: 'I was the driver. I was on the highway. I know that now. I would like to say that he was very confident, and that it took an hour.',
+            body: 'I was the driver, on the highway, and I know that now. I would like to say that he was very confident, and that it took an hour.',
             signature: 'A visitor, since gone',
         },
     },
@@ -756,7 +757,7 @@ export const LEADS = [
         classified:
             "PERSONAL: to the guests of Saturday's event — the host will be there. Probably. He has said maybe.",
         letter: {
-            body: 'I am going to his thing on Saturday. I said yes. He said maybe. It is at his house. I asked whether I should bring anything and he said "good question."',
+            body: 'I am going to his thing on Saturday. I said yes, and he said maybe. It is at his house. I asked whether I should bring anything, and he said "good question."',
             signature: 'A guest, so far',
         },
     },
@@ -806,7 +807,7 @@ export const LEADS = [
         classified:
             'WANTED: "me." Left a voicemail Tuesday, 7:40. Please call the office and say who you are. Do not say "it\'s me."',
         letter: {
-            body: 'I got the voicemail. I have four people it could be. I called two. It was neither. I have decided it can wait, which is what he decided about my message in March.',
+            body: 'I got the voicemail. I have four people it could be, and I called two. It was neither. I have decided it can wait, which is what he decided about my message in March.',
             signature: 'A friend, on her fifth call',
         },
     },
@@ -822,7 +823,7 @@ export const LEADS = [
             'The film was watched to the end. He called the ending "kind of sudden," having seen the first ten minutes and the last.',
         classified: 'FOR SALE: a film. Seen the start of. Very good start.',
         letter: {
-            body: 'I recommended the film. He has told me it\'s "good so far" three times over two months. It is 94 minutes long. I have stopped asking.',
+            body: 'I recommended the film. He has told me it is "good so far" three times in two months. It is 94 minutes long, and I have stopped asking.',
             signature: 'A former friend',
         },
     },
@@ -902,12 +903,12 @@ export const CORRECTIONS = [
     "Neckass's reply, as reported Monday, was a thumbs-up.",
     'An item said Neckass listened. He waited.',
     'Neckass did not cancel, as reported. He did not attend and did not say so.',
-    'The Gazette said Neckass paid. He said "I\'ll get the next one." There has been no next one.',
+    'The Gazette said Neckass paid. He said "I\'ll get the next one," and there has been no next one.',
     'An earlier edition reported that Neckass apologized to the printer. He apologized near it.',
     'The Gazette reported that Neckass remembered. He was reminded twice that morning.',
     'An item stated that Neckass returned the package. He intended to. It is in the car.',
     'Neckass walked, a Sunday item said. He drove to the walk.',
-    'We said Neckass finished the puzzle. One piece is missing. He has stopped mentioning it.',
+    'We said Neckass finished the puzzle. One piece is missing, and he has stopped mentioning it.',
     'An earlier edition described Neckass as happy to help. He was happy.',
     'An article overstated what Neckass understood. He nodded.',
     'For "Neckass cleaned up," read "Neckass moved things to a different room."',
@@ -916,7 +917,7 @@ export const CORRECTIONS = [
     'A headline Thursday, "Neckass learns his lesson," was sourced to Neckass. He has since done it again, and learned it again.',
     'The hour Neckass spent "on hold" was misreported. The call was answered after four minutes. He was talking.',
     'In an item on Neckass, "reached out" should have read "thought about it."',
-    'The Gazette said Neckass read the message. His phone said so. He disputes his phone.',
+    'The Gazette said Neckass read the message. His phone said so, and he disputes his phone.',
     'A caption gave Neckass as "at 80 percent." That was the phone.',
     'An item said Neckass was "on it." He had opened the email and closed it.',
     "We described Neckass's notes from the meeting as notes. They are the date, underlined.",
@@ -947,18 +948,18 @@ export const WEATHER = [
     'Wind. The picnic will move indoors after the food does.',
     'Fog, and a man walking quickly away from where he is going.',
     'Unsettled, according to three forecasts. He read out the fourth.',
-    'Bright. The sunglasses are on his head. The search will take twenty minutes.',
+    'Bright, and the sunglasses are on his head. The search will take twenty minutes.',
     'Drizzle, "not really rain," and wet through by noon.',
     'Cool, and a jacket carried all day "in case," then left on the train.',
     'Storms expected. The car is under the tree.',
-    'Snow. He drove anyway. The call will come from a hill.',
+    'Snow, and he drove anyway. The call will come from a hill.',
     'Humid. "It\'s not the heat, it\'s the humidity," to four people, none of whom asked.',
     'Gray. "Well, summer\'s over," for the fourth month in a row.',
     'Pleasant, and indoors. He will say tomorrow that he missed it.',
     'Frost, a credit card on the windshield, and then two halves of a credit card.',
     'Sun, briefly, and a barbecue booked on the strength of it.',
     'Rain easing, about a minute after he canceled.',
-    'Wind. The trash can is out. It will be collected from next door.',
+    'Wind, and the trash can is out to be collected from next door.',
     'Cold snap, and "at least it\'s dry." It is not.',
     'Heavy rain. The umbrella is in the car with the package.',
     'Bright and cold, and dressed for bright.',
@@ -969,14 +970,14 @@ export const WEATHER = [
     'Unremarkable. "At least it\'s not raining," four times, to the same person.',
     'Rain, and "it\'ll pass." It will, in November.',
     'Clear and cold, "the good kind," from inside.',
-    'Showers. The umbrella is closed and carried. He is wet.',
+    'Showers. He carries the umbrella closed, and is wet anyway.',
     'Bright. Neckass predicted this Tuesday, having read it in the forecast.',
     'Rain all day, and a walk planned for "when it clears."',
     'Hot. Told so, he went outside to check.',
     'Rain. "It\'s moving away," he said, checking the radar in the rain.',
     'Clear. "We should get out more," from the couch.',
     'Heat advisory. He has picked today for the run.',
-    'Overcast, no rain forecast, coat brought anyway. It rained. He has mentioned this.',
+    'Overcast, with no rain forecast and a coat brought anyway. It rained, and he has mentioned this.',
     'Sun. "We should make the most of it," he said, and went inside to plan how.',
     'Wind, "picking up," at the speed it has held since Tuesday.',
 ];
@@ -1071,15 +1072,15 @@ export const LETTERS = [
         signature: 'The group chat',
     },
     {
-        body: 'I own the café. There are four of us. None of us is called chief. One of us has a badge that says Kai, in capitals, at eye level.',
+        body: 'I own the café. There are four of us, and none of us is called chief. One of us has a badge that says Kai, in capitals, at eye level.',
         signature: 'The café',
     },
     {
-        body: 'He asked to borrow an egg. I said yes. He asked how many I had. I have not seen the carton since.',
+        body: 'He asked to borrow an egg. I said yes, and he asked how many I had. I have not seen the carton since.',
         signature: 'A neighbor',
     },
     {
-        body: 'I am at 14. The recycling bin is in my yard again. It is the third time. He says it is the wind. It is not windy.',
+        body: 'I am at 14. The recycling bin is in my yard again, the third time. He says it is the wind. It is not windy.',
         signature: 'Next door',
     },
     {
@@ -1095,11 +1096,11 @@ export const LETTERS = [
         signature: 'A neighbor',
     },
     {
-        body: 'I am his mother. He called on Sunday. It was a pocket dial. I listened for eleven minutes. He was ordering a sandwich, and he was very polite about it. He sounded well.',
+        body: 'I am his mother. He called on Sunday, by pocket dial. I listened for eleven minutes while he ordered a sandwich, very politely. He sounded well.',
         signature: 'His mother',
     },
     {
-        body: 'I live with him. He has started leaving me notes. The latest says "we should talk about the kitchen." We share the kitchen. I was in it when he wrote the note.',
+        body: 'I live with him, and he has started leaving me notes. The latest says "we should talk about the kitchen." We share the kitchen, and I was in it when he wrote the note.',
         signature: 'His roommate',
     },
     {
@@ -1115,7 +1116,7 @@ export const LETTERS = [
         signature: 'The clerk',
     },
     {
-        body: 'He says he goes to the gym. I run the gym. He was in the lot. He is often in the lot. He has a good spot.',
+        body: 'He says he goes to the gym. I run the gym, and he is often in the lot. He has a good spot.',
         signature: 'The gym',
     },
     {
@@ -1131,7 +1132,7 @@ export const LETTERS = [
         signature: 'His roommate',
     },
     {
-        body: 'I am his mother. The recipe is not mine. I have never made it. He called to ask how I make it. I said I don\'t. He said "right, but roughly."',
+        body: 'I am his mother, and the recipe is not mine. I have never made it. He called to ask how I make it, and I said I don\'t. He said "right, but roughly."',
         signature: 'His mother',
     },
     {
@@ -1139,7 +1140,7 @@ export const LETTERS = [
         signature: 'A host',
     },
     {
-        body: 'He ordered "the usual." He has been in twice. Neither time was the same. We gave him a coffee. He said "perfect."',
+        body: 'He ordered "the usual." He has been in twice, and neither time was the same, so we gave him a coffee. He said "perfect."',
         signature: 'The diner',
     },
     {
@@ -1159,7 +1160,7 @@ export const LETTERS = [
         signature: 'The office manager',
     },
     {
-        body: 'He asked me to "send that thing." I asked which thing. He said "you know." I sent four things. It was none of them. It was a thing I had sent him.',
+        body: 'He asked me to "send that thing," and when I asked which thing, he said "you know." I sent four things. It was none of them, and it was a thing I had sent him.',
         signature: 'A colleague',
     },
     {
