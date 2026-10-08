@@ -96,7 +96,7 @@ export const LEADS = [
         followUp:
             'A fifth alarm, at 6:45, labeled "last one." He has slept through five.',
         classified:
-            'WANTED: earplugs, heavy-duty. Alarms next door go at 5:30, 5:35, and 5:40, and nobody wakes.',
+            'WANTED: earplugs, heavy-duty. The alarms next door go at 5:30, 5:35, and 5:40 and wake everyone but the man who set them.',
         letter: {
             body: 'I am next door at 14. His alarms go at 5:30, 5:35, 5:40, and 6:30. Mine goes at seven. I have been up at 5:30 for a year.',
             signature: 'Next door',
@@ -143,7 +143,7 @@ export const LEADS = [
         byline: 'From wire reports',
         pose: 'explaining',
         correction:
-            'Neckass was quoted as saying he "never drinks." He said "basically never," and then named the vintage.',
+            'Neckass had the red he described to his doctor on a Monday, not a Tuesday. He had the other bottle Tuesday.',
         followUp:
             'His doctor declined to discuss a patient. According to the patient, the doctor wrote "drinks" on the file, and he asked to see it, and to add a vintage.',
         classified: 'FREE: advice about wine. One fact, repeated.',
@@ -428,8 +428,8 @@ export const LEADS = [
         classified:
             'NOTICE: we at the coffee shop wish to inform the gentleman that we are not all called chief.',
         letter: {
-            body: 'He calls me chief. I am wearing a name badge.',
-            signature: 'Kai, the café',
+            body: 'He calls me chief. I am wearing a badge that says Kai.',
+            signature: 'The barista',
         },
     },
     {
@@ -898,7 +898,7 @@ export const CORRECTIONS = [
     'A Tuesday item said Neckass had left. He had gone to the car and come back.',
     'The Gazette described Neckass as "on his way." He was choosing a shirt.',
     'A recipe item credited Neckass with cooking. He assembled.',
-    'A thumbs-up from Neckass was reported as a reply.',
+    "Neckass's reply, as reported Monday, was a thumbs-up.",
     'An item said Neckass listened. He waited.',
     'Neckass did not cancel, as reported. He did not attend and did not say so.',
     'The Gazette said Neckass paid. He said "I\'ll get the next one." There has been no next one.',
@@ -912,7 +912,7 @@ export const CORRECTIONS = [
     'For "Neckass cleaned up," read "Neckass moved things to a different room."',
     'We said Neckass declined. He did not reply, which he considers declining.',
     'An item reported Neckass as looking into it. He has opened one tab.',
-    'A headline Thursday, "Neckass learns his lesson," went further than he did. He said so. He has since done it again, and said so again.',
+    'A headline Thursday, "Neckass learns his lesson," was sourced to Neckass. He has since done it again, and learned it again.',
     'The hour Neckass spent "on hold" was misreported. The call was answered after four minutes. He was talking.',
     'In an item on Neckass, "reached out" should have read "thought about it."',
     'The Gazette said Neckass read the message. His phone said so. He disputes his phone.',
@@ -1020,7 +1020,7 @@ export const CLASSIFIEDS = [
     'FOR SALE: acoustic guitar, played for a week in 2021. Owner still lists it under "skills."',
     'WANTED: our lawn mower, lent in June to do "one strip." The strip is mowed. The rest of his lawn is not. — Next door',
     'NOTICE: karaoke is now limited to two songs a person. The limit was set Friday, after Thursday.',
-    'FOR SALE: golf clubs, full set, glove tag still on. Owner went to the range once and calls his swing "a work in progress."',
+    "FOR SALE: golf clubs, full set, glove tag still on. Owner went to the range once and has since corrected his father's swing.",
     'NOTICE: the register will no longer split a $9 sandwich across three gift cards and a coupon. It did on Saturday, with six people waiting.',
     'FOR SALE: a playlist called "running." Played 140 times, all on the couch.',
     'LOST: a tape measure. Owner measured the couch by eye, and the couch is in the stairwell.',
