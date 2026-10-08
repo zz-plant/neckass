@@ -156,7 +156,7 @@ export const CALENDAR = [
     {
         on: { month: 10, day: 31 },
         section: 'classifieds',
-        item: 'WANTED: someone to explain the costume. He says it is "obvious."',
+        item: 'WANTED: someone to explain the costume. He has explained it four times, and it is less clear each time.',
     },
     {
         on: { special: 'electionDay' },
