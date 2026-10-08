@@ -313,7 +313,7 @@ test.describe('The Gazette', () => {
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
         await expect(page.locator('#earlier-list a')).toHaveAttribute(
             'href',
-            '/archive.html',
+            '/archive',
         );
     });
 
@@ -476,7 +476,7 @@ test.describe('The Gazette', () => {
     test('the archive lists issues that resolve to real papers', async ({
         page,
     }) => {
-        await page.goto(`${BASE_URL}archive.html`);
+        await page.goto(`${BASE_URL}archive`);
         const links = page.locator('a[href*="?issue="]');
         await expect(links.first()).toBeVisible();
         expect(await links.count()).toBeGreaterThan(5);
@@ -553,6 +553,28 @@ test.describe('The Gazette', () => {
         await expect(page.locator('#letters-list li').first()).not.toBeEmpty();
         await expect(page.locator('#masthead-date')).not.toBeEmpty();
         await context.close();
+    });
+
+    test('the sitemap and each page name the URL the host serves', () => {
+        // Cloudflare Pages answers /archive.html with a 308 to /archive. A
+        // sitemap entry or canonical that names the .html file points search
+        // engines at a redirect, so both use the extensionless path.
+        const sitemap = read('../sitemap.xml');
+        const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+            (match) => match[1],
+        );
+        expect(locs).toContain('https://neckass.com/');
+        for (const loc of locs) {
+            expect(loc).not.toMatch(/\.html$/);
+        }
+        for (const page of ['archive', 'about', 'prompts']) {
+            const html = read(`../${page}.html`);
+            expect(locs).toContain(`https://neckass.com/${page}`);
+            expect(html).toContain(
+                `<link rel="canonical" href="https://neckass.com/${page}">`,
+            );
+            expect(html).not.toMatch(/href="\/(archive|about|prompts)\.html"/);
+        }
     });
 
     test('the feed is well-formed and leads with the current issue', async ({
