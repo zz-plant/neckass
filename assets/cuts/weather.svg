@@ -7,9 +7,19 @@
              .cut-weather { --sun: 0; --cloud: 1; --rain: 1; }
 
            1 shows an element, 0 hides it. The fallbacks are sun behind cloud. */
-        svg { --ink-default: #1c1a19; --paper-default: #efeae0; }
+        svg {
+            --ink-default: #1c1a19;
+            --paper-default: #efeae0;
+            --ink-sun-default: #d9a531;
+            --ink-sky-default: #2c6a96;
+        }
         @media (prefers-color-scheme: dark) {
-            svg { --ink-default: #ece7dc; --paper-default: #1e2523; }
+            svg {
+                --ink-default: #ece7dc;
+                --paper-default: #1e2523;
+                --ink-sun-default: #d6a540;
+                --ink-sky-default: #7fb2d9;
+            }
         }
         .stroke {
             fill: none;
@@ -24,6 +34,9 @@
             stroke-width: 2.6;
             stroke-linejoin: round;
         }
+        /* The colour plate under the line: the sun's disc and the rain. */
+        .layer-sun .filled { fill: var(--ink-sun, var(--ink-sun-default)); }
+        .layer-rain .stroke { stroke: var(--ink-sky, var(--ink-sky-default)); }
         /* With no cloud to sit behind, the sun moves to the middle of the
            box rather than hanging in the top corner. */
         .layer-sun {

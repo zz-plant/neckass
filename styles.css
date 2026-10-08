@@ -18,18 +18,16 @@
 }
 
 :root {
-    /* Newsprint, ink, and one second colour.
+    /* Newsprint, ink, and spot colours that each have one job.
 
        The stock is groundwood grey-tan rather than cream: set on white, a
        page reads as a website with a warm background instead of as paper.
        The ink is a warm near-black, and the display type takes that same
        ink — a paper sets its nameplate in what is already on the press.
 
-       The second colour is a ledger teal, the register this paper files
-       in: the corrections, the back issues. It carries the cutoff
-       rule and the links. The ground
-       under the sheet is that teal taken down to near-black, so the page
-       runs on two colour families rather than three unrelated ones. */
+       The ledger teal is the record. It carries the cutoff rule, the links
+       and the issue folios. The ground under the sheet is that teal taken
+       down to near-black, so the desk and the record are one family. */
     --surface-1: #212b28;
     --surface-2: #efeae0;
     --text-primary: #1c1a19;
@@ -42,6 +40,19 @@
     --focus-ring: rgba(23, 80, 73, 0.65);
     --link: #175049;
     --link-hover: #0f3a35;
+    /* The rubric is the red a rubricator kept for corrections and feast
+       days. This paper keeps it for the same two: the corrections, and the
+       red-letter issues (the first edition, the anniversaries). */
+    --ink-rubric: #a3311f;
+    /* The weather is printed in colour, as papers have printed it since
+       1982. Its two inks go under the cut's line work, the way a colour
+       plate goes under the key, and print nowhere else. */
+    --ink-sun: #d9a531;
+    --ink-sky: #2c6a96;
+    /* A screen is an ink at a tint: a box or a highlight without a second
+       plate. */
+    --screen-ledger: color-mix(in srgb, var(--accent) 18%, var(--surface));
+    --screen-sun: color-mix(in srgb, var(--ink-sun) 42%, var(--surface));
     --border-subtle: rgba(28, 26, 25, 0.16);
     --border-strong: rgba(28, 26, 25, 0.32);
     /* The sheet lies on the desk. A tight edge and a short throw, not the
@@ -92,6 +103,9 @@
     --link: #7cc4b6;
     --link-hover: #a3d9cc;
     --tap-highlight: rgba(70, 163, 148, 0.24);
+    --ink-rubric: #e2836b;
+    --ink-sun: #d6a540;
+    --ink-sky: #7fb2d9;
     --border-subtle: rgba(226, 234, 230, 0.16);
     --border-strong: rgba(226, 234, 230, 0.3);
     --shadow-page:
@@ -117,6 +131,9 @@
         --link: #7cc4b6;
         --link-hover: #a3d9cc;
         --tap-highlight: rgba(70, 163, 148, 0.24);
+        --ink-rubric: #e2836b;
+        --ink-sun: #d6a540;
+        --ink-sky: #7fb2d9;
         --border-subtle: rgba(226, 234, 230, 0.16);
         --border-strong: rgba(226, 234, 230, 0.3);
         --shadow-page:
@@ -175,6 +192,13 @@ body {
 
 a {
     -webkit-tap-highlight-color: var(--tap-highlight);
+}
+
+/* A reader marking a line marks it in highlighter, which on this press is
+   the sun's ink at a screen. */
+::selection {
+    background: var(--screen-sun);
+    color: var(--text);
 }
 
 /* Prose links previously fell through to the browser default, which put
@@ -407,9 +431,10 @@ ol.about-list {
 /* ---- Back issues ----------------------------------------------------
    The whole run, by month, each issue on one row: the folio on the left
    and the lead on the right in the display face, the way a contents page
-   lists what ran. Every row is a link, so the rows take the ink, not the
-   accent; the accent comes back on hover, where it means something.
-   Above a phone the months run in two columns. */
+   lists what ran. Every row is a link. The folio, the issue's number in
+   the record, takes the ledger teal; the lead takes the ink and turns
+   teal on hover. A red-letter issue is tagged in the rubric. Above a
+   phone the months run in two columns. */
 .archive-landmarks {
     margin-top: 22px;
 }
@@ -496,7 +521,7 @@ ol.about-list {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--muted);
+    color: var(--link);
 }
 
 .archive-lead {
@@ -513,13 +538,23 @@ ol.about-list {
     text-underline-offset: 2px;
 }
 
-/* A landmark carries a tag under its lead: first edition, anniversary. */
+/* A landmark carries a tag under its lead: first edition, anniversary.
+   Today's issue carries one too, which is not a red-letter day and stays
+   in the ledger's teal. */
 .archive-tag {
     font-size: 0.66rem;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-weight: 600;
-    color: var(--muted);
+    color: var(--ink-rubric);
+}
+
+.archive-tag--current {
+    color: var(--link);
+}
+
+.archive-landmarks .about-list li::marker {
+    color: var(--ink-rubric);
 }
 
 @media (min-width: 760px) {
@@ -555,11 +590,15 @@ a:focus-visible {
     padding-bottom: 4px;
 }
 
+/* A back issue is the record, so the notice that says which one is being
+   read hangs from the cutoff rule on a screen of the ledger teal. On
+   today's paper it is hidden and the rule runs bare. */
 .back-issue-notice {
     flex-basis: 100%;
     font-size: 0.82rem;
-    color: var(--muted);
-    padding: 10px 0 0;
+    color: var(--text);
+    background: var(--screen-ledger);
+    padding: 7px 12px;
 }
 
 .back-issue-notice a {
@@ -582,6 +621,14 @@ a:focus-visible {
     padding-top: 8px;
     margin-bottom: 10px;
     border-top: 2px solid var(--text);
+}
+
+/* The rubric's departments: the corrections, the editorial that only a
+   red-letter issue carries, and the archive's list of those issues. The
+   head and its rule print in the red; the copy under them stays in ink. */
+.section-label--rubric {
+    color: var(--ink-rubric);
+    border-top-color: var(--ink-rubric);
 }
 
 /* The title of a reading page — the entry, the standards, the archive. It
@@ -689,7 +736,7 @@ a:focus-visible {
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--muted);
+    color: var(--link);
     font-variant-numeric: tabular-nums;
 }
 
@@ -948,8 +995,10 @@ a:focus-visible {
     text-indent: -14px;
 }
 
+/* The dash that opens each one is the editor's pencil mark. */
 .corrections li::before {
     content: "\2014\00a0";
+    color: var(--ink-rubric);
 }
 
 .weather-body {
@@ -982,6 +1031,17 @@ a:focus-visible {
     stroke: var(--text);
     stroke-width: 2.6;
     stroke-linejoin: round;
+}
+
+/* The colour plate: the sun's disc and the rain take the weather's inks
+   under the same ink line as the rest of the cut. The cloud keeps the
+   sheet, since it has to cover the sun. */
+.weather-cut .sky-sun .sky-filled {
+    fill: var(--ink-sun);
+}
+
+.weather-cut .sky-rain .sky-stroke {
+    stroke: var(--ink-sky);
 }
 
 .weather-cut .sky-sun {
@@ -1314,6 +1374,10 @@ a:focus-visible {
         --accent-rule: #000;
         --link: #000;
         --link-hover: #000;
+        --ink-rubric: #000;
+        --ink-sky: #000;
+        /* The sun's disc goes back to the sheet, not to a black spot. */
+        --ink-sun: #fff;
         --border-subtle: rgba(0, 0, 0, 0.25);
         --border-strong: rgba(0, 0, 0, 0.6);
         --shadow-page: none;
