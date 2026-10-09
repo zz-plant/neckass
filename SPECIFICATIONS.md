@@ -262,8 +262,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   none): the nameplate, the issue's date and number, the lead and its deck
   beside the file cut of him in the lead's pose, and the motto at the foot,
   1200×630 PNG,
-  drawn by Satori and resvg with two static cuts of Fraunces
-  fetched from `/fonts/` through the ASSETS binding. The layout is
+  drawn by Satori and resvg with two static cuts of Fraunces and Bitstream
+  Vera Sans Mono (the wire's lines: the date and number, the motto, the
+  address) fetched from `/fonts/` through the ASSETS binding. It carries
+  the page's newsprint and its thick-and-thin under the name. The layout is
   `functions/lib/card.mjs`, which `bun run og:generate` also draws the still
   cards with (the standing issue, the entry, the back issues, the
   standards, each in a pose of its own); the cut is `functions/lib/cut.mjs`,

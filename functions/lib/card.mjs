@@ -11,6 +11,11 @@
  * and, at the foot, what the paper is, in one line. The deck is the
  * headline's second beat and is set in the ink, not greyed out under it.
  *
+ * It speaks in the page's two voices: the paper's sentences in Fraunces,
+ * the wire's lines (the date and number, the motto, the address) in the
+ * teletype's monospace, Bitstream Vera Sans Mono, the face Menlo was drawn
+ * from. The name closes on the page's thick-and-thin.
+ *
  * Satori takes an element tree rather than an HTML string, whose parser
  * splits text at entities and then objects to a heading with "two
  * children", so the tree is built directly. The same renderCardPng serves
@@ -31,7 +36,7 @@ export const HEIGHT = 630;
 // The page's own tokens: the desk, the sheet, the ink, the muted ink, and
 // the ledger teal that carries the cutoff rule.
 const DESK = '#212b28';
-const SHEET = '#efeae0';
+const SHEET = '#e8e5dc';
 const INK = '#1c1a19';
 const MUTED = '#4e4a42';
 const RULE = '#175049';
@@ -122,10 +127,11 @@ export function cardElement({
     deck,
     pose = POSES.explaining,
 }) {
-    const small = {
-        fontFamily: 'Fraunces Text',
-        fontSize: 18,
-        letterSpacing: 2.5,
+    // The wire's lines: monospace capitals, as the folio line sets them.
+    const wire = {
+        fontFamily: 'Wire',
+        fontSize: 17,
+        letterSpacing: 0.8,
         color: MUTED,
     };
     // The cut is set so the man is 184px wide whatever his pose. Its image
@@ -154,7 +160,8 @@ export function cardElement({
                 padding: '30px 48px 26px',
                 color: INK,
             },
-            // The nameplate and the folio, closed by the cutoff rule.
+            // The nameplate and the folio, closed by the cutoff rule: the
+            // page's thick-and-thin, a heavy rule over a hairline.
             el(
                 'div',
                 {
@@ -168,13 +175,19 @@ export function cardElement({
                     'span',
                     {
                         fontFamily: 'Fraunces',
-                        fontSize: 38,
-                        letterSpacing: -0.5,
+                        fontSize: 42,
+                        letterSpacing: -1.3,
                     },
                     'The Gazette',
                 ),
-                el('span', small, folio),
+                el('span', wire, folio),
             ),
+            el('div', {
+                display: 'flex',
+                height: 2,
+                background: RULE,
+                marginTop: 4,
+            }),
             // The lead, and the man it is about.
             el(
                 'div',
@@ -193,8 +206,9 @@ export function cardElement({
                         {
                             fontFamily: 'Fraunces',
                             fontSize: headlineSize(headline),
-                            lineHeight: 1.06,
-                            letterSpacing: -1.2,
+                            lineHeight: 1.04,
+                            // -0.025em, the page's headline tracking.
+                            letterSpacing: -headlineSize(headline) / 40,
                             textWrap: 'balance',
                         },
                         headline,
@@ -240,8 +254,8 @@ export function cardElement({
                     paddingTop: 12,
                     borderTop: '1.5px solid rgba(28,26,25,0.3)',
                 },
-                el('span', small, MOTTO.toUpperCase()),
-                el('span', { ...small, color: INK }, 'NECKASS.COM'),
+                el('span', wire, MOTTO.toUpperCase()),
+                el('span', { ...wire, color: INK }, 'NECKASS.COM'),
             ),
         ),
     );
