@@ -169,4 +169,9 @@ export const HEADLINES = [
     'The password is now the old password with a 2 on it, IT confirmed.',
     'The reply is still being composed. It was "seen" on the 3rd.',
     'The voice note has been transcribed. It says he is running late and does not say when.',
+    'Neckass laughed at a reel in a meeting of nine, farted, and turned to look at a chair across the room. He was standing.',
+    'A prediction market on whether Neckass makes the 8:04 has settled "no" on 31 of 31 weekdays. His own position, $40 on "yes," was placed from the shower at 8:01, according to the market\'s records.',
+    'Neckass disputed a $14.20 charge with his card company for fifty-one minutes. It was for the sandwich he was eating on the call, and the agent told him twice that she was there for him.',
+    '"Great question," his smart speaker said when Neckass asked how to tell a friend he would be late, and it read out five ways to say "five minutes away."',
+    'A delivery app wrote to Neckass on the anniversary of his first order to say it was "grateful for the journey." The journey is 611 orders, 400 of them from the place across the street.',
 ];

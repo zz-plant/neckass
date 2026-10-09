@@ -934,6 +934,8 @@ export const CORRECTIONS = [
     'We described the tour as a school tour. It was. Neckass has since said he was "with a school," and named one. It is the one he went to.',
     'We said Neckass "declined to elaborate." He elaborated, for twenty minutes, in the lot, to the reporter\'s closed car window.',
     'Neckass asked that the correction of the 4th be corrected. Asked what was wrong with it, he said he was "getting to that." That was the 9th.',
+    'A Monday item said Neckass blamed his chair. He was standing. He blamed the chair by the window.',
+    'The Gazette reported that Neckass bet against himself on the 8:04. He bet on himself, from the shower, at 8:01.',
 ];
 
 // A forecast, and what he will do about it. Sometimes he is right, which
@@ -1041,6 +1043,10 @@ export const CLASSIFIEDS = [
     'FOUND: a "World\'s Best Boss" mug, in the office sink for three weeks. Owner manages nobody.',
     'SWAP: one record, for any second record. Owner calls the first "the collection."',
     'LOST: a parking spot, right outside. Owner gave it up to move the car "a bit closer."',
+    'NOTICE FROM THE MARKET: we know mornings are hard. "Will Neckass make the 8:04?" reopens at 6 a.m. Please trade responsibly.',
+    'NOTICE FROM A CARD COMPANY: whatever you are going through, we are here for you. We are not refunding the sandwich.',
+    'NOTICE FROM FACILITIES: the chair by the window has been inspected, and it does not make that noise. Please stop putting in tickets about it.',
+    'NOTICE FROM A DELIVERY APP: nine nights in a row from the place across the street. Whatever you are going through, we are here for you, and so is the place, which is across the street.',
 ];
 
 // Letters not tied to a lead. The correspondents recur — his roommate,
@@ -1166,5 +1172,17 @@ export const LETTERS = [
     {
         body: 'He told me he had "seen" my message and would "really reply" later. That was the reply. He sent it as a voice note.',
         signature: 'His sister',
+    },
+    {
+        body: 'I took his call. He was disputing a $14.20 sandwich, and he was eating it. The script says to tell the customer we are here for them, so I did, and I was, for fifty-one minutes.',
+        signature: 'His card company, disputes',
+    },
+    {
+        body: 'I work in support at the market. He has written in nine times to say the market on the 8:04 is rigged. The market is whether he gets on a train.',
+        signature: 'Support, the market',
+    },
+    {
+        body: 'I sat beside him in the meeting. He laughed at his phone, then there was the noise, then he turned around to look at the chair by the window. Nobody was near that chair. I was near him.',
+        signature: 'The seat beside him',
     },
 ];
