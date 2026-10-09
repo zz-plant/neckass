@@ -44,16 +44,25 @@ following a line number that has since moved.
 ### Fonts & base theming
 - No font request leaves the site. Fraunces is self-hosted as a variable woff2
   (`fonts/fraunces-latin-var.woff2`, `font-display: swap`) and used through
-  `--headline-font`; body copy uses the system stack in `--font`.
+  `--headline-font`; the two other voices are system stacks.
+- The page speaks in two voices. Every sentence of the paper is set in
+  Fraunces, from the lead down to an ad. The wire's apparatus is set in the
+  system monospace (`--wire-font`), upper case as the teletype was: the
+  folio line and the site links, the department heads, bylines, the issue
+  folios in *Earlier issues* and the back issues, the forecast's figures,
+  an ad's keyword, a letter's signature, the cutline's *FILE*, and the
+  colophon. The reference entry is a third publication, an encyclopedia's,
+  and its body is set in the system sans (`--reference-font`), which has the
+  true italic its mentions and citations need.
 - CSS root variables define the newsprint palette, radius and shadow; `body` uses the `--bg`/`--text` aliases over `--surface-1`/`--text-primary`. A `prefers-color-scheme: dark` block redefines the tokens.
-- The palette is newsprint, ink and spot colours, each with one job: groundwood stock at `--surface-2` on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it.
+- The palette is newsprint, ink and spot colours, each with one job: groundwood stock at `--surface-2` (grey newsprint, not cream) on a near-black ground at `--surface-1`, warm near-black ink at `--text-primary`, and `--ink-display` aliased to that same ink so the nameplate and headlines print in it.
   - `--accent` is a ledger teal, the record. It carries the cutoff rule under the masthead (`--accent-rule`, a step down from the links in the dark theme so a 3px line does not glow), the links, and the issue folios in *Earlier issues* and the back issues.
   - `--ink-rubric` is a rubricator's red, for the corrections and the red-letter issues: the heads of Corrections, the editorial and *Of note* (`.section-label--rubric`), the dash before each correction, and the landmark tags in the back issues.
   - `--ink-sun` and `--ink-sky` are the weather's inks. They fill the sun's disc and the rain in the weather cut and print nowhere else.
   - A screen is an ink at a tint: `--screen-ledger` (18% teal) behind the back-issue notice, and `--screen-sun` behind selected text, as a highlighter.
 
   Text in the rubric holds 4.5:1 on the stock and on the dark plate. In the dark theme the ground sits a full step under the plate (`--sheet-edge` gives the plate a faint outline) and `--font-smoothing` switches to greyscale antialiasing.
-- Fraunces is used for the lead, page titles, the briefs, the deck, the letters, the editorial's head, the archive's leads, and the name on the folio line. The optical-size axis picks the cut for each size; the subset carries no italic, so nothing set in it relies on `<em>`.
+- The optical-size axis picks Fraunces's cut for each size. The subset carries no italic, so nothing set in it relies on `<em>`: the paper sets a word used as a word in quotes, as the wire does, and the motto and the signatures are roman.
 
 ### Layout grid & spacing
 - Content is wrapped in `.page-shell` (max width 1180px), square-cornered, with a tight shadow and no border in the light theme — a sheet on a desk. At ≤600px the sheet fills the viewport with no frame, and the desk shows only past its foot. Every page is a single column; the front page goes to the broadsheet grid at ≥760px, and the entry and standards hang their heads in a side column at ≥900px. Body padding is 28/24/48 px on the desk.
@@ -64,20 +73,22 @@ Every page opens on one folio line. The inside pages close it with the
 cutoff rule; the front page sets the nameplate under it and closes that.
 
 - On the inside pages the line carries three things: the paper —
-  `.masthead__name` **The Gazette** in Fraunces at 1.04rem — then the date,
+  `.masthead__name` **The Gazette** in Fraunces at 1.16rem — then the date,
   then the site links. The paper is not named for its subject, and it is
   not placed anywhere; "Neckass" appears in the copy as a surname would,
   which is the point.
 - The front page carries the nameplate instead (`.masthead--front`): the
   folio line holds the date and the site links over a hairline, and under
   it the `h1` **The Gazette** is set in Fraunces at up to
-  3.4rem, centred, on one line at every width (7.4vw below the cap), with `.nameplate__motto` — *One man, reported daily since
-  Sept. 29, 2024.* — in italic beneath. The front page is where a reader
+  5.6rem, centred, on one line at every width (13.5vw below the cap), the
+  largest type on the page, with `.nameplate__motto` — *One man, reported
+  daily since Sept. 29, 2024.* — in the roman beneath. The front page is where a reader
   lands from a shared link knowing nothing; the name says whose paper it is
   and the motto says what it covers, in the line before the lead.
-- The masthead closes with a 3px rule in the accent — under the folio line
-  on the inside pages, under the nameplate on the front. That rule is the
-  paper's cutoff: everything below it is the news.
+- The masthead closes with a thick-and-thin in the accent, a 3px rule with
+  a hairline 4px under it — under the folio line on the inside pages, under
+  the nameplate on the front. That rule is the paper's cutoff: everything
+  below it is the news.
 - `#masthead-date` ships with standing copy — "Published daily" — so the page reads before, and without, JavaScript, and is replaced on load
   with `<date> · Vol. <roman>, No. <n>`, the date and the volume each in a
   `span` with the middot in `.masthead__sep` between them. Neither span
@@ -102,7 +113,7 @@ cutoff rule; the front page sets the nameplate under it and closes that.
 ## Rules, labels and cuts
 The page has one vocabulary of horizontal rules, and it means something:
 
-- **3px solid** — the masthead cutoff. It is the only rule in the accent; a
+- **3px solid over a hairline** — the masthead cutoff. It is the only rule in the accent; a
   `.page-title` prints no rule of its own, since the masthead's is a hundred
   pixels above it.
 - **2px solid** — a department head (`.section-label`): In brief, Corrections,
@@ -119,9 +130,10 @@ Line-cuts live in `assets/cuts/` and are rigs: each exposes its moving parts
 as CSS custom properties, with fallbacks, so the files work as plain `<img>`
 and pose when inlined. `assets/cuts/README.md` lists the properties.
 
-- **The file cut** — the drawing in `assets/cuts/neckass.svg`, inlined at the
-  foot of the briefs column (`#cut-figure`) so it can be posed: the paper's
-  one picture of him, posed for the lead. Each lead names a pose from
+- **The file cut** — the drawing in `assets/cuts/neckass.svg`, inlined in
+  the lead (`#cut-figure`) so it can be posed: the paper's one picture of
+  him, posed for the lead and run beside it, where a paper runs the
+  photograph. Each lead names a pose from
   `data.POSES` — explaining, in his own defense, pointing it out, asked about
   it, satisfied, on his way out, on the phone, considering it, standing by,
   resting his eyes — and `front-page.js` sets its seven joints as custom
@@ -148,11 +160,14 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **The press** — `assets/cuts/press.svg`, on the 404 page.
 
 ## The issue (front page)
-- **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline`. At ≥760px the
-  lead sits on the same two columns as the departments below it: the headline
-  in the wide one, against the column rule, and the deck and byline in the
-  narrow one. The deck is set in Fraunces at text size, one step under the
-  headline. It carries no dateline: the paper is not placed anywhere. Bylines are staff names from the colophon, or "Staff report" /
+- **Lead** — `#lead-headline`, `#lead-deck`, `#lead-byline` in
+  `.lead__story`; the file cut and *Earlier issues* in `.lead__side`. At
+  ≥760px the lead sits on the same two columns as the departments below it:
+  the story (headline, deck, byline) in the wide one, against the column
+  rule, and the cut over the earlier issues in the narrow one, the cutline
+  beside the cut from 1000px and under it below that. On a phone the cut
+  follows the byline under a hairline. The deck is set in Fraunces at text
+  size, one step under the headline. It carries no dateline: the paper is not placed anywhere. Bylines are staff names from the colophon, or "Staff report" /
   "From wire reports".
 - **The headline is the issue's permalink** — `#lead-link`, inside
   `#lead-headline`, points at `/?issue=YYYY-MM-DD` for the issue on the page,
@@ -168,8 +183,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   one.
 - **Earlier issues** — `#earlier-list`, in the lead: the three issues
   before this one, each a link to `/?issue=…` carrying its weekday, number
-  and lead. The folio is in the ledger teal, the lead in the ink. At ≥760px it sits at the foot of the deck's column, beside the
-  headline; below that it follows the byline. The leads are set in the
+  and lead. The folio is in the ledger teal, the lead in the ink. At ≥760px it sits under the cut in the lead's narrow
+  column; below that it follows the cut. The leads are set in the
   regular cut a step under the deck, as an index rather than as news, so
   they do not outweigh today's lead. The standing markup is a single link
   labelled *Back issues*, which is what issue 1, with nothing earlier, keeps.
@@ -192,8 +207,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
-- **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`.
-- **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday and on Mother's Day; next door files her monthly bin letter on the 14th), then one dealt from `data.LETTERS`. A serial letter fills the section's size, so a witness files once per issue. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces: it is the one place on the page where someone other than the paper is speaking.
+- **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`. Each ad's keyword (FOR SALE, LOST, CARD OF THANKS) is marked `.classified__key` and set in the wire's face. From 1000px the ads run in two narrow columns, as a classifieds page runs them.
+- **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday and on Mother's Day; next door files her monthly bin letter on the 14th), then one dealt from `data.LETTERS`. A serial letter fills the section's size, so a witness files once per issue. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces; the signature is attribution, like a byline, and is set in the wire's capitals.
 - **Colophon** — the staff line (vacant, unattended, ongoing), the note
   (*Letters may be edited.*) and the issue's clipping (`#colophon-card`,
   `/card.png?issue=…`). The folio line already carries the site links; the
@@ -220,8 +235,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - Lists every issue newest first, by month (`#archive-run`, a
   `.archive-month` per month with a `.section-label` head), each row a link
   to `/?issue=YYYY-MM-DD` carrying the folio (`No. n · Weekday d`) and the
-  issue's lead in Fraunces. The current issue and the landmarks carry an
-  `.archive-tag` under the lead.
+  issue's lead in Fraunces, the folio in the wire's face. A month's head is
+  set in Fraunces at 1.4rem under the department rule, so a reader
+  scrolling a year can find the month. The current issue and the landmarks
+  carry an `.archive-tag` under the lead.
 - The landmark editions are listed first under *Of note*
   (`#archive-landmarks`), oldest first.
 - *By month* (`#archive-months`) follows: a line per year, newest first,
@@ -245,8 +262,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   none): the nameplate, the issue's date and number, the lead and its deck
   beside the file cut of him in the lead's pose, and the motto at the foot,
   1200×630 PNG,
-  drawn by Satori and resvg with two static cuts of Fraunces
-  fetched from `/fonts/` through the ASSETS binding. The layout is
+  drawn by Satori and resvg with two static cuts of Fraunces and Bitstream
+  Vera Sans Mono (the wire's lines: the date and number, the motto, the
+  address) fetched from `/fonts/` through the ASSETS binding. It carries
+  the page's newsprint and its thick-and-thin under the name. The layout is
   `functions/lib/card.mjs`, which `bun run og:generate` also draws the still
   cards with (the standing issue, the entry, the back issues, the
   standards, each in a pose of its own); the cut is `functions/lib/cut.mjs`,

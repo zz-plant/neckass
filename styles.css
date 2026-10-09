@@ -29,7 +29,7 @@
        and the issue folios. The ground under the sheet is that teal taken
        down to near-black, so the desk and the record are one family. */
     --surface-1: #212b28;
-    --surface-2: #efeae0;
+    --surface-2: #e8e5dc;
     --text-primary: #1c1a19;
     --text-muted: #4e4a42;
     --accent: #175049;
@@ -66,10 +66,23 @@
        switches to greyscale antialiasing, which brings it back to the
        weight the face was drawn at. */
     --font-smoothing: auto;
-    --font:
+    /* Two voices. Every sentence of the paper is set in Fraunces, whose
+       optical axis cuts it for each size, from the lead down to an ad. The
+       wire's apparatus (the date line, the department slugs, bylines,
+       folios, the forecast's figures, an ad's keyword, a signature) comes
+       off the teletype in the system's monospace, which needs no request
+       and was upper case on the wire. */
+    --headline-font: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --wire-font:
+        ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "Cascadia Mono",
+        Consolas, "Liberation Mono", monospace;
+    /* The reference entry is another publication, an encyclopedia's, and is
+       set the way one is: in a sans with a true italic for the words it
+       mentions and the works it cites, which Fraunces's subset does not
+       carry. */
+    --reference-font:
         ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
-    --headline-font: "Fraunces", "Iowan Old Style", Georgia, serif;
     --tap-highlight: rgba(23, 80, 73, 0.2);
     --bg: var(--surface-1);
     --surface: var(--surface-2);
@@ -144,11 +157,11 @@
 }
 
 body {
-    font-family: var(--font);
+    font-family: var(--headline-font);
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    line-height: 1.6;
+    line-height: 1.55;
     padding: calc(28px + env(safe-area-inset-top))
         calc(24px + env(safe-area-inset-right))
         calc(48px + env(safe-area-inset-bottom))
@@ -239,7 +252,7 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
    lead is the first thing here set large. */
 
 .masthead {
-    margin-bottom: 24px;
+    margin-bottom: 30px;
 }
 
 .masthead__folio {
@@ -252,6 +265,25 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
     /* The cutoff rule is the accent's: the teal carries the rule and the
        links. */
     border-bottom: 3px solid var(--accent-rule);
+}
+
+/* The cutoff is a thick-and-thin, the rule a paper runs under its flag:
+   the 3px rule, then a hairline under it. It closes the folio line on the
+   inside pages and the nameplate on the front. */
+.masthead:not(.masthead--front) .masthead__folio,
+.nameplate {
+    position: relative;
+}
+
+.masthead:not(.masthead--front) .masthead__folio::after,
+.nameplate::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -7px;
+    height: 1px;
+    background: var(--accent-rule);
 }
 
 .masthead__plate {
@@ -273,7 +305,7 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
    eye which face the lead below will be in. */
 .masthead__name {
     font-family: var(--headline-font);
-    font-size: 1.04rem;
+    font-size: 1.16rem;
     font-weight: 700;
     letter-spacing: 0;
     text-transform: none;
@@ -287,11 +319,11 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
 }
 
 .masthead__line {
-    font-size: 0.74rem;
+    font-family: var(--wire-font);
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.06em;
     color: var(--muted);
-    font-variant-numeric: tabular-nums;
 }
 
 /* The date and the volume are two units either side of a middot (see
@@ -320,30 +352,31 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
 .nameplate {
     display: grid;
     justify-items: center;
-    gap: 6px;
-    padding: 18px 0 14px;
+    gap: 10px;
+    padding: 22px 0 18px;
     border-bottom: 3px solid var(--accent-rule);
     text-align: center;
 }
 
-/* The name runs on one line at every width, as a nameplate does: the
-   setting needs about 0.86 of the viewport at 7.4vw, which the sheet has
-   down to a 320px phone. At 1.9rem it broke in two on a phone and cost the
-   lead a line above the fold. */
+/* The flag is the largest type on the page, as it is on a paper: the lead
+   under it is the day's, the name is every day's. It runs on one line at
+   every width; at 13.5vw the setting needs about 0.72 of the viewport,
+   which the sheet has down to a 320px phone. */
 .nameplate__name {
     font-family: var(--headline-font);
     font-weight: 700;
-    font-size: clamp(1.4rem, 7.4vw, 3.4rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.3rem, 13.5vw, 5.6rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
     color: var(--ink-display);
     text-wrap: balance;
 }
 
+/* Roman, not italic: the face is subset without its italic, and the
+   browser's slanted roman read as a typo under the flag. */
 .nameplate__motto {
     font-family: var(--headline-font);
-    font-style: italic;
-    font-size: clamp(0.94rem, 1.4vw, 1.08rem);
+    font-size: clamp(0.98rem, 1.5vw, 1.14rem);
     color: var(--muted);
     text-wrap: balance;
 }
@@ -356,9 +389,10 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
 }
 
 .top-nav a {
+    font-family: var(--wire-font);
     font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.06em;
     font-weight: 600;
     color: var(--muted);
     text-decoration: none;
@@ -407,6 +441,17 @@ a:not(.top-nav a, .masthead__plate a, .lead__headline a):hover {
 }
 
 .seo-copy p {
+    font-size: 1.06rem;
+    line-height: 1.6;
+}
+
+.entry p,
+.entry li {
+    font-family: var(--reference-font);
+}
+
+.entry p:not(.entry-note),
+.entry li {
     font-size: 1.02rem;
     line-height: 1.62;
 }
@@ -475,10 +520,10 @@ ol.about-list {
 }
 
 .archive-year {
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
+    font-family: var(--wire-font);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
     color: var(--muted);
-    font-variant-numeric: tabular-nums;
 }
 
 .archive-month {
@@ -490,7 +535,7 @@ ol.about-list {
 }
 
 .archive-month + .archive-month {
-    margin-top: 22px;
+    margin-top: 30px;
 }
 
 .archive-list {
@@ -518,15 +563,16 @@ ol.about-list {
 }
 
 .archive-folio {
-    font-size: 0.7rem;
+    font-family: var(--wire-font);
+    font-size: 0.68rem;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.04em;
     color: var(--link);
 }
 
 .archive-lead {
     font-family: var(--headline-font);
-    font-size: 0.98rem;
+    font-size: 1.02rem;
     line-height: 1.3;
     text-wrap: pretty;
 }
@@ -542,9 +588,10 @@ ol.about-list {
    Today's issue carries one too, which is not a red-letter day and stays
    in the ledger's teal. */
 .archive-tag {
+    font-family: var(--wire-font);
     font-size: 0.66rem;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.04em;
     font-weight: 600;
     color: var(--ink-rubric);
 }
@@ -612,9 +659,10 @@ a:focus-visible {
    department starts on one line, and the heads of two columns side by
    side draw one rule across the fold. */
 .section-label {
+    font-family: var(--wire-font);
     font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.08em;
     color: var(--text);
     font-weight: 700;
     line-height: 1.4;
@@ -631,6 +679,20 @@ a:focus-visible {
     border-top-color: var(--ink-rubric);
 }
 
+/* A month is a volume's chapter, not a department, so its head is set in
+   the paper's face at a size the eye can find while scrolling a year,
+   under the same 2px rule a department head takes. */
+.archive-month > .section-label {
+    font-family: var(--headline-font);
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    padding-top: 10px;
+    margin-bottom: 6px;
+}
+
 /* The title of a reading page — the entry, the standards, the archive. It
    was set in the same 0.7rem small caps as a department head, which left
    those pages with no first line worth reading. */
@@ -638,11 +700,11 @@ a:focus-visible {
     font-family: var(--headline-font);
     text-wrap: balance;
     font-weight: 700;
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
-    line-height: 1.1;
-    letter-spacing: -0.015em;
+    font-size: clamp(2.1rem, 5vw, 3.3rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
     color: var(--ink-display);
-    margin: 4px 0 10px;
+    margin: 4px 0 14px;
 }
 
 .seo-copy .section-label {
@@ -656,11 +718,11 @@ a:focus-visible {
 
 .lead__headline {
     font-family: var(--headline-font);
-    font-size: clamp(2rem, 5.2vw, 3.75rem);
-    line-height: 1.11;
-    letter-spacing: -0.015em;
+    font-size: clamp(2.1rem, 5.8vw, 4.4rem);
+    line-height: 1.03;
+    letter-spacing: -0.025em;
     color: var(--ink-display);
-    max-width: 24ch;
+    max-width: 22ch;
     text-wrap: balance;
 }
 
@@ -678,33 +740,33 @@ a:focus-visible {
     text-underline-offset: 0.12em;
 }
 
-/* The deck is set in the display face at its text size. In the body sans
-   it read as a caption to the headline; in the same face one step down it
-   reads as the story's own first sentence, which it is. */
+/* The deck is the story's first sentence, set one step under the headline
+   and under it, the way a story runs down its column. */
 .lead__deck {
-    margin-top: 14px;
+    margin-top: 18px;
     text-wrap: pretty;
     font-family: var(--headline-font);
-    font-size: clamp(1.06rem, 1.6vw, 1.26rem);
+    font-size: clamp(1.1rem, 1.7vw, 1.34rem);
     line-height: 1.42;
     color: var(--text);
-    max-width: 50ch;
+    max-width: 46ch;
 }
 
 .lead__byline {
     margin-top: 14px;
-    font-size: 0.72rem;
+    font-family: var(--wire-font);
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.06em;
     color: var(--muted);
 }
 
-/* The three issues before this one, by their leads. On the broadsheet they
-   fill the foot of the deck's column beside the headline, which otherwise
-   ran blank; on a phone they follow the byline. Each is a link to the
-   issue, and the headline is the link text. */
+/* The three issues before this one, by their leads. On the broadsheet
+   they run under the cut in the lead's narrow column; on a phone they
+   follow it. Each is a link to the issue, and the headline is the link
+   text. */
 .earlier {
-    margin-top: 22px;
+    margin-top: 24px;
 }
 
 .earlier__list {
@@ -733,11 +795,11 @@ a:focus-visible {
 }
 
 .earlier__folio {
-    font-size: 0.68rem;
+    font-family: var(--wire-font);
+    font-size: 0.66rem;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.04em;
     color: var(--link);
-    font-variant-numeric: tabular-nums;
 }
 
 /* Set as an index, not as news: the regular cut a step under the deck, so
@@ -758,9 +820,8 @@ a:focus-visible {
 }
 
 /* The editorial. Only a landmark issue carries one, under the lead and
-   across the page; the editor speaks in the paper's own voice, so it is set
-   in the body face, not the letters'. Two columns on the broadsheet, the
-   way a leader column runs. */
+   across the page, in two columns on the broadsheet, the way a leader
+   column runs. */
 .box--editorial {
     margin-bottom: 26px;
 }
@@ -782,7 +843,7 @@ a:focus-visible {
     max-width: 68ch;
     display: grid;
     gap: 10px;
-    font-size: 0.94rem;
+    font-size: 1rem;
     line-height: 1.55;
     text-wrap: pretty;
 }
@@ -801,10 +862,10 @@ a:focus-visible {
     }
 }
 
-/* A cut and its cutline, at the foot of the briefs column: the paper's one
-   picture of him. */
+/* A cut and its cutline: the paper's one picture of him, run with the lead
+   it is posed for. On a phone it follows the byline under a hairline. */
 .cut {
-    margin-top: 22px;
+    margin-top: 24px;
     padding-top: 18px;
     border-top: 1px solid var(--border);
     display: grid;
@@ -895,7 +956,7 @@ a:focus-visible {
 }
 
 .cut figcaption {
-    font-size: 0.78rem;
+    font-size: 0.86rem;
     line-height: 1.45;
     color: var(--muted);
     max-width: 34ch;
@@ -907,6 +968,12 @@ a:focus-visible {
 @media (min-width: 560px) {
     .cut {
         grid-template-columns: auto minmax(0, 1fr);
+    }
+}
+
+@media (min-width: 760px) and (max-width: 999px) {
+    .lead__side .cut {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
@@ -928,7 +995,8 @@ a:focus-visible {
 }
 
 .cut figcaption b {
-    letter-spacing: 0.1em;
+    font-family: var(--wire-font);
+    letter-spacing: 0.04em;
     font-size: 0.7rem;
     color: var(--text);
 }
@@ -987,9 +1055,9 @@ a:focus-visible {
 /* The corrections are the paper's running record, and the one retracting
    yesterday's lead is the best thing on the page. They take the ink. */
 .corrections li {
-    font-size: 0.88rem;
+    font-size: 0.96rem;
     text-wrap: pretty;
-    line-height: 1.45;
+    line-height: 1.42;
     color: var(--text);
     padding-left: 14px;
     text-indent: -14px;
@@ -1064,30 +1132,43 @@ a:focus-visible {
 }
 
 .weather {
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.98rem;
+    line-height: 1.45;
     color: var(--text);
     text-wrap: pretty;
 }
 
+/* The forecast's figures come over the wire with the date; the
+   forecaster's note under them is the paper's. */
 .weather-numbers {
-    font-variant-numeric: tabular-nums;
+    font-family: var(--wire-font);
+    font-size: 0.74rem;
+    line-height: 1.55;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
     text-wrap: pretty;
-    font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.45rem;
 }
 
 .classifieds {
     gap: 9px;
 }
 
+/* Set small, as a classifieds page is, each ad opening on its keyword in
+   the wire's face (modules/front-page.js marks it). */
 .classifieds li {
-    font-size: 0.84rem;
+    font-size: 0.9rem;
     text-wrap: pretty;
-    line-height: 1.4;
+    line-height: 1.38;
     color: var(--text);
-    font-variant-numeric: tabular-nums;
+}
+
+.classified__key {
+    font-family: var(--wire-font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
 }
 
 .letters {
@@ -1109,15 +1190,19 @@ a:focus-visible {
    change of voice is set in a change of face. */
 .letter-body {
     font-family: var(--headline-font);
-    font-size: 0.98rem;
-    line-height: 1.48;
+    font-size: 1.02rem;
+    line-height: 1.46;
     text-wrap: pretty;
 }
 
+/* A signature is attribution, like a byline, and is set like one: the
+   wire's caps rather than a slanted roman the face does not have. */
 .letter-signature {
-    margin-top: 6px;
-    font-size: 0.8rem;
-    font-style: italic;
+    margin-top: 8px;
+    font-family: var(--wire-font);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     color: var(--muted);
 }
 
@@ -1126,8 +1211,11 @@ a:focus-visible {
     padding-top: 18px;
     display: grid;
     gap: 6px;
-    font-size: 0.8rem;
-    line-height: 1.5;
+    font-family: var(--wire-font);
+    font-size: 0.7rem;
+    line-height: 1.6;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     color: var(--muted);
     text-wrap: pretty;
 }
@@ -1139,8 +1227,8 @@ a:focus-visible {
 .entry-note {
     border-left: 2px solid var(--border-strong);
     padding-left: 14px;
-    font-size: 0.88rem;
-    line-height: 1.55;
+    font-size: 0.92rem;
+    line-height: 1.5;
     color: var(--muted);
 }
 
@@ -1172,43 +1260,36 @@ a:focus-visible {
 
 @media (min-width: 760px), print {
     /* The lead sits on the same two columns as the departments under it:
-       the headline in the wide one, the deck and byline in the narrow one,
-       against the same rule. Set full-width, the headline's own 24ch measure
-       left the right half of the page blank. */
+       the story (headline, deck, byline) in the wide one against the
+       column rule, and the picture over yesterday's leads in the narrow
+       one. The cut is posed for the lead, so it runs beside it, where a
+       paper runs the photograph; at the foot of the briefs it was today's
+       picture two departments from today's story, with a gap beside it. */
     .lead {
         display: grid;
         grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-        /* The deck takes the height it needs; the byline follows it rather
-           than dropping to the foot of the headline beside it. */
-        grid-template-rows: auto auto 1fr;
         column-gap: 34px;
     }
 
-    .lead__headline {
-        grid-column: 1;
-        grid-row: 1 / span 3;
+    .lead__story {
         border-right: 1px solid var(--border);
         padding-right: 34px;
-        min-height: 100%;
     }
 
-    .lead__deck {
-        grid-column: 2;
-        grid-row: 1;
-        margin-top: 6px;
+    .lead__side {
+        display: grid;
+        align-content: start;
+        gap: 26px;
     }
 
-    .lead__byline {
-        grid-column: 2;
-        grid-row: 2;
-        align-self: start;
-        margin-top: 12px;
+    .lead__side .cut {
+        margin-top: 4px;
+        padding-top: 0;
+        border-top: 0;
     }
 
-    .earlier {
-        grid-column: 2;
-        grid-row: 3;
-        align-self: end;
+    .lead__side .earlier {
+        margin-top: 0;
     }
 
     .front-page__columns {
@@ -1228,6 +1309,22 @@ a:focus-visible {
     .box--classifieds {
         border-right: 1px solid var(--border);
         padding-right: 34px;
+    }
+}
+
+/* The ads run in two columns once their half of the sheet is wide enough,
+   as a classifieds page runs them in narrow measures. */
+@media (min-width: 1000px) {
+    .classifieds {
+        display: block;
+        columns: 2;
+        column-gap: 26px;
+        column-rule: 1px solid var(--border);
+    }
+
+    .classifieds li {
+        break-inside: avoid;
+        margin-bottom: 9px;
     }
 }
 
@@ -1278,8 +1375,8 @@ a:focus-visible {
         order: -1;
         border-left: 0;
         padding-left: 0;
-        font-size: 0.8rem;
-        line-height: 1.5;
+        font-size: 0.86rem;
+        line-height: 1.45;
     }
 }
 
@@ -1339,7 +1436,7 @@ a:focus-visible {
 
     .top-nav a {
         font-size: 0.68rem;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.02em;
     }
 
     /* The date and the volume take a line each; the middot between them

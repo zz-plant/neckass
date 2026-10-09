@@ -42,6 +42,11 @@ function mastheadInto(selector, line) {
     );
 }
 
+// An ad opens on its keyword (FOR SALE, LOST, CARD OF THANKS), which a
+// classifieds page sets apart from the ad; the stylesheet sets it in the
+// wire's face.
+const AD_KEY = /^([A-Z][A-Z ]*[A-Z]):\s/;
+
 function listInto(selector, items, render) {
     const list = document.querySelector(selector);
     if (!list || !Array.isArray(items) || !items.length) return;
@@ -182,7 +187,15 @@ function renderIssue(issue) {
     setWeatherCut(issue.weather);
 
     listInto('#classifieds-list', issue.classifieds, (li, ad) => {
-        li.textContent = ad;
+        const key = AD_KEY.exec(ad);
+        if (!key) {
+            li.textContent = ad;
+            return;
+        }
+        const label = document.createElement('b');
+        label.className = 'classified__key';
+        label.textContent = `${key[1]}:`;
+        li.replaceChildren(label, ` ${ad.slice(key[0].length)}`);
     });
 
     listInto('#letters-list', issue.letters, (li, letter) => {

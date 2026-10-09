@@ -4,8 +4,8 @@
  * Every share of neckass.com used to preview with the same still image
  * whatever the day's lead was. This draws the card on request: the lead of
  * the issue asked for (today's, if none is) beside the file cut of him,
- * posed as the front page poses it that day, set in Fraunces on the same
- * newsprint the page is printed on. The layout and the renderer are
+ * posed as the front page poses it that day, set in Fraunces and the
+ * wire's monospace on the same newsprint the page is printed on. The layout and the renderer are
  * functions/lib/card.mjs, which the still cards share.
  * The middleware points og:image here, so a shared link previews with the
  * headline that is actually running.
@@ -13,8 +13,8 @@
  * Rendering is Satori and resvg; no browser. Both engines are WebAssembly,
  * imported here as compiled modules (wrangler compiles .wasm imports) and
  * initialized once per isolate by initCardRenderer. The two static cuts of
- * Fraunces it needs are served from /fonts/ like the rest of the site and
- * fetched through the ASSETS binding once per isolate.
+ * Fraunces and the monospace it needs are served from /fonts/ like the rest
+ * of the site and fetched through the ASSETS binding once per isolate.
  */
 
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm';
@@ -48,10 +48,12 @@ function loadFonts(env, request) {
     fontsPromise = Promise.all([
         fetchFont('/fonts/fraunces-72pt-bold.ttf'),
         fetchFont('/fonts/fraunces-9pt-regular.ttf'),
+        fetchFont('/fonts/vera-sans-mono.ttf'),
     ])
-        .then(([display, text]) => [
+        .then(([display, text, wire]) => [
             { name: 'Fraunces', data: display, weight: 700, style: 'normal' },
             { name: 'Fraunces Text', data: text, weight: 400, style: 'normal' },
+            { name: 'Wire', data: wire, weight: 400, style: 'normal' },
         ])
         .catch((error) => {
             fontsPromise = null;

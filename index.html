@@ -89,43 +89,12 @@
                 <h2 class="sr-only" id="front-page-title">Today's issue</h2>
 
                 <article class="lead">
-                    <h3 class="lead__headline" id="lead-headline"><a href="/" id="lead-link">Neckass has been "five minutes away" since 2019. He is at home.</a></h3>
-                    <p class="lead__deck" id="lead-deck">He has said it to eleven people this year, according to a count by the Gazette. He has not left the house for any of them.</p>
-                    <p class="lead__byline" id="lead-byline">From wire reports</p>
-                    <!-- The three issues before this one, by their leads. Filled
-                         by front-page.js; without it, the way to the archive. -->
-                    <nav class="earlier" aria-labelledby="earlier-title">
-                        <h3 class="section-label" id="earlier-title">Earlier issues</h3>
-                        <ol class="earlier__list" id="earlier-list">
-                            <li><a href="/archive"><span class="earlier__head">Back issues</span></a></li>
-                        </ol>
-                    </nav>
-                </article>
-
-                <!-- Only a landmark issue carries one: the first edition, an
-                     anniversary. front-page.js reveals it when the issue has it. -->
-                <section class="box box--editorial" id="editorial" aria-labelledby="editorial-title" hidden>
-                    <h3 class="section-label section-label--rubric" id="editorial-title">From the editor</h3>
-                    <h4 class="editorial-head" id="editorial-head">Why a paper</h4>
-                    <div class="editorial-body" id="editorial-body">
-                        <p>This paper will report what he did. It will not say why, because nobody knows, least of all him.</p>
+                    <div class="lead__story">
+                        <h3 class="lead__headline" id="lead-headline"><a href="/" id="lead-link">Neckass has been "five minutes away" since 2019. He is at home.</a></h3>
+                        <p class="lead__deck" id="lead-deck">He has said it to eleven people this year, according to a count by the Gazette. He has not left the house for any of them.</p>
+                        <p class="lead__byline" id="lead-byline">From wire reports</p>
                     </div>
-                    <p class="letter-signature" id="editorial-signature">— The editor</p>
-                </section>
-
-                <div class="front-page__columns">
-                    <section class="column column--briefs" aria-labelledby="briefs-title">
-                        <h3 class="section-label" id="briefs-title">In brief</h3>
-                        <ul class="briefs" id="briefs-list">
-                            <li>Neckass read the room and disagreed with it.</li>
-                            <li>Neckass wrote "no rush" and followed up four minutes later.</li>
-                            <li>Neckass said he would sleep on it. That was in March, and he has slept well.</li>
-                            <li>Neckass told the group he had booked it. He had looked at it.</li>
-                            <li>Neckass said "keep the change" to a card reader.</li>
-                            <li>Neckass's houseplant has outlived three of his hobbies.</li>
-                            <li>Neckass responded "maybe" to his own birthday.</li>
-                        </ul>
-
+                    <div class="lead__side">
                         <figure class="cut">
                             <!-- The same drawing as assets/cuts/neckass.svg, inline so the
                                  desk can pose it: front-page.js sets each joint from the
@@ -188,6 +157,40 @@
                             </svg>
                             <figcaption><b>FILE</b> — <span id="cut-caption">Neckass, explaining.</span> The Gazette has one cut of him and has not needed a second.</figcaption>
                         </figure>
+                        <!-- The three issues before this one, by their leads. Filled
+                             by front-page.js; without it, the way to the archive. -->
+                        <nav class="earlier" aria-labelledby="earlier-title">
+                            <h3 class="section-label" id="earlier-title">Earlier issues</h3>
+                            <ol class="earlier__list" id="earlier-list">
+                                <li><a href="/archive"><span class="earlier__head">Back issues</span></a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </article>
+
+                <!-- Only a landmark issue carries one: the first edition, an
+                     anniversary. front-page.js reveals it when the issue has it. -->
+                <section class="box box--editorial" id="editorial" aria-labelledby="editorial-title" hidden>
+                    <h3 class="section-label section-label--rubric" id="editorial-title">From the editor</h3>
+                    <h4 class="editorial-head" id="editorial-head">Why a paper</h4>
+                    <div class="editorial-body" id="editorial-body">
+                        <p>This paper will report what he did. It will not say why, because nobody knows, least of all him.</p>
+                    </div>
+                    <p class="letter-signature" id="editorial-signature">— The editor</p>
+                </section>
+
+                <div class="front-page__columns">
+                    <section class="column column--briefs" aria-labelledby="briefs-title">
+                        <h3 class="section-label" id="briefs-title">In brief</h3>
+                        <ul class="briefs" id="briefs-list">
+                            <li>Neckass read the room and disagreed with it.</li>
+                            <li>Neckass wrote "no rush" and followed up four minutes later.</li>
+                            <li>Neckass said he would sleep on it. That was in March, and he has slept well.</li>
+                            <li>Neckass told the group he had booked it. He had looked at it.</li>
+                            <li>Neckass said "keep the change" to a card reader.</li>
+                            <li>Neckass's houseplant has outlived three of his hobbies.</li>
+                            <li>Neckass responded "maybe" to his own birthday.</li>
+                        </ul>
                     </section>
 
                     <div class="column column--side">
@@ -235,11 +238,11 @@
                     <section class="box box--classifieds" aria-labelledby="classifieds-title">
                         <h3 class="section-label" id="classifieds-title">Classifieds</h3>
                         <ul class="classifieds" id="classifieds-list">
-                            <li>PERSONAL: to the man who was five minutes away — we have gone home.</li>
-                            <li>FOUND: set of keys, outside the gym. Owner has never been inside.</li>
-                            <li>FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.</li>
-                            <li>WANTED: someone who can end a conversation with Neckass. Nobody has yet.</li>
-                            <li>WANTED: someone to smell some leftovers. They are nine days old. Urgent.</li>
+                            <li><b class="classified__key">PERSONAL:</b> to the man who was five minutes away — we have gone home.</li>
+                            <li><b class="classified__key">FOUND:</b> set of keys, outside the gym. Owner has never been inside.</li>
+                            <li><b class="classified__key">FOR SALE:</b> bicycle, never ridden. Has lived in a hallway since 2022.</li>
+                            <li><b class="classified__key">WANTED:</b> someone who can end a conversation with Neckass. Nobody has yet.</li>
+                            <li><b class="classified__key">WANTED:</b> someone to smell some leftovers. They are nine days old. Urgent.</li>
                         </ul>
                     </section>
 

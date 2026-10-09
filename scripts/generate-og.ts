@@ -64,7 +64,7 @@ export const OG_CARDS: OgCard[] = [
         folio: 'REFERENCE',
         headline:
             "Neckass (slang): defined by a dictionary in 2032, accurately, to nobody's satisfaction",
-        deck: 'A person may be foolish without being a neckass, and a neckass need not be especially foolish.',
+        deck: 'A person may be foolish without being a neckass, and a neckass need not be especially foolish, only certain.',
         pose: 'shrug',
     },
     {
@@ -97,6 +97,12 @@ function fonts() {
         {
             name: 'Fraunces Text',
             data: font('fraunces-9pt-regular.ttf'),
+            weight: 400 as const,
+            style: 'normal' as const,
+        },
+        {
+            name: 'Wire',
+            data: font('vera-sans-mono.ttf'),
             weight: 400 as const,
             style: 'normal' as const,
         },
