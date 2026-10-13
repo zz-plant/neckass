@@ -50,7 +50,7 @@ const server = Bun.serve({
         const path = resolveWithinRoot(pathname);
         if (!path) return new Response('Forbidden', { status: 403 });
 
-        // Cloudflare Pages serves /archive from archive.html; match it so the
+        // The edge serves /archive from archive.html; match it so the
         // extensionless links the pages use resolve locally too.
         let file = Bun.file(path);
         let servedPath = path;

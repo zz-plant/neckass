@@ -17,7 +17,7 @@ import {
 } from '../modules/issue.js';
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
-// The Pages Functions under workerd; see playwright.config.mjs.
+// The Worker under workerd (wrangler dev); see playwright.config.mjs.
 const EDGE_URL = process.env.PLAYWRIGHT_EDGE_URL || 'http://127.0.0.1:8800/';
 
 // A brief ends on a period; the same item as a headline does not.
@@ -556,7 +556,7 @@ test.describe('The Gazette', () => {
     });
 
     test('the sitemap and each page name the URL the host serves', () => {
-        // Cloudflare Pages answers /archive.html with a 308 to /archive. A
+        // The edge answers /archive.html with a 308 to /archive. A
         // sitemap entry or canonical that names the .html file points search
         // engines at a redirect, so both use the extensionless path.
         const sitemap = read('../sitemap.xml');
@@ -682,6 +682,82 @@ test.describe('The Gazette', () => {
         // The feed is served, too.
         const feed = await request.get(`${EDGE_URL}feed.xml`);
         expect(feed.ok()).toBe(true);
+        expect(feed.headers()['content-type']).toContain('application/rss+xml');
+    });
+
+    test('the edge serves every file the pages name, and none of the source', async ({
+        request,
+    }) => {
+        // The Worker's assets are the repository root, and .assetsignore
+        // lets the site back in. A file a page names that the list leaves
+        // out is a broken page; a file it lets out that is not the site is
+        // the repository on the open web.
+        const named = new Set();
+        for (const page of ['index', 'about', 'archive', 'prompts', '404']) {
+            const html = read(`../${page}.html`);
+            const refs = [
+                ...html.matchAll(/(?:src|href)="([^"]+)"/g),
+                ...html.matchAll(/content="(https:\/\/neckass\.com\/[^"]*)"/g),
+            ];
+            for (const [, ref] of refs) {
+                const url = new URL(ref, 'https://neckass.com/');
+                if (url.hostname === 'neckass.com') named.add(url.pathname);
+            }
+        }
+        for (const icon of JSON.parse(read('../site.webmanifest')).icons) {
+            named.add(icon.src);
+        }
+        for (const path of named) {
+            const response = await request.get(`${EDGE_URL}${path.slice(1)}`);
+            expect(response.status(), path).toBe(200);
+        }
+
+        for (const path of [
+            'package.json',
+            'bun.lock',
+            'README.md',
+            'AGENTS.md',
+            'wrangler.jsonc',
+            'worker.js',
+            '.assetsignore',
+            '_headers',
+            'functions/_middleware.js',
+            'scripts/serve.ts',
+            'tests/smoke.spec.mjs',
+            '.github/workflows/ci.yml',
+            'docs/assets/source.svg',
+            'fonts/README.md',
+        ]) {
+            const response = await request.get(`${EDGE_URL}${path}`);
+            expect(response.status(), path).toBe(404);
+        }
+    });
+
+    test('the edge answers the way Pages did', async ({ request }) => {
+        // The middleware writes a different issue into the same index.html
+        // every day, so the front page carries no ETag a browser could
+        // revalidate yesterday's paper against.
+        const front = await request.get(`${EDGE_URL}?issue=2025-01-06`);
+        expect(front.status()).toBe(200);
+        expect(front.headers().etag).toBeUndefined();
+
+        // A path with no file is the 404 page, not cached.
+        const missing = await request.get(`${EDGE_URL}no-such-page`);
+        expect(missing.status()).toBe(404);
+        expect(missing.headers()['content-type']).toContain('text/html');
+        expect(missing.headers()['cache-control']).toBe('no-store');
+
+        // The .html address of a page moved permanently, query and all.
+        const moved = await request.get(`${EDGE_URL}about.html?x=1`, {
+            maxRedirects: 0,
+        });
+        expect(moved.status()).toBe(308);
+        expect(moved.headers().location).toBe('/about?x=1');
+
+        // Pages matched a function's route in any case, with or without a
+        // trailing slash.
+        const feed = await request.get(`${EDGE_URL}Feed.xml/`);
+        expect(feed.status()).toBe(200);
         expect(feed.headers()['content-type']).toContain('application/rss+xml');
     });
 });

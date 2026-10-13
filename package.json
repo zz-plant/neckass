@@ -11,14 +11,15 @@
     "assets:check": "bun run scripts/check-assets.ts",
     "assets:generate": "bun run scripts/generate-scenes.ts",
     "og:generate": "bun run scripts/generate-og.ts",
-    "edge": "wrangler pages dev . --port 8800 --inspector-port 0 --log-level warn --compatibility-date=2026-09-01"
+    "edge": "wrangler dev --port 8800 --inspector-port 0 --log-level warn",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.8",
     "@playwright/test": "^1.62.1",
     "@resvg/resvg-wasm": "2.4.0",
     "satori": "0.15.2",
-    "wrangler": "^4.134.0",
+    "wrangler": "^4.150.0",
     "yoga-wasm-web": "0.3.3"
   }
 }

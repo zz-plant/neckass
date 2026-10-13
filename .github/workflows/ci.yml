@@ -29,6 +29,11 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      # Bundles the Worker and reads the assets the way a deploy would,
+      # without credentials and without uploading anything.
+      - name: Build the Worker
+        run: bunx wrangler deploy --dry-run
+
       # Reads PNG headers only, so it needs no rendering toolchain on the
       # runner. Regenerating (assets:generate) does need rsvg-convert.
       - name: Check generated assets

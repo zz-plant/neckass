@@ -254,7 +254,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   ≥760px, one on a phone.
 - Without JavaScript the page still explains the archive and links to today.
 
-## Edge functions (Cloudflare Pages)
+## Edge functions (Cloudflare Worker)
 - `functions/feed.xml.js` serves `/feed.xml`: RSS for the last 30 issues,
   composed per request, `cache-control: public, max-age=3600`. Item titles and
   descriptions are XML-escaped.
@@ -278,9 +278,14 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   and in the picture.
 - All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
   adapter over `modules/issue.js` — the same module the browser runs, so the
-  runtimes cannot disagree about a lead. The smoke suite runs the functions
-  under `wrangler pages dev` (`bun run edge`, port 8800) and checks the card
+  runtimes cannot disagree about a lead. The smoke suite runs the Worker
+  under `wrangler dev` (`bun run edge`, port 8800) and checks the card
   is a real PNG and the tags point at it.
+- The edge answers as Pages did: the card and the feed match in any case,
+  with or without a trailing slash, for GET only; the front page carries no
+  ETag; a path with no file is `404.html` with status 404 and `no-store`; a
+  page's `.html` or trailing-slash address is a 308 to the extensionless
+  one, query string kept; any method but GET or HEAD is a 405.
 
 ## Responsive behavior checkpoints
 The paper reads in one column, two, or the broadsheet grid, in that order:

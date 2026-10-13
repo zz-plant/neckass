@@ -1,0 +1,6 @@
+# Cloudflare Pages sent these on every static response by default. Workers
+# static assets do not, so the site sends them itself.
+/*
+  Access-Control-Allow-Origin: *
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff

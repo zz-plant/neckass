@@ -1,0 +1,22 @@
+# The assets directory is the repository root, so this file decides what
+# the site publishes. It is an allowlist: everything is left out, then the
+# site's own files are let back in. A new page or image at the root is
+# public by its extension; a new directory has to be named here. Source,
+# tooling, docs and anything untracked in a working copy stay private.
+/*
+!/*.html
+!/*.css
+!/*.png
+!/*.ico
+!/*.svg
+!/*.txt
+!/*.xml
+!/*.webmanifest
+!/assets/
+!/data/
+!/fonts/
+!/modules/
+
+# Inside those: the notes for whoever edits them, and macOS's folder files.
+README.md
+.DS_Store
