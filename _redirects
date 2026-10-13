@@ -1,0 +1,14 @@
+# Pages answered these with 308. Workers' own trailing-slash handling
+# answers them with 307, which tells a crawler the move is temporary. The
+# sitemap and the canonicals name the paths on the right.
+/index.html     /         308
+/index          /         308
+/index/         /         308
+/about.html     /about    308
+/about/         /about    308
+/archive.html   /archive  308
+/archive/       /archive  308
+/prompts.html   /prompts  308
+/prompts/       /prompts  308
+/404.html       /404      308
+/404/           /404      308

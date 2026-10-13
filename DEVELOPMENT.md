@@ -14,13 +14,15 @@ workerd:
 bun run edge
 ```
 
-serves the same tree through `wrangler pages dev` on `http://127.0.0.1:8800/`.
+serves the same tree through `wrangler dev` on `http://127.0.0.1:8800/`, with
+the assets `.assetsignore` lets through and the Worker in front of them, as
+production runs it.
 
 ## Why the code is ES modules, shared by both runtimes
 
 `data/*.js` and the issue arithmetic are plain ES modules. The browser loads
 them through one `<script type="module">` per page, whose import graph is
-statically analyzed; the Pages Functions import the same files directly.
+statically analyzed; the edge handlers import the same files directly.
 There is one copy of each pool and of the lead-selection arithmetic, so the
 feed and the card cannot drift from the page: they run the same code by
 construction.
@@ -82,6 +84,19 @@ ends when `front-page.js` has rendered.
   TrueType cuts for the card renderer.
 
 ### Edge
+- `worker.js` — the Worker's entry, and the router Pages used to generate
+  from `functions/`. It sends GET `/card.png` and `/feed.xml` (any case, one
+  trailing slash or none, as Pages matched them) to their handlers and runs
+  the middleware in front of every request it sees. It drops the ETag from
+  what it fetches from the assets, since the front page is rewritten per
+  day, and answers a path with no file with `404.html`, 404, `no-store`.
+- `wrangler.jsonc` — the Worker: the Pages project's compatibility date,
+  the repository root as the assets directory, and the front page in
+  `run_worker_first`, since the middleware has to see it before the asset
+  is served. Every other file is served without running the Worker.
+- `.assetsignore` — the allowlist of what the site publishes; see the
+  README's Deployment section. `_headers` and `_redirects` restore the
+  headers and the 308s Pages sent by default.
 - `functions/feed.xml.js` — RSS for the last 30 issues, per request.
 - `functions/card.png.js` — the issue's social card, drawn with Satori and
   resvg.
@@ -140,10 +155,11 @@ round) and the edge (the feed, the card, the rewritten tags).
 ## Analytics
 
 Not wired in code, and it should not be: Cloudflare Web Analytics is enabled
-for a Pages project from the dashboard (Web Analytics → the project → enable),
-which injects the beacon at the edge. It is cookieless and collects no
-personal data, so it does not compromise the site's privacy stance, and doing
-it in the dashboard avoids committing a site token.
+for the proxied hostname from the dashboard (Web Analytics → Add a site →
+neckass.com, automatic setup), which injects the beacon at the edge. It is
+cookieless and collects no personal data, so it does not compromise the
+site's privacy stance, and doing it in the dashboard avoids committing a site
+token.
 
 Until it is switched on there is no measurement of whether the daily issue
 brings anyone back, which is the one assumption the whole format rests on.

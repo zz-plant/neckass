@@ -17,7 +17,9 @@ complexity. The front page is the product.
 - `styles.css` — all visual/layout styling, including the inlined cuts' and print.
 - `data/` — the pools (`formats.js`, `headlines.js`), the landmark issues (`editions.js`), the calendar (`calendar.js`), the file cut's poses (`poses.js`). Plain ES modules, imported by both the browser and the edge.
 - `modules/issue.js` — the issue arithmetic and composition, shared by both runtimes; `modules/calendar.js` — matches dated items; `modules/front-page.js` — renders the front page; `modules/archive-list.js` — the archive.
-- `functions/` — Cloudflare Pages Functions: the feed, the social card, the middleware; `lib/issue.mjs` is a UTC adapter over `modules/issue.js`, `lib/card.mjs` holds the card layout and its one renderer.
+- `worker.js` — the Cloudflare Worker's entry: routes the feed and the card to their handlers in `functions/` and runs the middleware in front of them and the front page. `wrangler.jsonc` configures it.
+- `functions/` — the edge handlers, written as Pages Functions and imported by `worker.js`: the feed, the social card, the middleware; `lib/issue.mjs` is a UTC adapter over `modules/issue.js`, `lib/card.mjs` holds the card layout and its one renderer.
+- `.assetsignore` — an allowlist: the repository root is the Worker's assets directory, and only the files it lets back in are published. A new top-level directory the pages load from has to be added to it; the smoke suite fails if a page names a file the edge does not serve.
 - `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`. The file cut has three copies (the rig, the front page's inline one, `functions/lib/cut.mjs`); change all three together, and the smoke test checks that you did.
 - `fonts/` — Fraunces: variable woff2 for the page, two static TTFs for the card.
 
@@ -29,7 +31,7 @@ complexity. The front page is the product.
 
 ## Local testing
 - `bun run serve` (static, :8001); the pages are ES modules, so open them over HTTP.
-- With the edge: `bun run edge` (Pages Functions, :8800).
+- With the edge: `bun run edge` (the Worker under `wrangler dev`, :8800).
 - `bun run lint`, `bun run assets:check`, `bun run test:smoke` before merge.
 
 ## When changing content

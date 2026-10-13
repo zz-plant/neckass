@@ -1,0 +1,71 @@
+/**
+ * The Worker: the router Cloudflare Pages used to build from functions/.
+ *
+ * Pages routed each file in functions/ by its name and ran _middleware.js
+ * in front of every request. A Worker routes nothing on its own, so the
+ * two routes are written out here and the handlers are imported unchanged,
+ * called with the parts of the Pages context they use.
+ *
+ * Cloudflare serves a request that names a file without running the
+ * Worker, except the paths in assets.run_worker_first (wrangler.jsonc):
+ * the front page, which the middleware rewrites. Everything else that
+ * reaches the Worker names no file: the card, the feed, and the paths that
+ * get 404.html.
+ */
+
+import { onRequest as middleware } from './functions/_middleware.js';
+import { onRequestGet as card } from './functions/card.png.js';
+import { onRequestGet as feed } from './functions/feed.xml.js';
+
+const ROUTES = new Map([
+    ['/card.png', card],
+    ['/feed.xml', feed],
+]);
+
+// As Pages matched them: any case, one trailing slash or none, and an
+// onRequestGet handler for GET only, so a HEAD falls through to the assets.
+function routeFor(request) {
+    if (request.method !== 'GET') return undefined;
+    const path = new URL(request.url).pathname.toLowerCase();
+    return ROUTES.get(path.length > 1 ? path.replace(/\/$/, '') : path);
+}
+
+// Workers send each file's ETag, and the middleware writes a different
+// issue into the same index.html every day, so a revalidation against that
+// ETag would be answered 304 for another day's paper. The Worker asks for
+// files whole and sends no validator, as Pages did not on these responses.
+//
+// A path with no file got the nearest 404.html from Pages, with status 404
+// and no-store. The site has one 404.html, at the root. Asked for with a
+// method other than GET or HEAD, the 404 page answers 405, as every file
+// does, and as Pages did for every path.
+async function fetchAsset(request, env) {
+    const headers = new Headers(request.headers);
+    headers.delete('if-none-match');
+    headers.delete('if-modified-since');
+    let asset = await env.ASSETS.fetch(new Request(request, { headers }));
+    let status = asset.status;
+    if (status === 404) {
+        const page = new URL('/404', request.url);
+        asset = await env.ASSETS.fetch(
+            new Request(page, { method: request.method, headers }),
+        );
+        status = asset.ok ? 404 : asset.status;
+    }
+    const response = new Response(asset.body, {
+        status,
+        headers: asset.headers,
+    });
+    response.headers.delete('etag');
+    if (status === 404) response.headers.set('cache-control', 'no-store');
+    return response;
+}
+
+export default {
+    async fetch(request, env) {
+        const route = routeFor(request);
+        const next = () =>
+            route ? route({ request, env }) : fetchAsset(request, env);
+        return middleware({ request, env, next });
+    },
+};

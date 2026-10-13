@@ -17,8 +17,8 @@ export default defineConfig({
             reuseExistingServer: true,
             timeout: 10_000,
         },
-        // The edge: the Pages Functions (feed, social card, middleware)
-        // under workerd, which is the only place they run.
+        // The edge: the Worker (feed, social card, middleware) and the
+        // assets it serves, under workerd, which is the only place it runs.
         {
             command: 'bun run edge',
             url: 'http://127.0.0.1:8800/',

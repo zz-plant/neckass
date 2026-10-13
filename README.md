@@ -18,8 +18,8 @@ reading.
   runs the next thing he did. It knows what day it is: the council's
   Tuesday, the clocks, his birthday, the paper's own anniversary.
 - **Static-first.** The browser and the edge import the same ES modules;
-  any static host serves it. Two Cloudflare Pages Functions add what a file
-  cannot: the RSS feed and a social card drawn per issue.
+  any static host serves it. A Cloudflare Worker adds what a file cannot:
+  the RSS feed and a social card drawn per issue.
 
 ## Quick start
 1. Clone the repository.
@@ -39,7 +39,7 @@ bun run serve
 
 That serves the site on `http://127.0.0.1:8001/`. To run the edge functions
 as well (the feed, the card, the middleware), `bun run edge` serves the same
-tree through `wrangler pages dev` on `http://127.0.0.1:8800/`.
+tree through `wrangler dev` on `http://127.0.0.1:8800/`.
 
 ## Pages
 - `index.html` — today's front page. `/?issue=YYYY-MM-DD` is any past one.
@@ -79,8 +79,10 @@ JavaScript disabled and crawlers see copy rather than an empty shell.
 
 ## Edge functions
 
-The site is static; two Cloudflare Pages Functions add what a static file
-cannot:
+The site is static; a Cloudflare Worker adds what a static file cannot.
+`worker.js` is its router: it sends `/card.png` and `/feed.xml` to their
+handlers in `functions/`, which were Pages Functions and keep the Pages
+signatures, and runs the middleware in front of them and the front page.
 
 - `functions/feed.xml.js` — builds the RSS feed for the last 30 issues on
   request. No store and no cron: issues come from the calendar.
@@ -99,8 +101,8 @@ runtimes pick the same lead by construction.
 A Playwright suite covers what a reader opens: today's issue renders whole,
 a back issue loads from the archive, the corrections chain points at the
 lead it claims to, the calendar runs on its days, the landmarks are written,
-and the edge serves the feed and a real card. It starts the static server and
-`wrangler pages dev` itself.
+and the edge serves the feed, a real card, every file the pages name and none
+of the source. It starts the static server and `wrangler dev` itself.
 
 ```bash
 bun install
@@ -127,36 +129,47 @@ bun run test:smoke
 
 
 ## Deployment
-[neckass.com](https://neckass.com) is served by Cloudflare Pages (project `neckass`).
+[neckass.com](https://neckass.com) is served by a Cloudflare Worker with static
+assets (Worker `neckass`, configured in `wrangler.jsonc`).
 
-The repository root *is* the deploy artifact: there is no output directory, so
-Pages publishes the tree exactly as committed. Pushing to `main` triggers a
-production deploy; other branches get preview deployments.
+The repository root *is* the assets directory: there is no build output, so
+the Worker serves the tree as committed, less what `.assetsignore` keeps back.
+That file is an allowlist. It leaves everything out, then lets back in the
+pages, the stylesheet, the images and icons at the root, and `assets/`,
+`data/`, `fonts/` and `modules/`. Source, tooling, docs and anything untracked
+in a working copy are never uploaded. A new page or image at the root is
+public by its extension; a new directory has to be added to the list.
 
-To deploy from a working copy instead of a push:
+`_headers` sends the three headers Pages added to every static response, and
+`_redirects` answers the `.html` and trailing-slash addresses with the 308
+Pages gave them, where Workers would send a 307.
+
+Pushing to `main` deploys through Workers Builds. To deploy from a working
+copy instead:
 
 ```bash
-bunx wrangler pages deploy . --project-name=neckass --branch=main
+bun run deploy
 ```
 
 ## Verification
 
-`.github/workflows/ci.yml` runs `bun run lint`, `bun run assets:check` and the
-Playwright suite on every push to `main` and every pull request.
+`.github/workflows/ci.yml` runs `bun run lint`, bundles the Worker with
+`wrangler deploy --dry-run`, and runs `bun run assets:check` and the Playwright
+suite on every push to `main` and every pull request.
 
-Pages runs `bun install --frozen-lockfile && bun run lint` as its build
-command, so a lint failure fails the build and nothing is published — the site
-keeps serving the last good deployment.
+Workers Builds runs `bun install --frozen-lockfile && bun run lint` as its
+build command, so a lint failure fails the build and nothing is deployed — the
+site keeps serving the last good version.
 
-**The smoke tests do not gate the deploy.** Pages builds on push regardless of
-what GitHub Actions concluded, and running Playwright inside the Pages build
-would mean downloading a browser on every deploy. Two ways to close that gap:
+**The smoke tests do not gate the deploy.** Workers Builds deploys on push
+regardless of what GitHub Actions concluded, and running Playwright inside the
+build would mean downloading a browser on every deploy. Two ways to close that
+gap:
 
 1. Require the `verify` check on `main` with a repository ruleset. Changes to
    `main` then have to arrive by pull request, and a red suite blocks the merge.
-2. Turn off automatic production deployments in the Pages dashboard and publish
-   from CI with `wrangler pages deploy` after the suite passes. Needs a
-   Cloudflare API token stored as a GitHub secret.
+2. Disconnect Workers Builds and deploy from CI with `wrangler deploy` after
+   the suite passes. Needs a Cloudflare API token stored as a GitHub secret.
 
 ### Generated assets
 
