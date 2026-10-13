@@ -6,6 +6,7 @@
   "compatibility_date": "2024-09-29",
   "upload_source_maps": true,
   "workers_dev": true,
+  "routes": [{ "pattern": "neckass.com/*", "zone_name": "neckass.com" }],
   "assets": {
     // The repository root is the site. .assetsignore keeps everything
     // else in the tree off it.
