@@ -12,6 +12,7 @@ import {
     parseIssueDate,
     recentIssues,
 } from './issue.js';
+import { issueMetadata } from './issue-metadata.js';
 
 function textInto(selector, value) {
     const node = document.querySelector(selector);
@@ -218,6 +219,40 @@ function requestedIssueDate() {
     return parseIssueDate(requested);
 }
 
+function writeMetadata(issue, datedLink) {
+    if (!issue?.lead) return;
+    const metadata = issueMetadata(issue, datedLink);
+    const values = {
+        description: metadata.description,
+        'og:title': metadata.title,
+        'twitter:title': metadata.title,
+        'og:description': metadata.description,
+        'twitter:description': metadata.description,
+        'og:image': metadata.image,
+        'og:image:secure_url': metadata.image,
+        'twitter:image': metadata.image,
+        'og:image:alt': metadata.alt,
+        'twitter:image:alt': metadata.alt,
+        'og:url': metadata.canonical,
+        'twitter:url': metadata.canonical,
+    };
+    for (const meta of document.head.querySelectorAll('meta')) {
+        const value = values[meta.getAttribute('property') || meta.name];
+        if (value) meta.content = value;
+    }
+    document
+        .querySelector('link[rel="canonical"]')
+        ?.setAttribute('href', metadata.canonical);
+    let schema = document.getElementById('issue-jsonld');
+    if (!schema) {
+        schema = document.createElement('script');
+        schema.id = 'issue-jsonld';
+        schema.type = 'application/ld+json';
+        document.head.appendChild(schema);
+    }
+    schema.textContent = JSON.stringify(metadata.jsonLd);
+}
+
 function init() {
     if (!document.querySelector('#lead-headline')) return;
 
@@ -229,6 +264,7 @@ function init() {
     const isFuture = requested && issueNumber(requested) > today.number;
     const issue = requested && !isFuture ? composeIssue(requested) : today;
     renderIssue(issue);
+    writeMetadata(issue, Boolean(requested && !isFuture));
     window.Neckass = window.Neckass || {};
     window.Neckass.currentIssue = issue;
 
