@@ -12,29 +12,30 @@
  */
 
 import { composeIssue } from '../modules/issue.js';
-import {
-    issueNumber,
-    issueParam,
-    parseIssueDate,
-    selectLead,
-} from './lib/issue.mjs';
+import { issueMetadata } from '../modules/issue-metadata.js';
+import { issueNumber, issueParam, parseIssueDate } from './lib/issue.mjs';
 
-const SITE = 'https://neckass.com';
 const CARD_TITLE_TAGS = new Set(['og:title', 'twitter:title']);
-const CARD_TEXT_TAGS = new Set(['og:description', 'twitter:description']);
+const CARD_TEXT_TAGS = new Set([
+    'description',
+    'og:description',
+    'twitter:description',
+]);
 const CARD_IMAGE_TAGS = new Set([
     'og:image',
     'og:image:secure_url',
     'twitter:image',
 ]);
 const CARD_ALT_TAGS = new Set(['og:image:alt', 'twitter:image:alt']);
+const CARD_URL_TAGS = new Set(['og:url', 'twitter:url']);
 
 class MetaRewriter {
-    constructor({ title, description, image, alt }) {
+    constructor({ title, description, image, alt, canonical }) {
         this.title = title;
         this.description = description;
         this.image = image;
         this.alt = alt;
+        this.canonical = canonical;
     }
 
     element(element) {
@@ -48,6 +49,29 @@ class MetaRewriter {
             element.setAttribute('content', this.image);
         else if (CARD_ALT_TAGS.has(key))
             element.setAttribute('content', this.alt);
+        else if (CARD_URL_TAGS.has(key))
+            element.setAttribute('content', this.canonical);
+    }
+}
+
+class CanonicalRewriter {
+    constructor(url) {
+        this.url = url;
+    }
+    element(element) {
+        element.setAttribute('href', this.url);
+    }
+}
+
+class ArticleWriter {
+    constructor(schema) {
+        this.schema = JSON.stringify(schema).replace(/</g, '\\u003c');
+    }
+    element(element) {
+        element.append(
+            `<script id="issue-jsonld" type="application/ld+json">${this.schema}</script>`,
+            { html: true },
+        );
     }
 }
 
@@ -123,21 +147,32 @@ export async function onRequest(context) {
         return response;
     }
 
-    const date = parseIssueDate(url.searchParams.get('issue')) || new Date();
+    const now = new Date();
+    const requested = parseIssueDate(url.searchParams.get('issue'));
+    const requestedNumber = requested ? issueNumber(requested) : 0;
+    // Future editions are not on file yet; the browser displays today's paper.
+    const datedLink = Boolean(
+        requested &&
+            requestedNumber >= 1 &&
+            requestedNumber <= issueNumber(now),
+    );
+    const date = datedLink ? requested : now;
     const number = issueNumber(date);
     if (number < 1) return response;
-    const lead = selectLead(number);
+    const issue = composeIssue(date);
+    const lead = issue.lead;
     if (!lead) return response;
 
-    const title = `${lead.headline} | The Gazette, No. ${number}`;
+    const metadata = issueMetadata(issue, datedLink);
     // The standing issue in the markup is a different day's paper, and its
     // folio line is one line where today's is two on a phone. Writing
     // today's masthead and lead here keeps front-page.js from moving the
     // page when it swaps in the same issue. A Worker's clock is UTC, so a
     // reader whose local date differs still gets their own day's swap.
-    const issue = composeIssue(date);
     return new HTMLRewriter()
-        .on('title', new TitleRewriter(title))
+        .on('title', new TitleRewriter(metadata.title))
+        .on('head', new ArticleWriter(metadata.jsonLd))
+        .on('link[rel="canonical"]', new CanonicalRewriter(metadata.canonical))
         .on('#masthead-date', new MastheadRewriter(issue.mastheadLine))
         .on(
             '#lead-link',
@@ -145,14 +180,6 @@ export async function onRequest(context) {
         )
         .on('#lead-deck', new TextRewriter(lead.deck))
         .on('#lead-byline', new TextRewriter(lead.byline))
-        .on(
-            'meta',
-            new MetaRewriter({
-                title,
-                description: lead.deck,
-                image: `${SITE}/card.png?issue=${issueParam(date)}`,
-                alt: `The front page of The Gazette, No. ${number}: ${lead.headline}`,
-            }),
-        )
+        .on('meta', new MetaRewriter(metadata))
         .transform(response);
 }
