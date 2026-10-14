@@ -22,10 +22,10 @@ const ROUTES = new Map([
     ['/feed.xml', feed],
 ]);
 
-// As Pages matched them: any case, one trailing slash or none, and an
-// onRequestGet handler for GET only, so a HEAD falls through to the assets.
+// Any case, one trailing slash or none, supporting GET and HEAD for dynamic routes
+// so social card unfurlers and RSS readers checking headers receive 200 rather than 404.
 function routeFor(request) {
-    if (request.method !== 'GET') return undefined;
+    if (request.method !== 'GET' && request.method !== 'HEAD') return undefined;
     const path = new URL(request.url).pathname.toLowerCase();
     return ROUTES.get(path.length > 1 ? path.replace(/\/$/, '') : path);
 }
@@ -64,8 +64,20 @@ async function fetchAsset(request, env) {
 export default {
     async fetch(request, env) {
         const route = routeFor(request);
-        const next = () =>
-            route ? route({ request, env }) : fetchAsset(request, env);
+        const next = async () => {
+            if (route) {
+                const response = await route({ request, env });
+                if (request.method === 'HEAD') {
+                    return new Response(null, {
+                        status: response.status,
+                        statusText: response.statusText,
+                        headers: response.headers,
+                    });
+                }
+                return response;
+            }
+            return fetchAsset(request, env);
+        };
         return middleware({ request, env, next });
     },
 };
