@@ -93,11 +93,20 @@ export async function onRequestGet({ request, env }) {
     });
 }
 
-export async function onRequestHead(context) {
-    const response = await onRequestGet(context);
+// A HEAD check answers the same status and headers a GET would, without
+// rendering. The unfurlers that probe before fetching do not need the PNG,
+// and drawing it only to discard it would pay a cold-start WASM init and a
+// font fetch for nothing.
+export function onRequestHead({ request }) {
+    const url = new URL(request.url);
+    const date = parseIssueDate(url.searchParams.get('issue')) || new Date();
+    const number = issueNumber(date);
+    const lead = number >= 1 ? selectLead(number) : null;
+    if (!lead) return new Response(null, { status: 404 });
     return new Response(null, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
+        headers: {
+            'content-type': 'image/png',
+            'cache-control': 'public, max-age=86400',
+        },
     });
 }
