@@ -14,20 +14,26 @@
  */
 
 import { onRequest as middleware } from './functions/_middleware.js';
-import { onRequestGet as card } from './functions/card.png.js';
+import {
+    onRequestGet as card,
+    onRequestHead as cardHead,
+} from './functions/card.png.js';
 import { onRequestGet as feed } from './functions/feed.xml.js';
 
 const ROUTES = new Map([
-    ['/card.png', card],
-    ['/feed.xml', feed],
+    ['/card.png', { GET: card, HEAD: cardHead }],
+    ['/feed.xml', { GET: feed }],
 ]);
 
 // Any case, one trailing slash or none, supporting GET and HEAD for dynamic routes
 // so social card unfurlers and RSS readers checking headers receive 200 rather than 404.
+// HEAD answers the cheap handler where one exists — the card, which would
+// otherwise draw a PNG just to discard it — and the GET handler elsewhere.
 function routeFor(request) {
     if (request.method !== 'GET' && request.method !== 'HEAD') return undefined;
     const path = new URL(request.url).pathname.toLowerCase();
-    return ROUTES.get(path.length > 1 ? path.replace(/\/$/, '') : path);
+    const route = ROUTES.get(path.length > 1 ? path.replace(/\/$/, '') : path);
+    return route?.[request.method] || route?.GET;
 }
 
 // Workers send each file's ETag, and the middleware writes a different
