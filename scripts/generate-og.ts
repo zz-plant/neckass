@@ -55,7 +55,7 @@ export const OG_CARDS: OgCard[] = [
         folio: 'PUBLISHED DAILY',
         headline:
             'Neckass has been "five minutes away" since 2019. He is at home.',
-        deck: 'He has said it to eleven people this year, according to a count by the Gazette. He has not left the house for any of them.',
+        deck: 'He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.',
         // The pose that lead carries in data/formats.js.
         pose: 'phone',
     },

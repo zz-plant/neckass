@@ -21,7 +21,7 @@ export const LEADS = [
     {
         headline:
             'Neckass has been "five minutes away" since 2019. He is at home.',
-        deck: 'He has said it to eleven people this year, according to a count by the Gazette. He has not left the house for any of them.',
+        deck: 'He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.',
         byline: 'From wire reports',
         pose: 'phone',
         correction:
@@ -58,14 +58,14 @@ export const LEADS = [
         byline: 'Staff report',
         pose: 'shrug',
         correction:
-            'An earlier edition said Neckass had not read the email. He has now read it. He has not replied.',
+            'An earlier edition said Neckass had not read the email. He had read the subject line, which is "Best man?"',
         followUp:
             '"Sounds good," Neckass wrote to the best-man email, and asked what date.',
         classified:
             'WANTED: a best man for Saturday. The current one believes it is a different Saturday.',
         letter: {
-            body: 'Neckass has told everyone he is my best man. I have not asked him or set a date, and I am not engaged.',
-            signature: 'The groom, apparently',
+            body: 'I asked him in March. He has not replied to me, but he has told four people he is my best man and asked each of them when the wedding is.',
+            signature: 'The groom',
         },
     },
     {
@@ -288,7 +288,7 @@ export const LEADS = [
     {
         headline:
             'Neckass arrived at the restaurant an hour early and waited outside',
-        deck: 'He had not checked the time, and stood outside for an hour in the rain.',
+        deck: 'He said he likes to "get a feel for the place" and stood in the rain for an hour, turning down a table from the hostess four times because the booking was for eight.',
         byline: 'From wire reports',
         pose: 'standingBy',
         correction:
@@ -310,7 +310,7 @@ export const LEADS = [
         correction:
             'The ending he explained was the ending of a different film.',
         followUp:
-            'The person who recommended the film has watched the one Neckass described instead. It was not the one they recommended. It was better. He has been told and has said he knew.',
+            'The person who recommended the film watched the one Neckass had described by mistake, liked it better, and told him, and he said that was the one he had been recommending all along.',
         classified:
             'SEEKING: the person who recommended the film. He would like to explain it to you.',
         letter: {
@@ -331,7 +331,7 @@ export const LEADS = [
         classified:
             'SEEKING: a minute to sit down and really reply. Owner has been meaning to since the 3rd.',
         letter: {
-            body: 'I asked if he was coming Saturday. He read it on Tuesday. The Sunday after, he replied "just seeing this!" I had seen him on Friday. He said nothing.',
+            body: 'I asked him on Tuesday if he was coming Saturday. He sat next to me at dinner on Friday and asked what I was doing Saturday, and on the Sunday after he replied "just seeing this!"',
             signature: 'A friend',
         },
     },
@@ -469,7 +469,7 @@ export const LEADS = [
     {
         headline:
             'Neckass agreed with two people who were disagreeing with each other',
-        deck: 'He agreed with the first, then the second, in the same conversation. Both noticed.',
+        deck: 'He agreed with the first, then the second, and, asked to choose, said "I think you\'re both saying the same thing." They were not.',
         byline: 'Staff report',
         pose: 'shrug',
         correction:
@@ -554,7 +554,7 @@ export const LEADS = [
         byline: 'Staff report',
         pose: 'standingBy',
         correction:
-            'Forty feet: far enough that they had to jog, and did, and thanked him.',
+            'We reported that the person was forty feet away. They were sixty, by their own account, and jogged the last forty, and thanked him.',
         followUp:
             'The person who jogged to the door has written in. It was the wrong building.',
         classified:
@@ -673,7 +673,7 @@ export const LEADS = [
             'The heat was turned off, a window opened "to freshen up," and the heat turned back on.',
         classified: 'FOR SALE: a thermostat. Works. Owner has set it once.',
         letter: {
-            body: 'The heat has been on since October. I have slept with the window open since November. We have not discussed it. He has left a note.',
+            body: 'The heat has been on since October and I have slept with the window open since November. We have not discussed it, except in the note he taped to the thermostat, which says "set, do not touch."',
             signature: 'His roommate',
         },
     },
@@ -703,7 +703,7 @@ export const LEADS = [
         correction:
             'The caller was let go at 6:50 on the third "I\'ll let you go." The call ended at 7:05.',
         followUp:
-            'Neckass called back to check the caller got off all right. They had. They were in the middle of it.',
+            'Neckass called back the next morning to check the caller had got off all right, and let them go at 9:40, on the fourth try.',
         classified:
             'WANTED: a way off the phone with a man who says "anyway." We have tried "anyway."',
         letter: {
@@ -853,7 +853,7 @@ export const LEADS = [
         correction:
             'The second dinner was canceled at the restaurant, by text, from the parking lot. The first was canceled the day of.',
         followUp:
-            'A date for the next dinner was proposed. It is one the others cannot do, which he knew. "Well, we tried."',
+            'Neckass proposed a date for the next dinner, the one night he knew the others could not do, and said "well, we tried."',
         classified:
             'WANTED: three people free on a Friday. Fourth will confirm the day of, and may not.',
         letter: {
@@ -900,7 +900,7 @@ export const CORRECTIONS = [
     'A Tuesday item said Neckass had left. He had gone to the car and come back.',
     'The Gazette described Neckass as "on his way." He was choosing a shirt.',
     'A recipe item credited Neckass with cooking. He assembled.',
-    "Neckass's reply, as reported Monday, was a thumbs-up.",
+    'We reported Monday that Neckass replied with a thumbs-up. It was a thumbs-down, which he says means "got it."',
     'An item said Neckass listened. He waited.',
     'Neckass did not cancel, as reported. He did not attend and did not say so.',
     'The Gazette said Neckass paid. He said "I\'ll get the next one," and there has been no next one.',
@@ -944,7 +944,7 @@ export const WEATHER = [
     'Sunny, according to Neckass, who has not been outside and is going by the window.',
     'Overcast, and a photo of it in the group chat, captioned "ugh."',
     "Mild. He has dressed for yesterday's forecast.",
-    'Rain, twice announced, and no jacket.',
+    'Rain, and no jacket, on principle. He has not said which.',
     'Clear, or "basically nice," which is his highest rating.',
     'Cold. "Fine," in shorts.',
     'Wind. The picnic will move indoors after the food does.',
@@ -991,7 +991,7 @@ export const CLASSIFIEDS = [
     'FOR SALE: bicycle, never ridden. Has lived in a hallway since 2022.',
     'NOTICE FROM IT: before calling about the printer, please check the paper. It has been the paper every time.',
     'WANTED: someone who can end a conversation with Neckass. Previous applicants are still in it.',
-    'FOR SALE: exercise bike. Currently a coat rack. Coats included.',
+    'FOR SALE: exercise bike, as new. Owner bought it to "stop paying for the gym," which he is still paying for.',
     'LOST: one hour, every morning, between the alarm and getting up.',
     'NOTICE: this column no longer accepts ads from Neckass. He placed nine last week, all "WANTED: motivation."',
     'WANTED: someone to smell some leftovers. They are nine days old. Urgent.',
@@ -1010,10 +1010,10 @@ export const CLASSIFIEDS = [
     'FOUND: an umbrella, open, in a hallway, indoors. Owner says it was raining earlier.',
     'LOST: Wednesday. Owner spent it believing it was Tuesday.',
     'FOR SALE: snow shovel, bought in the first snow of the year, once it had stopped.',
-    'LOST: the second earbud. Owner has checked the case four times.',
+    'LOST: the second earbud. Reward offered, and a larger one for the first, which has since also gone.',
     'FOR SALE: slides, socks attached. Owner wore them to a wedding and called it "business casual."',
     'SEEKING: a second listener for a podcast. The first has gone.',
-    'NOTICE: the recycling bin from No. 12 is in our yard again.',
+    'NOTICE: the recycling bin from No. 12 is in our yard again, full, and he says the wind did that too.',
     'FREE: half a bag of salad, best by yesterday, described by owner as "probably fine."',
     'SERVICES: will tell you your lineup is fine. It is not. $5.',
     'FOR SALE: the rest of a meal. He said he would just have a bite.',
