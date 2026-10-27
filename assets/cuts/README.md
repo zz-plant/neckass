@@ -21,10 +21,17 @@ The file cut is drawn by hand, in one pen: a fine-point marker, so every
 line is the same black at nearly one weight (2.2 for outlines, 1.7 for
 detail, 1.2 for hatching, none of it grey), with round ends and round
 corners, and no line quite straight. Every limb is a capsule whose round
-ends are centred on its pivots, and a forearm's top tucks under the end of
-its upper arm, so an elbow or a shoulder turned to any angle stays a round
-joint. The jacket's shoulders are broad enough to cover the tops of the
-arms. The head is drawn behind the jacket, so the neck shows in the open
+ends are centred on its pivots, so an elbow or a shoulder turned to any
+angle stays a round joint, and the round tops of the arms are his
+shoulders. Each arm, and the legs with the hips, is drawn as one shape:
+its edges first, at twice the weight (`.outline`), then its fills over
+them (`.body`), so only the outside of the whole shows. A bent elbow is a
+bend in the sleeve, not the end of one tube over another, and the hips
+draw no line across the trousers. Elsewhere a piece that meets another
+is tucked under it rather than laid along it: the posts under the
+lintel, the monitor's foot under the desk, the plate under the tabletop,
+the parcel one outline with its inner edges drawn once. No edge is drawn
+twice. The head is drawn behind the jacket, so the neck shows in the open
 collar. The mark on the neck is his Adam's apple; the standards forbid
 explaining the neck. The props are drawn by the same hand.
 
