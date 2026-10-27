@@ -914,6 +914,22 @@ a:focus-visible {
     fill: var(--text);
 }
 
+/* Each arm, and the legs with the hips, is one shape: its edges are drawn
+   first at twice the weight and its fills over them, so only the outside
+   of the whole shows, and a bent elbow or the top of a trouser leg draws
+   no line across the sleeve or the seat. */
+.cut-figure .outline {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 4.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.cut-figure .body {
+    fill: var(--surface);
+}
+
 .cut-figure .detail,
 .cut-figure .hatch {
     fill: none;

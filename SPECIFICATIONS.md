@@ -147,8 +147,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   theme and the print sheet. It is drawn by hand in one fine-point marker:
   one black, nearly one weight, round ends, no line quite straight. Each
   limb is a capsule round on its pivots, so an elbow or shoulder turned to
-  any angle stays round; the head sits behind the jacket, the neck in its
-  open collar.
+  any angle stays round; each arm, and the legs with the hips, is one
+  outline (edges at double weight, fills over them), so no part draws a
+  line across another, and no edge is drawn twice. The head sits behind
+  the jacket, the neck in its open collar.
 - **The scene** — a lead may also name what its story happens among, from
   `data.SCENES`: a phone, a coffee cup or a hat, which he holds or wears
   and which turn with him; or a couch, a television, a desk, a table, a
