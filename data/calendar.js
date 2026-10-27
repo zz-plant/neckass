@@ -16,7 +16,7 @@ export const CALENDAR = [
     {
         on: { weekday: 1 },
         section: 'classifieds',
-        item: 'LOST: a weekend. Owner spent it "catching up" and has caught up on nothing.',
+        item: 'LOST: a weekend. Owner said Friday he would "do absolutely nothing" and, by his account, ran out of time.',
     },
     {
         on: { weekday: 5 },

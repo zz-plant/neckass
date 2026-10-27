@@ -60,7 +60,7 @@ export const EDITIONS = {
             correction:
                 'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
             followUp:
-                'Neckass collected the scarf. He asked again that the paper stop. He was in the office thirty-five minutes, which is an improvement.',
+                'Neckass came back for the scarf and asked again, for thirty-five minutes, that the paper stop, which is an improvement.',
             classified:
                 'FOUND: a scarf, left at the Gazette office by a man asking that the paper stop. He has since called to ask whether we have it, and whether we have stopped.',
             letter: {
