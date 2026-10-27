@@ -17,6 +17,17 @@ sheet. The weather cut has two more, `--ink-sun` for the sun's disc and
 | `weather.svg` | The sky, in four layers. | `--sun`, `--cloud`, `--rain`, `--wind` — `1` shows a layer, `0` hides it. With `--cloud: 0` the sun moves to the middle of the box rather than hanging in the corner. |
 | `press.svg` | A screw press. | `--lever` (angle of the bar; `0` is at rest, straight out), `--sheet: 0` clears the paper off the bed. |
 
+The file cut is drawn by hand, in one pen: a fine-point marker, so every
+line is the same black at nearly one weight (2.2 for outlines, 1.7 for
+detail, 1.2 for hatching, none of it grey), with round ends and round
+corners, and no line quite straight. Every limb is a capsule whose round
+ends are centred on its pivots, and a forearm's top tucks under the end of
+its upper arm, so an elbow or a shoulder turned to any angle stays a round
+joint. The jacket's shoulders are broad enough to cover the tops of the
+arms. The head is drawn behind the jacket, so the neck shows in the open
+collar. The mark on the neck is his Adam's apple; the standards forbid
+explaining the neck. The props are drawn by the same hand.
+
 Each box is cut to the pose the file ships in, so the drawing sits centred with
 an even margin. A pose that throws a limb wide — an arm straight out — reaches
 past that. Inlined, it simply draws outside the box (`overflow: visible`); as an

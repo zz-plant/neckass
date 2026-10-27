@@ -899,10 +899,14 @@ a:focus-visible {
     overflow: visible;
 }
 
+/* One pen: a fine-point marker, so every line is the same black at
+   nearly the same weight, with round ends and round corners, and the
+   hatching is ink, not grey. */
 .cut-figure .part {
     fill: var(--surface);
     stroke: var(--text);
-    stroke-width: 3;
+    stroke-width: 2.2;
+    stroke-linecap: round;
     stroke-linejoin: round;
 }
 
@@ -914,13 +918,13 @@ a:focus-visible {
 .cut-figure .hatch {
     fill: none;
     stroke: var(--text);
-    stroke-width: 2;
+    stroke-width: 1.7;
     stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .cut-figure .hatch {
-    stroke-width: 1.4;
-    opacity: 0.7;
+    stroke-width: 1.2;
 }
 
 .cut-figure [class^="joint-"] {
