@@ -137,7 +137,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   photograph. Each lead names a pose from
   `data.POSES` — explaining, in his own defense, pointing it out, asked about
   it, satisfied, on his way out, on the phone, considering it, standing by,
-  resting his eyes — and `front-page.js` sets its seven joints as custom
+  resting his eyes — and `front-page.js` sets its ten joints as custom
   properties, its alt text as the figure's `aria-label`, and its caption in
   the cutline: *FILE — Neckass, on the phone. The Gazette has one cut of him
   and has not needed a second.* Unposed, the joints fall back to the house
@@ -145,12 +145,18 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   three sides for a thrown limb, so a pose never draws over the column rule
   or the cutline. The inks are the page's tokens, so the cut follows the
   theme and the print sheet. It is drawn by hand in one fine-point marker:
-  one black, nearly one weight, round ends, no line quite straight. Each
-  limb is a capsule round on its pivots, so an elbow or shoulder turned to
-  any angle stays round; each arm, and the legs with the hips, is one
-  outline (edges at double weight, fills over them), so no part draws a
-  line across another, and no edge is drawn twice. The head sits behind
-  the jacket, the neck in its open collar.
+  one black, nearly one weight, round ends, no line quite straight. He
+  wears a suit, the jacket open over a shirt and a striped tie. Each limb
+  is a capsule round on its pivots, so a joint turned to any angle stays
+  round; each arm, and the legs with the seat, is one outline (edges at
+  double weight, fills over them), so no part draws a line across another,
+  and no edge is drawn twice. The arms hang in front of the jacket, the
+  tops of the sleeves under its shoulders, so a hand can rest on a hip or
+  on his head and an arm turns at the shoulder without showing where it
+  ends. Above the belt he leans (`--lean`) on legs that stay put, and each
+  hand turns at the wrist. The head sits behind the collar. The figure is
+  set down as geometry in `scripts/draw-cut.ts` and drawn by a seeded hand
+  into all three copies (the rig, the page, the card) by `bun run cut:draw`.
 - **The scene** — a lead may also name what its story happens among, from
   `data.SCENES`: a phone, a coffee cup or a hat, which he holds or wears
   and which turn with him; or a couch, a television, a desk, a table, a
@@ -164,15 +170,25 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   `aria-label`: *Line-cut of a man with one hand held to his ear, holding a
   phone, in front of a couch.* The cutline names the pose only.
 - **The cut's motion** — once `front-page.js` has set the pose (as
-  `data-pose`), the cut acts it out: the raised hand makes its point, he
-  nods into the phone, waves on his way out, shrugs, protests, scratches
-  his head, and, resting his eyes, nods off and catches himself; standing
-  by, he stands by. The rain and the shower fall, the alarm clock rings, the
-  smoke alarm chirps. Each swing is a `rotate` added to the joint's pose, so
-  the drawing comes to rest exactly as printed. It plays once, after 0.4s,
-  and every motion is over by 4.4s, so a page with no controls needs none to
-  stop it (WCAG 2.2.2); nothing flashes. Under `prefers-reduced-motion:
-  reduce` none of it runs. The card and the print sheet are still.
+  `data-pose`), the cut acts it out: explaining, the raised hand makes its
+  point three times; in his own defense, he leans back, protests with both
+  hands and shakes his head; pointing it out, he jabs at it; asked about
+  it, he shrugs twice; satisfied, he nods to himself; on his way out, he
+  waves from the wrist with the near foot already going; on the phone, he
+  nods into it while the free hand makes the point; considering it, he
+  scratches his head; resting his eyes, he nods off with them open,
+  catches himself and blinks twice; standing by, he blinks once. It is
+  acted the way it would be drawn: a joint draws back before it goes, each
+  beat is smaller than the last, the wrist moves after the forearm and the
+  tie after everything, and a motion settles past the pose before it
+  stops; he blinks, and his brows go up at the point. The rain and the
+  shower fall, the alarm clock rings in two bursts, the smoke alarm chirps,
+  and the shelf gives at its bracket. Each motion is a `rotate`,
+  `translate` or `scale` added to the part's own transform, so the drawing
+  comes to rest exactly as printed. It plays once, from 0.4s, and every
+  motion is over by 4.4s, so a page with no controls needs none to stop it
+  (WCAG 2.2.2); nothing flashes. Under `prefers-reduced-motion: reduce`
+  none of it runs. The card and the print sheet are still.
 - **Reading-page side heads** — at ≥900px, a `.seo-copy` that has
   `.section-label` children (the entry, the standards) becomes a 200px / 68ch
   grid: the title and copy in the text column, each head in the margin with

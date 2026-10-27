@@ -105,8 +105,9 @@ ends when `front-page.js` has rendered.
   on the front page.
 - `functions/lib/issue.mjs` — UTC date adapters over `modules/issue.js`.
 - `functions/lib/cut.mjs` — the file cut flattened for the card, in any
-  pose. A smoke test holds it, the rig and the front page's copy to the same
-  parts, pivots and house pose.
+  pose. `bun run cut:draw` (`scripts/draw-cut.ts`) writes its figure, the
+  rig's and the front page's from one drawing; a smoke test holds the three
+  to the same parts, pivots and house pose.
 - `functions/lib/card.mjs` — the card's layout and the one renderer
   (`renderCardPng`) shared with `scripts/generate-og.ts`; `initCardRenderer`
   loads the WebAssembly engines once per runtime, from imported modules on

@@ -943,12 +943,39 @@ a:focus-visible {
     stroke-width: 1.2;
 }
 
+/* What the marker did that a plotter would not: where it pressed or
+   pooled, a heavier line over the line, and where it ran dry, the paper
+   down the middle of it. Each path carries its own width. */
+.cut-figure .heavy {
+    fill: none;
+    stroke: var(--text);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.cut-figure .dry {
+    fill: none;
+    stroke: var(--surface);
+    stroke-linecap: round;
+}
+
+/* The scan: every edge caught a little in the paper's fibre (the filters
+   are in the drawing's defs). While the cut plays, the line boils through
+   three cuts of the same noise; at rest it is the first. */
+.cut-figure > g {
+    filter: url(#cut-ink-a);
+}
+
 .cut-figure [class^="joint-"] {
     transform-box: view-box;
 }
 .cut-figure .joint-head {
     transform-origin: 100px 66px;
     transform: rotate(var(--tilt, -4deg));
+}
+.cut-figure .joint-lean {
+    transform-origin: 100px 156px;
+    transform: rotate(var(--lean, -2deg));
 }
 .cut-figure .joint-arm-near {
     transform-origin: 70px 80px;
@@ -958,6 +985,10 @@ a:focus-visible {
     transform-origin: 70px 124px;
     transform: rotate(var(--forearm-near, 9deg));
 }
+.cut-figure .joint-hand-near {
+    transform-origin: 70px 162px;
+    transform: rotate(var(--hand-near, 0deg));
+}
 .cut-figure .joint-arm-far {
     transform-origin: 130px 80px;
     transform: rotate(var(--arm-far, -22deg));
@@ -965,6 +996,10 @@ a:focus-visible {
 .cut-figure .joint-forearm-far {
     transform-origin: 130px 124px;
     transform: rotate(var(--forearm-far, -122deg));
+}
+.cut-figure .joint-hand-far {
+    transform-origin: 130px 162px;
+    transform: rotate(var(--hand-far, -10deg));
 }
 .cut-figure .joint-leg-near {
     transform-origin: 88px 156px;
@@ -1039,41 +1074,237 @@ a:focus-visible {
     opacity: var(--smoke, 0);
 }
 
-/* The alarm clock rings on its own legs; the bedside table stays put. */
+/* The parts that move without being joints: the tie hangs from its knot,
+   the eyes shut on their own middles, the alarm clock rings on its legs
+   while the bedside table stays put, and the shelf gives at its bracket. */
+.cut-figure .tie {
+    transform-box: view-box;
+    transform-origin: 100px 78px;
+}
+.cut-figure .eye {
+    transform-box: fill-box;
+    transform-origin: center;
+}
 .cut-figure .ring {
     transform-box: view-box;
     transform-origin: 168px 224px;
 }
+.cut-figure .scene-shelf > :not(:last-child) {
+    transform-box: view-box;
+    transform-origin: 133px 66px;
+}
+.cut-figure .scene-smoke .detail:last-child {
+    transform-box: view-box;
+    transform-origin: 176px -18px;
+}
 
-/* Motion. Once the desk has set the pose, the cut acts it out — he waves,
-   he nods into the phone, he dozes off and catches himself — and then
-   stands in the pose as printed. Each swing is a `rotate` added to the
-   joint's own rotation, so it always comes to rest where the pose put
-   it. Nothing runs longer than four and a half seconds, and nothing
-   repeats after that, so a paper with no controls needs none to stop it;
-   asked for less motion, it does not play at all, and he stands by. */
+/* Motion. Once the desk has set the pose, the cut acts it out — he makes
+   his point, waves, nods into the phone, dozes off and catches himself —
+   and then stands in the pose as printed. It is acted the way a hand
+   would draw it: a joint draws back before it goes, each beat smaller
+   than the last, and it settles past where it stops; the hand moves a
+   moment after the forearm, the forearm after the arm, the tie after
+   everything, and he blinks when he is done. Each motion is a `rotate`,
+   `translate` or `scale` added to the part's own transform, so the
+   drawing always comes to rest where the pose put it. Nothing runs past
+   4.4 seconds and nothing repeats after that, so a paper with no controls
+   needs none to stop it; asked for less motion, it does not play at all,
+   and he stands by. */
 @media (prefers-reduced-motion: no-preference) {
-    @keyframes cut-swing {
-        0%,
+    /* Beats: draws back, then three hits, each smaller, the last one
+       settling a little past the pose. A point being made; a nod. */
+    @keyframes cut-beats {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        8% {
+            rotate: calc(var(--swing) * -0.18);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+        20% {
+            rotate: var(--swing);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        33% {
+            rotate: calc(var(--swing) * 0.2);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+        45% {
+            rotate: calc(var(--swing) * 0.85);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        58% {
+            rotate: calc(var(--swing) * 0.15);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+        70% {
+            rotate: calc(var(--swing) * 0.6);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        84% {
+            rotate: calc(var(--swing) * -0.08);
+        }
         100% {
             rotate: 0deg;
-        }
-        50% {
-            rotate: var(--swing);
         }
     }
 
-    /* Nodding off: the head goes slowly and comes back at once. */
-    @keyframes cut-doze {
+    /* A wave: either side of the pose, dying away. A hand waving, a head
+       shaking, two hands protesting. */
+    @keyframes cut-wave {
         0%,
         100% {
             rotate: 0deg;
         }
-        72% {
+        7% {
+            rotate: calc(var(--swing) * -0.25);
+        }
+        19% {
             rotate: var(--swing);
         }
-        80% {
-            rotate: -3deg;
+        31% {
+            rotate: calc(var(--swing) * -0.7);
+        }
+        43% {
+            rotate: calc(var(--swing) * 0.85);
+        }
+        55% {
+            rotate: calc(var(--swing) * -0.55);
+        }
+        67% {
+            rotate: calc(var(--swing) * 0.6);
+        }
+        79% {
+            rotate: calc(var(--swing) * -0.25);
+        }
+        90% {
+            rotate: calc(var(--swing) * 0.08);
+        }
+    }
+
+    /* Goes there, overshoots, holds, comes back past the pose and
+       settles. A lean, a shrug, a head cocked. */
+    @keyframes cut-hold {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+        }
+        10% {
+            rotate: calc(var(--swing) * -0.12);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+        26% {
+            rotate: calc(var(--swing) * 1.08);
+        }
+        34% {
+            rotate: var(--swing);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        68% {
+            rotate: calc(var(--swing) * 0.94);
+            animation-timing-function: cubic-bezier(0.5, 0, 0.3, 1);
+        }
+        84% {
+            rotate: calc(var(--swing) * -0.1);
+        }
+        100% {
+            rotate: 0deg;
+        }
+    }
+
+    /* Nodding off: the head goes, fights it, goes all the way, and comes
+       back at once, past where it started. */
+    @keyframes cut-doze {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.35, 0, 0.65, 1);
+        }
+        18% {
+            rotate: calc(var(--swing) * 0.32);
+        }
+        27% {
+            rotate: calc(var(--swing) * 0.2);
+            animation-timing-function: cubic-bezier(0.55, 0, 0.9, 0.6);
+        }
+        62% {
+            rotate: var(--swing);
+            animation-timing-function: cubic-bezier(0.1, 0, 0, 1);
+        }
+        68% {
+            rotate: calc(var(--swing) * -0.35);
+        }
+        77% {
+            rotate: calc(var(--swing) * 0.1);
+        }
+        86% {
+            rotate: calc(var(--swing) * -0.04);
+        }
+        100% {
+            rotate: 0deg;
+        }
+    }
+
+    /* What hangs: pushed one way, back past the middle, and less each
+       time. The tie; an arm that is not doing anything. */
+    @keyframes cut-sway {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+        14% {
+            rotate: var(--swing);
+        }
+        30% {
+            rotate: calc(var(--swing) * -0.6);
+        }
+        46% {
+            rotate: calc(var(--swing) * 0.35);
+        }
+        62% {
+            rotate: calc(var(--swing) * -0.18);
+        }
+        78% {
+            rotate: calc(var(--swing) * 0.07);
+        }
+    }
+
+    @keyframes cut-lift {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+        14% {
+            translate: 0 calc(var(--lift) * 1.15);
+        }
+        22%,
+        72% {
+            translate: 0 var(--lift);
+        }
+    }
+
+    @keyframes cut-blink {
+        0%,
+        100% {
+            scale: 1;
+        }
+        40%,
+        55% {
+            scale: 1 0.12;
+        }
+    }
+
+    /* The boil: the line redrawn eight times a second, as a drawn film's
+       line is, for as long as anything moves. */
+    @keyframes cut-boil {
+        0% {
+            filter: url(#cut-ink-b);
+        }
+        33.33% {
+            filter: url(#cut-ink-c);
+        }
+        66.67% {
+            filter: url(#cut-ink-a);
         }
     }
 
@@ -1086,139 +1317,423 @@ a:focus-visible {
         }
     }
 
+    /* Rings in two bursts with a breath between. */
+    @keyframes cut-ring {
+        0%,
+        40%,
+        60%,
+        100% {
+            rotate: 0deg;
+        }
+        4%,
+        12%,
+        20%,
+        28%,
+        36%,
+        64%,
+        72%,
+        80%,
+        88%,
+        96% {
+            rotate: var(--swing);
+        }
+        8%,
+        16%,
+        24%,
+        32%,
+        68%,
+        76%,
+        84%,
+        92% {
+            rotate: calc(var(--swing) * -1);
+        }
+    }
+
+    /* The chirp goes out and the next one comes in behind it. */
     @keyframes cut-chirp {
         0%,
-        55%,
         100% {
             opacity: 1;
+            scale: 1;
         }
-        62%,
-        90% {
+        22% {
             opacity: 0;
+            scale: 1.3;
+        }
+        23% {
+            opacity: 0;
+            scale: 0.6;
+        }
+        45% {
+            opacity: 1;
+            scale: 1;
         }
     }
 
-    /* Every joint is still unless its pose gives it beats. The values are
-       set here on each joint, so a forearm does not inherit its upper
-       arm's swing and move twice. */
-    .cut-figure[data-pose] [class^="joint-"] {
-        --beat: 0.8s;
-        --beats: 0;
-        --swing: 0deg;
-        animation: cut-swing var(--beat) ease-in-out 0.4s var(--beats);
-    }
+    /* Every moving part is still unless its pose gives it a motion,
+       each with its own reach (--swing, or --lift for the brows), so a
+       forearm does not inherit its arm's and move twice. Delays count
+       from the pose being set: 0.4s, and a moment more for whatever
+       follows something else. */
 
-    /* Explaining: the raised hand makes the point four times. */
+    /* Explaining: the raised hand makes its point three times, the wrist
+       a moment behind the forearm and the head behind both; he leans into
+       it, the brows go up, the tie and the idle hand follow. */
     .cut-figure[data-pose="explaining"] .joint-forearm-far {
+        --swing: 18deg;
+        animation: cut-beats 2.6s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="explaining"] .joint-hand-far {
         --swing: 16deg;
-        --beats: 4;
+        animation: cut-beats 2.6s ease-in-out 0.48s;
+    }
+    .cut-figure[data-pose="explaining"] .joint-arm-far {
+        --swing: 4deg;
+        animation: cut-beats 2.6s ease-in-out 0.4s;
     }
     .cut-figure[data-pose="explaining"] .joint-head {
         --swing: 4deg;
-        --beat: 1.6s;
-        --beats: 2;
+        animation: cut-beats 2.6s ease-in-out 0.54s;
+    }
+    .cut-figure[data-pose="explaining"] .joint-lean {
+        --swing: -2.5deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="explaining"] .joint-forearm-near {
+        --swing: 4deg;
+        animation: cut-sway 2.2s ease-in-out 0.6s;
+    }
+    .cut-figure[data-pose="explaining"] .tie {
+        --swing: 4deg;
+        animation: cut-sway 2.6s ease-in-out 0.52s;
+    }
+    .cut-figure[data-pose="explaining"] .brows {
+        --lift: -1.6px;
+        animation: cut-lift 2.4s ease-in-out 0.54s;
+    }
+    .cut-figure[data-pose="explaining"] .eye {
+        animation: cut-blink 0.2s ease-in-out 3.3s;
     }
 
-    /* In his own defense: both hands, protesting. */
+    /* In his own defense: leans back from it, both hands protesting a
+       beat apart, the head shaking no. */
+    .cut-figure[data-pose="defense"] .joint-lean {
+        --swing: 3deg;
+        animation: cut-hold 3.2s ease-in-out 0.4s;
+    }
     .cut-figure[data-pose="defense"] .joint-forearm-near {
-        --swing: -9deg;
-        --beat: 0.4s;
-        --beats: 7;
+        --swing: -10deg;
+        animation: cut-wave 2.4s ease-in-out 0.4s;
     }
     .cut-figure[data-pose="defense"] .joint-forearm-far {
-        --swing: 9deg;
-        --beat: 0.4s;
-        --beats: 7;
+        --swing: 10deg;
+        animation: cut-wave 2.4s ease-in-out 0.46s;
+    }
+    .cut-figure[data-pose="defense"] .joint-hand-near {
+        --swing: -12deg;
+        animation: cut-wave 2.4s ease-in-out 0.48s;
+    }
+    .cut-figure[data-pose="defense"] .joint-hand-far {
+        --swing: 12deg;
+        animation: cut-wave 2.4s ease-in-out 0.54s;
+    }
+    .cut-figure[data-pose="defense"] .joint-head {
+        --swing: 5deg;
+        animation: cut-wave 1.8s ease-in-out 0.6s;
+    }
+    .cut-figure[data-pose="defense"] .tie {
+        --swing: -4deg;
+        animation: cut-sway 2.6s ease-in-out 0.52s;
+    }
+    .cut-figure[data-pose="defense"] .brows {
+        --lift: -2px;
+        animation: cut-lift 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="defense"] .eye {
+        animation: cut-blink 0.2s ease-in-out 3.7s;
     }
 
-    /* Pointing it out, more than once. */
+    /* Pointing it out, more than once: the arm jabs, the elbow and the
+       finger snap after it, and he leans toward it. */
     .cut-figure[data-pose="pointing"] .joint-arm-far {
         --swing: -6deg;
-        --beat: 0.5s;
-        --beats: 5;
+        animation: cut-beats 2.4s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="pointing"] .joint-forearm-far {
+        --swing: 8deg;
+        animation: cut-beats 2.4s ease-in-out 0.46s;
+    }
+    .cut-figure[data-pose="pointing"] .joint-hand-far {
+        --swing: 14deg;
+        animation: cut-beats 2.4s ease-in-out 0.52s;
+    }
+    .cut-figure[data-pose="pointing"] .joint-lean {
+        --swing: 3deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
     }
     .cut-figure[data-pose="pointing"] .joint-head {
-        --swing: -4deg;
-        --beat: 1.25s;
-        --beats: 2;
+        --swing: -5deg;
+        animation: cut-beats 2.4s ease-in-out 0.5s;
+    }
+    .cut-figure[data-pose="pointing"] .joint-forearm-near {
+        --swing: 5deg;
+        animation: cut-sway 2.2s ease-in-out 0.5s;
+    }
+    .cut-figure[data-pose="pointing"] .tie {
+        --swing: -5deg;
+        animation: cut-sway 2.4s ease-in-out 0.55s;
+    }
+    .cut-figure[data-pose="pointing"] .brows {
+        --lift: -1.5px;
+        animation: cut-lift 2.4s ease-in-out 0.5s;
+    }
+    .cut-figure[data-pose="pointing"] .eye {
+        animation: cut-blink 0.2s ease-in-out 3.4s;
     }
 
-    /* Asked about it: the shoulders go up, and up again. */
-    .cut-figure[data-pose="shrug"] .joint-arm-near {
-        --swing: 10deg;
-        --beat: 0.9s;
-        --beats: 3;
+    /* Asked about it: the shoulders go up, and up again, the palms turn
+       out, the head cocks and the brows go up with them. */
+    .cut-figure[data-pose="shrug"] :is(.joint-arm-near, .joint-arm-far) {
+        --swing: 9deg;
+        animation: cut-hold 1.5s ease-in-out 0.4s 2;
     }
     .cut-figure[data-pose="shrug"] .joint-arm-far {
+        --swing: -9deg;
+    }
+    .cut-figure[data-pose="shrug"]
+        :is(.joint-forearm-near, .joint-forearm-far) {
+        --swing: 10deg;
+        animation: cut-hold 1.5s ease-in-out 0.45s 2;
+    }
+    .cut-figure[data-pose="shrug"] .joint-forearm-far {
         --swing: -10deg;
-        --beat: 0.9s;
-        --beats: 3;
+    }
+    .cut-figure[data-pose="shrug"] :is(.joint-hand-near, .joint-hand-far) {
+        --swing: -14deg;
+        animation: cut-hold 1.5s ease-in-out 0.5s 2;
+    }
+    .cut-figure[data-pose="shrug"] .joint-hand-far {
+        --swing: 14deg;
     }
     .cut-figure[data-pose="shrug"] .joint-head {
-        --swing: 6deg;
-        --beat: 0.9s;
-        --beats: 3;
+        --swing: 7deg;
+        animation: cut-hold 1.5s ease-in-out 0.48s 2;
+    }
+    .cut-figure[data-pose="shrug"] .joint-lean {
+        --swing: 1.5deg;
+        animation: cut-hold 1.5s ease-in-out 0.4s 2;
+    }
+    .cut-figure[data-pose="shrug"] .tie {
+        --swing: 3deg;
+        animation: cut-sway 1.5s ease-in-out 0.5s 2;
+    }
+    .cut-figure[data-pose="shrug"] .brows {
+        --lift: -2.2px;
+        animation: cut-lift 1.5s ease-in-out 0.4s 2;
+    }
+    .cut-figure[data-pose="shrug"] .eye {
+        animation: cut-blink 0.2s ease-in-out 2.3s;
     }
 
-    /* Satisfied: a nod, to himself. */
+    /* Satisfied: sits back on his heels, elbows out, and nods to himself,
+       with one slow blink. */
     .cut-figure[data-pose="satisfied"] .joint-head {
         --swing: -6deg;
-        --beat: 1s;
-        --beats: 3;
+        animation: cut-beats 2.4s ease-in-out 0.6s;
+    }
+    .cut-figure[data-pose="satisfied"] .joint-lean {
+        --swing: -2.5deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="satisfied"] .joint-arm-near {
+        --swing: 3deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="satisfied"] .joint-arm-far {
+        --swing: -3deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="satisfied"] .joint-forearm-near {
+        --swing: -4deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="satisfied"] .joint-forearm-far {
+        --swing: 4deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="satisfied"] .tie {
+        --swing: -3deg;
+        animation: cut-sway 2.4s ease-in-out 0.55s;
+    }
+    .cut-figure[data-pose="satisfied"] .brows {
+        --lift: -1.4px;
+        animation: cut-lift 2.6s ease-in-out 0.6s;
+    }
+    .cut-figure[data-pose="satisfied"] .eye {
+        animation: cut-blink 0.55s ease-in-out 3.1s;
     }
 
-    /* On his way out: still waving. */
+    /* On his way out: still waving, from the wrist, leaning toward the
+       door, the near foot already going. */
     .cut-figure[data-pose="leaving"] .joint-forearm-far {
-        --swing: -26deg;
-        --beat: 0.45s;
-        --beats: 8;
+        --swing: -24deg;
+        animation: cut-wave 2.6s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="leaving"] .joint-hand-far {
+        --swing: -22deg;
+        animation: cut-wave 2.6s ease-in-out 0.48s;
+    }
+    .cut-figure[data-pose="leaving"] .joint-arm-far {
+        --swing: -5deg;
+        animation: cut-wave 2.6s ease-in-out 0.43s;
+    }
+    .cut-figure[data-pose="leaving"] .joint-lean {
+        --swing: -3deg;
+        animation: cut-hold 3.2s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="leaving"] .joint-head {
+        --swing: -5deg;
+        animation: cut-hold 3.2s ease-in-out 0.5s;
+    }
+    .cut-figure[data-pose="leaving"] .joint-leg-near {
+        --swing: 6deg;
+        animation: cut-hold 2.8s ease-in-out 0.8s;
+    }
+    .cut-figure[data-pose="leaving"] .joint-forearm-near {
+        --swing: 6deg;
+        animation: cut-sway 2.4s ease-in-out 0.55s;
+    }
+    .cut-figure[data-pose="leaving"] .tie {
+        --swing: 5deg;
+        animation: cut-sway 2.6s ease-in-out 0.5s;
+    }
+    .cut-figure[data-pose="leaving"] .eye {
+        animation: cut-blink 0.2s ease-in-out 3.5s;
     }
 
-    /* On the phone: nodding into it, the free hand making the point. */
+    /* On the phone: nodding into it, uh-huh, six times, while the free
+       hand makes the point the caller cannot see. */
     .cut-figure[data-pose="phone"] .joint-head {
         --swing: 5deg;
-        --beat: 0.6s;
-        --beats: 6;
+        animation: cut-beats 1.5s ease-in-out 0.4s 2;
+    }
+    .cut-figure[data-pose="phone"] .joint-arm-near {
+        --swing: -4deg;
+        animation: cut-beats 2.4s ease-in-out 0.7s;
     }
     .cut-figure[data-pose="phone"] .joint-forearm-near {
-        --swing: 24deg;
-        --beat: 1.2s;
-        --beats: 3;
+        --swing: 22deg;
+        animation: cut-beats 2.4s ease-in-out 0.72s;
+    }
+    .cut-figure[data-pose="phone"] .joint-hand-near {
+        --swing: 16deg;
+        animation: cut-beats 2.4s ease-in-out 0.8s;
+    }
+    .cut-figure[data-pose="phone"] .joint-lean {
+        --swing: 1.5deg;
+        animation: cut-hold 3s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="phone"] .tie {
+        --swing: 3deg;
+        animation: cut-sway 2.4s ease-in-out 0.8s;
+    }
+    .cut-figure[data-pose="phone"] .brows {
+        --lift: -1.5px;
+        animation: cut-lift 2.4s ease-in-out 0.7s;
+    }
+    .cut-figure[data-pose="phone"] .eye {
+        animation: cut-blink 0.2s ease-in-out 3.4s;
     }
 
-    /* Considering it: the hand at the head scratches it. */
+    /* Considering it: scratches his head in three goes, the head tipped
+       into it and the brows down. */
+    .cut-figure[data-pose="considering"] .joint-hand-near {
+        --swing: 16deg;
+        animation: cut-wave 1s ease-in-out 0.4s 3;
+    }
     .cut-figure[data-pose="considering"] .joint-forearm-near {
-        --swing: 8deg;
-        --beat: 0.3s;
-        --beats: 10;
+        --swing: 5deg;
+        animation: cut-wave 1s ease-in-out 0.44s 3;
     }
     .cut-figure[data-pose="considering"] .joint-head {
-        --swing: -4deg;
-        --beat: 1.5s;
-        --beats: 2;
+        --swing: -5deg;
+        animation: cut-hold 3.2s ease-in-out 0.5s;
+    }
+    .cut-figure[data-pose="considering"] .joint-lean {
+        --swing: -1.5deg;
+        animation: cut-hold 3.2s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="considering"] .joint-forearm-far {
+        --swing: -3deg;
+        animation: cut-sway 2.2s ease-in-out 0.6s;
+    }
+    .cut-figure[data-pose="considering"] .tie {
+        --swing: 2deg;
+        animation: cut-sway 2.2s ease-in-out 0.6s;
+    }
+    .cut-figure[data-pose="considering"] .brows {
+        --lift: 1.2px;
+        animation: cut-lift 3.2s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="considering"] .eye {
+        animation: cut-blink 0.2s ease-in-out 3.8s;
     }
 
-    /* Standing by is standing by. */
+    /* Standing by is standing by. He blinks once. */
+    .cut-figure[data-pose="standingBy"] .eye {
+        animation: cut-blink 0.2s ease-in-out 2.4s;
+    }
 
-    /* Resting his eyes. */
+    /* Resting his eyes, which stay open: he nods off and slumps, catches
+       himself, the brows go up, he blinks twice, and the arms and the tie
+       swing from the jolt. */
     .cut-figure[data-pose="resting"] .joint-head {
         --swing: 16deg;
-        --beat: 1.6s;
-        --beats: 2;
-        animation-name: cut-doze;
+        animation: cut-doze 3.2s ease-in-out 0.4s;
+    }
+    .cut-figure[data-pose="resting"] .joint-lean {
+        --swing: 4deg;
+        animation: cut-doze 3.2s ease-in-out 0.45s;
+    }
+    .cut-figure[data-pose="resting"] .joint-forearm-near {
+        --swing: 6deg;
+        animation: cut-sway 1.4s ease-in-out 2.45s;
+    }
+    .cut-figure[data-pose="resting"] .joint-forearm-far {
+        --swing: -6deg;
+        animation: cut-sway 1.4s ease-in-out 2.5s;
+    }
+    .cut-figure[data-pose="resting"] .tie {
+        --swing: 6deg;
+        animation: cut-sway 1.6s ease-in-out 2.45s;
+    }
+    .cut-figure[data-pose="resting"] .brows {
+        --lift: -2.4px;
+        animation: cut-lift 1.4s ease-in-out 2.4s;
+    }
+    .cut-figure[data-pose="resting"] .eye {
+        animation: cut-blink 0.18s ease-in-out 2.55s 2;
     }
 
     /* The props that move: the rain and the shower fall, the alarm clock
-       rings, the smoke alarm chirps. */
+       rings in bursts, the smoke alarm chirps, and the shelf gives a
+       little more. */
     .cut-figure[data-pose] :is(.scene-rain, .scene-shower) .hatch {
         animation: cut-fall 0.5s linear 0.4s 8;
     }
     .cut-figure[data-pose] .ring {
-        --swing: 9deg;
-        animation: cut-swing 0.16s linear 0.4s 14;
+        --swing: 7deg;
+        animation: cut-ring 2.4s linear 0.4s;
     }
     .cut-figure[data-pose] .scene-smoke .detail:last-child {
-        animation: cut-chirp 1s linear 0.4s 4;
+        animation: cut-chirp 1s ease-out 0.4s 4;
+    }
+    .cut-figure[data-pose] > g {
+        animation: cut-boil 0.36s step-end 0.4s 11;
+    }
+    .cut-figure[data-pose] .scene-shelf > :not(:last-child) {
+        --swing: 2.5deg;
+        animation: cut-sway 1.6s ease-in-out 1.6s;
     }
 }
 

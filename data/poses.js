@@ -5,10 +5,13 @@
 // social card draws the cut in the same pose (functions/lib/cut.mjs).
 //
 // Zero on every joint stands him to attention. Positive turns a joint
-// clockwise as drawn: the near arm (his left, the viewer's left) swings
-// out, the far arm swings in. The arms are drawn behind the torso and the
-// head, so a hand brought in front of either is hidden; a pose keeps its
-// hands out at the sides, or up by the ear.
+// clockwise as drawn: the near arm (the viewer's left) swings out, the
+// far arm swings in, and `lean` tips everything above the belt to the
+// viewer's right, on the legs, which stay where they stand. The hands turn
+// at the wrist. The arms are drawn in front of the jacket and the head, so
+// a hand can rest on a hip or scratch his head; the tops of the sleeves go
+// under the jacket's shoulders, so an arm turns at the shoulder without
+// showing where it ends.
 //
 // The caption follows "FILE —" in the cutline. The alt text says what the
 // drawing shows, for a reader who cannot see it.
@@ -18,10 +21,13 @@ export const POSES = {
         alt: 'Line-cut of a man standing with one hand raised, explaining.',
         joints: {
             tilt: -4,
+            lean: -2,
             armNear: 7,
             forearmNear: 9,
+            handNear: 0,
             armFar: -22,
             forearmFar: -122,
+            handFar: -10,
             legNear: 2,
             legFar: -3,
         },
@@ -31,10 +37,13 @@ export const POSES = {
         alt: 'Line-cut of a man with both hands raised.',
         joints: {
             tilt: -4,
+            lean: 4,
             armNear: 22,
             forearmNear: 122,
+            handNear: -14,
             armFar: -22,
             forearmFar: -122,
+            handFar: 14,
             legNear: 2,
             legFar: -3,
         },
@@ -44,10 +53,13 @@ export const POSES = {
         alt: 'Line-cut of a man pointing to one side, arm straight out.',
         joints: {
             tilt: -8,
+            lean: 3,
             armNear: 7,
             forearmNear: 9,
+            handNear: 0,
             armFar: -96,
             forearmFar: 8,
+            handFar: 4,
             legNear: 2,
             legFar: -3,
         },
@@ -57,10 +69,13 @@ export const POSES = {
         alt: 'Line-cut of a man shrugging, palms up.',
         joints: {
             tilt: 10,
+            lean: 0,
             armNear: 48,
             forearmNear: 92,
+            handNear: -24,
             armFar: -48,
             forearmFar: -92,
+            handFar: 24,
             legNear: 2,
             legFar: -3,
         },
@@ -70,10 +85,13 @@ export const POSES = {
         alt: 'Line-cut of a man standing with his hands on his hips.',
         joints: {
             tilt: -6,
+            lean: -2,
             armNear: 34,
             forearmNear: -70,
+            handNear: 0,
             armFar: -34,
             forearmFar: 70,
+            handFar: 0,
             legNear: 6,
             legFar: -6,
         },
@@ -83,10 +101,13 @@ export const POSES = {
         alt: 'Line-cut of a man waving, one arm high.',
         joints: {
             tilt: -6,
+            lean: -4,
             armNear: 6,
             forearmNear: 6,
+            handNear: 0,
             armFar: -150,
             forearmFar: -20,
+            handFar: 12,
             legNear: 2,
             legFar: -3,
         },
@@ -96,10 +117,13 @@ export const POSES = {
         alt: 'Line-cut of a man with one hand held to his ear.',
         joints: {
             tilt: 8,
+            lean: 2,
             armNear: 4,
             forearmNear: 4,
+            handNear: 0,
             armFar: -80,
             forearmFar: -151,
+            handFar: 0,
             legNear: 2,
             legFar: -3,
         },
@@ -109,10 +133,13 @@ export const POSES = {
         alt: 'Line-cut of a man with one hand raised to his head.',
         joints: {
             tilt: -8,
-            armNear: 58,
-            forearmNear: 163,
+            lean: -2,
+            armNear: 140,
+            forearmNear: 109,
+            handNear: -30,
             armFar: -3,
             forearmFar: -2,
+            handFar: 0,
             legNear: 2,
             legFar: -3,
         },
@@ -122,10 +149,13 @@ export const POSES = {
         alt: 'Line-cut of a man standing to attention, arms at his sides.',
         joints: {
             tilt: 0,
+            lean: 0,
             armNear: 0,
             forearmNear: 0,
+            handNear: 0,
             armFar: 0,
             forearmFar: 0,
+            handFar: 0,
             legNear: 0,
             legFar: 0,
         },
@@ -136,10 +166,13 @@ export const POSES = {
         alt: 'Line-cut of a man standing with his head to one side, eyes open.',
         joints: {
             tilt: 14,
+            lean: 3,
             armNear: 2,
             forearmNear: 0,
+            handNear: 0,
             armFar: -2,
             forearmFar: 0,
+            handFar: 0,
             legNear: 0,
             legFar: 0,
         },

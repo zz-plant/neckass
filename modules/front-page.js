@@ -102,10 +102,13 @@ function setWeatherCut(line) {
 // plays once when the pose is set.
 const JOINTS = {
     tilt: '--tilt',
+    lean: '--lean',
     armNear: '--arm-near',
     forearmNear: '--forearm-near',
+    handNear: '--hand-near',
     armFar: '--arm-far',
     forearmFar: '--forearm-far',
+    handFar: '--hand-far',
     legNear: '--leg-near',
     legFar: '--leg-far',
 };
