@@ -20,7 +20,7 @@ complexity. The front page is the product.
 - `worker.js` — the Cloudflare Worker's entry: routes the feed and the card to their handlers in `functions/` and runs the middleware in front of them and the front page. `wrangler.jsonc` configures it.
 - `functions/` — the edge handlers, written as Pages Functions and imported by `worker.js`: the feed, the social card, the middleware; `lib/issue.mjs` is a UTC adapter over `modules/issue.js`, `lib/card.mjs` holds the card layout and its one renderer.
 - `.assetsignore` — an allowlist: the repository root is the Worker's assets directory, and only the files it lets back in are published. A new top-level directory the pages load from has to be added to it; the smoke suite fails if a page names a file the edge does not serve.
-- `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`. The file cut has three copies (the rig, the front page's inline one, `functions/lib/cut.mjs`); change all three together, and the smoke test checks that you did.
+- `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`. The file cut has three copies (the rig, the front page's inline one, `functions/lib/cut.mjs`); the figure in all three is drawn by `scripts/draw-cut.ts`, so change it there and run `bun run cut:draw`. The smoke test checks that the copies agree.
 - `fonts/` — Fraunces: variable woff2 for the page, two static TTFs for the card.
 
 ## Change priorities

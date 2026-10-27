@@ -29,10 +29,13 @@ const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 // The rig's joints by the name the CSS gives them and the name a pose does.
 const RIG_JOINTS = {
     head: ['--tilt', 'tilt'],
+    lean: ['--lean', 'lean'],
     'arm-near': ['--arm-near', 'armNear'],
     'forearm-near': ['--forearm-near', 'forearmNear'],
+    'hand-near': ['--hand-near', 'handNear'],
     'arm-far': ['--arm-far', 'armFar'],
     'forearm-far': ['--forearm-far', 'forearmFar'],
+    'hand-far': ['--hand-far', 'handFar'],
     'leg-near': ['--leg-near', 'legNear'],
     'leg-far': ['--leg-far', 'legFar'],
 };

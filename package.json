@@ -10,6 +10,7 @@
     "format": "biome format --write .",
     "assets:check": "bun run scripts/check-assets.ts",
     "assets:generate": "bun run scripts/generate-scenes.ts",
+    "cut:draw": "bun run scripts/draw-cut.ts",
     "og:generate": "bun run scripts/generate-og.ts",
     "edge": "wrangler dev --port 8800 --inspector-port 0 --log-level warn",
     "deploy": "wrangler deploy"

@@ -183,6 +183,14 @@ minimum byte size per scene, and fails on any PNG that is not a known scene —
 that last rule is what stops hand-added files rotting in the directory
 unnoticed. Both scripts read their scene list from `scripts/asset-specs.ts`.
 
+### The file cut
+
+The man in `assets/cuts/neckass.svg`, the front page's inlined copy of him
+and the card's flattened one are drawn by `bun run cut:draw`, from the
+geometry in `scripts/draw-cut.ts` and a hand that bows each line from a
+fixed seed, so the three agree to the stroke and a redraw is repeatable.
+Run `bun run og:generate` after it.
+
 ### Social preview cards
 
 `og-image.png`, `og-about.png`, `og-archive.png` and `og-prompts.png` live at
