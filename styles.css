@@ -955,6 +955,253 @@ a:focus-visible {
     transform: rotate(var(--leg-far, -3deg));
 }
 
+/* The scene: what the lead's story happens among (data/scenes.js). Each
+   prop is a layer of the cut, off until front-page.js sets its switch to
+   1, so the standing issue has him on the bare sheet. The phone, the cup
+   and the hat are held and turn with the joint that holds them; the rest
+   stand behind him on his ground, in the margin the box keeps for a
+   thrown limb. */
+.cut-figure .scene-phone {
+    opacity: var(--phone, 0);
+}
+.cut-figure .scene-cup {
+    opacity: var(--cup, 0);
+}
+.cut-figure .scene-hat {
+    opacity: var(--hat, 0);
+}
+.cut-figure .scene-doorway {
+    opacity: var(--doorway, 0);
+}
+.cut-figure .scene-couch {
+    opacity: var(--couch, 0);
+}
+.cut-figure .scene-fridge {
+    opacity: var(--fridge, 0);
+}
+.cut-figure .scene-tv {
+    opacity: var(--tv, 0);
+}
+.cut-figure .scene-desk {
+    opacity: var(--desk, 0);
+}
+.cut-figure .scene-table {
+    opacity: var(--table, 0);
+}
+.cut-figure .scene-easel {
+    opacity: var(--easel, 0);
+}
+.cut-figure .scene-signpost {
+    opacity: var(--signpost, 0);
+}
+.cut-figure .scene-shelf {
+    opacity: var(--shelf, 0);
+}
+.cut-figure .scene-clock {
+    opacity: var(--clock, 0);
+}
+.cut-figure .scene-alarm {
+    opacity: var(--alarm, 0);
+}
+.cut-figure .scene-parcel {
+    opacity: var(--parcel, 0);
+}
+.cut-figure .scene-shoe {
+    opacity: var(--shoe, 0);
+}
+.cut-figure .scene-rain {
+    opacity: var(--rain, 0);
+}
+.cut-figure .scene-shower {
+    opacity: var(--shower, 0);
+}
+.cut-figure .scene-smoke {
+    opacity: var(--smoke, 0);
+}
+
+/* The alarm clock rings on its own legs; the bedside table stays put. */
+.cut-figure .ring {
+    transform-box: view-box;
+    transform-origin: 168px 224px;
+}
+
+/* Motion. Once the desk has set the pose, the cut acts it out — he waves,
+   he nods into the phone, he dozes off and catches himself — and then
+   stands in the pose as printed. Each swing is a `rotate` added to the
+   joint's own rotation, so it always comes to rest where the pose put
+   it. Nothing runs longer than four and a half seconds, and nothing
+   repeats after that, so a paper with no controls needs none to stop it;
+   asked for less motion, it does not play at all, and he stands by. */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes cut-swing {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+        50% {
+            rotate: var(--swing);
+        }
+    }
+
+    /* Nodding off: the head goes slowly and comes back at once. */
+    @keyframes cut-doze {
+        0%,
+        100% {
+            rotate: 0deg;
+        }
+        72% {
+            rotate: var(--swing);
+        }
+        80% {
+            rotate: -3deg;
+        }
+    }
+
+    @keyframes cut-fall {
+        from {
+            translate: 5px -14px;
+        }
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes cut-chirp {
+        0%,
+        55%,
+        100% {
+            opacity: 1;
+        }
+        62%,
+        90% {
+            opacity: 0;
+        }
+    }
+
+    /* Every joint is still unless its pose gives it beats. The values are
+       set here on each joint, so a forearm does not inherit its upper
+       arm's swing and move twice. */
+    .cut-figure[data-pose] [class^="joint-"] {
+        --beat: 0.8s;
+        --beats: 0;
+        --swing: 0deg;
+        animation: cut-swing var(--beat) ease-in-out 0.4s var(--beats);
+    }
+
+    /* Explaining: the raised hand makes the point four times. */
+    .cut-figure[data-pose="explaining"] .joint-forearm-far {
+        --swing: 16deg;
+        --beats: 4;
+    }
+    .cut-figure[data-pose="explaining"] .joint-head {
+        --swing: 4deg;
+        --beat: 1.6s;
+        --beats: 2;
+    }
+
+    /* In his own defense: both hands, protesting. */
+    .cut-figure[data-pose="defense"] .joint-forearm-near {
+        --swing: -9deg;
+        --beat: 0.4s;
+        --beats: 7;
+    }
+    .cut-figure[data-pose="defense"] .joint-forearm-far {
+        --swing: 9deg;
+        --beat: 0.4s;
+        --beats: 7;
+    }
+
+    /* Pointing it out, more than once. */
+    .cut-figure[data-pose="pointing"] .joint-arm-far {
+        --swing: -6deg;
+        --beat: 0.5s;
+        --beats: 5;
+    }
+    .cut-figure[data-pose="pointing"] .joint-head {
+        --swing: -4deg;
+        --beat: 1.25s;
+        --beats: 2;
+    }
+
+    /* Asked about it: the shoulders go up, and up again. */
+    .cut-figure[data-pose="shrug"] .joint-arm-near {
+        --swing: 10deg;
+        --beat: 0.9s;
+        --beats: 3;
+    }
+    .cut-figure[data-pose="shrug"] .joint-arm-far {
+        --swing: -10deg;
+        --beat: 0.9s;
+        --beats: 3;
+    }
+    .cut-figure[data-pose="shrug"] .joint-head {
+        --swing: 6deg;
+        --beat: 0.9s;
+        --beats: 3;
+    }
+
+    /* Satisfied: a nod, to himself. */
+    .cut-figure[data-pose="satisfied"] .joint-head {
+        --swing: -6deg;
+        --beat: 1s;
+        --beats: 3;
+    }
+
+    /* On his way out: still waving. */
+    .cut-figure[data-pose="leaving"] .joint-forearm-far {
+        --swing: -26deg;
+        --beat: 0.45s;
+        --beats: 8;
+    }
+
+    /* On the phone: nodding into it, the free hand making the point. */
+    .cut-figure[data-pose="phone"] .joint-head {
+        --swing: 5deg;
+        --beat: 0.6s;
+        --beats: 6;
+    }
+    .cut-figure[data-pose="phone"] .joint-forearm-near {
+        --swing: 24deg;
+        --beat: 1.2s;
+        --beats: 3;
+    }
+
+    /* Considering it: the hand at the head scratches it. */
+    .cut-figure[data-pose="considering"] .joint-forearm-near {
+        --swing: 8deg;
+        --beat: 0.3s;
+        --beats: 10;
+    }
+    .cut-figure[data-pose="considering"] .joint-head {
+        --swing: -4deg;
+        --beat: 1.5s;
+        --beats: 2;
+    }
+
+    /* Standing by is standing by. */
+
+    /* Resting his eyes. */
+    .cut-figure[data-pose="resting"] .joint-head {
+        --swing: 16deg;
+        --beat: 1.6s;
+        --beats: 2;
+        animation-name: cut-doze;
+    }
+
+    /* The props that move: the rain and the shower fall, the alarm clock
+       rings, the smoke alarm chirps. */
+    .cut-figure[data-pose] :is(.scene-rain, .scene-shower) .hatch {
+        animation: cut-fall 0.5s linear 0.4s 8;
+    }
+    .cut-figure[data-pose] .ring {
+        --swing: 9deg;
+        animation: cut-swing 0.16s linear 0.4s 14;
+    }
+    .cut-figure[data-pose] .scene-smoke .detail:last-child {
+        animation: cut-chirp 1s linear 0.4s 4;
+    }
+}
+
 .cut figcaption {
     font-size: 0.86rem;
     line-height: 1.45;

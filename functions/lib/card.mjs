@@ -117,15 +117,17 @@ export async function renderCardPng(element, { width, height, fonts }) {
 }
 
 /**
- * @param {{ folio: string, headline: string, deck: string, pose?: object }} card
+ * @param {{ folio: string, headline: string, deck: string, pose?: object, scene?: string[] }} card
  *   folio: the right of the top line — the issue's date and number, or the
  *   page's name. pose: an entry of data/poses.js; the house pose if none.
+ *   scene: keys of data/scenes.js the cut is drawn among; none if none.
  */
 export function cardElement({
     folio,
     headline,
     deck,
     pose = POSES.explaining,
+    scene = [],
 }) {
     // The wire's lines: monospace capitals, as the folio line sets them.
     const wire = {
@@ -238,7 +240,7 @@ export function cardElement({
                     {
                         type: 'img',
                         props: {
-                            src: cutSrc(pose.joints),
+                            src: cutSrc(pose.joints, scene),
                             width: cutWidth,
                             height: cutHeight,
                         },

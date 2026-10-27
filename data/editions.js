@@ -19,6 +19,7 @@ export const EDITIONS = {
             deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
             byline: 'Staff report',
             pose: 'explaining',
+            scene: ['doorway', 'shoe'],
             correction:
                 'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
             followUp:
@@ -57,6 +58,7 @@ export const EDITIONS = {
             deck: 'He came to the office Friday to ask that the paper stop. He stayed forty minutes. He has appeared in one hundred issues and read four, one of them twice.',
             byline: 'Staff report',
             pose: 'defense',
+            scene: ['desk'],
             correction:
                 'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
             followUp:
@@ -86,6 +88,7 @@ export const EDITIONS = {
             deck: 'A neighbor called the desk Saturday to say there was a man in a hat on her street "doing all the same things." It was the same man. The hat is new.',
             byline: 'From wire reports',
             pose: 'satisfied',
+            scene: ['hat'],
             correction:
                 "We reported that the hat is new. It is his father's. He has had it since March and worn it since Saturday.",
             followUp:
@@ -114,6 +117,7 @@ export const EDITIONS = {
             deck: 'Asked about it, he said he had "been meaning to read it." The paper is delivered to his door. He steps over it.',
             byline: 'From wire reports',
             pose: 'shrug',
+            scene: ['doorway'],
             correction:
                 'We reported that Neckass steps over the paper. He steps on it.',
             followUp:
@@ -143,6 +147,7 @@ export const EDITIONS = {
             deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
             byline: 'From wire reports',
             pose: 'considering',
+            scene: ['table'],
             correction:
                 'We reported that Neckass was holding a copy of the paper. He was holding it, and reading his phone.',
             followUp:

@@ -6,6 +6,7 @@
  * archive.
  */
 
+import { SCENES } from '../data/scenes.js';
 import {
     composeIssue,
     issueNumber,
@@ -95,8 +96,10 @@ function setWeatherCut(line) {
 }
 
 // The file cut is the rig from assets/cuts/neckass.svg, inlined; each joint
-// turns on a custom property. The lead names the pose (data/poses.js), and
-// the cutline and the alt text say what it is.
+// turns on a custom property. The lead names the pose (data/poses.js) and
+// the scene (data/scenes.js), each prop a layer with a switch; the cutline
+// and the alt text say what it is. data-pose picks the motion styles.css
+// plays once when the pose is set.
 const JOINTS = {
     tilt: '--tilt',
     armNear: '--arm-near',
@@ -107,14 +110,18 @@ const JOINTS = {
     legFar: '--leg-far',
 };
 
-function setCutPose(pose) {
+function setCut({ pose, poseName, scene = [], cutAlt }) {
     const cut = document.getElementById('cut-figure');
     if (!cut || !pose) return;
 
     for (const [joint, angle] of Object.entries(pose.joints)) {
         if (JOINTS[joint]) cut.style.setProperty(JOINTS[joint], `${angle}deg`);
     }
-    cut.setAttribute('aria-label', pose.alt);
+    for (const prop of Object.keys(SCENES)) {
+        cut.style.setProperty(`--${prop}`, scene.includes(prop) ? '1' : '0');
+    }
+    cut.dataset.pose = poseName;
+    cut.setAttribute('aria-label', cutAlt || pose.alt);
     textInto('#cut-caption', pose.caption);
 }
 
@@ -154,7 +161,7 @@ function renderIssue(issue) {
     listInto('#briefs-list', issue.briefs, (li, brief) => {
         li.textContent = brief;
     });
-    setCutPose(issue.pose);
+    setCut(issue);
 
     // The correction that retracts yesterday's lead says which issue it
     // retracts, and links to it, so the reader can read what was wrong.

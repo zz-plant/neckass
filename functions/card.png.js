@@ -31,6 +31,7 @@ import {
     issueNumber,
     parseIssueDate,
     poseOf,
+    sceneOf,
     selectLead,
 } from './lib/issue.mjs';
 
@@ -76,6 +77,7 @@ export async function onRequestGet({ request, env }) {
         headline: lead.headline,
         deck: lead.deck,
         pose: poseOf(lead),
+        scene: sceneOf(lead),
     };
     const png = await renderCardPng(cardElement(card), {
         width: WIDTH,
