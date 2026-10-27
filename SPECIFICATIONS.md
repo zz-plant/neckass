@@ -144,7 +144,33 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   pose, which is what the standing issue shows. The box keeps a margin on
   three sides for a thrown limb, so a pose never draws over the column rule
   or the cutline. The inks are the page's tokens, so the cut follows the
-  theme and the print sheet.
+  theme and the print sheet. It is drawn by hand in one fine-point marker:
+  one black, nearly one weight, round ends, no line quite straight. Each
+  limb is a capsule round on its pivots, so an elbow or shoulder turned to
+  any angle stays round; the head sits behind the jacket, the neck in its
+  open collar.
+- **The scene** — a lead may also name what its story happens among, from
+  `data.SCENES`: a phone, a coffee cup or a hat, which he holds or wears
+  and which turn with him; or a couch, a television, a desk, a table, a
+  doorway, an open fridge, a flip chart, a signpost, a shelf coming off the
+  wall, a wall clock, a bedside alarm, a package, a shoe, the rain, a
+  running shower or a smoke alarm, which stand behind him on his ground, in
+  the margin the box already keeps. Each is a layer of the same drawing with
+  a switch (`--phone: 1`), off by default, so the standing issue and the rig
+  as an `<img>` show him on the bare sheet. `front-page.js` sets every
+  switch, on or off, from the lead, and the scene finishes the figure's
+  `aria-label`: *Line-cut of a man with one hand held to his ear, holding a
+  phone, in front of a couch.* The cutline names the pose only.
+- **The cut's motion** — once `front-page.js` has set the pose (as
+  `data-pose`), the cut acts it out: the raised hand makes its point, he
+  nods into the phone, waves on his way out, shrugs, protests, scratches
+  his head, and, resting his eyes, nods off and catches himself; standing
+  by, he stands by. The rain and the shower fall, the alarm clock rings, the
+  smoke alarm chirps. Each swing is a `rotate` added to the joint's pose, so
+  the drawing comes to rest exactly as printed. It plays once, after 0.4s,
+  and every motion is over by 4.4s, so a page with no controls needs none to
+  stop it (WCAG 2.2.2); nothing flashes. Under `prefers-reduced-motion:
+  reduce` none of it runs. The card and the print sheet are still.
 - **Reading-page side heads** — at ≥900px, a `.seo-copy` that has
   `.section-label` children (the entry, the standards) becomes a 200px / 68ch
   grid: the title and copy in the text column, each head in the margin with

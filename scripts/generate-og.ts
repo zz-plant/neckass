@@ -45,6 +45,8 @@ export type OgCard = {
     deck: string;
     /** How the file cut stands beside it (data/poses.js). */
     pose: keyof typeof POSES;
+    /** What it stands among (data/scenes.js), if anything. */
+    scene?: string[];
 };
 
 export const OG_CARDS: OgCard[] = [
@@ -56,8 +58,9 @@ export const OG_CARDS: OgCard[] = [
         headline:
             'Neckass has been "five minutes away" since 2019. He is at home.',
         deck: 'He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.',
-        // The pose that lead carries in data/formats.js.
+        // The pose and scene that lead carries in data/formats.js.
         pose: 'phone',
+        scene: ['phone', 'couch'],
     },
     {
         file: 'og-about.png',

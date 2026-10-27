@@ -21,6 +21,7 @@ import {
 } from '../data/formats.js';
 import { HEADLINES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
+import { SCENES } from '../data/scenes.js';
 import { itemsFor as calendarItemsFor } from './calendar.js';
 
 export const FIRST_EDITION = Date.UTC(2024, 8, 29);
@@ -250,6 +251,27 @@ export function poseOf(lead) {
     return POSES[lead?.pose] || POSES.explaining;
 }
 
+// The pose's name, for the motion the page gives it: the same fallback.
+export function poseNameOf(lead) {
+    return POSES[lead?.pose] ? lead.pose : 'explaining';
+}
+
+// What the cut is drawn among for a lead (data/scenes.js), in the
+// scene's own order, held props first; a name the cut has no layer for
+// is dropped rather than drawn as nothing.
+export function sceneOf(lead) {
+    const named = new Set(Array.isArray(lead?.scene) ? lead.scene : []);
+    return Object.keys(SCENES).filter((key) => named.has(key));
+}
+
+// The cut's alt text: the pose's, finished with the scene's.
+export function cutAltOf(lead) {
+    const alt = poseOf(lead).alt;
+    const scene = sceneOf(lead).map((key) => SCENES[key].alt);
+    if (!scene.length) return alt;
+    return `${alt.replace(/\.$/, '')}, ${scene.join(', ')}.`;
+}
+
 // The earliest issues are shorter. He had done less. The briefs column
 // grows one item every six weeks or so until it reaches its full seven,
 // and for the first two months the letters page carries one letter.
@@ -313,6 +335,9 @@ export function composeIssue(date = new Date()) {
         issueParam: toIssueParam(date),
         lead,
         pose: poseOf(lead),
+        poseName: poseNameOf(lead),
+        scene: sceneOf(lead),
+        cutAlt: cutAltOf(lead),
         editorial: null,
         tag: null,
         briefs: [

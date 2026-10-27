@@ -13,7 +13,8 @@
 // detail and leaves the damning part standing), the brief that runs the
 // next day at the top of the column, in which he has done the next
 // thing, and the classified and the letter from the person he did it to.
-// Its pose is how the file cut stands beside it (data/poses.js). issue.js
+// Its pose is how the file cut stands beside it (data/poses.js), and its
+// scene, where it names one, what he stands among (data/scenes.js). issue.js
 // runs all of them in the same issue, so the page compounds: the lead,
 // then the ad, then the letter. The general pools below hold everything
 // not tied to a lead.
@@ -24,6 +25,7 @@ export const LEADS = [
         deck: 'He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.',
         byline: 'From wire reports',
         pose: 'phone',
+        scene: ['phone', 'couch'],
         correction:
             'Neckass has been "five minutes away" since November 2018, not 2019, as reported.',
         followUp:
@@ -41,6 +43,7 @@ export const LEADS = [
         deck: 'The plan, a copy of which was obtained by the Gazette, is one page. The page says "ten-year plan." There is nothing else on it.',
         byline: 'Staff report',
         pose: 'considering',
+        scene: ['easel'],
         correction:
             'The ten-year plan is one page printed on both sides, not one page. The second side is blank.',
         followUp:
@@ -57,6 +60,7 @@ export const LEADS = [
         deck: 'The wedding is Saturday. He has told the groom he is free a different Saturday.',
         byline: 'Staff report',
         pose: 'shrug',
+        scene: ['desk'],
         correction:
             'An earlier edition said Neckass had not read the email. He had read the subject line, which is "Best man?"',
         followUp:
@@ -74,6 +78,7 @@ export const LEADS = [
         deck: 'He is not hungry, he said. Asked what he was looking for, he said "just seeing." His roommate kept the count.',
         byline: 'Staff report',
         pose: 'considering',
+        scene: ['fridge'],
         correction:
             'Twelve openings, not eleven: he has since gone back for the twelfth and eaten a slice of cheese standing up.',
         followUp:
@@ -91,6 +96,7 @@ export const LEADS = [
         deck: 'They are labeled "up," "UP," and "seriously." He turned off the third without opening his eyes.',
         byline: 'Staff report',
         pose: 'resting',
+        scene: ['alarm'],
         correction:
             'Four alarms, not three. The fourth, at 6:30, is labeled "ok fine." He got up at 8:10.',
         followUp:
@@ -108,6 +114,7 @@ export const LEADS = [
         deck: 'Muting stopped the notifications, though not him. According to his phone, he has opened the chat 400 times today.',
         byline: 'Staff report',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'The 400 openings of the chat were by noon, not for the day.',
         followUp:
@@ -125,6 +132,7 @@ export const LEADS = [
         deck: 'He moved the emails to a folder called "Later." Later has 2,000 emails.',
         byline: 'From wire reports',
         pose: 'satisfied',
+        scene: ['desk'],
         correction:
             'An earlier edition said the folder is called "Later." It is called "Later!!"',
         followUp:
@@ -175,6 +183,7 @@ export const LEADS = [
         deck: 'He set it for a long weekend in June. Everyone has stopped emailing him. Reached at his desk, he said he was pleased.',
         byline: 'From wire reports',
         pose: 'satisfied',
+        scene: ['desk'],
         correction:
             'The out-of-office reply has run eleven weeks and now says he is "back in the office." It is still on.',
         followUp:
@@ -192,6 +201,7 @@ export const LEADS = [
         deck: 'It took forty minutes. Asked what he had agreed to, he said "the usual."',
         byline: 'From wire reports',
         pose: 'considering',
+        scene: ['desk'],
         correction:
             'He did not read the terms in full. He scrolled them in full.',
         followUp:
@@ -224,6 +234,7 @@ export const LEADS = [
         deck: 'It is the story about the airport. Everyone at the table has heard it at this table, from him, twice before, according to the host.',
         byline: 'Staff report',
         pose: 'explaining',
+        scene: ['table'],
         correction:
             'The story concerns a train station, not an airport. He has told it as an airport for three years.',
         followUp:
@@ -241,6 +252,7 @@ export const LEADS = [
         deck: 'He said "anyway, I should go" at 9:10, "right, I\'m off" at 9:30, and "no, really" at 9:50. He left at ten.',
         byline: 'Staff report',
         pose: 'leaving',
+        scene: ['doorway'],
         correction:
             'The goodbye ran fifty minutes only because the hosts went to bed at forty. He continued in the hall.',
         followUp:
@@ -258,6 +270,7 @@ export const LEADS = [
         deck: 'He was locked out at two, according to IT. He was locked out again at 2:01.',
         byline: 'From wire reports',
         pose: 'phone',
+        scene: ['phone', 'desk'],
         correction:
             'Two lockouts, not one. He reset the password to the old one, was told he could not reuse it, and added a 1. He was locked out again at 2:04.',
         followUp:
@@ -275,6 +288,7 @@ export const LEADS = [
         deck: 'The first charger is behind the couch, where he has not looked. He now has three.',
         byline: 'Staff report',
         pose: 'shrug',
+        scene: ['couch'],
         correction: 'Five chargers, not three. Two are behind the couch.',
         followUp:
             'Neckass found the charger behind the couch while looking for the remote. He put it back.',
@@ -291,6 +305,7 @@ export const LEADS = [
         deck: 'He said he likes to "get a feel for the place" and stood in the rain for an hour, turning down a table from the hostess four times because the booking was for eight.',
         byline: 'From wire reports',
         pose: 'standingBy',
+        scene: ['rain'],
         correction:
             'The restaurant was the wrong one. He waited outside it for an hour.',
         followUp:
@@ -307,6 +322,7 @@ export const LEADS = [
         deck: 'They recommended it Tuesday. He explained it to them Thursday, in full, including the end.',
         byline: 'Staff report',
         pose: 'explaining',
+        scene: ['tv'],
         correction:
             'The ending he explained was the ending of a different film.',
         followUp:
@@ -324,6 +340,7 @@ export const LEADS = [
         deck: 'The message asked whether he was coming Saturday. He read it on the 3rd. Saturday was the 6th. He wants to sit down and really reply.',
         byline: 'Staff report',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'His phone says he read the message on the 3rd. He says he "saw it but didn\'t see it."',
         followUp:
@@ -341,6 +358,7 @@ export const LEADS = [
         deck: 'It is on the passenger seat. Asked about it, he said "I know, I know." He does know.',
         byline: 'Staff report',
         pose: 'shrug',
+        scene: ['parcel'],
         correction:
             'The package has been in the car since March and through two car washes.',
         followUp:
@@ -358,6 +376,7 @@ export const LEADS = [
         deck: 'The train left at 8:04. He was in the shower at 8:04, his roommate said. He arrived at 9:40.',
         byline: 'Staff report',
         pose: 'phone',
+        scene: ['phone', 'shower'],
         correction:
             'Neckass arrived at 9:40 and said "the trains." It was not the trains.',
         followUp:
@@ -375,6 +394,7 @@ export const LEADS = [
         deck: 'He asked at noon, and six were proposed. At seven he suggested the first one.',
         byline: 'From wire reports',
         pose: 'considering',
+        scene: ['phone'],
         correction:
             'Six restaurants were proposed. The one he suggested at seven was the one he had rejected first, by name, at noon.',
         followUp:
@@ -391,6 +411,7 @@ export const LEADS = [
         deck: 'It needs a battery. He describes the chirping as "on and off." It is on.',
         byline: 'Staff report',
         pose: 'explaining',
+        scene: ['smoke'],
         correction:
             'The chirping is at nine days. He has moved his bed to the other room and describes the problem as solved.',
         followUp:
@@ -407,6 +428,7 @@ export const LEADS = [
         deck: 'The note on the request says "gas," according to a screenshot provided to the Gazette. The friend was driving. The $40 has been owed since the Fourth of July.',
         byline: 'Staff report',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'We reported the request was for $3. It was $3.50, and the note says "gas + tip."',
         followUp: 'Neckass paid back $5 of the $40, with the note "we even?"',
@@ -423,6 +445,7 @@ export const LEADS = [
         deck: 'They know his order and his name, the owner said. He calls all three of them "chief."',
         byline: 'Staff report',
         pose: 'leaving',
+        scene: ['cup'],
         correction:
             'Four staff, not three: he calls the fourth "boss," and she owns the café.',
         followUp:
@@ -439,6 +462,7 @@ export const LEADS = [
         deck: 'The task is to call his mother, which takes ten minutes. He describes it as "a whole thing."',
         byline: 'Staff report',
         pose: 'considering',
+        scene: ['phone'],
         correction:
             'Forty-one times, not forty: he moved it again while reading the item.',
         followUp:
@@ -455,6 +479,7 @@ export const LEADS = [
         deck: 'The instructions account for every screw. The shelf is up. Asked about the screws, he said he was "not going to think about it."',
         byline: 'Staff report',
         pose: 'satisfied',
+        scene: ['shelf'],
         correction:
             'Six screws were left over, not four. The shelf came down Sunday with the books on it. No one was hurt.',
         followUp:
@@ -489,6 +514,7 @@ export const LEADS = [
         deck: 'He sent it at 7:50 from the car. The Gazette has listened to it in full, at double speed. He was still late, and it does not say by how much.',
         byline: 'From wire reports',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'The voice note was nine minutes plus a second note, saying "sorry, long one."',
         followUp:
@@ -505,6 +531,7 @@ export const LEADS = [
         deck: 'He has been told, and he said "it\'s fine, it lasts." It lasted until 10:40.',
         byline: 'From wire reports',
         pose: 'phone',
+        scene: ['phone'],
         correction: 'The phone died during the conversation about the charger.',
         followUp:
             'Neckass charged the phone to 100 percent overnight and has spent the day at 100, saying he does not want to use it up.',
@@ -553,6 +580,7 @@ export const LEADS = [
         deck: 'They were not walking toward the door. They are now, because he is holding it.',
         byline: 'Staff report',
         pose: 'standingBy',
+        scene: ['doorway'],
         correction:
             'We reported that the person was forty feet away. They were sixty, by their own account, and jogged the last forty, and thanked him.',
         followUp:
@@ -569,6 +597,7 @@ export const LEADS = [
         deck: 'The object is a shoe. It has been in the middle of the floor for five weeks. The floor around it is clean.',
         byline: 'Staff report',
         pose: 'satisfied',
+        scene: ['shoe'],
         correction: 'Two shoes, not a shoe, and they do not match.',
         followUp:
             'The shoes are now in the hall, in the middle of the floor, and the hall is clean around them.',
@@ -600,6 +629,7 @@ export const LEADS = [
         deck: 'He said he was not reading it. He called four hours later, after a second message.',
         byline: 'Staff report',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'The four-hour delay included a second "haha," before the call.',
         followUp:
@@ -616,6 +646,7 @@ export const LEADS = [
         deck: 'He cut with a spade while holding the queen of hearts. The table caught it on the next trick. He asked his partner why she led a heart.',
         byline: 'Staff report',
         pose: 'pointing',
+        scene: ['table'],
         correction:
             'We reported that Neckass reneged once. He reneged twice. The second time was while explaining the first.',
         followUp:
@@ -633,6 +664,7 @@ export const LEADS = [
         deck: "He took the lid off at the curb, tipped the salad into his mother's bowl, and added paprika. He told four people it was his recipe. The receipt was in the bag.",
         byline: 'Staff report',
         pose: 'defense',
+        scene: ['table'],
         correction:
             'We reported that Neckass added paprika. He added raisins, and nobody has eaten it.',
         followUp:
@@ -650,6 +682,7 @@ export const LEADS = [
         deck: 'He said "stop me if you\'ve heard this." Four people said they had. He did not stop.',
         byline: 'Staff report',
         pose: 'explaining',
+        scene: ['table'],
         correction:
             'Five people said they had heard it, not four. The fifth said so at the end.',
         followUp:
@@ -683,6 +716,7 @@ export const LEADS = [
         deck: 'He rested his eyes from two until 3:45, under a blanket, and woke saying he was listening.',
         byline: 'Staff report',
         pose: 'resting',
+        scene: ['couch'],
         correction:
             'He was woken at 3:45 by the end of the show he was listening to.',
         followUp:
@@ -700,6 +734,7 @@ export const LEADS = [
         deck: 'The caller said they had to go at 6:10. Neckass let them go at 6:50, after letting them go twice more.',
         byline: 'From wire reports',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'The caller was let go at 6:50 on the third "I\'ll let you go." The call ended at 7:05.',
         followUp:
@@ -717,6 +752,7 @@ export const LEADS = [
         deck: 'He asked for the aux at 9:40 and said he had "a vibe." He skipped every song he chose, including one he said was "about to go crazy." It did not go.',
         byline: 'From wire reports',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'We said eleven songs. It was twelve, and the twelfth was a voice note he played by accident, to the whole car.',
         followUp:
@@ -734,6 +770,7 @@ export const LEADS = [
         deck: 'The driver asked if this was the highway. It was. Neckass said "you want to go back the way you came and take the second left." The driver did.',
         byline: 'From wire reports',
         pose: 'pointing',
+        scene: ['signpost'],
         correction:
             'There is no second left. The driver took the first and has written in.',
         followUp:
@@ -766,6 +803,7 @@ export const LEADS = [
         deck: 'His cousin has played it every night since 2019. Neckass had played once, on Tuesday, and lost by 40. He explained for eleven minutes and got the buttons wrong.',
         byline: 'From wire reports',
         pose: 'explaining',
+        scene: ['tv'],
         correction:
             'We said he got the buttons wrong. He got the buttons wrong and held the controller upside down.',
         followUp:
@@ -800,6 +838,7 @@ export const LEADS = [
         deck: 'It was left at 7:40 a.m. The recipient, who asked not to be named, has four people it could be. She has called two.',
         byline: 'Staff report',
         pose: 'phone',
+        scene: ['phone'],
         correction:
             'The voicemail was left at 7:40 and again at 7:42, to say "sorry, it\'s me."',
         followUp:
@@ -817,6 +856,7 @@ export const LEADS = [
         deck: 'He starts it after dinner and is asleep by the title card. He has seen the title card four times and says it "really gets going."',
         byline: 'Staff report',
         pose: 'resting',
+        scene: ['tv', 'couch'],
         correction:
             'He is asleep before the title card. He has seen the studio logo four times.',
         followUp:
@@ -833,6 +873,7 @@ export const LEADS = [
         deck: 'He arrived at 2:25 for two, said "sorry, but actually," and set out why the meeting was at 2:30. It was not, according to the invitation.',
         byline: 'From wire reports',
         pose: 'defense',
+        scene: ['clock'],
         correction:
             'He was in the building at 2:25 and in the room at 2:31, with a coffee.',
         followUp:
@@ -867,6 +908,7 @@ export const LEADS = [
         deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows.',
         byline: 'From wire reports',
         pose: 'defense',
+        scene: ['desk'],
         correction:
             'He sorted one column, undid it, and sorted a different column. The first is still sorted.',
         followUp:

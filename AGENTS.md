@@ -15,7 +15,7 @@ complexity. The front page is the product.
   and one `<script type="module">` whose import graph is the dependency
   chain.
 - `styles.css` — all visual/layout styling, including the inlined cuts' and print.
-- `data/` — the pools (`formats.js`, `headlines.js`), the landmark issues (`editions.js`), the calendar (`calendar.js`), the file cut's poses (`poses.js`). Plain ES modules, imported by both the browser and the edge.
+- `data/` — the pools (`formats.js`, `headlines.js`), the landmark issues (`editions.js`), the calendar (`calendar.js`), the file cut's poses (`poses.js`) and what it can be drawn among (`scenes.js`). Plain ES modules, imported by both the browser and the edge.
 - `modules/issue.js` — the issue arithmetic and composition, shared by both runtimes; `modules/calendar.js` — matches dated items; `modules/front-page.js` — renders the front page; `modules/archive-list.js` — the archive.
 - `worker.js` — the Cloudflare Worker's entry: routes the feed and the card to their handlers in `functions/` and runs the middleware in front of them and the front page. `wrangler.jsonc` configures it.
 - `functions/` — the edge handlers, written as Pages Functions and imported by `worker.js`: the feed, the social card, the middleware; `lib/issue.mjs` is a UTC adapter over `modules/issue.js`, `lib/card.mjs` holds the card layout and its one renderer.
@@ -35,7 +35,7 @@ complexity. The front page is the product.
 - `bun run lint`, `bun run assets:check`, `bun run test:smoke` before merge.
 
 ## When changing content
-- A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it.
+- A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it. A lead may also name a scene, keys of `data/scenes.js`: what the story happens among, as props the cut can hold or stand in front of. One or two; the box does not take more.
 - Dated items go on the calendar, not in the pools.
 - Regenerate the still cards after changing the card layout or copy: `bun run og:generate`.
 

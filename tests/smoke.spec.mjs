@@ -4,6 +4,7 @@ import { EDITIONS } from '../data/editions.js';
 import { LEADS } from '../data/formats.js';
 import { HEADLINES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
+import { SCENES } from '../data/scenes.js';
 import { buildFeed } from '../functions/feed.xml.js';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
 import { issueNumber } from '../functions/lib/issue.mjs';
@@ -101,18 +102,35 @@ test.describe('The Gazette', () => {
         expect(issue.weatherNumbers).toMatch(
             /^High -?\d+°, low -?\d+°\. Winds [NESW]{1,2} \d+ mph\. Sunset \d{1,2}:\d{2} p\.m\.$/,
         );
-        // The file cut takes the lead's pose, and the cutline says which.
+        // The file cut takes the lead's pose and scene, the cutline says
+        // which pose, and the alt text says both.
         expect(issue.pose).toEqual(POSES[issue.lead.pose]);
         const cut = page.locator('#cut-figure');
         await expect(page.locator('#cut-caption')).toHaveText(
             issue.pose.caption,
         );
-        await expect(cut).toHaveAttribute('aria-label', issue.pose.alt);
+        await expect(cut).toHaveAttribute('aria-label', issue.cutAlt);
+        await expect(cut).toHaveAttribute('data-pose', issue.poseName);
         expect(
             await cut.evaluate((node) =>
                 node.style.getPropertyValue('--arm-far'),
             ),
         ).toBe(`${issue.pose.joints.armFar}deg`);
+        const switches = await cut.evaluate(
+            (node, props) =>
+                Object.fromEntries(
+                    props.map((prop) => [
+                        prop,
+                        node.style.getPropertyValue(`--${prop}`),
+                    ]),
+                ),
+            Object.keys(SCENES),
+        );
+        for (const prop of Object.keys(SCENES)) {
+            expect(switches[prop], prop).toBe(
+                issue.scene.includes(prop) ? '1' : '0',
+            );
+        }
 
         // Every section is dealt at its documented size. A pool that empties
         // would silently shorten one of these.
@@ -451,8 +469,8 @@ test.describe('The Gazette', () => {
         }
         expect(closest).toBeGreaterThan(Math.min(14, Math.floor(size / 4)));
 
-        // Every lead carries everything the paper prints about it, and a
-        // pose the file cut has.
+        // Every lead carries everything the paper prints about it, a pose
+        // the file cut has, and only scenes it has a layer for.
         const incomplete = [
             ...LEADS,
             ...Object.values(EDITIONS).map((edition) => edition.lead),
@@ -460,6 +478,7 @@ test.describe('The Gazette', () => {
             (lead) =>
                 !(
                     POSES[lead.pose] &&
+                    (lead.scene || []).every((prop) => SCENES[prop]) &&
                     lead.headline &&
                     lead.deck &&
                     lead.byline &&
@@ -506,6 +525,46 @@ test.describe('The Gazette', () => {
         );
     });
 
+    test('the cut acts out its pose once, and not at all when asked not to', async ({
+        browser,
+    }) => {
+        // Motion that starts by itself and runs past five seconds needs a
+        // way to stop it (WCAG 2.2.2). The paper has no controls, so the
+        // cut stops by itself, and does not start for a reader who has
+        // asked for less motion.
+        for (const reducedMotion of ['no-preference', 'reduce']) {
+            const context = await browser.newContext({ reducedMotion });
+            const page = await context.newPage();
+            await page.goto(BASE_URL);
+            await page.waitForFunction(() =>
+                Boolean(window.Neckass?.currentIssue),
+            );
+            // Animations only: the stylesheet's reduced-motion rule gives
+            // every property a 0.01ms transition, which setting the pose
+            // trips, and those are not motion.
+            const ends = await page.evaluate(() =>
+                document
+                    .getAnimations()
+                    .filter(
+                        (animation) =>
+                            animation instanceof CSSAnimation &&
+                            animation.effect?.target?.closest?.('#cut-figure'),
+                    )
+                    .map(
+                        (animation) =>
+                            animation.effect.getComputedTiming().endTime,
+                    ),
+            );
+            if (reducedMotion === 'reduce') {
+                expect(ends).toEqual([]);
+            } else {
+                expect(ends.length).toBeGreaterThan(0);
+                expect(Math.max(...ends)).toBeLessThanOrEqual(5000);
+            }
+            await context.close();
+        }
+    });
+
     test('the file cut is one drawing wherever it is drawn', () => {
         // The rig, the front page's inlined copy and the card's flattened
         // copy are three copies of the same parts. A part changed in one
@@ -514,11 +573,36 @@ test.describe('The Gazette', () => {
         const inline = read('../index.html').match(
             /<svg class="cut-figure"[\s\S]*?<\/svg>/,
         )[0];
-        const card = atob(cutSrc(POSES.explaining.joints).split(',')[1]);
+        // The card draws only the scene it is given; with every prop on,
+        // it is the whole rig.
+        const card = atob(
+            cutSrc(POSES.explaining.joints, Object.keys(SCENES)).split(',')[1],
+        );
         const shapes = shapesOf(rig);
         expect(shapes.length).toBeGreaterThan(20);
         expect(shapesOf(inline)).toEqual(shapes);
         expect(shapesOf(card)).toEqual(shapes);
+        const bare = atob(cutSrc(POSES.explaining.joints).split(',')[1]);
+        expect(shapesOf(bare).length).toBeLessThan(shapes.length);
+
+        // Every prop is a layer with a switch, off unless it is thrown, in
+        // the rig and on the page, so the standing issue and the rig on its
+        // own show him on the bare sheet.
+        const sheet = read('../styles.css');
+        for (const prop of Object.keys(SCENES)) {
+            for (const [where, source] of [
+                ['rig', rig],
+                ['page', sheet],
+            ]) {
+                expect(source, `${where}: ${prop}`).toMatch(
+                    new RegExp(
+                        `\\.scene-${prop}\\s*\\{\\s*opacity:\\s*var\\(--${prop},\\s*0\\);`,
+                    ),
+                );
+            }
+            expect(rig, prop).toContain(`<g class="scene-${prop}">`);
+            expect(inline, prop).toContain(`<g class="scene-${prop}">`);
+        }
 
         // The joints turn on the same pivots, and unposed they stand in
         // the house pose, which is the pose a lead naming none is given.

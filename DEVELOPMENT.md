@@ -55,13 +55,14 @@ thin adapter that applies it to UTC dates.
 3. `data/formats.js` — `LEADS` (each with deck, correction, follow-up,
    classified, letter, pose), `CORRECTIONS`, `WEATHER`, `CLASSIFIEDS`,
    `LETTERS`; `data/poses.js` — the file cut's poses (`POSES`);
+   `data/scenes.js` — the props it can be drawn among (`SCENES`);
    `data/headlines.js` — the briefs pool (`HEADLINES`); `data/editions.js` —
    the landmark issues, keyed by number; and:
 4. `modules/calendar.js` — matches the calendar against a date. It imports:
 5. `data/calendar.js` — what runs on which day.
 
 `front-page.js` swaps the standing issue in the markup for the composed one,
-sets the title, the file cut's pose, the weather cut's layers, the
+sets the title, the file cut's pose and scene, the weather cut's layers, the
 editorial, the clipping link and the back-issue notice, and publishes the composed issue as
 `window.Neckass.currentIssue`.
 
