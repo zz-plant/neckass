@@ -8,8 +8,12 @@ following a line number that has since moved.
 ## Shape of the site
 - **The front page (`index.html`)** is one issue: lead item with deck and
   byline, a briefs column, corrections, weather, classifieds, letters, and a
-  colophon. A complete standing issue is present in the markup, so the page
-  reads without JavaScript.
+  colophon. The edge prints the day's issue into the page as it serves it,
+  every section, with the renderer the browser uses (`modules/render.js`),
+  so the page reads whole without JavaScript and crawlers get the day's
+  paper. The markup also carries a standing issue (No. 759, printed by
+  `bun run standing` with the same renderer), which a static host serves
+  and the browser prints over.
 - **Issue composition (`modules/issue.js`)** is deterministic. The issue number
   is days elapsed since the first edition (2024-09-29); that number seeds
   selection from `data/formats.js`. `/?issue=YYYY-MM-DD` renders any past
@@ -137,11 +141,11 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   photograph. Each lead names a pose from
   `data.POSES` — explaining, in his own defense, pointing it out, asked about
   it, satisfied, on his way out, on the phone, considering it, standing by,
-  resting his eyes — and `front-page.js` sets its ten joints as custom
+  resting his eyes — and the renderer sets its ten joints as custom
   properties, its alt text as the figure's `aria-label`, and its caption in
   the cutline: *FILE — Neckass, on the phone. The Gazette has one cut of him
   and has not needed a second.* Unposed, the joints fall back to the house
-  pose, which is what the standing issue shows. The box keeps a margin on
+  pose. The box keeps a margin on
   three sides for a thrown limb, so a pose never draws over the column rule
   or the cutline. The inks are the page's tokens, so the cut follows the
   theme and the print sheet. It is drawn by hand in one fine-point marker:
@@ -164,13 +168,13 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   wall, a wall clock, a bedside alarm, a package, a shoe, the rain, a
   running shower or a smoke alarm, which stand behind him on his ground, in
   the margin the box already keeps. Each is a layer of the same drawing with
-  a switch (`--phone: 1`), off by default, so the standing issue and the rig
-  as an `<img>` show him on the bare sheet. `front-page.js` sets every
+  a switch (`--phone: 1`), off by default, so the rig as an `<img>` shows
+  him on the bare sheet. The renderer sets every
   switch, on or off, from the lead, and the scene finishes the figure's
   `aria-label`: *Line-cut of a man with one hand held to his ear, holding a
   phone, in front of a couch.* The cutline names the pose only.
-- **The cut's motion** — once `front-page.js` has set the pose (as
-  `data-pose`), the cut acts it out: explaining, the raised hand makes its
+- **The cut's motion** — once the page carries the pose (as `data-pose`),
+  the cut acts it out: explaining, the raised hand makes its
   point three times; in his own defense, he leans back, protests with both
   hands and shakes his head; pointing it out, he jabs at it; asked about
   it, he shrugs twice; satisfied, he nods to himself; on his way out, he
@@ -226,9 +230,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   lead never returns within that many days; the tail of a round is never
   moved. A landmark (`data.EDITIONS[n].lead`) is taken instead of the dealt
   one.
-- **Pool growth** — a pool grows only at its end, in steps
-  (`data/growth.js`): from issue `from` on, it is dealt from its first
-  `size` items, in rounds that start on that issue and are seeded by it, so
+- **Pool growth** — every pool item is keyed by a number, from 1 with none
+  skipped, and dealt by it. A pool grows in steps (`data/growth.js`): from
+  issue `from` on, it deals numbers 1 to `size`, less any a step has
+  `retired`, in rounds that start on that issue and are seeded by it, so
   every issue before the step runs what it always ran. A step's first round
   of leads keeps out of its opening places the leads of the last days
   before it, as a round does the round before. A step's first split of a
@@ -288,19 +293,21 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   match print).
 
 ## Back issues (`archive.html`)
-- Lists every issue newest first, by month (`#archive-run`, a
-  `.archive-month` per month with a `.section-label` head), each row a link
-  to `/?issue=YYYY-MM-DD` carrying the folio (`No. n · Weekday d`) and the
-  issue's lead in Fraunces, the folio in the wire's face. A month's head is
-  set in Fraunces at 1.4rem under the department rule, so a reader
-  scrolling a year can find the month. The current issue and the landmarks
-  carry an `.archive-tag` under the lead.
+- Lists one month of issues, newest first (`#archive-run`, one
+  `.archive-month` with a `.section-label` head): this month by the press
+  clock, or the month `?month=YYYY-MM` names if the run has it. Each row is
+  a link to `/?issue=YYYY-MM-DD` carrying the folio (`No. n · Weekday d`)
+  and the issue's lead in Fraunces, the folio in the wire's face. The
+  month's head is set in Fraunces at 1.4rem under the department rule. The
+  current issue and the landmarks carry an `.archive-tag` under the lead.
+  At the foot, `.archive-steps` links the month before and after, in the
+  wire's face. The page stays a month long however long the run gets.
 - The landmark editions are listed first under *Of note*
   (`#archive-landmarks`), oldest first.
 - *By month* (`#archive-months`) follows: a line per year, newest first,
-  each month in AP style linking to its head in the run
-  (`#month-YYYY-MM`). The months wrap in their own column beside the
-  year.
+  each month in AP style linking to its page (`/archive?month=YYYY-MM`);
+  the month shown is marked `aria-current="page"` and set in the ink. The
+  months wrap in their own column beside the year.
 - The list is derived from the calendar, not stored, and stops at issue 1;
   `issue.recentIssues()` returns the whole run with each lead and tag.
 - The folio takes the ledger teal and the lead the ink, which underlines in
@@ -330,16 +337,33 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   Each issue's card is drawn once per data center: the first fetch stores
   it in the Workers cache under the issue it resolved to, and later fetches
   are answered from there.
-- `functions/_middleware.js` rewrites `<title>`, the `og:`/`twitter:` title
-  and description, `og:image`/`og:image:secure_url`/`twitter:image` (to the
-  card for the same issue) and the image alt tags, on the front page only,
-  so a shared link previews with the headline actually running in the text
-  and in the picture.
-- All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
-  adapter over `modules/issue.js` — the same module the browser runs, so the
-  runtimes cannot disagree about a lead. The smoke suite runs the Worker
+- `functions/_middleware.js` prints the issue into the front page: every
+  section, from `issueParts` in `modules/render.js` through
+  `functions/lib/print.mjs`, marked with the issue's number
+  (`.front-page[data-issue]`), so `front-page.js`, finding the issue it
+  would print already there, leaves it alone. Only the edge leaves the
+  mark: the standing issue was printed for no request and carries none, so
+  on a static host the page is always printed for the link, No. 759's
+  included. It also rewrites `<title>`
+  (the lead's headline and the issue's number, which the browser keeps),
+  the `og:`/`twitter:` title and description,
+  `og:image`/`og:image:secure_url`/`twitter:image` (to the card for the
+  same issue) and the image alt tags, so a shared link previews with the
+  headline actually running in the text and in the picture.
+- All three compose the lead with `modules/issue.js`, the same module the
+  browser runs, on the same clock: today is the press clock's, midnight US
+  Eastern (`pressDate`), for the page, the card, the feed and the tags
+  alike, so the runtimes cannot disagree about a lead or a day. The smoke suite runs the Worker
   under `wrangler dev` (`bun run edge`, port 8800) and checks the card
   is a real PNG and the tags point at it.
+- The pages are served with a Content-Security-Policy (`_headers`): scripts,
+  styles, fonts and images from the site only, no plugins, no forms, no
+  framing. Style attributes are allowed, since the edge prints the file
+  cut's pose and the weather cut's layers in them; the JSON-LD is data and
+  does not run. The drawings in `assets/cuts/` carry their own `<style>`,
+  so the policy is on the pages only. The fonts are served with a year's
+  immutable cache. The smoke suite loads every page through the edge and
+  fails if the browser blocks anything.
 - The edge answers as Pages did: the card and the feed match in any case,
   with or without a trailing slash, for GET only; the front page carries no
   ETag; a path with no file is `404.html` with status 404 and `no-store`; a

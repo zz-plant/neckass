@@ -37,11 +37,11 @@ removed all of it. If you need to open a page from disk, run `bun run serve`
 first.
 
 The one intentional difference between the runtimes is the clock: the
-browser composes issues on the reader's local date, so the masthead matches
-the paper on their table; the edge runs on UTC, the only clock a Worker has.
-`modules/issue.js` holds the runtime-agnostic arithmetic (the epoch, the
-RNG, the round dealing, landmark lookup); `functions/lib/issue.mjs` is a
-thin adapter that applies it to UTC dates.
+browser and the edge both take today from the press clock, midnight US
+Eastern (`pressDate` in `modules/issue.js`), so a shared link's card and
+tags name the issue the reader lands on. `modules/issue.js` holds all of
+the arithmetic (the clock, the epoch, the RNG, the round dealing, landmark
+lookup), and the edge imports it directly.
 
 ## Architecture overview
 
@@ -62,13 +62,19 @@ thin adapter that applies it to UTC dates.
 4. `modules/calendar.js` — matches the calendar against a date. It imports:
 5. `data/calendar.js` — what runs on which day.
 
-`front-page.js` swaps the standing issue in the markup for the composed one,
-sets the title, the file cut's pose and scene, the weather cut's layers, the
-editorial and the back-issue notice, and publishes the composed issue as
+`modules/render.js` turns a composed issue into patches, an element and the
+text, markup or attributes it gets: every section, the file cut's pose and
+scene, the weather cut's layers, the editorial and the back-issue notice.
+The edge prints them into the page as it serves it
+(`functions/_middleware.js` through `functions/lib/print.mjs`), and
+`bun run standing` prints them into `index.html` for the standing issue,
+No. 759 (`scripts/standing.ts`; `--check` fails if it is out of date).
+`front-page.js` works out the issue the URL asks for; if the page already
+carries it, it leaves it alone, and otherwise (a static host) it prints it
+with the same patches. Either way it publishes the issue as
 `window.Neckass.currentIssue`.
 
-There is no bootstrap, no state, no storage and no input handling. The page
-ends when `front-page.js` has rendered.
+There is no bootstrap, no state, no storage and no input handling.
 
 ### The archive
 `archive.html` loads `modules/archive-list.js`, which imports the same
@@ -76,8 +82,9 @@ ends when `front-page.js` has rendered.
 
 ### Data and assets
 - `data/` — see above. Pool sizes are load-bearing; see the comments in
-  `data/formats.js`. A pool grows only at its end, from an issue that has
-  not run yet (`data/growth.js`), so the back issues keep what they ran.
+  `data/formats.js`. Items are numbered and dealt by number; a pool grows
+  or retires an item only from an issue that has not run yet
+  (`data/growth.js`), so the back issues keep what they ran.
 - `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and
   layers are CSS custom properties with fallbacks, so the files work as plain
   `<img>` and pose when inlined. The file cut and the weather cut are
@@ -103,9 +110,9 @@ ends when `front-page.js` has rendered.
 - `functions/feed.xml.js` — RSS for the last 30 issues, per request.
 - `functions/card.png.js` — the issue's social card, drawn with Satori and
   resvg.
-- `functions/_middleware.js` — per-issue title, description and image tags
-  on the front page.
-- `functions/lib/issue.mjs` — UTC date adapters over `modules/issue.js`.
+- `functions/_middleware.js` — prints the issue into the front page, and
+  its title, description and image tags (`functions/lib/print.mjs` applies
+  the renderer's patches with HTMLRewriter).
 - `functions/lib/cut.mjs` — the file cut flattened for the card, in any
   pose. `bun run cut:draw` (`scripts/draw-cut.ts`) writes its figure, the
   rig's and the front page's from one drawing; a smoke test holds the three
@@ -133,17 +140,22 @@ ends when `front-page.js` has rendered.
 5. Print preview: ink on white, two columns, no site links.
 7. Layout remains usable across small and wide viewports, in both themes.
 
-## Smoke test harness
+## Tests
 ```bash
 bun install
-bun run test:smoke
+bun run test:unit    # the arithmetic and the data, no browser, under a second
+bun run test:smoke   # the pages and the edge, in Chromium
 ```
 
-Playwright starts `bun run serve` and `bun run edge` itself. The suite covers
-what a reader opens (the issue, a back issue, the archive, no-JS), the
-arithmetic — run directly against `modules/issue.js`, without a browser —
-(the corrections chain, the calendar, the landmarks, no repeats inside a
-round) and the edge (the feed, the card, the rewritten tags).
+`tests/paper.test.mjs` runs under `bun test` against the modules
+directly: the corrections chain, the calendar, the standing matters, no
+repeats inside a round or across a step of growth, the numbering of the
+pools and the back issues' deal, the file cut's three copies, the sitemap,
+and the standing issue in `index.html` as the renderer prints it.
+`tests/smoke.spec.mjs` runs under Playwright, which starts `bun run serve`
+and `bun run edge` itself: what a reader opens (the issue, a back issue,
+the archive, no-JS, the motion) and the edge (the printed issue, the feed,
+the card, the files it serves).
 
 ## UI change requirements
 - Include screenshot(s) for visible changes.

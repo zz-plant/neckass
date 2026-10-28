@@ -62,9 +62,10 @@ issue at `/?issue=YYYY-MM-DD` — so the archive costs no storage.
 
 Leads are dealt in rounds of the pool's length, so no lead runs twice inside
 a round. The other sections are dealt in rounds too, so a brief, an ad or a
-letter stays away for most of its pool before it runs again. A pool grows
-only at its end, from an issue that has not gone to press
-(`data/growth.js`), so a back issue always runs what it ran. Every lead carries its deck, the correction the paper runs the next
+letter stays away for most of its pool before it runs again. Every item
+is numbered and dealt by its number; a pool grows, or retires an item,
+only from an issue that has not gone to press (`data/growth.js`), so a
+back issue always runs what it ran. Every lead carries its deck, the correction the paper runs the next
 day, the brief that runs the next morning, and the classified and the letter
 from the person it happened to, so the page compounds: the item, the ad, the
 letter, then tomorrow the retraction and what he did next.
@@ -76,8 +77,11 @@ the days they happen — the book club meets the first and third Tuesday and
 Wednesday reports on it; the clocks go forward and back; his mother writes
 in on his birthday.
 
-A complete standing issue ships in `index.html` itself, so the paper reads with
-JavaScript disabled and crawlers see copy rather than an empty shell.
+The edge prints the day's whole issue into the page as it serves it, with the
+renderer the browser uses (`modules/render.js`), so the paper reads with
+JavaScript disabled and crawlers see the day's copy. `index.html` also
+carries a standing issue, printed from No. 759 by `bun run standing`, for a
+static host.
 
 ## Edge functions
 
@@ -90,14 +94,16 @@ signatures, and runs the middleware in front of them and the front page.
   request. No store and no cron: issues come from the calendar.
 - `functions/card.png.js` — draws the issue's lead on the sheet as a PNG, on
   request, with Satori and resvg. About 150 ms; no browser.
-- `functions/_middleware.js` — rewrites the front page's title and
-  social-card tags to the active issue's lead, and points the image tags at
-  the card for the same issue, so a shared link previews with the headline
+- `functions/_middleware.js` — prints the active issue into the front page,
+  rewrites its title and social-card tags to the issue's lead, and points
+  the image tags at the card for the same issue, so a shared link previews with the headline
   that is actually running.
 
-All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
-adapter over `modules/issue.js` — the same module the browser runs, so both
-runtimes pick the same lead by construction.
+All three compose the lead with `modules/issue.js`, the same module the
+browser runs, and on the same clock: an issue goes to press at midnight US
+Eastern (`pressDate`, `PRESS_TIME_ZONE`), wherever the reader or the
+Worker is, so the page, the card, the feed and the share tags always name
+the same issue.
 
 ## Smoke tests
 A Playwright suite covers what a reader opens: today's issue renders whole,
@@ -108,8 +114,12 @@ of the source. It starts the static server and `wrangler dev` itself.
 
 ```bash
 bun install
+bun run test:unit
 bun run test:smoke
 ```
+
+`test:unit` is the arithmetic and the data under `bun test`, without a
+browser; `test:smoke` is the pages and the edge under Playwright.
 
 ## Documentation map
 

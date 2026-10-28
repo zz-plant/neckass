@@ -1,5 +1,11 @@
 # Fonts
 
+The fonts are served with a year's immutable cache (`_headers`), so a reader
+fetches each once. A new cut of a face takes a new filename, and the
+references follow it (the `@font-face` in `styles.css`, the preload in each
+page, `functions/card.png.js` and `scripts/generate-og.ts`); a file changed
+under the same name would not reach anyone who already has it.
+
 ## fraunces-latin-var.woff2
 
 - **Family:** Fraunces (variable, weight 400–700, latin subset)

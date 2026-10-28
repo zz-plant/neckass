@@ -4,3 +4,25 @@
   Access-Control-Allow-Origin: *
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff
+
+# The pages load nothing from anywhere but here: their scripts, the
+# stylesheet and the fonts are the site's own, and the only inline script
+# is the JSON-LD, which is data and never runs. Style attributes are
+# allowed because the edge sets the file cut's pose and the weather cut's
+# layers in them. The drawings in assets/cuts carry their own <style>, so
+# the policy is on the pages and not on every file.
+/
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+/about
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+/archive
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+/prompts
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+/404
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+# The fonts change only when their file does, and a new cut gets a new
+# name (fonts/README.md), so a reader keeps them for a year.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

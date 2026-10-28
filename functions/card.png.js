@@ -20,6 +20,15 @@
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm';
 import yogaWasm from 'yoga-wasm-web/dist/yoga.wasm';
 import {
+    issueNumber,
+    parseIssueDate,
+    poseOf,
+    pressDate,
+    sceneOf,
+    selectLead,
+    toIssueParam,
+} from '../modules/issue.js';
+import {
     cardElement,
     HEIGHT,
     initCardRenderer,
@@ -27,14 +36,6 @@ import {
     renderCardPng,
     WIDTH,
 } from './lib/card.mjs';
-import {
-    issueNumber,
-    issueParam,
-    parseIssueDate,
-    poseOf,
-    sceneOf,
-    selectLead,
-} from './lib/issue.mjs';
 
 const rendererReady = initCardRenderer({ yogaWasm, resvgWasm });
 
@@ -66,7 +67,7 @@ function loadFonts(env, request) {
 
 export async function onRequestGet({ request, env, waitUntil }) {
     const url = new URL(request.url);
-    const date = parseIssueDate(url.searchParams.get('issue')) || new Date();
+    const date = parseIssueDate(url.searchParams.get('issue')) || pressDate();
     const number = issueNumber(date);
     const lead = number >= 1 ? selectLead(number) : null;
     if (!lead) return new Response('No such issue', { status: 404 });
@@ -80,7 +81,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
     const version = env.CF_VERSION_METADATA?.id ?? '';
     const key = new Request(
         new URL(
-            `/card.png?issue=${issueParam(date)}&v=${version}`,
+            `/card.png?issue=${toIssueParam(date)}&v=${version}`,
             request.url,
         ),
     );
@@ -120,7 +121,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
 // font fetch for nothing.
 export function onRequestHead({ request }) {
     const url = new URL(request.url);
-    const date = parseIssueDate(url.searchParams.get('issue')) || new Date();
+    const date = parseIssueDate(url.searchParams.get('issue')) || pressDate();
     const number = issueNumber(date);
     const lead = number >= 1 ? selectLead(number) : null;
     if (!lead) return new Response(null, { status: 404 });

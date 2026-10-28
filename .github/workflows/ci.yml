@@ -39,6 +39,12 @@ jobs:
       - name: Check generated assets
         run: bun run assets:check
 
+      # The arithmetic and the data, without a browser: the dealing, the
+      # calendar, the growth of the pools, the drawing's three copies, and
+      # the standing issue in index.html as the renderer prints it.
+      - name: Unit tests
+        run: bun run test:unit
+
       # Playwright pins its browser build, so key the cache on the lockfile.
       - name: Cache Playwright browsers
         id: playwright-cache
