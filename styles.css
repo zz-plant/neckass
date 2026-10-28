@@ -2283,7 +2283,6 @@ a:focus-visible {
     .skip-link,
     .top-nav,
     .back-issue-notice,
-    #colophon-card,
     .top-nav a {
         display: none;
     }

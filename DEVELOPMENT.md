@@ -64,7 +64,7 @@ thin adapter that applies it to UTC dates.
 
 `front-page.js` swaps the standing issue in the markup for the composed one,
 sets the title, the file cut's pose and scene, the weather cut's layers, the
-editorial, the clipping link and the back-issue notice, and publishes the composed issue as
+editorial and the back-issue notice, and publishes the composed issue as
 `window.Neckass.currentIssue`.
 
 There is no bootstrap, no state, no storage and no input handling. The page
@@ -121,8 +121,9 @@ ends when `front-page.js` has rendered.
 3. Contributor/maintainer docs (`README`, `CONTRIBUTING`, this file).
 
 ## Validation checklist (manual)
-1. Today's issue renders whole: lead, seven briefs, four corrections,
-   weather, five classifieds, two letters, the colophon.
+1. Today's issue renders whole: lead, five briefs, three corrections,
+   weather, three classifieds, two letters, the colophon (from No. 770;
+   seven, four and five before it).
 2. `/?issue=2024-09-29` is the first edition, with its editorial and one
    correction; `/?issue=2026-09-29` is the second anniversary.
 3. The first brief continues yesterday's lead and the first correction

@@ -245,13 +245,13 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **Editorial** — `#editorial`, `hidden` unless the issue is a landmark with
   one: a head, paragraphs, and the editor's signature, under the lead and
   across the page, in two columns at ≥760px.
-- **Briefs** — `#briefs-list`, seven items. The first is the *previous*
+- **Briefs** — `#briefs-list`, five items (seven through No. 769). The first is the *previous*
   issue's lead's `followUp` — he has done the next thing — then any calendar
   briefs for the date, then items dealt from `data.HEADLINES`, which holds
   no lead's headline: the lead tells that story, and a brief would repeat
   it on another morning. The earliest issues are shorter: the column
-  grows from three to seven over the first year (`briefsCount`).
-- **Corrections** — `#corrections-list`, four entries. The first retracts a
+  grows from three to its full size over the first year (`briefsCount`).
+- **Corrections** — `#corrections-list`, three entries (four through No. 769). The first retracts a
   detail of the *previous* issue's actual lead, from that lead's `correction`
   field. Then any calendar correction, then the rest from `data.CORRECTIONS`.
   Issue 1 is written and runs one correction, which says there is nothing to
@@ -261,16 +261,17 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
   forecaster's note about him follows in `#weather-line`.
-- **Classifieds** — `#classifieds-list`, five entries. The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`. Each ad's keyword (FOR SALE, LOST, CARD OF THANKS) is marked `.classified__key` and set in the wire's face. From 1000px the ads run in two narrow columns, as a classifieds page runs them.
+- **Classifieds** — `#classifieds-list`, three entries (five through No. 769). The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`. Each ad's keyword (FOR SALE, LOST, CARD OF THANKS) is marked `.classified__key` and set in the wire's face. From 1000px the ads run in two narrow columns, as a classifieds page runs them.
 - **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday and on Mother's Day; next door files her monthly bin letter on the 14th), then one dealt from `data.LETTERS`. A serial letter fills the section's size, so a witness files once per issue. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces; the signature is attribution, like a byline, and is set in the wire's capitals.
-- **Colophon** — the staff line (vacant, unattended, ongoing), the note
-  (*Letters may be edited.*) and the issue's clipping (`#colophon-card`,
-  `/card.png?issue=…`). The folio line already carries the site links; the
-  colophon does not repeat them.
+- **Colophon** — the staff line (vacant, unattended, ongoing). The folio
+  line already carries the site links; the colophon does not repeat them.
 - **Section dealing** — briefs, corrections, classifieds, letters and the
   forecaster's note are dealt in rounds of their pools, like the leads, at a
   fixed number of places a day (`DEALS` in `modules/issue.js`: six, three,
-  four, one, one). Each pool is split once into four quarters, and every
+  four, one, one; from No. 770, a step in `data/growth.js` sets four, two,
+  two, one, one). A section prints the item it carries from the lead and
+  its places, so the page is five briefs, three corrections, three ads and
+  two letters. Each pool is split once into four quarters, and every
   round runs the quarters in order, each reshuffled, so an item does not
   return until three quarters of its pool have run, and a day straddling
   two rounds cannot deal one item twice. A day that needs fewer items
@@ -282,7 +283,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   across a step of growth as well as inside one.
 - **Print** — `@media print` sets ink on white, with every spot colour
   printed black and the sun's disc left white; it drops the desk, the shadow,
-  the site links, the back-issue notice and the clipping link, and keeps the
+  the site links and the back-issue notice, and keeps the
   broadsheet's columns whatever the sheet's width (the ≥760px queries also
   match print).
 
