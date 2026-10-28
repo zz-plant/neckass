@@ -1,8 +1,10 @@
 /**
  * The archive is not stored, it is derived: every past date composes its
  * own issue from the calendar, so the back catalogue is as long as the
- * paper is old and costs nothing to keep. The whole run is listed, by
- * month, each issue with its lead, so a reader can find the fridge one.
+ * paper is old and costs nothing to keep. It is read a month at a time
+ * (/archive?month=YYYY-MM, this month by default), each issue with its
+ * lead, under an index of every month in the run, so a reader can find
+ * the fridge one without the page growing by an issue a day forever.
  */
 
 import { AP_MONTHS, recentIssues, toIssueParam } from './issue.js';
@@ -62,17 +64,16 @@ function landmarks(issues) {
     list.closest('section')?.removeAttribute('hidden');
 }
 
-function monthAnchor(date) {
-    return `month-${toIssueParam(date).slice(0, 7)}`;
-}
+const monthKey = (date) => toIssueParam(date).slice(0, 7);
+const monthHref = (key) => `/archive?month=${key}`;
 
 // The run is two years long and growing, so the months are indexed at
-// the top: a line per year, newest first, each month a link to its head.
-function monthIndex(months) {
+// the top: a line per year, newest first, each month a link to its page.
+function monthIndex(months, shown) {
     const list = document.querySelector('#archive-months');
     if (!list) return;
     const years = new Map();
-    for (const [, issues] of months) {
+    for (const [, { issues }] of months) {
         const { date } = issues[0];
         const year = date.getFullYear();
         if (!years.has(year)) years.set(year, []);
@@ -89,8 +90,11 @@ function monthIndex(months) {
             links.append(
                 ...dates.map((date) => {
                     const link = document.createElement('a');
-                    link.href = `#${monthAnchor(date)}`;
+                    link.href = monthHref(monthKey(date));
                     link.textContent = AP_MONTHS[date.getMonth()];
+                    if (monthKey(date) === shown) {
+                        link.setAttribute('aria-current', 'page');
+                    }
                     return link;
                 }),
             );
@@ -99,6 +103,28 @@ function monthIndex(months) {
         }),
     );
     list.closest('nav')?.removeAttribute('hidden');
+}
+
+// The month before and after the one shown, so a reader can go on
+// reading the run in either direction.
+function monthSteps(months, shown) {
+    const keys = [...months.keys()];
+    const at = keys.indexOf(shown);
+    const nav = document.createElement('nav');
+    nav.className = 'archive-steps';
+    nav.setAttribute('aria-label', 'Other months');
+    for (const [key, label] of [
+        [keys[at + 1], 'Earlier'],
+        [keys[at - 1], 'Later'],
+    ]) {
+        if (!key) continue;
+        const link = document.createElement('a');
+        link.href = monthHref(key);
+        link.rel = label === 'Earlier' ? 'prev' : 'next';
+        link.textContent = `${label}: ${months.get(key).label}`;
+        nav.append(link);
+    }
+    return nav;
 }
 
 function init() {
@@ -112,32 +138,34 @@ function init() {
     // Group by month, most recent first.
     const months = new Map();
     for (const issue of issues) {
-        const key = monthFormatter.format(issue.date);
-        if (!months.has(key)) months.set(key, []);
-        months.get(key).push(issue);
+        const key = monthKey(issue.date);
+        if (!months.has(key)) {
+            months.set(key, {
+                label: monthFormatter.format(issue.date),
+                issues: [],
+            });
+        }
+        months.get(key).issues.push(issue);
     }
 
-    monthIndex(months);
+    // The month asked for, if the run has it; this month otherwise.
+    const asked = new URLSearchParams(window.location.search).get('month');
+    const shown = months.has(asked) ? asked : [...months.keys()][0];
+    const { label, issues: list } = months.get(shown);
 
-    host.replaceChildren(
-        ...[...months].map(([month, list], monthIndex_) => {
-            const section = document.createElement('section');
-            section.className = 'archive-month';
-            section.id = monthAnchor(list[0].date);
-            const head = document.createElement('h2');
-            head.className = 'section-label';
-            head.textContent = month;
-            const ul = document.createElement('ul');
-            ul.className = 'archive-list';
-            ul.append(
-                ...list.map((issue, index) =>
-                    issueRow(issue, monthIndex_ === 0 && index === 0),
-                ),
-            );
-            section.append(head, ul);
-            return section;
-        }),
-    );
+    monthIndex(months, shown);
+
+    const section = document.createElement('section');
+    section.className = 'archive-month';
+    section.id = `month-${shown}`;
+    const head = document.createElement('h2');
+    head.className = 'section-label';
+    head.textContent = label;
+    const ul = document.createElement('ul');
+    ul.className = 'archive-list';
+    ul.append(...list.map((issue) => issueRow(issue, issue === issues[0])));
+    section.append(head, ul, monthSteps(months, shown));
+    host.replaceChildren(section);
 }
 
 if (document.readyState === 'loading') {

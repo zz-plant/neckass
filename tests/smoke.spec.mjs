@@ -636,17 +636,37 @@ test.describe('The Gazette', () => {
         await expect(links.first()).toBeVisible();
         expect(await links.count()).toBeGreaterThan(5);
 
-        // The month index reaches every month in the run.
-        const months = await page.evaluate(() => ({
-            links: [...document.querySelectorAll('#archive-months a')].map(
-                (a) => a.getAttribute('href'),
-            ),
-            sections: document.querySelectorAll('.archive-month').length,
-        }));
-        expect(months.links.length).toBe(months.sections);
-        for (const href of months.links) {
-            await expect(page.locator(href)).toHaveCount(1);
-        }
+        // The page is one month, this one, and lists today first.
+        await expect(page.locator('.archive-month')).toHaveCount(1);
+        await expect(page.locator('.archive-tag--current')).toHaveText(
+            'Current issue',
+        );
+        // The month index reaches every month in the run, from the first
+        // edition's on, and each link opens that month.
+        const months = await page
+            .locator('#archive-months a')
+            .evaluateAll((links) => links.map((a) => a.getAttribute('href')));
+        const first = new Date(2024, 8, 29);
+        const today = pressDate();
+        expect(months.length).toBe(
+            (today.getFullYear() - first.getFullYear()) * 12 +
+                today.getMonth() -
+                first.getMonth() +
+                1,
+        );
+        expect(months.at(-1)).toBe('/archive?month=2024-09');
+        await page.goto(new URL(months.at(-1), BASE_URL).toString());
+        await expect(page.locator('.archive-month .section-label')).toHaveText(
+            'September 2024',
+        );
+        await expect(page.locator('.archive-month li')).toHaveCount(2);
+        await expect(
+            page.locator('#archive-months a[aria-current="page"]'),
+        ).toHaveText('Sept.');
+        await expect(page.locator('.archive-steps a')).toHaveText([
+            'Later: October 2024',
+        ]);
+        await page.goto(`${BASE_URL}archive`);
 
         // Follow one and confirm it renders the issue it advertised.
         const href = await links.nth(3).getAttribute('href');

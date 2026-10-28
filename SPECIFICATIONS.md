@@ -293,19 +293,21 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   match print).
 
 ## Back issues (`archive.html`)
-- Lists every issue newest first, by month (`#archive-run`, a
-  `.archive-month` per month with a `.section-label` head), each row a link
-  to `/?issue=YYYY-MM-DD` carrying the folio (`No. n · Weekday d`) and the
-  issue's lead in Fraunces, the folio in the wire's face. A month's head is
-  set in Fraunces at 1.4rem under the department rule, so a reader
-  scrolling a year can find the month. The current issue and the landmarks
-  carry an `.archive-tag` under the lead.
+- Lists one month of issues, newest first (`#archive-run`, one
+  `.archive-month` with a `.section-label` head): this month by the press
+  clock, or the month `?month=YYYY-MM` names if the run has it. Each row is
+  a link to `/?issue=YYYY-MM-DD` carrying the folio (`No. n · Weekday d`)
+  and the issue's lead in Fraunces, the folio in the wire's face. The
+  month's head is set in Fraunces at 1.4rem under the department rule. The
+  current issue and the landmarks carry an `.archive-tag` under the lead.
+  At the foot, `.archive-steps` links the month before and after, in the
+  wire's face. The page stays a month long however long the run gets.
 - The landmark editions are listed first under *Of note*
   (`#archive-landmarks`), oldest first.
 - *By month* (`#archive-months`) follows: a line per year, newest first,
-  each month in AP style linking to its head in the run
-  (`#month-YYYY-MM`). The months wrap in their own column beside the
-  year.
+  each month in AP style linking to its page (`/archive?month=YYYY-MM`);
+  the month shown is marked `aria-current="page"` and set in the ink. The
+  months wrap in their own column beside the year.
 - The list is derived from the calendar, not stored, and stops at issue 1;
   `issue.recentIssues()` returns the whole run with each lead and tag.
 - The folio takes the ledger teal and the lead the ink, which underlines in
