@@ -4,6 +4,10 @@
 // issue keeps what it was printed with. The first step of each pool is
 // the pool as it stood when it could not grow.
 //
+// A step may also set `perIssue`, the places a day the section deals
+// from then on, which with the item each section carries from the lead
+// is how many the page prints.
+//
 // To add to a pool: append the new items to the end of it, and add a
 // step here at an issue that has not run yet, with the pool's new
 // length. Never insert an item, reorder a pool or remove one; edit an
@@ -19,15 +23,15 @@ export const GROWTH = {
     ],
     briefs: [
         { from: 1, size: 143 },
-        { from: 770, size: 155 },
+        { from: 770, size: 155, perIssue: 4 },
     ],
     corrections: [
         { from: 1, size: 50 },
-        { from: 770, size: 62 },
+        { from: 770, size: 62, perIssue: 2 },
     ],
     classifieds: [
         { from: 1, size: 60 },
-        { from: 770, size: 72 },
+        { from: 770, size: 72, perIssue: 2 },
     ],
     letters: [
         { from: 1, size: 33 },

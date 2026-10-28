@@ -218,10 +218,6 @@ function renderIssue(issue) {
         signature.textContent = `— ${letter.signature}`;
         li.append(body, signature);
     });
-
-    // The clipping is the issue's social card, drawn at the edge.
-    const clipping = document.querySelector('#colophon-card');
-    if (clipping) clipping.href = `/card.png?issue=${issue.issueParam}`;
 }
 
 function requestedIssueDate() {

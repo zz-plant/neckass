@@ -143,11 +143,17 @@ test.describe('The Gazette', () => {
             );
         }
 
-        // Every section is dealt at its documented size. A pool that empties
-        // would silently shorten one of these.
-        await expect(page.locator('#briefs-list li')).toHaveCount(7);
-        await expect(page.locator('#corrections-list li')).toHaveCount(4);
-        await expect(page.locator('#classifieds-list li')).toHaveCount(5);
+        // Every section is dealt at its documented size: the item it
+        // carries from the lead and the places it deals that day. A pool
+        // that empties would silently shorten one of these.
+        for (const section of ['briefs', 'corrections', 'classifieds']) {
+            const step = GROWTH[section]
+                .filter(({ from }) => from <= issue.number)
+                .at(-1);
+            await expect(page.locator(`#${section}-list li`)).toHaveCount(
+                1 + (step.perIssue ?? DEALS[section].perIssue),
+            );
+        }
         await expect(page.locator('#letters-list li')).toHaveCount(2);
 
         // No section may repeat an item inside one issue.
@@ -225,11 +231,13 @@ test.describe('The Gazette', () => {
         expect(birthday.letters[1]?.signature).toBe('His mother');
         expect(anniversary.briefs[1]).toMatch(/^The Gazette is three today/);
         // A dated item takes the place of a dealt one; sizes do not change.
+        // Both days are after No. 770, when the page went to five briefs
+        // and three ads.
         expect([
             thanksgiving.briefs.length,
             birthday.letters.length,
             birthday.classifieds.length,
-        ]).toEqual([7, 2, 5]);
+        ]).toEqual([5, 2, 3]);
     });
 
     test('standing matters compound with the run', () => {
@@ -577,6 +585,15 @@ test.describe('The Gazette', () => {
             }
         }
         expect(hash.toString(16)).toBe('27b53208');
+
+        // From No. 770 the page prints fewer items a day: five briefs,
+        // three corrections, three ads, two letters.
+        const later = composeIssue(new Date(2024, 8, 28 + 800));
+        expect(
+            ['briefs', 'corrections', 'classifieds', 'letters'].map(
+                (section) => later[section].filter(Boolean).length,
+            ),
+        ).toEqual([5, 3, 3, 2]);
     });
 
     test('the archive lists issues that resolve to real papers', async ({

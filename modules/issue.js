@@ -293,9 +293,9 @@ function quarteredRound(section, step, round) {
 }
 
 // The places in a section's pool dealt to an issue, in order.
-function dealtPlaces(section, number, count = DEALS[section].perIssue) {
-    const { perIssue } = DEALS[section];
+function dealtPlaces(section, number, count = placesFor(section, number)) {
     const step = stepFor(GROWTH[section], number);
+    const perIssue = placesFor(section, number);
     const dealt = [];
     let round = -1;
     let order = [];
@@ -310,7 +310,13 @@ function dealtPlaces(section, number, count = DEALS[section].perIssue) {
     return dealt;
 }
 
-function dealFor(section, number, count = DEALS[section].perIssue) {
+// How many places a day a section deals: its own, or what the step of
+// growth an issue falls in has set.
+function placesFor(section, number) {
+    return stepFor(GROWTH[section], number).perIssue ?? DEALS[section].perIssue;
+}
+
+function dealFor(section, number, count) {
     const { pool } = DEALS[section];
     return dealtPlaces(section, number, count).map((place) => pool[place]);
 }
@@ -343,10 +349,18 @@ export function cutAltOf(lead) {
 }
 
 // The earliest issues are shorter. He had done less. The briefs column
-// grows one item every six weeks or so until it reaches its full seven,
-// and for the first two months the letters page carries one letter.
+// grows one item every six weeks or so until it reaches its full size,
+// and for the first two months the letters page carries one letter. A
+// section's full size is the item it carries from the lead (the
+// follow-up, the retraction, the lead's own ad) and the places it deals.
+function sizeOf(section, number) {
+    return 1 + placesFor(section, number);
+}
 function briefsCount(number) {
-    return Math.min(7, 3 + Math.floor((number - 1) / 45));
+    return Math.min(
+        sizeOf('briefs', number),
+        3 + Math.floor((number - 1) / 45),
+    );
 }
 function lettersCount(number) {
     return number <= 60 ? 1 : 2;
@@ -417,7 +431,11 @@ export function composeIssue(date = new Date()) {
         // Yesterday's retraction first, then the rest.
         corrections: [
             ...fixedCorrections,
-            ...dealAfter('corrections', 4, fixedCorrections),
+            ...dealAfter(
+                'corrections',
+                sizeOf('corrections', number),
+                fixedCorrections,
+            ),
         ],
         weatherNumbers: weatherFor(date, rng),
         weather: dealFor('weather', number)[0] || '',
@@ -426,7 +444,11 @@ export function composeIssue(date = new Date()) {
         // it to. The rest are dealt from the general pools.
         classifieds: [
             ...fixedClassifieds,
-            ...dealAfter('classifieds', 5, fixedClassifieds),
+            ...dealAfter(
+                'classifieds',
+                sizeOf('classifieds', number),
+                fixedClassifieds,
+            ),
         ],
         letters: [
             ...fixedLetters,
