@@ -3,7 +3,7 @@
 // of one dealt item, so the counts do not change. Weekdays are 0–6 from
 // Sunday. `nth` is which of that weekday in the month; `dayAfter` runs
 // the item the day after the spec matches, which is how Wednesday
-// reports on Tuesday's council meeting.
+// reports on Tuesday's book club.
 //
 // Placeholders: {age}, {ageLess2}, {years} and {yearsWord} (of the
 // paper), {year}, {lastYear}. A rule may set `from: 'YYYY-MM-DD'` and
@@ -16,34 +16,34 @@ export const CALENDAR = [
     {
         on: { weekday: 1 },
         section: 'classifieds',
-        item: 'LOST: a weekend. Owner said Friday he would "do absolutely nothing" and, by his account, ran out of time.',
+        item: 'LOST: a weekend. Owner said Friday he would “do absolutely nothing” and, by his account, ran out of time.',
     },
     {
         on: { weekday: 5 },
         section: 'briefs',
-        item: 'Neckass has said "is it Friday already?" He has said it on each of the last four Fridays and one Thursday.',
+        item: 'Neckass has said “is it Friday already?” He has said it on each of the last four Fridays and one Thursday.',
     },
     {
         on: { weekday: 6 },
         section: 'briefs',
-        item: 'Neckass has gone to the farmers market "for a look" and bought a plant. It is the fourth plant. The first three are on the windowsill and are not expected to recover.',
+        item: 'Neckass went to the farmers market “for a look” and bought a plant. It is the fourth plant. The first three are on the windowsill and are not expected to recover.',
     },
     {
         on: { weekday: 0 },
         section: 'briefs',
-        item: 'Neckass said Sunday is "for resetting." He has reset by watching nine episodes of a show he says he does not like.',
+        item: 'Neckass said Sunday is “for resetting.” He reset by watching nine episodes of a show he says he does not like.',
     },
 
-    // ---- The council: first and third Tuesday ----------------------
+    // ---- Book club: first and third Tuesday ------------------------
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
         section: 'briefs',
-        item: "The council met Tuesday, and Neckass spoke for eleven minutes under a three-minute limit for public comment, on an item that was not on the agenda and is now on next month's.",
+        item: 'Book club met Tuesday, and Neckass, who had not read the book, spoke for twelve minutes under a three-minute rule, on the cover, and proposed it again for next month.',
     },
     {
         on: { dayAfter: { weekday: 2, nth: [1, 3] } },
         section: 'corrections',
-        item: "An item on Tuesday's council meeting gave the length of public comment as three minutes. That is the limit. The comment ran eleven.",
+        item: 'An item on Tuesday’s book club gave each member’s turn as three minutes. That is the rule. His turn ran twelve.',
     },
 
     // ---- The month ------------------------------------------------
@@ -55,29 +55,29 @@ export const CALENDAR = [
     {
         on: { special: 'friday13' },
         section: 'briefs',
-        item: 'Neckass said he is "not superstitious" and has not left the house.',
+        item: 'Neckass said he is “not superstitious” and has not left the house.',
     },
 
     // ---- The year -------------------------------------------------
     {
         on: { month: 1, day: 1 },
         section: 'briefs',
-        item: "Neckass announced his resolutions for {year}. They are last year's, with the year changed.",
+        item: 'Neckass announced his resolutions for {year}. They are last year’s, with the year changed.',
     },
     {
         on: { month: 1, day: 2 },
         section: 'briefs',
-        item: 'Neckass described Jan. 1 as "a practice day" and started the resolutions over today.',
+        item: 'Neckass described Jan. 1 as “a practice day” and started the resolutions over today.',
     },
     {
         on: { month: 2, day: 14 },
         section: 'classifieds',
-        item: 'PERSONAL: to whoever received the card signed "guess who" — he has asked us to confirm it was him.',
+        item: 'PERSONAL: to whoever received the card signed “guess who” — he has asked us to confirm it was him.',
     },
     {
         on: { special: 'leapDay' },
         section: 'briefs',
-        item: 'Neckass, who was not born on a leap day and had not been asked, said he is "technically only nine."',
+        item: 'Neckass, who was not born on a leap day and had not been asked, said he is “technically only nine.”',
     },
     {
         on: { special: 'birthday' },
@@ -87,7 +87,7 @@ export const CALENDAR = [
     {
         on: { special: 'birthday' },
         section: 'classifieds',
-        item: 'PERSONAL: happy birthday to the man at No. 12, from the people at 14, who would like the recycling bin back.',
+        item: 'PERSONAL: happy birthday to the man at No. 12, from the people at No. 14, who would like the recycling bin back.',
     },
     {
         on: { special: 'birthday' },
@@ -105,32 +105,32 @@ export const CALENDAR = [
     {
         on: { dayAfter: { special: 'dstStart' } },
         section: 'briefs',
-        item: 'Neckass has been an hour early for everything today. He has described this as "being organized."',
+        item: 'Neckass has been an hour early for everything today. He has described this as “being organized.”',
     },
     {
         on: { month: 3, day: 20 },
         section: 'briefs',
-        item: 'Neckass, in shorts at 39 degrees, has declared it spring.',
+        item: 'Neckass, in shorts at 39 degrees, declared it spring.',
     },
     {
         on: { month: 4, day: 1 },
         section: 'briefs',
-        item: "Neckass attempted an April Fools' joke on the office. He explained it first.",
+        item: 'Neckass attempted an April Fools’ joke on the office. He explained it first.',
     },
     {
         on: { month: 4, day: 15 },
         section: 'briefs',
-        item: 'Neckass filed his taxes at 11:52 p.m. He has described this as "early, for me."',
+        item: 'Neckass filed his taxes at 11:52 p.m. He has described this as “early, for me.”',
     },
     {
         on: { weekday: 1, last: true, month: 5 },
         section: 'briefs',
-        item: 'Neckass, who has been told twice that there is no collection on the holiday, put the trash out and has said "they might still come."',
+        item: 'Neckass went in to work on Memorial Day, having been told twice it was a holiday, and sat at his desk until 11 waiting for “the others.”',
     },
     {
         on: { month: 6, day: 21 },
         section: 'briefs',
-        item: 'Neckass said "the days are already getting shorter." It is the longest day of the year.',
+        item: 'Neckass said “the days are already getting shorter.” It is the longest day of the year.',
     },
     {
         on: { dayAfter: { month: 7, day: 4 } },
@@ -140,18 +140,18 @@ export const CALENDAR = [
     {
         on: { weekday: 1, nth: [1], month: 9 },
         section: 'briefs',
-        item: 'Neckass said "well, summer\'s over." He said it on July 9 as well.',
+        item: 'Neckass said “well, summer’s over.” He said it on July 9 as well.',
     },
     {
         on: { special: 'anniversary' },
         unlessWritten: true,
         section: 'briefs',
-        item: 'The Gazette is {yearsWord} today. Neckass has said "is it?" and asked whether the paper had ever covered him.',
+        item: 'The Gazette is {yearsWord} today. Neckass has said “is it?” and asked whether the paper had ever covered him.',
     },
     {
         on: { month: 10, day: 31 },
         section: 'briefs',
-        item: 'Neckass answered the door to trick-or-treaters with nothing in the house. He has offered a banana and been declined.',
+        item: 'Neckass answered the door to trick-or-treaters with nothing in the house. He offered a banana and was declined.',
     },
     {
         on: { month: 10, day: 31 },
@@ -161,7 +161,7 @@ export const CALENDAR = [
     {
         on: { special: 'electionDay' },
         section: 'briefs',
-        item: 'Neckass, having voted, asked the poll worker whether he had gotten it right and was told she could not say, which he has taken as a no.',
+        item: 'Neckass wore an “I voted” sticker to work. It is from 2022. He said it “still counts.”',
     },
     {
         on: { special: 'dstEnd' },
@@ -171,12 +171,12 @@ export const CALENDAR = [
     {
         on: { special: 'thanksgiving' },
         section: 'briefs',
-        item: 'Neckass was asked to bring a side. He has brought a bag of rolls, opened, and described them as "artisan."',
+        item: 'Neckass was asked to bring a side. He brought a bag of rolls, opened, and described them as “artisan.”',
     },
     {
         on: { dayAfter: { special: 'thanksgiving' } },
         section: 'briefs',
-        item: 'Neckass left the Thanksgiving table with one plate of leftovers and went back for a second, "for someone else."',
+        item: 'Neckass left the Thanksgiving table with one plate of leftovers and went back for a second, “for someone else.”',
     },
     {
         on: { month: 12, day: 24 },
@@ -186,12 +186,12 @@ export const CALENDAR = [
     {
         on: { month: 12, day: 25 },
         section: 'briefs',
-        item: 'Neckass received a gift he gave someone last year. He has said "oh, nice" and asked where they found it.',
+        item: 'Neckass received a gift he gave someone last year. He said “oh, nice” and asked where they found it.',
     },
     {
         on: { month: 12, day: 31 },
         section: 'briefs',
-        item: 'Neckass said {year} was "a building year" and that {lastYear} was too.',
+        item: 'Neckass said {year} was “a building year” and that {lastYear} was too.',
     },
 
     // ---- Standing matters ------------------------------------------
@@ -206,13 +206,13 @@ export const CALENDAR = [
     {
         on: { day: 2, from: '2026-04-02' },
         section: 'briefs',
-        item: 'The package, on the passenger seat since March, has now been "going out this week" for {package.days} days.',
+        item: 'The package, on the passenger seat since March, has now been “going out this week” for {package.days} days.',
     },
     {
         on: { day: 4, from: '2026-08-04' },
         section: 'letters',
         item: {
-            body: 'The $35 that remains of the $40 from the Fourth of July has been outstanding for {debt.days} days. The $5 came back with the note "we even?" I have kept the note.',
+            body: 'The $35 that remains of the $40 from the Fourth of July has been outstanding for {debt.days} days. The $5 came back with the note “we even?” I have kept the note.',
             signature: 'The friend from the Fourth, $35 down',
         },
     },
@@ -225,20 +225,20 @@ export const CALENDAR = [
         on: { day: 14, from: '2025-10-14' },
         section: 'letters',
         item: {
-            body: 'I am at 14. This is letter number {bin.count} about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
+            body: 'I am at No. 14. This is letter number {bin.count} about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
             signature: 'Next door',
         },
     },
     {
         on: { day: 15, from: '2025-10-15' },
         section: 'corrections',
-        item: "The Gazette printed next door's letter of the 14th about the bin and has confirmed one fact in it, the address, 14. The wind remains unverified, and the bin has not moved.",
+        item: 'The Gazette printed next door’s letter of the 14th about the bin and has confirmed one fact in it, the address, No. 14. The wind remains unverified, and the bin has not moved.',
     },
     {
         on: { weekday: 0, nth: [2], month: 5 },
         section: 'letters',
         item: {
-            body: "I am his mother. He called Saturday, the day before Mother's Day, to say he would call Sunday. I have read this paper every day since the first one, {ma.count} issues of it. It is how I know about the shoes.",
+            body: 'I am his mother. He called Saturday, the day before Mother’s Day, to say he would call Sunday. I have read this paper every day since the first one, {ma.count} issues of it. It is how I know about the shoes.',
             signature: 'His mother',
         },
     },

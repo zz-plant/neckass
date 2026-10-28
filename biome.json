@@ -7,13 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!vendor/**",
-      "!docs/assets/**",
-      "!bun.lock",
-      "!**/*.svg"
-    ]
+    "includes": ["**", "!vendor/**", "!bun.lock", "!**/*.svg"]
   },
   "formatter": {
     "enabled": true,

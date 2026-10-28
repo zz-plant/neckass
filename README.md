@@ -15,8 +15,8 @@ reading.
   briefs, the corrections, the weather. The archive is derived, not
   stored, and costs nothing.
 - **Continuous.** Today's paper retracts a detail of yesterday's lead and
-  runs the next thing he did. It knows what day it is: the council's
-  Tuesday, the clocks, his birthday, the paper's own anniversary.
+  runs the next thing he did. It knows what day it is: the book
+  club's Tuesday, the clocks, his birthday, the paper's own anniversary.
 - **Static-first.** The browser and the edge import the same ES modules;
   any static host serves it. A Cloudflare Worker adds what a file cannot:
   the RSS feed and a social card drawn per issue.
@@ -70,7 +70,7 @@ letter, then tomorrow the retraction and what he did next.
 A few issues are written rather than dealt (`data/editions.js`): the first
 edition, the hundredth, No. 288, and the anniversaries, each with its own
 lead and an editorial. The calendar (`data/calendar.js`) runs dated items on
-the days they happen — the council meets the first and third Tuesday and
+the days they happen — the book club meets the first and third Tuesday and
 Wednesday reports on it; the clocks go forward and back; his mother writes
 in on his birthday.
 
@@ -173,15 +173,9 @@ gap:
 
 ### Generated assets
 
-`docs/assets/` is build output, not hand-edited artwork. Every PNG is rendered
-from `docs/assets/source.svg` by `bun run assets:generate`, which needs
-`rsvg-convert` locally; generation is deterministic, so regenerating an
-unchanged source produces byte-identical files.
-
-`bun run assets:check` verifies dimensions, colour type, bit depth and a
-minimum byte size per scene, and fails on any PNG that is not a known scene —
-that last rule is what stops hand-added files rotting in the directory
-unnoticed. Both scripts read their scene list from `scripts/asset-specs.ts`.
+Every PNG the site serves is committed and checked by `bun run assets:check`:
+the four social cards below, at their size and above a minimum byte count,
+and the three icons the pages and the manifest name, at the sizes they claim.
 
 ### The file cut
 
@@ -197,8 +191,7 @@ Run `bun run og:generate` after it.
 the repo root, are 1200x630, and are rendered by `bun run og:generate` from
 `scripts/generate-og.ts` — with the same layout (`functions/lib/card.mjs`),
 renderer (Satori and resvg) and Fraunces as the per-issue `/card.png`, so
-every shared link previews as the same paper. `assets:check` covers them too,
-so one command checks every generated image.
+every shared link previews as the same paper.
 
 They are PNG deliberately. They used to be SVG, which no major platform renders
 as a link preview, so shared neckass.com links showed no image at all.
