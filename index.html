@@ -65,8 +65,8 @@
              yet been told. -->
         <header class="masthead masthead--front">
             <div class="masthead__folio">
-                <!-- Replaced with the active issue's date and number on load. -->
-                <p class="masthead__line" id="masthead-date">Published daily</p>
+                <!-- The issue's date and number; see the standing issue below. -->
+                <p class="masthead__line" id="masthead-date"><span>Tuesday, October 27, 2026</span><span class="masthead__sep"> · </span><span>Vol. III, No. 759</span></p>
                 <nav class="top-nav" aria-label="Site">
                     <a href="/archive">Back issues</a>
                     <a href="/about">Reference</a>
@@ -77,22 +77,23 @@
                 <h1 class="nameplate__name">The Gazette</h1>
                 <p class="nameplate__motto">One man, reported daily since Sept. 29, 2024.</p>
             </div>
-            <p class="back-issue-notice" id="back-issue-notice" hidden>
+            <p class="back-issue-notice" id="back-issue-notice" hidden="">
                 <span id="back-issue-text"></span>
                 <a href="/">Return to today’s issue.</a>
             </p>
         </header>
 
         <main class="container">
-            <!-- The standing issue. modules/front-page.js swaps in the one for
-                 today's date; everything here is real copy so the paper is
-                 legible before, and without, that. -->
-            <section class="front-page" aria-labelledby="front-page-title">
+            <!-- The standing issue, No. 759, printed by `bun run standing`
+                 with the renderer the edge uses (modules/render.js). The
+                 edge prints the day's issue over it as it serves the page;
+                 on a static host, front-page.js does. -->
+            <section class="front-page" aria-labelledby="front-page-title" data-issue="759">
                 <h2 class="sr-only" id="front-page-title">Today’s issue</h2>
 
                 <article class="lead">
                     <div class="lead__story">
-                        <h3 class="lead__headline" id="lead-headline"><a href="/" id="lead-link">Neckass has been “five minutes away” since 2019. He is at home.</a></h3>
+                        <h3 class="lead__headline" id="lead-headline"><a href="/?issue=2026-10-27" id="lead-link">Neckass has been “five minutes away” since 2019. He is at home.</a></h3>
                         <p class="lead__deck" id="lead-deck">He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.</p>
                         <p class="lead__byline" id="lead-byline">From wire reports</p>
                     </div>
@@ -103,7 +104,7 @@
                                  lead's pose (data/poses.js) and each prop's switch from its
                                  scene (data/scenes.js). Unposed, it is the house pose, on
                                  the bare sheet. -->
-                            <svg class="cut-figure" id="cut-figure" viewBox="0 0 182 278" width="182" height="278" role="img" aria-label="Line-cut of a man standing with one hand raised, explaining.">
+                            <svg class="cut-figure" id="cut-figure" viewBox="0 0 182 278" width="182" height="278" role="img" aria-label="Line-cut of a man with one hand held to his ear, holding a phone, in front of a couch." style="--tilt: 8deg; --lean: 2deg; --arm-near: 4deg; --forearm-near: 4deg; --hand-near: 0deg; --arm-far: -80deg; --forearm-far: -151deg; --hand-far: 0deg; --leg-near: 2deg; --leg-far: -3deg; --phone: 1; --cup: 0; --hat: 0; --doorway: 0; --couch: 1; --fridge: 0; --tv: 0; --desk: 0; --table: 0; --easel: 0; --signpost: 0; --shelf: 0; --clock: 0; --alarm: 0; --parcel: 0; --shoe: 0; --rain: 0; --shower: 0; --smoke: 0" data-pose="phone">
                                 <defs class="scan">
                                     <filter id="cut-ink-a" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
                                         <feTurbulence type="fractalNoise" baseFrequency="1.25" numOctaves="3" seed="4" result="fibre" />
@@ -401,22 +402,19 @@
                                     <path class="heavy" stroke-width="1.9" d="M150.3 250.5 l0.1 0" />
                                 </g>
                             </svg>
-                            <figcaption><b>FILE</b> — <span id="cut-caption">Neckass, explaining.</span> The Gazette has one cut of him and has not needed a second.</figcaption>
+                            <figcaption><b>FILE</b> — <span id="cut-caption">Neckass, on the phone.</span> The Gazette has one cut of him and has not needed a second.</figcaption>
                         </figure>
-                        <!-- The three issues before this one, by their leads. Filled
-                             by front-page.js; without it, the way to the archive. -->
+                        <!-- The three issues before this one, by their leads. -->
                         <nav class="earlier" aria-labelledby="earlier-title">
                             <h3 class="section-label" id="earlier-title">Earlier issues</h3>
-                            <ol class="earlier__list" id="earlier-list">
-                                <li><a href="/archive"><span class="earlier__head">Back issues</span></a></li>
-                            </ol>
+                            <ol class="earlier__list" id="earlier-list"><li><a href="/?issue=2026-10-26"><span class="earlier__folio">Monday · No. 758</span><span class="earlier__head">Neckass’s smoke alarm has been chirping for nine days</span></a></li><li><a href="/?issue=2026-10-25"><span class="earlier__folio">Sunday · No. 757</span><span class="earlier__head">Neckass apologized for being late by explaining that he was not late</span></a></li><li><a href="/?issue=2026-10-24"><span class="earlier__folio">Saturday · No. 756</span><span class="earlier__head">Neckass cleaned around the object rather than move it</span></a></li></ol>
                         </nav>
                     </div>
                 </article>
 
                 <!-- Only a landmark issue carries one: the first edition, an
-                     anniversary. front-page.js reveals it when the issue has it. -->
-                <section class="box box--editorial" id="editorial" aria-labelledby="editorial-title" hidden>
+                     anniversary. The renderer shows it when the issue has it. -->
+                <section class="box box--editorial" id="editorial" aria-labelledby="editorial-title" hidden="">
                     <h3 class="section-label section-label--rubric" id="editorial-title">From the editor</h3>
                     <h4 class="editorial-head" id="editorial-head">Why a paper</h4>
                     <div class="editorial-body" id="editorial-body">
@@ -428,23 +426,13 @@
                 <div class="front-page__columns">
                     <section class="column column--briefs" aria-labelledby="briefs-title">
                         <h3 class="section-label" id="briefs-title">In brief</h3>
-                        <ul class="briefs" id="briefs-list">
-                            <li>Neckass read the room, at a baby shower, and proposed a drinking game.</li>
-                            <li>Neckass wrote “no rush” and followed up four minutes later.</li>
-                            <li>Neckass said “keep the change” to a card reader.</li>
-                            <li>Neckass’s houseplant has outlived the guitar, the sourdough starter and the running. His roommate waters it.</li>
-                            <li>Neckass texted the group chat to ask whether anyone had his number.</li>
-                        </ul>
+                        <ul class="briefs" id="briefs-list"><li>A battery for the smoke alarm is on the counter. The alarm is in the other room, chirping.</li><li>Neckass apologized for being late. The apology was the route.</li><li>“Quick question” now averages thirty-eight minutes, down from forty, according to the colleague with the timer.</li><li>Neckass has been sitting in the parked car for eleven minutes finishing a song. The song is four minutes long.</li><li>Neckass has a folder called “Important” containing one screenshot of a cat. It is not his cat.</li><li>The voice note has been transcribed. It says he is running late and does not say when.</li><li>Neckass said “keep the change” to a card reader.</li></ul>
                     </section>
 
                     <div class="column column--side">
                         <section class="box" aria-labelledby="corrections-title">
                             <h3 class="section-label section-label--rubric" id="corrections-title">Corrections</h3>
-                            <ul class="corrections" id="corrections-list">
-                                <li>The ten-year plan is one page printed on both sides, not one page. The second side is blank.</li>
-                                <li>The Gazette stated that Neckass had finished. He had stopped.</li>
-                                <li>An earlier edition quoted Neckass as saying “no worries.” There were four, and he had caused three.</li>
-                            </ul>
+                            <ul class="corrections" id="corrections-list"><li>The smoke alarm chirps once a minute, not “on and off,” as he told the Gazette. He has moved his bed to the other room and describes the problem as solved. See <a href="/?issue=2026-10-26">No. 758</a>.</li><li>An earlier edition described Neckass as happy to help. He was happy.</li><li>We said Neckass finished the puzzle. One piece is missing, and he has stopped mentioning it.</li><li>A caption gave Neckass as “at 80 percent.” That was the phone.</li></ul>
                         </section>
 
                         <section class="box box--weather" aria-labelledby="weather-title">
@@ -453,7 +441,7 @@
                                 <!-- The same drawing as assets/cuts/weather.svg, inline so the
                                      desk can switch its layers: front-page.js reads the forecast
                                      and sets --sun, --cloud, --rain and --wind. -->
-                                <svg class="weather-cut" id="weather-cut" viewBox="6 0 84 72" width="84" height="72" aria-hidden="true" focusable="false">
+                                <svg class="weather-cut" id="weather-cut" viewBox="6 0 84 72" width="84" height="72" aria-hidden="true" focusable="false" style="--sun: 1; --cloud: 0; --rain: 0; --wind: 0">
                                     <g class="sky-sun">
                                         <circle class="sky-filled" cx="34" cy="26" r="13" />
                                         <path class="sky-stroke" d="M34 5 v5 M34 42 v5 M13 26 h5 M50 26 h5 M19 11 l4 4 M45 37 l4 4 M49 11 l-4 4 M23 37 l-4 4" />
@@ -469,8 +457,8 @@
                                     </g>
                                 </svg>
                                 <div>
-                                    <p class="weather-numbers" id="weather-numbers">High 68°, low 51°. Winds W 6 mph. Sunset 7:10 p.m.</p>
-                                    <p class="weather" id="weather-line">Sunny, according to Neckass, who has not been outside and is going by the window.</p>
+                                    <p class="weather-numbers" id="weather-numbers">High 49°, low 35°. Winds SW 4 mph. Sunset 5:17 p.m.</p>
+                                    <p class="weather" id="weather-line">Clear. “We should get out more,” from the couch.</p>
                                 </div>
                             </div>
                         </section>
@@ -480,25 +468,12 @@
                 <div class="front-page__columns front-page__columns--lower">
                     <section class="box box--classifieds" aria-labelledby="classifieds-title">
                         <h3 class="section-label" id="classifieds-title">Classifieds</h3>
-                        <ul class="classifieds" id="classifieds-list">
-                            <li><b class="classified__key">PERSONAL:</b> to the man who was five minutes away — we have gone home.</li>
-                            <li><b class="classified__key">FOUND:</b> set of keys, outside the gym, with a gym tag on them. Owner has been inside twice.</li>
-                            <li><b class="classified__key">WANTED:</b> someone to smell some leftovers. They are nine days old. Urgent.</li>
-                        </ul>
+                        <ul class="classifieds" id="classifieds-list"><li><b class="classified__key">PERSONAL:</b> to the man who was five minutes away — we have gone home.</li><li><b class="classified__key">FREE:</b> half a bag of salad, best by yesterday, described by owner as “probably fine.”</li><li><b class="classified__key">WANTED:</b> someone to smell some leftovers. They are nine days old. Urgent.</li><li><b class="classified__key">WANTED:</b> anyone but him to put on a duvet cover. He has been inside the current one twice.</li><li><b class="classified__key">FOR SALE:</b> air fryer, used once, for toast.</li></ul>
                     </section>
 
                     <section class="box" aria-labelledby="letters-title">
                         <h3 class="section-label" id="letters-title">Letters</h3>
-                        <ul class="letters" id="letters-list">
-                            <li>
-                                <p class="letter-body">He has been five minutes away from my house since 2019. I have moved.</p>
-                                <p class="letter-signature">— A former neighbor</p>
-                            </li>
-                            <li>
-                                <p class="letter-body">I am in IT. The printer is out of paper. That is all that is wrong with it. That is all that has ever been wrong with it.</p>
-                                <p class="letter-signature">— IT</p>
-                            </li>
-                        </ul>
+                        <ul class="letters" id="letters-list"><li><p class="letter-body">He has been five minutes away from my house since 2019. I have moved.</p><p class="letter-signature">— A former neighbor</p></li><li><p class="letter-body">He offered to help me move. He arrived after the van, carried a lamp to the van, and told the driver a route. The driver had a route.</p><p class="letter-signature">— The friend who moved</p></li></ul>
                     </section>
                 </div>
                 <footer class="colophon">

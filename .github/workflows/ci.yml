@@ -39,6 +39,11 @@ jobs:
       - name: Check generated assets
         run: bun run assets:check
 
+      # index.html's standing issue is printed by the renderer the edge
+      # uses; this fails if it was not reprinted after a change.
+      - name: Check the standing issue
+        run: bun run standing --check
+
       # Playwright pins its browser build, so key the cache on the lockfile.
       - name: Cache Playwright browsers
         id: playwright-cache

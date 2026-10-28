@@ -8,8 +8,12 @@ following a line number that has since moved.
 ## Shape of the site
 - **The front page (`index.html`)** is one issue: lead item with deck and
   byline, a briefs column, corrections, weather, classifieds, letters, and a
-  colophon. A complete standing issue is present in the markup, so the page
-  reads without JavaScript.
+  colophon. The edge prints the day's issue into the page as it serves it,
+  every section, with the renderer the browser uses (`modules/render.js`),
+  so the page reads whole without JavaScript and crawlers get the day's
+  paper. The markup also carries a standing issue (No. 759, printed by
+  `bun run standing` with the same renderer), which a static host serves
+  and the browser prints over.
 - **Issue composition (`modules/issue.js`)** is deterministic. The issue number
   is days elapsed since the first edition (2024-09-29); that number seeds
   selection from `data/formats.js`. `/?issue=YYYY-MM-DD` renders any past
@@ -137,11 +141,11 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   photograph. Each lead names a pose from
   `data.POSES` — explaining, in his own defense, pointing it out, asked about
   it, satisfied, on his way out, on the phone, considering it, standing by,
-  resting his eyes — and `front-page.js` sets its ten joints as custom
+  resting his eyes — and the renderer sets its ten joints as custom
   properties, its alt text as the figure's `aria-label`, and its caption in
   the cutline: *FILE — Neckass, on the phone. The Gazette has one cut of him
   and has not needed a second.* Unposed, the joints fall back to the house
-  pose, which is what the standing issue shows. The box keeps a margin on
+  pose. The box keeps a margin on
   three sides for a thrown limb, so a pose never draws over the column rule
   or the cutline. The inks are the page's tokens, so the cut follows the
   theme and the print sheet. It is drawn by hand in one fine-point marker:
@@ -164,13 +168,13 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   wall, a wall clock, a bedside alarm, a package, a shoe, the rain, a
   running shower or a smoke alarm, which stand behind him on his ground, in
   the margin the box already keeps. Each is a layer of the same drawing with
-  a switch (`--phone: 1`), off by default, so the standing issue and the rig
-  as an `<img>` show him on the bare sheet. `front-page.js` sets every
+  a switch (`--phone: 1`), off by default, so the rig as an `<img>` shows
+  him on the bare sheet. The renderer sets every
   switch, on or off, from the lead, and the scene finishes the figure's
   `aria-label`: *Line-cut of a man with one hand held to his ear, holding a
   phone, in front of a couch.* The cutline names the pose only.
-- **The cut's motion** — once `front-page.js` has set the pose (as
-  `data-pose`), the cut acts it out: explaining, the raised hand makes its
+- **The cut's motion** — once the page carries the pose (as `data-pose`),
+  the cut acts it out: explaining, the raised hand makes its
   point three times; in his own defense, he leans back, protests with both
   hands and shakes his head; pointing it out, he jabs at it; asked about
   it, he shrugs twice; satisfied, he nods to himself; on his way out, he
@@ -331,11 +335,16 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   Each issue's card is drawn once per data center: the first fetch stores
   it in the Workers cache under the issue it resolved to, and later fetches
   are answered from there.
-- `functions/_middleware.js` rewrites `<title>`, the `og:`/`twitter:` title
-  and description, `og:image`/`og:image:secure_url`/`twitter:image` (to the
-  card for the same issue) and the image alt tags, on the front page only,
-  so a shared link previews with the headline actually running in the text
-  and in the picture.
+- `functions/_middleware.js` prints the issue into the front page: every
+  section, from `issueParts` in `modules/render.js` through
+  `functions/lib/print.mjs`, marked with the issue's number
+  (`.front-page[data-issue]`), so `front-page.js`, finding the issue it
+  would print already there, leaves it alone. It also rewrites `<title>`
+  (the lead's headline and the issue's number, which the browser keeps),
+  the `og:`/`twitter:` title and description,
+  `og:image`/`og:image:secure_url`/`twitter:image` (to the card for the
+  same issue) and the image alt tags, so a shared link previews with the
+  headline actually running in the text and in the picture.
 - All three compose the lead with `modules/issue.js`, the same module the
   browser runs, on the same clock: today is the press clock's, midnight US
   Eastern (`pressDate`), for the page, the card, the feed and the tags

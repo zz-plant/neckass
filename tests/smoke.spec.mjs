@@ -839,29 +839,52 @@ test.describe('The Gazette', () => {
         ).toHaveAttribute('href', '/feed.xml');
     });
 
-    test('the edge writes the masthead and lead of the issue into the page', async ({
-        request,
+    test('the edge prints the whole issue into the page', async ({
+        browser,
         page,
     }) => {
-        // The markup carries a standing issue whose folio line is one line;
-        // today's is two on a phone. The edge writes the asked-for issue's
-        // masthead and lead so the script's swap does not move the page.
+        // The edge prints the asked-for issue into the markup with the
+        // renderer the browser uses, so a reader without JavaScript, and a
+        // crawler, gets that issue whole: every section, the file cut's
+        // pose and the earlier issues, not the standing one.
         const issue = composeIssue(parseIssueDate('2025-06-11'));
-        const [day, volume] = issue.mastheadLine.split(' · ');
-        const response = await request.get(`${EDGE_URL}?issue=2025-06-11`);
-        expect(response.ok()).toBe(true);
-        const html = await response.text();
-        expect(html).toContain(
-            `<p class="masthead__line" id="masthead-date"><span>${day}</span><span class="masthead__sep"> · </span><span>${volume}</span></p>`,
+        const context = await browser.newContext({ javaScriptEnabled: false });
+        const bare = await context.newPage();
+        await bare.goto(`${EDGE_URL}?issue=2025-06-11`);
+        await expect(bare.locator('.front-page')).toHaveAttribute(
+            'data-issue',
+            String(issue.number),
         );
-        expect(html).toContain(
-            `<a href="/?issue=2025-06-11" id="lead-link">${issue.lead.headline
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')}</a>`,
+        await expect(bare.locator('#masthead-date')).toHaveText(
+            issue.mastheadLine,
         );
+        await expect(bare.locator('#lead-link')).toHaveText(
+            issue.lead.headline,
+        );
+        await expect(bare.locator('#lead-link')).toHaveAttribute(
+            'href',
+            '/?issue=2025-06-11',
+        );
+        await expect(bare.locator('#briefs-list li')).toHaveText(issue.briefs);
+        await expect(bare.locator('#classifieds-list li')).toHaveCount(
+            issue.classifieds.length,
+        );
+        await expect(bare.locator('#letters-list .letter-body')).toHaveText(
+            issue.letters.map((letter) => letter.body),
+        );
+        await expect(bare.locator('#weather-line')).toHaveText(issue.weather);
+        await expect(bare.locator('#cut-figure')).toHaveAttribute(
+            'data-pose',
+            issue.poseName,
+        );
+        await expect(bare.locator('#back-issue-notice')).toBeVisible();
+        await expect(bare).toHaveTitle(
+            `${issue.lead.headline} | The Gazette, No. ${issue.number}`,
+        );
+        await context.close();
 
-        // After the script runs, the folio line and the lead read the same.
+        // With the script, the page is already the issue it would print,
+        // and it leaves it as the edge printed it.
         await page.setViewportSize({ width: 390, height: 844 });
         await page.goto(`${EDGE_URL}?issue=2025-06-11`);
         await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
@@ -870,6 +893,9 @@ test.describe('The Gazette', () => {
         );
         await expect(page.locator('#lead-link')).toHaveText(
             issue.lead.headline,
+        );
+        await expect(page).toHaveTitle(
+            `${issue.lead.headline} | The Gazette, No. ${issue.number}`,
         );
     });
 

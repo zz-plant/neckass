@@ -507,6 +507,25 @@ export function composeIssue(date = pressDate()) {
     return Object.assign(issue, written);
 }
 
+// The issue a front-page request is for. `param` is the ?issue= value,
+// if there is one. A date not yet gone to press is `due`, and the reader
+// gets today's paper with a line saying when it is due; a malformed date,
+// or one before the first edition, gets today's. `dated` is true when the
+// link names an issue that has run, which then has a canonical of its own.
+export function issueForRequest(param, now = new Date()) {
+    const today = composeIssue(pressDate(now));
+    const requested = parseIssueDate(param);
+    const number = requested ? issueNumber(requested) : 0;
+    const due = number > today.number ? composeIssue(requested) : null;
+    const dated = number >= 1 && !due;
+    return {
+        issue: dated ? composeIssue(requested) : today,
+        today,
+        due,
+        dated,
+    };
+}
+
 // Most recent first, today included, with each issue's lead and its
 // landmark tag if it has one. The lead is a pure function of the number,
 // so listing the whole run costs nothing worth measuring. Used by the

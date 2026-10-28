@@ -77,8 +77,11 @@ the days they happen — the book club meets the first and third Tuesday and
 Wednesday reports on it; the clocks go forward and back; his mother writes
 in on his birthday.
 
-A complete standing issue ships in `index.html` itself, so the paper reads with
-JavaScript disabled and crawlers see copy rather than an empty shell.
+The edge prints the day's whole issue into the page as it serves it, with the
+renderer the browser uses (`modules/render.js`), so the paper reads with
+JavaScript disabled and crawlers see the day's copy. `index.html` also
+carries a standing issue, printed from No. 759 by `bun run standing`, for a
+static host.
 
 ## Edge functions
 
@@ -91,9 +94,9 @@ signatures, and runs the middleware in front of them and the front page.
   request. No store and no cron: issues come from the calendar.
 - `functions/card.png.js` — draws the issue's lead on the sheet as a PNG, on
   request, with Satori and resvg. About 150 ms; no browser.
-- `functions/_middleware.js` — rewrites the front page's title and
-  social-card tags to the active issue's lead, and points the image tags at
-  the card for the same issue, so a shared link previews with the headline
+- `functions/_middleware.js` — prints the active issue into the front page,
+  rewrites its title and social-card tags to the issue's lead, and points
+  the image tags at the card for the same issue, so a shared link previews with the headline
   that is actually running.
 
 All three compose the lead with `modules/issue.js`, the same module the

@@ -11,14 +11,15 @@ complexity. The front page is the product.
 - `CONTRIBUTING.md` defines contributor expectations/checklists.
 
 ## Project layout (current)
-- `index.html` — the front page: a complete standing issue in the markup,
-  and one `<script type="module">` whose import graph is the dependency
+- `index.html` — the front page: a complete standing issue in the markup
+  (No. 759, printed by `bun run standing`; the edge prints the day's over
+  it), and one `<script type="module">` whose import graph is the dependency
   chain.
 - `styles.css` — all visual/layout styling, including the inlined cuts' and print.
 - `data/` — the pools (`formats.js`, `headlines.js`), the landmark issues (`editions.js`), the calendar (`calendar.js`), when the pools grew (`growth.js`), the file cut's poses (`poses.js`) and what it can be drawn among (`scenes.js`). Plain ES modules, imported by both the browser and the edge.
-- `modules/issue.js` — the issue arithmetic and composition, shared by both runtimes, and the press clock (`pressDate`: an issue goes to press at midnight US Eastern, for the page and the edge alike); `modules/calendar.js` — matches dated items; `modules/front-page.js` — renders the front page; `modules/archive-list.js` — the archive.
+- `modules/issue.js` — the issue arithmetic and composition, shared by both runtimes, and the press clock (`pressDate`: an issue goes to press at midnight US Eastern, for the page and the edge alike); `modules/calendar.js` — matches dated items; `modules/render.js` — the front page's sections as patches, printed by the edge, the browser and the standing-issue script alike; `modules/front-page.js` — prints the issue when the page does not already carry it; `modules/archive-list.js` — the archive.
 - `worker.js` — the Cloudflare Worker's entry: routes the feed and the card to their handlers in `functions/` and runs the middleware in front of them and the front page. `wrangler.jsonc` configures it.
-- `functions/` — the edge handlers, written as Pages Functions and imported by `worker.js`: the feed, the social card, the middleware; they import `modules/issue.js` directly, and `lib/card.mjs` holds the card layout and its one renderer.
+- `functions/` — the edge handlers, written as Pages Functions and imported by `worker.js`: the feed, the social card, the middleware (which prints the day's issue into the front page, through `lib/print.mjs`); they import `modules/issue.js` directly, and `lib/card.mjs` holds the card layout and its one renderer.
 - `.assetsignore` — an allowlist: the repository root is the Worker's assets directory, and only the files it lets back in are published. A new top-level directory the pages load from has to be added to it; the smoke suite fails if a page names a file the edge does not serve.
 - `assets/cuts/` — the line-cuts, posable through CSS custom properties. See `assets/cuts/README.md`. The file cut has three copies (the rig, the front page's inline one, `functions/lib/cut.mjs`); the figure in all three is drawn by `scripts/draw-cut.ts`, so change it there and run `bun run cut:draw`. The smoke test checks that the copies agree.
 - `fonts/` — Fraunces: variable woff2 for the page, two static TTFs for the card.
@@ -40,6 +41,7 @@ complexity. The front page is the product.
 - Set quotation marks and apostrophes curly (“ ” ’) in anything a reader sees. The smoke suite fails on a straight one.
 - Pool items are keyed by number and dealt by it. Edit an item in place. To add one, give it the next number and add a step to `data/growth.js` at an issue that has not run yet; to drop one, retire its number in a step. Never renumber or delete an item: the back issues ran it, and the entry cites them.
 - Regenerate the still cards after changing the card layout or copy: `bun run og:generate`.
+- Reprint the standing issue after changing the renderer, the front page's markup or No. 759's copy: `bun run standing` (CI runs `--check`).
 
 ## When changing visible UI
 - Capture a screenshot with available browser tooling.

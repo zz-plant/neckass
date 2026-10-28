@@ -62,13 +62,19 @@ lookup), and the edge imports it directly.
 4. `modules/calendar.js` — matches the calendar against a date. It imports:
 5. `data/calendar.js` — what runs on which day.
 
-`front-page.js` swaps the standing issue in the markup for the composed one,
-sets the title, the file cut's pose and scene, the weather cut's layers, the
-editorial and the back-issue notice, and publishes the composed issue as
+`modules/render.js` turns a composed issue into patches, an element and the
+text, markup or attributes it gets: every section, the file cut's pose and
+scene, the weather cut's layers, the editorial and the back-issue notice.
+The edge prints them into the page as it serves it
+(`functions/_middleware.js` through `functions/lib/print.mjs`), and
+`bun run standing` prints them into `index.html` for the standing issue,
+No. 759 (`scripts/standing.ts`; `--check` fails if it is out of date).
+`front-page.js` works out the issue the URL asks for; if the page already
+carries it, it leaves it alone, and otherwise (a static host) it prints it
+with the same patches. Either way it publishes the issue as
 `window.Neckass.currentIssue`.
 
-There is no bootstrap, no state, no storage and no input handling. The page
-ends when `front-page.js` has rendered.
+There is no bootstrap, no state, no storage and no input handling.
 
 ### The archive
 `archive.html` loads `modules/archive-list.js`, which imports the same
@@ -104,8 +110,9 @@ ends when `front-page.js` has rendered.
 - `functions/feed.xml.js` — RSS for the last 30 issues, per request.
 - `functions/card.png.js` — the issue's social card, drawn with Satori and
   resvg.
-- `functions/_middleware.js` — per-issue title, description and image tags
-  on the front page.
+- `functions/_middleware.js` — prints the issue into the front page, and
+  its title, description and image tags (`functions/lib/print.mjs` applies
+  the renderer's patches with HTMLRewriter).
 - `functions/lib/cut.mjs` — the file cut flattened for the card, in any
   pose. `bun run cut:draw` (`scripts/draw-cut.ts`) writes its figure, the
   rig's and the front page's from one drawing; a smoke test holds the three
