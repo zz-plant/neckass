@@ -57,7 +57,8 @@ thin adapter that applies it to UTC dates.
    `LETTERS`; `data/poses.js` — the file cut's poses (`POSES`);
    `data/scenes.js` — the props it can be drawn among (`SCENES`);
    `data/headlines.js` — the briefs pool (`HEADLINES`); `data/editions.js` —
-   the landmark issues, keyed by number; and:
+   the landmark issues, keyed by number; `data/growth.js` — the issue each
+   pool grew on, and its length from then (`GROWTH`); and:
 4. `modules/calendar.js` — matches the calendar against a date. It imports:
 5. `data/calendar.js` — what runs on which day.
 
@@ -75,7 +76,8 @@ ends when `front-page.js` has rendered.
 
 ### Data and assets
 - `data/` — see above. Pool sizes are load-bearing; see the comments in
-  `data/formats.js`.
+  `data/formats.js`. A pool grows only at its end, from an issue that has
+  not run yet (`data/growth.js`), so the back issues keep what they ran.
 - `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and
   layers are CSS custom properties with fallbacks, so the files work as plain
   `<img>` and pose when inlined. The file cut and the weather cut are

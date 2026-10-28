@@ -62,7 +62,9 @@ issue at `/?issue=YYYY-MM-DD` — so the archive costs no storage.
 
 Leads are dealt in rounds of the pool's length, so no lead runs twice inside
 a round. The other sections are dealt in rounds too, so a brief, an ad or a
-letter stays away for most of its pool before it runs again. Every lead carries its deck, the correction the paper runs the next
+letter stays away for most of its pool before it runs again. A pool grows
+only at its end, from an issue that has not gone to press
+(`data/growth.js`), so a back issue always runs what it ran. Every lead carries its deck, the correction the paper runs the next
 day, the brief that runs the next morning, and the classified and the letter
 from the person it happened to, so the page compounds: the item, the ad, the
 letter, then tomorrow the retraction and what he did next.

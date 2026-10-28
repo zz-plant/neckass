@@ -226,6 +226,15 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   lead never returns within that many days; the tail of a round is never
   moved. A landmark (`data.EDITIONS[n].lead`) is taken instead of the dealt
   one.
+- **Pool growth** — a pool grows only at its end, in steps
+  (`data/growth.js`): from issue `from` on, it is dealt from its first
+  `size` items, in rounds that start on that issue and are seeded by it, so
+  every issue before the step runs what it always ran. A step's first round
+  of leads keeps out of its opening places the leads of the last days
+  before it, as a round does the round before. A step's first split of a
+  section puts the items of its last eleven days at the end, in the order
+  they ran. The smoke test pins the place in each pool that each issue
+  through No. 769 was dealt.
 - **Earlier issues** — `#earlier-list`, in the lead: the three issues
   before this one, each a link to `/?issue=…` carrying its weekday, number
   and lead. The folio is in the ledger teal, the lead in the ink. At ≥760px it sits under the cut in the lead's narrow
@@ -269,7 +278,8 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
 - Calendar items take the place of dealt ones, so no section changes size
   on a dated day. Pool depth is load-bearing: each pool must be at least
   four times its places a day, and the deeper it is the longer an item
-  stays away; the smoke test holds every pooled item to more than ten days.
+  stays away; the smoke test holds every pooled item to more than ten days,
+  across a step of growth as well as inside one.
 - **Print** — `@media print` sets ink on white, with every spot colour
   printed black and the sun's disc left white; it drops the desk, the shadow,
   the site links, the back-issue notice and the clipping link, and keeps the
