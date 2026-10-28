@@ -415,14 +415,16 @@ test.describe('The Gazette', () => {
         // itself.
         const leads = new Set(
             [
-                ...LEADS,
+                ...Object.values(LEADS),
                 ...Object.values(EDITIONS).map((edition) => edition.lead),
             ]
                 .filter(Boolean)
                 .map((lead) => unpunctuated(lead.headline)),
         );
         expect(
-            HEADLINES.filter((item) => leads.has(unpunctuated(item))),
+            Object.values(HEADLINES).filter((item) =>
+                leads.has(unpunctuated(item)),
+            ),
         ).toEqual([]);
     });
 
@@ -476,8 +478,9 @@ test.describe('The Gazette', () => {
         for (const [section, { pool, perIssue }] of Object.entries(DEALS)) {
             // A day takes no more than a quarter of its pool, or the
             // quarters could not keep a day's items apart.
-            expect(pool.length, section).toBeGreaterThanOrEqual(4 * perIssue);
-            const pooled = new Set(pool.map((item) => JSON.stringify(item)));
+            const items = Object.values(pool);
+            expect(items.length, section).toBeGreaterThanOrEqual(4 * perIssue);
+            const pooled = new Set(items.map((item) => JSON.stringify(item)));
             const last = new Map();
             let closest = Number.POSITIVE_INFINITY;
             issues.forEach((issue, day) => {
@@ -530,7 +533,7 @@ test.describe('The Gazette', () => {
         // Every lead carries everything the paper prints about it, a pose
         // the file cut has, and only scenes it has a layer for.
         const incomplete = [
-            ...LEADS,
+            ...Object.values(LEADS),
             ...Object.values(EDITIONS).map((edition) => edition.lead),
         ].filter(
             (lead) =>
@@ -551,33 +554,44 @@ test.describe('The Gazette', () => {
     });
 
     test('a pool that grows keeps the back issues as they ran', () => {
-        // New items go on the end of a pool and are dealt from a step at an
-        // issue that has not run yet (data/growth.js). Each pool's last
-        // step is its length, and the steps only go forward.
+        // Every item has a number, from 1 with none skipped, and is dealt
+        // by it, so where it sits in the file does not matter. A pool
+        // grows by steps at issues that have not run yet (data/growth.js):
+        // each pool's last step is its highest number, and the steps only
+        // go forward.
         const pools = { leads: LEADS };
         for (const [section, { pool }] of Object.entries(DEALS)) {
             pools[section] = pool;
         }
         for (const [name, pool] of Object.entries(pools)) {
+            const ids = Object.keys(pool).map(Number);
+            expect(ids, name).toEqual(ids.map((_, index) => index + 1));
             const steps = GROWTH[name];
             expect(steps[0], name).toEqual({ from: 1, size: steps[0].size });
-            expect(steps.at(-1).size, name).toBe(pool.length);
+            expect(steps.at(-1).size, name).toBe(ids.length);
             steps.slice(1).forEach((step, index) => {
                 expect(step.from, name).toBeGreaterThan(steps[index].from);
-                expect(step.size, name).toBeGreaterThan(steps[index].size);
+                expect(step.size, name).toBeGreaterThanOrEqual(
+                    steps[index].size,
+                );
             });
         }
 
-        // The place in each pool that each issue was dealt, through
+        // The item each issue was dealt in each pool, by its number less
+        // one (its place in the pool before the pools had numbers), through
         // No. 769, the last issue before the pools first grew. A change to
-        // the dealing changes it; editing an item in place does not.
+        // the dealing changes this; editing an item in place does not.
+        const placeOf = (pool, item) => {
+            const id = Object.keys(pool).find((key) => pool[key] === item);
+            return id === undefined ? -1 : Number(id) - 1;
+        };
         let hash = 0x811c9dc5;
         for (let number = 1; number <= 769; number += 1) {
             const issue = composeIssue(new Date(2024, 8, 28 + number));
-            const row = [LEADS.indexOf(issue.lead)];
+            const row = [placeOf(LEADS, issue.lead)];
             for (const [section, { pool }] of Object.entries(DEALS)) {
                 row.push(
-                    [issue[section]].flat().map((item) => pool.indexOf(item)),
+                    [issue[section]].flat().map((item) => placeOf(pool, item)),
                 );
             }
             for (const char of JSON.stringify(row)) {
@@ -594,6 +608,24 @@ test.describe('The Gazette', () => {
                 (section) => later[section].filter(Boolean).length,
             ),
         ).toEqual([5, 3, 3, 2]);
+
+        // An item a step retires does not run from that step on.
+        for (const [name, steps] of Object.entries(GROWTH)) {
+            for (const { from, retired = [] } of steps) {
+                const pool = pools[name];
+                const gone = new Set(retired.map((id) => pool[id]));
+                for (let number = from; number < from + 120; number += 1) {
+                    const issue = composeIssue(new Date(2024, 8, 28 + number));
+                    const printed =
+                        name === 'leads' ? [issue.lead] : [issue[name]].flat();
+                    for (const item of printed) {
+                        expect(gone.has(item), `${name} No. ${number}`).toBe(
+                            false,
+                        );
+                    }
+                }
+            }
+        }
     });
 
     test('the archive lists issues that resolve to real papers', async ({

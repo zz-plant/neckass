@@ -177,23 +177,44 @@ function stepFor(steps, number) {
     return step;
 }
 
+// The ids a step deals, in order: every id up to its size, less any it or
+// a step before it has retired.
+const dealtIdLists = new Map();
+function idsOf(steps, step) {
+    if (dealtIdLists.has(step)) return dealtIdLists.get(step);
+    const retired = new Set(
+        steps
+            .filter(({ from }) => from <= step.from)
+            .flatMap((earlier) => earlier.retired || []),
+    );
+    const ids = [];
+    for (let id = 1; id <= step.size; id += 1) {
+        if (!retired.has(id)) ids.push(id);
+    }
+    dealtIdLists.set(step, ids);
+    return ids;
+}
+
 // A round's seed. The first step's is the one it has always been.
 function roundSeed(round, from) {
     return round * 2654435761 + 1 + (from - 1) * 0x9e3779b9;
 }
 
-function shuffledRound(round, size, from) {
-    return shuffle(places(size), createRng(roundSeed(round, from)));
+function shuffledRound(round, step) {
+    return shuffle(
+        [...idsOf(GROWTH.leads, step)],
+        createRng(roundSeed(round, step.from)),
+    );
 }
 
-function roundOrder(round, { from, size }) {
-    const order = shuffledRound(round, size, from);
-    const seam = Math.min(14, Math.floor(size / 4));
-    if (seam === 0 || (round === 0 && from === 1)) return order;
+function roundOrder(round, step) {
+    const order = shuffledRound(round, step);
+    const seam = Math.min(14, Math.floor(order.length / 4));
+    if (seam === 0 || (round === 0 && step.from === 1)) return order;
     const closing = new Set(
         round > 0
-            ? shuffledRound(round - 1, size, from).slice(-seam)
-            : places(seam).map((back) => dealtLead(from - 1 - back)),
+            ? shuffledRound(round - 1, step).slice(-seam)
+            : places(seam).map((back) => dealtLead(step.from - 1 - back)),
     );
     let spare = seam;
     for (let i = 0; i < seam; i += 1) {
@@ -205,18 +226,19 @@ function roundOrder(round, { from, size }) {
     return order;
 }
 
-// The place in LEADS dealt to an issue, whether or not a landmark's
+// The id of the lead dealt to an issue, whether or not a landmark's
 // written lead runs in its stead.
 function dealtLead(number) {
     const step = stepFor(GROWTH.leads, number);
-    const round = Math.floor((number - step.from) / step.size);
-    return roundOrder(round, step)[(number - step.from) % step.size];
+    const size = idsOf(GROWTH.leads, step).length;
+    const round = Math.floor((number - step.from) / size);
+    return roundOrder(round, step)[(number - step.from) % size];
 }
 
 export function selectLead(number) {
     const written = EDITIONS[number]?.lead;
     if (written) return written;
-    if (!LEADS.length || number < 1) return null;
+    if (number < 1) return null;
     return LEADS[dealtLead(number)] || null;
 }
 
@@ -237,9 +259,9 @@ export function selectLead(number) {
 // rounds takes the last quarter of one and the first of the next, which
 // share nothing, so no issue deals an item twice.
 //
-// A step of growth (data/growth.js) splits its larger pool afresh, with
-// what ran in the last `RECENT_DAYS` before it in its closing places, in
-// the order it ran, so none of it comes round in the step's first days.
+// A step of growth (data/growth.js) splits its pool afresh, with what ran
+// in the last `RECENT_DAYS` before it in its closing places, in the order
+// it ran, so none of it comes round in the step's first days.
 export const DEALS = {
     briefs: { pool: HEADLINES, perIssue: 6, salt: 1 },
     corrections: { pool: CORRECTIONS, perIssue: 3, salt: 2 },
@@ -252,27 +274,25 @@ const QUARTERS = 4;
 const RECENT_DAYS = 11;
 
 const splits = new Map();
-function splitFor(section, { from, size }) {
-    const key = `${section} ${from}`;
+function splitFor(section, step) {
+    const key = `${section} ${step.from}`;
     if (splits.has(key)) return splits.get(key);
     const { salt } = DEALS[section];
+    const ids = idsOf(GROWTH[section], step);
     let split = shuffle(
-        places(size),
-        createRng(salt * 0x85ebca6b + 7 + (from - 1) * 0x9e3779b9),
+        [...ids],
+        createRng(salt * 0x85ebca6b + 7 + (step.from - 1) * 0x9e3779b9),
     );
-    if (from > 1) {
+    if (step.from > 1) {
         const recent = [];
-        for (let number = from - RECENT_DAYS; number < from; number += 1) {
-            for (const place of dealtPlaces(section, number)) {
-                if (recent.includes(place))
-                    recent.splice(recent.indexOf(place), 1);
-                recent.push(place);
+        for (let n = step.from - RECENT_DAYS; n < step.from; n += 1) {
+            for (const id of dealtIds(section, n)) {
+                if (recent.includes(id)) recent.splice(recent.indexOf(id), 1);
+                recent.push(id);
             }
         }
-        split = [
-            ...split.filter((place) => !recent.includes(place)),
-            ...recent,
-        ];
+        const kept = recent.filter((id) => ids.includes(id));
+        split = [...split.filter((id) => !kept.includes(id)), ...kept];
     }
     splits.set(key, split);
     return split;
@@ -285,27 +305,28 @@ function quarteredRound(section, step, round) {
     );
     const order = [];
     for (let quarter = 0; quarter < QUARTERS; quarter += 1) {
-        const from = Math.floor((quarter * step.size) / QUARTERS);
-        const to = Math.floor(((quarter + 1) * step.size) / QUARTERS);
+        const from = Math.floor((quarter * split.length) / QUARTERS);
+        const to = Math.floor(((quarter + 1) * split.length) / QUARTERS);
         order.push(...shuffle(split.slice(from, to), rng));
     }
     return order;
 }
 
-// The places in a section's pool dealt to an issue, in order.
-function dealtPlaces(section, number, count = placesFor(section, number)) {
+// The ids in a section's pool dealt to an issue, in order.
+function dealtIds(section, number, count = placesFor(section, number)) {
     const step = stepFor(GROWTH[section], number);
+    const size = idsOf(GROWTH[section], step).length;
     const perIssue = placesFor(section, number);
     const dealt = [];
     let round = -1;
     let order = [];
     for (let offset = 0; offset < Math.min(count, perIssue); offset += 1) {
         const place = (number - step.from) * perIssue + offset;
-        if (Math.floor(place / step.size) !== round) {
-            round = Math.floor(place / step.size);
+        if (Math.floor(place / size) !== round) {
+            round = Math.floor(place / size);
             order = quarteredRound(section, step, round);
         }
-        dealt.push(order[place % step.size]);
+        dealt.push(order[place % size]);
     }
     return dealt;
 }
@@ -318,7 +339,7 @@ function placesFor(section, number) {
 
 function dealFor(section, number, count) {
     const { pool } = DEALS[section];
-    return dealtPlaces(section, number, count).map((place) => pool[place]);
+    return dealtIds(section, number, count).map((id) => pool[id]);
 }
 
 // How the file cut stands for a lead: the pose it names, or the house

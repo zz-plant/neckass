@@ -76,8 +76,9 @@ ends when `front-page.js` has rendered.
 
 ### Data and assets
 - `data/` — see above. Pool sizes are load-bearing; see the comments in
-  `data/formats.js`. A pool grows only at its end, from an issue that has
-  not run yet (`data/growth.js`), so the back issues keep what they ran.
+  `data/formats.js`. Items are numbered and dealt by number; a pool grows
+  or retires an item only from an issue that has not run yet
+  (`data/growth.js`), so the back issues keep what they ran.
 - `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and
   layers are CSS custom properties with fallbacks, so the files work as plain
   `<img>` and pose when inlined. The file cut and the weather cut are

@@ -38,7 +38,7 @@ complexity. The front page is the product.
 - A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it. A lead may also name a scene, keys of `data/scenes.js`: what the story happens among, as props the cut can hold or stand in front of. One or two; the box does not take more.
 - Dated items go on the calendar, not in the pools.
 - Set quotation marks and apostrophes curly (“ ” ’) in anything a reader sees. The smoke suite fails on a straight one.
-- Edit pool items in place. To add to a pool, append to its end and add a step to `data/growth.js` at an issue that has not run yet. Inserting, removing or reordering an item changes what the back issues ran and breaks the issue numbers the entry cites.
+- Pool items are keyed by number and dealt by it. Edit an item in place. To add one, give it the next number and add a step to `data/growth.js` at an issue that has not run yet; to drop one, retire its number in a step. Never renumber or delete an item: the back issues ran it, and the entry cites them.
 - Regenerate the still cards after changing the card layout or copy: `bun run og:generate`.
 
 ## When changing visible UI

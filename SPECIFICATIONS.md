@@ -226,9 +226,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   lead never returns within that many days; the tail of a round is never
   moved. A landmark (`data.EDITIONS[n].lead`) is taken instead of the dealt
   one.
-- **Pool growth** — a pool grows only at its end, in steps
-  (`data/growth.js`): from issue `from` on, it is dealt from its first
-  `size` items, in rounds that start on that issue and are seeded by it, so
+- **Pool growth** — every pool item is keyed by a number, from 1 with none
+  skipped, and dealt by it. A pool grows in steps (`data/growth.js`): from
+  issue `from` on, it deals numbers 1 to `size`, less any a step has
+  `retired`, in rounds that start on that issue and are seeded by it, so
   every issue before the step runs what it always ran. A step's first round
   of leads keeps out of its opening places the leads of the last days
   before it, as a round does the round before. A step's first split of a
