@@ -556,6 +556,41 @@ test.describe('The Gazette', () => {
         }
     });
 
+    test('the pages run under their content security policy', async ({
+        browser,
+    }) => {
+        // Each page is served with a policy that lets it load only the
+        // site's own scripts, styles, fonts and images (_headers). Every
+        // page, as the edge serves it, renders without the browser blocking
+        // anything it asked for.
+        const context = await browser.newContext();
+        for (const path of [
+            '',
+            '?issue=2025-06-11',
+            'about',
+            'archive',
+            'prompts',
+            'missing',
+        ]) {
+            const page = await context.newPage();
+            const blocked = [];
+            page.on('console', (message) => {
+                if (/Content Security Policy/i.test(message.text())) {
+                    blocked.push(message.text());
+                }
+            });
+            const response = await page.goto(`${EDGE_URL}${path}`);
+            expect(
+                response.headers()['content-security-policy'],
+                path,
+            ).toContain("script-src 'self'");
+            await page.waitForLoadState('networkidle');
+            expect(blocked, path || '/').toEqual([]);
+            await page.close();
+        }
+        await context.close();
+    });
+
     test('the edge answers the way Pages did', async ({ request }) => {
         // The middleware writes a different issue into the same index.html
         // every day, so the front page carries no ETag a browser could

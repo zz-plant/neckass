@@ -353,6 +353,14 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   alike, so the runtimes cannot disagree about a lead or a day. The smoke suite runs the Worker
   under `wrangler dev` (`bun run edge`, port 8800) and checks the card
   is a real PNG and the tags point at it.
+- The pages are served with a Content-Security-Policy (`_headers`): scripts,
+  styles, fonts and images from the site only, no plugins, no forms, no
+  framing. Style attributes are allowed, since the edge prints the file
+  cut's pose and the weather cut's layers in them; the JSON-LD is data and
+  does not run. The drawings in `assets/cuts/` carry their own `<style>`,
+  so the policy is on the pages only. The fonts are served with a year's
+  immutable cache. The smoke suite loads every page through the edge and
+  fails if the browser blocks anything.
 - The edge answers as Pages did: the card and the feed match in any case,
   with or without a trailing slash, for GET only; the front page carries no
   ETag; a path with no file is `404.html` with status 404 and `no-store`; a
