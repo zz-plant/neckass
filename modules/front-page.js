@@ -11,6 +11,7 @@ import {
     composeIssue,
     issueNumber,
     parseIssueDate,
+    pressDate,
     recentIssues,
 } from './issue.js';
 import { issueMetadata } from './issue-metadata.js';
@@ -262,7 +263,7 @@ function writeMetadata(issue, datedLink) {
 function init() {
     if (!document.querySelector('#lead-headline')) return;
 
-    const today = composeIssue(new Date());
+    const today = composeIssue(pressDate());
     const requested = requestedIssueDate();
     // A date past today is an issue that has not gone to press. The
     // entry cites a few of those ahead of time; the reader gets today's

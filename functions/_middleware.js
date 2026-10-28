@@ -11,9 +11,14 @@
  * the headline too.
  */
 
-import { composeIssue } from '../modules/issue.js';
+import {
+    composeIssue,
+    issueNumber,
+    parseIssueDate,
+    pressDate,
+    toIssueParam,
+} from '../modules/issue.js';
 import { issueMetadata } from '../modules/issue-metadata.js';
-import { issueNumber, issueParam, parseIssueDate } from './lib/issue.mjs';
 
 const CARD_TITLE_TAGS = new Set(['og:title', 'twitter:title']);
 const CARD_TEXT_TAGS = new Set([
@@ -147,16 +152,16 @@ export async function onRequest(context) {
         return response;
     }
 
-    const now = new Date();
+    const today = pressDate();
     const requested = parseIssueDate(url.searchParams.get('issue'));
     const requestedNumber = requested ? issueNumber(requested) : 0;
     // Future editions are not on file yet; the browser displays today's paper.
     const datedLink = Boolean(
         requested &&
             requestedNumber >= 1 &&
-            requestedNumber <= issueNumber(now),
+            requestedNumber <= issueNumber(today),
     );
-    const date = datedLink ? requested : now;
+    const date = datedLink ? requested : today;
     const number = issueNumber(date);
     if (number < 1) return response;
     const issue = composeIssue(date);
@@ -167,8 +172,8 @@ export async function onRequest(context) {
     // The standing issue in the markup is a different day's paper, and its
     // folio line is one line where today's is two on a phone. Writing
     // today's masthead and lead here keeps front-page.js from moving the
-    // page when it swaps in the same issue. A Worker's clock is UTC, so a
-    // reader whose local date differs still gets their own day's swap.
+    // page when it swaps in the same issue. Both go by the press clock, so
+    // the issue written here is the one the script swaps in.
     return new HTMLRewriter()
         .on('title', new TitleRewriter(metadata.title))
         .on('head', new ArticleWriter(metadata.jsonLd))
@@ -176,7 +181,10 @@ export async function onRequest(context) {
         .on('#masthead-date', new MastheadRewriter(issue.mastheadLine))
         .on(
             '#lead-link',
-            new LeadLinkRewriter(lead.headline, `/?issue=${issueParam(date)}`),
+            new LeadLinkRewriter(
+                lead.headline,
+                `/?issue=${toIssueParam(date)}`,
+            ),
         )
         .on('#lead-deck', new TextRewriter(lead.deck))
         .on('#lead-byline', new TextRewriter(lead.byline))

@@ -336,9 +336,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   card for the same issue) and the image alt tags, on the front page only,
   so a shared link previews with the headline actually running in the text
   and in the picture.
-- All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
-  adapter over `modules/issue.js` — the same module the browser runs, so the
-  runtimes cannot disagree about a lead. The smoke suite runs the Worker
+- All three compose the lead with `modules/issue.js`, the same module the
+  browser runs, on the same clock: today is the press clock's, midnight US
+  Eastern (`pressDate`), for the page, the card, the feed and the tags
+  alike, so the runtimes cannot disagree about a lead or a day. The smoke suite runs the Worker
   under `wrangler dev` (`bun run edge`, port 8800) and checks the card
   is a real PNG and the tags point at it.
 - The edge answers as Pages did: the card and the feed match in any case,

@@ -37,11 +37,11 @@ removed all of it. If you need to open a page from disk, run `bun run serve`
 first.
 
 The one intentional difference between the runtimes is the clock: the
-browser composes issues on the reader's local date, so the masthead matches
-the paper on their table; the edge runs on UTC, the only clock a Worker has.
-`modules/issue.js` holds the runtime-agnostic arithmetic (the epoch, the
-RNG, the round dealing, landmark lookup); `functions/lib/issue.mjs` is a
-thin adapter that applies it to UTC dates.
+browser and the edge both take today from the press clock, midnight US
+Eastern (`pressDate` in `modules/issue.js`), so a shared link's card and
+tags name the issue the reader lands on. `modules/issue.js` holds all of
+the arithmetic (the clock, the epoch, the RNG, the round dealing, landmark
+lookup), and the edge imports it directly.
 
 ## Architecture overview
 
@@ -106,7 +106,6 @@ ends when `front-page.js` has rendered.
   resvg.
 - `functions/_middleware.js` — per-issue title, description and image tags
   on the front page.
-- `functions/lib/issue.mjs` — UTC date adapters over `modules/issue.js`.
 - `functions/lib/cut.mjs` — the file cut flattened for the card, in any
   pose. `bun run cut:draw` (`scripts/draw-cut.ts`) writes its figure, the
   rig's and the front page's from one drawing; a smoke test holds the three

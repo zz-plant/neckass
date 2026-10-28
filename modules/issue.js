@@ -7,8 +7,9 @@
  * paper, which is the whole point of a paper.
  *
  * This file is a plain ES module imported by modules/front-page.js and
- * modules/archive-list.js in the browser and by functions/lib/issue.mjs on
- * the edge, so both runtimes name the same lead the same way.
+ * modules/archive-list.js in the browser and by the handlers in functions/
+ * on the edge, so both runtimes name the same lead the same way, and both
+ * go by the same clock (`pressDate`).
  */
 
 import { EDITIONS } from '../data/editions.js';
@@ -61,8 +62,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
 });
 
-// Parse an ?issue=YYYY-MM-DD param into a local date, or null. Local, not
-// UTC, so the archive lines up with the masthead a reader sees at home.
+// Parse an ?issue=YYYY-MM-DD param into a calendar date (midnight, in
+// whatever zone the runtime is in), or null. Only the calendar date
+// matters; which date is today is the press clock's (`pressDate`).
 export function parseIssueDate(value) {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''));
     if (!match) return null;
@@ -71,6 +73,28 @@ export function parseIssueDate(value) {
     if (Number.isNaN(date.getTime())) return null;
     if (date.getMonth() !== Number(month) - 1) return null;
     return date;
+}
+
+// The paper's clock. An issue goes to press at midnight in one zone,
+// wherever its reader is, so the page, the card, the feed and the share
+// tags agree on which issue is today's. A Worker's clock is UTC and a
+// reader's is their own; neither decides. The zone is a clock and not a
+// place: the paper names none.
+export const PRESS_TIME_ZONE = 'America/New_York';
+const pressClock = new Intl.DateTimeFormat('en-US', {
+    timeZone: PRESS_TIME_ZONE,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+});
+
+/** Today's issue date by the press clock, as a calendar date. */
+export function pressDate(now = new Date()) {
+    const part = (type) =>
+        Number(
+            pressClock.formatToParts(now).find((p) => p.type === type).value,
+        );
+    return new Date(part('year'), part('month') - 1, part('day'));
 }
 
 // Volumes turn over on the anniversary of the first edition.
@@ -387,7 +411,7 @@ function lettersCount(number) {
     return number <= 60 ? 1 : 2;
 }
 
-export function composeIssue(date = new Date()) {
+export function composeIssue(date = pressDate()) {
     const number = issueNumber(date);
     // The forecast's numbers are the one thing drawn fresh each day: they
     // follow the season, not a pool.
@@ -489,7 +513,7 @@ export function composeIssue(date = new Date()) {
 // archive; `count` defaults to every issue there is.
 export function recentIssues(
     count = Number.POSITIVE_INFINITY,
-    from = new Date(),
+    from = pressDate(),
 ) {
     const issues = [];
     for (let offset = 0; offset < count; offset += 1) {

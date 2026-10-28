@@ -15,12 +15,12 @@ import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
 import { buildFeed } from '../functions/feed.xml.js';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
-import { issueNumber } from '../functions/lib/issue.mjs';
 import {
     composeIssue,
     DEALS,
-    issueNumber as localIssueNumber,
+    issueNumber,
     parseIssueDate,
+    pressDate,
     recentIssues,
     selectLead,
 } from '../modules/issue.js';
@@ -392,7 +392,7 @@ test.describe('The Gazette', () => {
         const rendered = await page.evaluate(
             () => window.Neckass.currentIssue.number,
         );
-        expect(rendered).toBe(localIssueNumber(new Date()));
+        expect(rendered).toBe(issueNumber(pressDate()));
         const notice = page.locator('#back-issue-notice');
         await expect(notice).toBeVisible();
         await expect(notice).toContainText('goes to press');
@@ -405,7 +405,7 @@ test.describe('The Gazette', () => {
         const rendered = await page.evaluate(
             () => window.Neckass.currentIssue.number,
         );
-        expect(rendered).toBe(localIssueNumber(new Date()));
+        expect(rendered).toBe(issueNumber(pressDate()));
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
@@ -800,8 +800,12 @@ test.describe('The Gazette', () => {
     test('the feed is well-formed and leads with the current issue', async ({
         page,
     }) => {
-        const now = new Date(Date.UTC(2026, 8, 2));
+        // 1 a.m. UTC on Sept. 2 is still Sept. 1 by the press clock, so the
+        // feed leads with No. 703, not No. 704: it goes by the press clock,
+        // as the page does, not by the Worker's UTC.
+        const now = new Date(Date.UTC(2026, 8, 2, 1));
         const xml = buildFeed(now);
+        expect(issueNumber(pressDate(now))).toBe(703);
 
         expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')).toBe(
             true,
@@ -814,7 +818,8 @@ test.describe('The Gazette', () => {
         const firstTitle = /<item>[\s\S]*?<title>([\s\S]*?)<\/title>/.exec(
             xml,
         )?.[1];
-        const headline = selectLead(issueNumber(now))?.headline ?? '';
+        const headline =
+            selectLead(issueNumber(pressDate(now)))?.headline ?? '';
         // The feed escapes for XML, so compare against the escaped headline.
         const escaped = headline
             .replace(/&/g, '&amp;')

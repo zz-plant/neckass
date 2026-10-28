@@ -96,9 +96,11 @@ signatures, and runs the middleware in front of them and the front page.
   the card for the same issue, so a shared link previews with the headline
   that is actually running.
 
-All three compose the lead through `functions/lib/issue.mjs`, a thin UTC
-adapter over `modules/issue.js` — the same module the browser runs, so both
-runtimes pick the same lead by construction.
+All three compose the lead with `modules/issue.js`, the same module the
+browser runs, and on the same clock: an issue goes to press at midnight US
+Eastern (`pressDate`, `PRESS_TIME_ZONE`), wherever the reader or the
+Worker is, so the page, the card, the feed and the share tags always name
+the same issue.
 
 ## Smoke tests
 A Playwright suite covers what a reader opens: today's issue renders whole,
