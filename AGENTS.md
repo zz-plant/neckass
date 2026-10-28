@@ -33,7 +33,7 @@ complexity. The front page is the product.
 ## Local testing
 - `bun run serve` (static, :8001); the pages are ES modules, so open them over HTTP.
 - With the edge: `bun run edge` (the Worker under `wrangler dev`, :8800).
-- `bun run lint`, `bun run assets:check`, `bun run test:smoke` before merge.
+- `bun run lint`, `bun run assets:check`, `bun run test:unit`, `bun run test:smoke` before merge.
 
 ## When changing content
 - A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it. A lead may also name a scene, keys of `data/scenes.js`: what the story happens among, as props the cut can hold or stand in front of. One or two; the box does not take more.
@@ -41,7 +41,7 @@ complexity. The front page is the product.
 - Set quotation marks and apostrophes curly (“ ” ’) in anything a reader sees. The smoke suite fails on a straight one.
 - Pool items are keyed by number and dealt by it. Edit an item in place. To add one, give it the next number and add a step to `data/growth.js` at an issue that has not run yet; to drop one, retire its number in a step. Never renumber or delete an item: the back issues ran it, and the entry cites them.
 - Regenerate the still cards after changing the card layout or copy: `bun run og:generate`.
-- Reprint the standing issue after changing the renderer, the front page's markup or No. 759's copy: `bun run standing` (CI runs `--check`).
+- Reprint the standing issue after changing the renderer, the front page's markup or No. 759's copy: `bun run standing` (`test:unit` fails if you did not).
 
 ## When changing visible UI
 - Capture a screenshot with available browser tooling.

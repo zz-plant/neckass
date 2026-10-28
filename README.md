@@ -114,8 +114,12 @@ of the source. It starts the static server and `wrangler dev` itself.
 
 ```bash
 bun install
+bun run test:unit
 bun run test:smoke
 ```
+
+`test:unit` is the arithmetic and the data under `bun test`, without a
+browser; `test:smoke` is the pages and the edge under Playwright.
 
 ## Documentation map
 

@@ -2,6 +2,8 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
     testDir: './tests',
+    // tests/paper.test.mjs is the arithmetic, under `bun test`.
+    testMatch: '**/*.spec.mjs',
     // the deferred-script bootstrap can take a while on a loaded machine
     timeout: 60_000,
     expect: { timeout: 10_000 },

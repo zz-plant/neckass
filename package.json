@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:unit": "bun test ./tests/paper.test.mjs",
     "test:smoke": "playwright test",
     "test:smoke:headed": "playwright test --headed",
     "serve": "bun run scripts/serve.ts",

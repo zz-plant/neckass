@@ -140,17 +140,22 @@ There is no bootstrap, no state, no storage and no input handling.
 5. Print preview: ink on white, two columns, no site links.
 7. Layout remains usable across small and wide viewports, in both themes.
 
-## Smoke test harness
+## Tests
 ```bash
 bun install
-bun run test:smoke
+bun run test:unit    # the arithmetic and the data, no browser, under a second
+bun run test:smoke   # the pages and the edge, in Chromium
 ```
 
-Playwright starts `bun run serve` and `bun run edge` itself. The suite covers
-what a reader opens (the issue, a back issue, the archive, no-JS), the
-arithmetic — run directly against `modules/issue.js`, without a browser —
-(the corrections chain, the calendar, the landmarks, no repeats inside a
-round) and the edge (the feed, the card, the rewritten tags).
+`tests/paper.test.mjs` runs under `bun test` against the modules
+directly: the corrections chain, the calendar, the standing matters, no
+repeats inside a round or across a step of growth, the numbering of the
+pools and the back issues' deal, the file cut's three copies, the sitemap,
+and the standing issue in `index.html` as the renderer prints it.
+`tests/smoke.spec.mjs` runs under Playwright, which starts `bun run serve`
+and `bun run edge` itself: what a reader opens (the issue, a back issue,
+the archive, no-JS, the motion) and the edge (the printed issue, the feed,
+the card, the files it serves).
 
 ## UI change requirements
 - Include screenshot(s) for visible changes.
