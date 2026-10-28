@@ -35,7 +35,7 @@ jobs:
         run: bunx wrangler deploy --dry-run
 
       # Reads PNG headers only, so it needs no rendering toolchain on the
-      # runner. Regenerating (assets:generate) does need rsvg-convert.
+      # runner.
       - name: Check generated assets
         run: bun run assets:check
 

@@ -56,7 +56,7 @@ export const OG_CARDS: OgCard[] = [
         file: 'og-image.png',
         folio: 'PUBLISHED DAILY',
         headline:
-            'Neckass has been "five minutes away" since 2019. He is at home.',
+            'Neckass has been “five minutes away” since 2019. He is at home.',
         deck: 'He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.',
         // The pose and scene that lead carries in data/formats.js.
         pose: 'phone',
@@ -66,7 +66,7 @@ export const OG_CARDS: OgCard[] = [
         file: 'og-about.png',
         folio: 'REFERENCE',
         headline:
-            "Neckass (slang): defined by a dictionary in 2032, accurately, to nobody's satisfaction",
+            'Neckass (slang): defined by a dictionary in 2032, accurately, to nobody’s satisfaction',
         deck: 'A person may be foolish without being a neckass, and a neckass need not be especially foolish, only certain.',
         pose: 'shrug',
     },
@@ -83,7 +83,7 @@ export const OG_CARDS: OgCard[] = [
         folio: 'STANDARDS',
         headline:
             'The Gazette does not file stories where he turned out to be right. It has happened twice.',
-        deck: 'The desk recognizes four kinds of neckassery. "Unprecedented" is used rarely. It has been used twice by mistake.',
+        deck: 'The desk recognizes four kinds of neckassery. “Unprecedented” is used rarely. It has been used twice by mistake.',
         pose: 'defense',
     },
 ];

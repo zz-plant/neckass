@@ -19,7 +19,7 @@ following a line number that has since moved.
   own lead, so the corrections chain runs through it; some carry an
   editorial. The entry cites them by number and links to them.
 - **The calendar (`data/calendar.js`, `modules/calendar.js`)** runs dated
-  items — the council's Tuesday, the clocks, his birthday, Thanksgiving —
+  items — the book club's Tuesday, the clocks, his birthday, Thanksgiving —
   in place of a dealt item on the days they happen, and every lead carries a
   follow-up brief that runs the next morning. A rule may carry
   `from: 'YYYY-MM-DD'` and does not run before it. The standing matters
@@ -316,6 +316,9 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   standards, each in a pose of its own); the cut is `functions/lib/cut.mjs`,
   the rig flattened in any pose, its box padded for a thrown limb.
   `cache-control: public, max-age=86400`; 404 before the first edition.
+  Each issue's card is drawn once per data center: the first fetch stores
+  it in the Workers cache under the issue it resolved to, and later fetches
+  are answered from there.
 - `functions/_middleware.js` rewrites `<title>`, the `og:`/`twitter:` title
   and description, `og:image`/`og:image:secure_url`/`twitter:image` (to the
   card for the same issue) and the image alt tags, on the front page only,

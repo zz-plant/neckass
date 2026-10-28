@@ -20,6 +20,9 @@
     // before the asset is served.
     "run_worker_first": ["/", "/index.html"]
   },
+  // Names the deploy, so the card cache (functions/card.png.js) starts
+  // over when the copy does.
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
   "observability": {
     "enabled": true,
     "traces": {

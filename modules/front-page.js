@@ -287,7 +287,7 @@ function init() {
             const due = composeIssue(requested);
             textInto(
                 '#back-issue-text',
-                `No. ${due.number} goes to press ${due.dateLabel}. This is today's issue.`,
+                `No. ${due.number} goes to press ${due.dateLabel}. This is today’s issue.`,
             );
             banner.querySelector('a').hidden = true;
         } else if (isBackIssue) {

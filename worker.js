@@ -68,11 +68,15 @@ async function fetchAsset(request, env) {
 }
 
 export default {
-    async fetch(request, env) {
+    async fetch(request, env, ctx) {
         const route = routeFor(request);
         const next = async () => {
             if (route) {
-                const response = await route({ request, env });
+                const response = await route({
+                    request,
+                    env,
+                    waitUntil: (promise) => ctx.waitUntil(promise),
+                });
                 if (request.method === 'HEAD') {
                     return new Response(null, {
                         status: response.status,

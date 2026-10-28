@@ -304,7 +304,7 @@ export function composeIssue(date = new Date()) {
     // who comes back gets a story, not a reshuffle.
     const followUp = previousLead?.followUp || null;
 
-    // What the calendar has for this date — the council's Tuesday, the
+    // What the calendar has for this date — Tuesday's book club, the
     // clocks, his birthday. Each runs first in its section and takes
     // the place of a dealt item, so every section keeps its size.
     const onCalendar = calendarItemsFor(date, {

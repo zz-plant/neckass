@@ -1,7 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { CALENDAR } from '../data/calendar.js';
 import { EDITIONS } from '../data/editions.js';
-import { LEADS } from '../data/formats.js';
+import {
+    CLASSIFIEDS,
+    CORRECTIONS,
+    LEADS,
+    LETTERS,
+    WEATHER,
+} from '../data/formats.js';
 import { HEADLINES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
@@ -22,7 +29,7 @@ const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8001/';
 const EDGE_URL = process.env.PLAYWRIGHT_EDGE_URL || 'http://127.0.0.1:8800/';
 
 // A brief ends on a period; the same item as a headline does not.
-const unpunctuated = (text) => text.replace(/\.("?)$/, '$1');
+const unpunctuated = (text) => text.replace(/\.(”?)$/, '$1');
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 
@@ -210,7 +217,7 @@ test.describe('The Gazette', () => {
         // Yesterday's lead continues at the top of today's column.
         expect(thanksgiving.briefs[0]).toBe(before.lead.followUp);
         expect(thanksgiving.briefs[1]).toMatch(/bring a side/);
-        expect(wednesday.briefs[1]).toMatch(/The council met Tuesday/);
+        expect(wednesday.briefs[1]).toMatch(/Book club met Tuesday/);
         expect(birthday.briefs[1]).toBe(
             'Neckass is 38 today. He has told people he is 36 since he was 36.',
         );
@@ -233,7 +240,7 @@ test.describe('The Gazette', () => {
 
         // Next door files on the 14th of each month and keeps count.
         expect(compose('2025-10-14').letters[1]?.body).toBe(
-            'I am at 14. This is letter number 1 about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
+            'I am at No. 14. This is letter number 1 about the bin, which is in my yard again and which he says the wind moved. I have kept every letter.',
         );
         expect(october.letters[1]?.body).toMatch(/letter number 13/);
         expect(compose('2026-11-14').letters[1]?.body).toMatch(
@@ -249,7 +256,7 @@ test.describe('The Gazette', () => {
             /The wind remains unverified/,
         );
         expect(compose('2026-05-02').briefs.join('\n')).toMatch(
-            /going out this week" for \d+ days/,
+            /going out this week” for \d+ days/,
         );
         expect(compose('2026-05-08').classifieds.join('\n')).toMatch(
             /now \d+ days out/,
@@ -408,6 +415,40 @@ test.describe('The Gazette', () => {
         expect(
             HEADLINES.filter((item) => leads.has(unpunctuated(item))),
         ).toEqual([]);
+    });
+
+    test('the copy is set in curly quotes', async ({ page }) => {
+        // Quotation marks and apostrophes are curly wherever a reader
+        // sees them: the pools, the landmark issues, the calendar, the
+        // file cut's captions and the pages. A straight one is a
+        // typewriter's, and at the size of the headline it shows.
+        const straight = [];
+        const walk = (value) => {
+            if (typeof value === 'string') {
+                if (/['"]/.test(value)) straight.push(value);
+            } else if (value && typeof value === 'object') {
+                for (const item of Object.values(value)) walk(item);
+            }
+        };
+        walk([
+            LEADS,
+            HEADLINES,
+            CORRECTIONS,
+            CLASSIFIEDS,
+            LETTERS,
+            WEATHER,
+            CALENDAR,
+            EDITIONS,
+            POSES,
+            SCENES,
+        ]);
+        expect(straight).toEqual([]);
+
+        for (const path of ['', 'about', 'archive', 'prompts', '404']) {
+            await page.goto(`${BASE_URL}${path}`);
+            const text = await page.locator('body').innerText();
+            expect(text.match(/.{0,30}['"].{0,30}/g), path || '/').toBeNull();
+        }
     });
 
     test('a dealt item does not come back inside ten days', () => {
@@ -812,7 +853,7 @@ test.describe('The Gazette', () => {
             'scripts/serve.ts',
             'tests/smoke.spec.mjs',
             '.github/workflows/ci.yml',
-            'docs/assets/source.svg',
+            'scripts/draw-cut.ts',
             'fonts/README.md',
         ]) {
             const response = await request.get(`${EDGE_URL}${path}`);

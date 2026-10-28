@@ -29,6 +29,7 @@ import {
 } from './lib/card.mjs';
 import {
     issueNumber,
+    issueParam,
     parseIssueDate,
     poseOf,
     sceneOf,
@@ -63,12 +64,28 @@ function loadFonts(env, request) {
     return fontsPromise;
 }
 
-export async function onRequestGet({ request, env }) {
+export async function onRequestGet({ request, env, waitUntil }) {
     const url = new URL(request.url);
     const date = parseIssueDate(url.searchParams.get('issue')) || new Date();
     const number = issueNumber(date);
     const lead = number >= 1 ? selectLead(number) : null;
     if (!lead) return new Response('No such issue', { status: 404 });
+
+    // An issue's card is drawn once per data center and deploy. The first
+    // fetch draws it and leaves it in the cache under the issue it resolved
+    // to; the crawlers after it get the stored PNG. Drawing took about a
+    // second, and every unfurler that fetched a shared link paid it again.
+    // The deploy is in the key so an edit to the copy is drawn at once.
+    const cache = globalThis.caches?.default;
+    const version = env.CF_VERSION_METADATA?.id ?? '';
+    const key = new Request(
+        new URL(
+            `/card.png?issue=${issueParam(date)}&v=${version}`,
+            request.url,
+        ),
+    );
+    const stored = await cache?.match(key);
+    if (stored) return stored;
 
     await rendererReady;
     const fonts = await loadFonts(env, request);
@@ -87,12 +104,14 @@ export async function onRequestGet({ request, env }) {
     // The card for a given issue only changes when the copy does. A day is
     // long enough to absorb the crawlers and short enough to pick up an
     // edit.
-    return new Response(png, {
+    const response = new Response(png, {
         headers: {
             'content-type': 'image/png',
             'cache-control': 'public, max-age=86400',
         },
     });
+    if (cache) waitUntil?.(cache.put(key, response.clone()));
+    return response;
 }
 
 // A HEAD check answers the same status and headers a GET would, without

@@ -1,6 +1,6 @@
 /**
  * The paper knows what day it is. data/calendar.js lists what runs on
- * which days — the council's Tuesday, the clocks going back, his
+ * which days — the book club's Tuesday, the clocks going back, his
  * birthday — and this works out which of those a given date is. Every
  * rule is a pure function of the date, like the rest of the issue, so
  * a back issue carries the holiday it was printed on.
