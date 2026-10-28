@@ -9,6 +9,7 @@ import {
     LETTERS,
     WEATHER,
 } from '../data/formats.js';
+import { GROWTH } from '../data/growth.js';
 import { HEADLINES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
@@ -486,24 +487,28 @@ test.describe('The Gazette', () => {
     });
 
     test('no lead runs twice inside one round of the pool', () => {
-        const size = LEADS.length;
-        // Three consecutive rounds, well clear of the landmark issues.
-        for (let round = 8; round < 11; round += 1) {
-            const seen = new Set();
-            for (let place = 0; place < size; place += 1) {
-                const number = round * size + place + 1;
-                if (EDITIONS[number]) continue;
-                seen.add(selectLead(number).headline);
+        // Each step of the pool's growth deals its own rounds. Three
+        // consecutive rounds of each, clear of the landmark issues.
+        for (const { from, size } of GROWTH.leads) {
+            const first = from === 1 ? 8 : 0;
+            for (let round = first; round < first + 3; round += 1) {
+                const seen = new Set();
+                for (let place = 0; place < size; place += 1) {
+                    const number = from + round * size + place;
+                    if (EDITIONS[number]) continue;
+                    seen.add(selectLead(number).headline);
+                }
+                expect(seen.size, `from No. ${from}`).toBe(size);
             }
-            expect(seen.size).toBe(size);
         }
 
-        // Each round is its own shuffle, so the seam between two rounds is
-        // where a lead could run twice in a row. It must not come back
-        // inside a quarter of the pool (a fortnight at most).
+        // Each round is its own shuffle, so the seam between two rounds,
+        // or two steps, is where a lead could run twice in a row. It must
+        // not come back inside a quarter of the pool (a fortnight at most).
         const last = new Map();
         let closest = Number.POSITIVE_INFINITY;
-        for (let number = 1; number <= size * 12; number += 1) {
+        const { from, size } = GROWTH.leads.at(-1);
+        for (let number = 1; number <= from + size * 6; number += 1) {
             if (EDITIONS[number]) continue;
             const { headline } = selectLead(number);
             if (last.has(headline)) {
@@ -511,7 +516,8 @@ test.describe('The Gazette', () => {
             }
             last.set(headline, number);
         }
-        expect(closest).toBeGreaterThan(Math.min(14, Math.floor(size / 4)));
+        const smallest = Math.min(...GROWTH.leads.map((step) => step.size));
+        expect(closest).toBeGreaterThan(Math.min(14, Math.floor(smallest / 4)));
 
         // Every lead carries everything the paper prints about it, a pose
         // the file cut has, and only scenes it has a layer for.
@@ -534,6 +540,43 @@ test.describe('The Gazette', () => {
                 ),
         ).length;
         expect(incomplete).toBe(0);
+    });
+
+    test('a pool that grows keeps the back issues as they ran', () => {
+        // New items go on the end of a pool and are dealt from a step at an
+        // issue that has not run yet (data/growth.js). Each pool's last
+        // step is its length, and the steps only go forward.
+        const pools = { leads: LEADS };
+        for (const [section, { pool }] of Object.entries(DEALS)) {
+            pools[section] = pool;
+        }
+        for (const [name, pool] of Object.entries(pools)) {
+            const steps = GROWTH[name];
+            expect(steps[0], name).toEqual({ from: 1, size: steps[0].size });
+            expect(steps.at(-1).size, name).toBe(pool.length);
+            steps.slice(1).forEach((step, index) => {
+                expect(step.from, name).toBeGreaterThan(steps[index].from);
+                expect(step.size, name).toBeGreaterThan(steps[index].size);
+            });
+        }
+
+        // The place in each pool that each issue was dealt, through
+        // No. 769, the last issue before the pools first grew. A change to
+        // the dealing changes it; editing an item in place does not.
+        let hash = 0x811c9dc5;
+        for (let number = 1; number <= 769; number += 1) {
+            const issue = composeIssue(new Date(2024, 8, 28 + number));
+            const row = [LEADS.indexOf(issue.lead)];
+            for (const [section, { pool }] of Object.entries(DEALS)) {
+                row.push(
+                    [issue[section]].flat().map((item) => pool.indexOf(item)),
+                );
+            }
+            for (const char of JSON.stringify(row)) {
+                hash = Math.imul(hash ^ char.charCodeAt(0), 0x01000193) >>> 0;
+            }
+        }
+        expect(hash.toString(16)).toBe('27b53208');
     });
 
     test('the archive lists issues that resolve to real papers', async ({

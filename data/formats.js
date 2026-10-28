@@ -6,7 +6,9 @@
 //
 // Pool sizes are load-bearing. modules/issue.js deals a fixed number of
 // each per issue, so a pool must be several times its deal size or a
-// reader coming back two days in a row sees the same paper.
+// reader coming back two days in a row sees the same paper. A pool grows
+// only at its end, from an issue that has not run yet: see
+// data/growth.js. Edit an item in place; never insert, remove or reorder.
 
 // A lead carries everything the paper prints about that incident: the
 // deck, the correction it runs the next day (it always retracts a trivial
@@ -921,6 +923,317 @@ export const LEADS = [
             signature: 'The owner of the spreadsheet',
         },
     },
+    {
+        headline:
+            'Neckass collected $160 for a colleague’s birthday present. The birthday was Tuesday.',
+        deck: 'Eight people gave $20 each, according to the envelope, which he has. The present, a knife set, is in his online cart, where he says it is waiting to go on sale.',
+        byline: 'Staff report',
+        pose: 'defense',
+        scene: ['parcel'],
+        correction:
+            'Seven people gave $20, not eight. The eighth $20 was his, and he has since taken it back out of the envelope, “for shipping.”',
+        followUp:
+            'The knife set went on sale and was delivered to Neckass. He has asked the colleague whether she would like to “swing by for it.”',
+        classified:
+            'LOST: $20, given in an envelope for a birthday present. Owner would settle for the present, or the $20, or knowing which.',
+        letter: {
+            body: 'It was my birthday. I was given a card signed by eight people and a photograph of a knife set. He said the real one was “basically on its way.”',
+            signature: 'The colleague with the birthday',
+        },
+    },
+    {
+        headline:
+            'Neckass packed eight shirts for a two-night trip, and no socks',
+        deck: 'He said he “likes options.” He wore the same shirt both days, according to a colleague on the trip, and bought socks at the airport for $19.',
+        byline: 'Staff report',
+        pose: 'leaving',
+        correction:
+            'The socks were $21, not $19. He has expensed them as “travel.”',
+        followUp:
+            'Neckass unpacked from the trip by moving the bag from the hall to his bedroom. The eight shirts are still in it, folded, and he is wearing a ninth.',
+        classified:
+            'FOR SALE: eight shirts, folded, recently traveled. Not worn on the trip.',
+        letter: {
+            body: 'I sat next to him at the conference. He told me he had brought “a shirt for every mood.” He wore the same one Thursday and Friday, in a mood both days.',
+            signature: 'A colleague, on the trip',
+        },
+    },
+    {
+        headline:
+            'Neckass invited twelve people to celebrate a new job title, at a table for eight',
+        deck: 'The title is Senior Associate. The job is the one he had, at the same desk and the same pay, according to a colleague who has seen the letter. He has said four of the twelve “won’t come anyway.”',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['table'],
+        correction:
+            'The table seats ten, not eight. He is two over, and has asked whether anyone minds standing.',
+        followUp:
+            'Eleven came. Neckass toasted the title and asked the table to split the bill eleven ways.',
+        classified:
+            'WANTED: four chairs, Saturday, for a celebration. The guest of honor will be sitting.',
+        letter: {
+            body: 'I sit next to him. He is Senior Associate now. He has changed his email signature, his voicemail and the nameplate on his desk, and I have seen his work, and it is the same.',
+            signature: 'A colleague, Associate',
+        },
+    },
+    {
+        headline:
+            'Neckass has driven with the check-engine light on since April and covered it with a note',
+        deck: 'The note says “fine,” according to a passenger who rides with him to work. The car has made a noise since June that he describes as “character.”',
+        byline: 'From wire reports',
+        pose: 'shrug',
+        correction:
+            'The note says “FINE,” in capitals, not “fine.” He wrote it again in capitals when the first one fell off.',
+        followUp:
+            'The car stopped Tuesday on the highway. Neckass told the tow driver it had happened “out of nowhere.” The tow driver had read the note.',
+        classified:
+            'WANTED: a mechanic to listen to a noise. Owner will not be bringing the car, and will do the noise.',
+        letter: {
+            body: 'I ride to work with him. When the noise started on Monday he turned the radio up, and on Tuesday he turned it up again.',
+            signature: 'A passenger',
+        },
+    },
+    {
+        headline:
+            'Neckass has saved a $50 gift card “for something good” since 2020',
+        deck: 'The card is for a store that closed in 2022. He has said it is “probably still good online.” The website is closed too, according to the website.',
+        byline: 'Staff report',
+        pose: 'considering',
+        correction:
+            'The store closed in 2021, not 2022. He went there in 2022, with the card, and read the sign.',
+        followUp:
+            'Neckass gave the gift card to his cousin for his birthday and said it was “basically $50.”',
+        classified: 'FOR SALE: gift card, $50, store closed. Will take $40.',
+        letter: {
+            body: 'I gave him the gift card in 2020. Last week I asked what he got with it. He said he was saving it for something good, and asked what I would get.',
+            signature: 'His auntie',
+        },
+    },
+    {
+        headline:
+            'Neckass texted the host of a party to ask her to turn the music down. He was at the party.',
+        deck: 'He sent it at 11:40 from the bathroom, according to the host, who read it in the kitchen and turned the music down. He came out and asked why it had gone quiet.',
+        byline: 'Staff report',
+        pose: 'considering',
+        scene: ['phone'],
+        correction:
+            'He sent it from the hallway, not the bathroom. The bathroom was occupied, which he had also texted her about.',
+        followUp:
+            'Neckass has been invited to the host’s next party on the condition that he stay in one room. He has asked which.',
+        classified:
+            'WANTED: someone to turn the music back up at a party. The guest who asked for it down would like it up.',
+        letter: {
+            body: 'I was hosting. My phone said “can u turn it down a bit,” and I did, and he came out and said “where’d the music go?” He is the only guest who has my number.',
+            signature: 'A host',
+        },
+    },
+    {
+        headline:
+            'Neckass labeled his lunch in the office fridge and ate someone else’s',
+        deck: 'His label reads “DO NOT TOUCH,” according to a photograph posted in the kitchen. His lunch is still in the fridge. The one he ate was labeled “please, not again.”',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['fridge'],
+        correction:
+            'His label reads “DO NOT TOUCH (N.),” not “DO NOT TOUCH.” He has since added the date.',
+        followUp:
+            'His lunch has been in the office fridge for eight days. Facilities threw it out Friday, and he has asked who ate it.',
+        classified:
+            'NOTICE FROM THE KITCHEN: the fridge is cleared Fridays. A label does not exempt a lunch, and neither do capitals.',
+        letter: {
+            body: 'It was my lunch. It was labeled. It was the second time. He told me it was “really good,” and asked what was in the dressing.',
+            signature: 'The other label',
+        },
+    },
+    {
+        headline:
+            'Neckass offered a friend a ride to the airport and asked to borrow her car for it',
+        deck: 'He offered in the group chat at nine. At 9:15 he asked whether he could take her car, since his is “making the noise.” The flight is at six.',
+        byline: 'Staff report',
+        pose: 'pointing',
+        correction:
+            'The flight was at 6:15, not six. He has said the fifteen minutes “change everything.”',
+        followUp:
+            'Neckass sent the group a photograph from the departures curb with the caption “made it.” He was not flying.',
+        classified:
+            'WANTED: a ride to the airport, for a woman who was offered one.',
+        letter: {
+            body: 'He offered to drive me to the airport. Then he asked to borrow my car to do it. I said I could drive myself in it. He said “even better,” and asked if he could come.',
+            signature: 'A friend, flying',
+        },
+    },
+    {
+        headline:
+            'Neckass has used next door’s Wi-Fi since 2023 and called them to say it was slow',
+        deck: 'He called at ten on Tuesday night to say it had been “going in and out” and asked them to restart it. The password is on their fridge, which he saw once, at a barbecue.',
+        byline: 'From wire reports',
+        pose: 'explaining',
+        correction: 'He called at 10:20, not ten, having knocked first.',
+        followUp:
+            'Next door changed the Wi-Fi password. Neckass came over to ask for it and said the old one had been “more secure.”',
+        classified:
+            'NOTICE: the network called NEXTDOOR is not for public use. It is for next door.',
+        letter: {
+            body: 'Our Wi-Fi was called “next door,” which he said was “basically an invitation.” I have changed the name. He has found it.',
+            signature: 'Next door',
+        },
+    },
+    {
+        headline: 'Neckass asked a friend to return his book. It is her book.',
+        deck: 'He asked by text Monday, by voice note Tuesday and in person Wednesday, according to the friend, who showed him her name in the front. He said he had “lent it to her first.”',
+        byline: 'Staff report',
+        pose: 'defense',
+        correction:
+            'Her name is in the front in pen, not pencil. He had suggested it was pencil.',
+        followUp:
+            'The friend gave him the book to end it. Neckass has lent it to his cousin.',
+        classified:
+            'FOUND: a book with someone else’s name in the front. Finder says it is his.',
+        letter: {
+            body: 'It is my book. I bought it in 2019, and I have the receipt, which he asked to see, and read, and then asked how I could be sure.',
+            signature: 'A friend, with the receipt',
+        },
+    },
+    {
+        headline:
+            'Neckass, staying the weekend with friends, gave their neighbor a tour of their house',
+        deck: 'He showed her the kitchen, the “good bathroom” and the thermostat, which he said “runs warm.” The friends were out. She had come to return a dish.',
+        byline: 'Staff report',
+        pose: 'pointing',
+        scene: ['doorway'],
+        correction:
+            'He did not only show her the thermostat. He turned it up, to show her how it runs.',
+        followUp:
+            'The friends came home to a house at 76 degrees and a note from their neighbor thanking them for the tour.',
+        classified: 'WANTED: a houseguest who knows whose house it is.',
+        letter: {
+            body: 'I live next door to them. I brought back a dish and was shown the kitchen I had borrowed it from. He recommended the good bathroom. I have used it at their parties for six years.',
+            signature: 'Their neighbor',
+        },
+    },
+    {
+        headline:
+            'Neckass took a call on speaker in the quiet car and asked the car to keep it down',
+        deck: 'The call lasted twenty minutes, according to a passenger who timed it, and was about a parking space. When two people near him began to whisper, he covered the phone and said “guys.”',
+        byline: 'From wire reports',
+        pose: 'explaining',
+        scene: ['phone'],
+        correction:
+            'Twenty-two minutes, not twenty. The last two were spent telling the caller he was “on a train, actually.”',
+        followUp:
+            'Neckass rode the quiet car again and took no calls. He watched a video with the sound on and said it was “only a short one.”',
+        classified:
+            'WANTED: earplugs, for the quiet car of the 5:52. Current ones are no match for a parking space.',
+        letter: {
+            body: 'I was in the quiet car. I now know where he parks, why the space is his, and that the other man “doesn’t even drive a real car.” He told us to keep it down twice.',
+            signature: 'A commuter, quiet car',
+        },
+    },
+    {
+        headline:
+            'Neckass booked the group’s campsite for the right weekend of the wrong month',
+        deck: 'Eight people drove three hours Friday, according to the group chat. The reservation is for the same weekend next month. He said he had “saved the spot.”',
+        byline: 'Staff report',
+        pose: 'standingBy',
+        scene: ['signpost'],
+        correction:
+            'Seven people drove Friday, not eight. He came Saturday morning, with the ice, and said the site looked “great for next month.”',
+        followUp:
+            'The group slept Friday in two cars and a tent for six. Neckass has asked who is in for next month.',
+        classified:
+            'FOR SALE: a campsite reservation for eight, next month. One careful owner.',
+        letter: {
+            body: 'I took the Friday off and drove three hours. The ranger showed us the date on his clipboard, and then on ours.',
+            signature: 'A camper',
+        },
+    },
+    {
+        headline:
+            'Neckass lost at checkers to his niece, 7, and has asked for best of seven',
+        deck: 'He lost the first game in twelve moves and the second in nine, according to her mother, who keeps the score on the fridge. Between games he explained the rules to her.',
+        byline: 'Staff report',
+        pose: 'considering',
+        scene: ['table'],
+        correction: 'She is 7½, not 7. She asked that this be printed.',
+        followUp:
+            'The series stands at 4–0. Neckass has proposed that the next game “count double.”',
+        classified:
+            'WANTED: a checkers coach for an adult. Must be better than a second-grader. Several applicants are second-graders.',
+        letter: {
+            body: 'I keep the score on the fridge. She is up 2–0. He has asked to play “for real” now, and has started taking his pieces back to think.',
+            signature: 'Her mother',
+        },
+    },
+    {
+        headline:
+            'Neckass asked for a raise and brought thirty copies of the Gazette as evidence',
+        deck: 'He said he was “covered daily” and that this showed demand, according to his manager, who read one.',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['desk'],
+        correction:
+            'His manager read two, not one. She asked to keep the second.',
+        followUp:
+            'His manager has answered about the raise. The answer is no, in one line, which Neckass has framed.',
+        classified:
+            'FOR SALE: thirty Gazettes, carried to a meeting and back. Some reading.',
+        letter: {
+            body: 'He put thirty newspapers on my desk and said “read any of them.” I read one. He was in it, and that was what I had wanted to talk to him about.',
+            signature: 'His manager',
+        },
+    },
+    {
+        headline:
+            'Neckass carried the groceries in one trip and dropped the eggs on the step',
+        deck: 'Ten bags, on two arms and a wrist, according to his roommate, who held the door. The eggs were on the wrist. He has said it “still counts as one trip.”',
+        byline: 'Staff report',
+        pose: 'standingBy',
+        scene: ['doorway'],
+        correction:
+            'The eggs were in his teeth, not on the wrist. He dropped them to say “I’ve got it.”',
+        followUp:
+            'Neckass bought eggs again and carried them in on their own, on a second trip, which he made in the dark so that it would not count.',
+        classified: 'FREE: a dozen eggs, on a step, as is.',
+        letter: {
+            body: 'I held the door. He said he had it, and he had it, until the step. I am still finding egg in the mat.',
+            signature: 'His roommate',
+        },
+    },
+    {
+        headline:
+            'Neckass waved a car through a four-way stop for a minute and forty seconds. It was parked.',
+        deck: 'He waved, nodded, waved again and flashed his lights, according to a pedestrian who timed it. The car, with nobody in it, was parked outside No. 14.',
+        byline: 'From wire reports',
+        pose: 'leaving',
+        correction:
+            'A minute and fifty seconds, not forty. He waved once more after the pedestrian knocked on his window.',
+        followUp:
+            'Neckass told the group he had “let someone go first” this morning, and that people should do that more.',
+        classified:
+            'PERSONAL: to the man at the four-way stop on Tuesday — it was parked. You may go.',
+        letter: {
+            body: 'It is my car. It was parked. I watched from the window as he waved it through for nearly two minutes, and then he honked at it.',
+            signature: 'Next door',
+        },
+    },
+    {
+        headline:
+            'Neckass insisted on taking the group photo and took seven of his thumb',
+        deck: 'He said he was “good at these,” according to the group, and took seven in a row with his thumb over the lens. Asked to check them, he said they looked “moody.”',
+        byline: 'Staff report',
+        pose: 'pointing',
+        scene: ['phone'],
+        correction:
+            'His thumb is in six of the seven, not all seven. The seventh is of his shoe.',
+        followUp:
+            'A stranger took the group photo in one try. Neckass has asked her to take one of him, “for the profile.”',
+        classified:
+            'WANTED: a group photo with the group in it. The current ones have a thumb.',
+        letter: {
+            body: 'There are seven photographs of my birthday dinner. You can see him in all of them, a little, from the inside.',
+            signature: 'A friend, in none of them',
+        },
+    },
 ];
 
 // Standalone corrections, drawn alongside the routine one and the one
@@ -979,6 +1292,18 @@ export const CORRECTIONS = [
     'Neckass asked that the correction of the 4th be corrected. Asked what was wrong with it, he said he was “getting to that.” That was the 9th.',
     'A Monday item said Neckass blamed his chair. He was standing. He blamed the chair by the window.',
     'The Gazette reported that Neckass bet against himself on the 8:04. He bet on himself, from the shower, at 8:01.',
+    'We reported that Neckass recycled. He rinsed a jar and put it in the trash.',
+    'An item said Neckass helped carry the couch. He carried a cushion, and gave directions on the stairs.',
+    'The Gazette described Neckass as “a regular” at the bakery. He has been twice and asks each time whether they are new.',
+    'We said Neckass changed the lightbulb. He changed it for a brighter one and has worn sunglasses in the hall since.',
+    'An earlier edition said Neckass took notes at the training. He photographed each slide, 140 in all, and has not looked at them.',
+    'Neckass did not bring wine, as reported. He brought a bottle he had been given at the last party, with the card still on it, addressed to him.',
+    'An item said Neckass apologized in person. He apologized by text, from the next room.',
+    'We described Neckass’s garden as a garden. It is a tomato plant and a sign that says “garden.”',
+    'An earlier edition reported that Neckass cooked dinner for six. He cooked for six and served four, having eaten two portions while plating.',
+    'A Wednesday item gave Neckass’s golf handicap as 18. That is the number of balls he lost.',
+    'We said Neckass read the instructions. He read the warning on the box, and the box.',
+    'An item described Neckass as “a morning person.” He has said so, at 11:40.',
 ];
 
 // A forecast, and what he will do about it. Sometimes he is right, which
@@ -1025,6 +1350,10 @@ export const WEATHER = [
     'Overcast, with no rain forecast and a coat brought anyway. It rained, and he has mentioned this.',
     'Sun. “We should make the most of it,” he said, and went inside to plan how.',
     'Wind, “picking up,” at the speed it has held since Tuesday.',
+    'Clear and still. He has opened every window “to air it out” and gone out for the day.',
+    'Sleet, which he has called “basically rain,” from under an awning.',
+    'First frost overnight. He brought the tomato plant in at noon.',
+    'Hazy. He has blamed his glasses and cleaned them on his shirt, twice.',
 ];
 
 // The ads that are not about a lead. He is in most of them anyway.
@@ -1090,6 +1419,18 @@ export const CLASSIFIEDS = [
     'NOTICE FROM A CARD COMPANY: whatever you are going through, we are here for you. We are not refunding the sandwich.',
     'NOTICE FROM FACILITIES: the chair by the window has been inspected, and it does not make that noise. Please stop putting in tickets about it.',
     'NOTICE FROM A DELIVERY APP: nine nights in a row from the place across the street. The driver has asked us to tell you he can see you in the window.',
+    'FOR SALE: label maker. Has labeled one drawer “MISC” and the label maker.',
+    'LOST: a voice memo titled “big idea,” recorded at 2 a.m. Owner remembers that it was big.',
+    'FOR SALE: hammock, assembled, never lain in. Owner calls it “the project.”',
+    'WANTED: someone to tell him. — His friends',
+    'SEEKING: a fourth for doubles. Must not mind a partner who calls every ball out, including his own.',
+    'FOR SALE: a speaker, taken to the beach once. The beach has asked us to list it.',
+    'LOST: the thread. Owner was making a point at dinner Saturday and would like to finish it.',
+    'FOR SALE: two concert tickets, for last night. Owner says the seats were good, going by the photos.',
+    'WANTED: a nickname. Owner has chosen three, and nobody else has used any of them.',
+    'SERVICES: will watch your bags. Will also go to the bathroom.',
+    'WANTED: a grill brush. The grill has been “seasoned” since 2024, by its owner’s account.',
+    'FOR SALE: fanny pack, worn ironically for three years. It is now sincere.',
 ];
 
 // Letters not tied to a lead. The correspondents recur — his roommate,
@@ -1227,5 +1568,29 @@ export const LETTERS = [
     {
         body: 'I sat beside him in the meeting. He laughed at his phone, then there was the noise, then he turned around to look at the chair by the window. Nobody was near that chair. I was near him.',
         signature: 'The seat beside him',
+    },
+    {
+        body: 'I drive the bus. He waved it down at the stop on Monday, got on, asked where it goes, and got off. He did the same on Wednesday. It goes to the same place.',
+        signature: 'The bus driver',
+    },
+    {
+        body: 'He asked me to proofread his cover letter. It was for my job.',
+        signature: 'A colleague',
+    },
+    {
+        body: 'I walk the dog next door. He has stopped me nine times to say the dog likes him. The dog does not, and I am paid by the hour.',
+        signature: 'The dog walker',
+    },
+    {
+        body: 'He has my spare key, for emergencies. He has used it twice: to borrow a charger, and to return it.',
+        signature: 'Next door',
+    },
+    {
+        body: 'I taught him in the fourth grade. He has written to say I misspelled his name on a report card in 1999. I have checked. He misspelled it, on the cover.',
+        signature: 'His fourth-grade teacher',
+    },
+    {
+        body: 'We are his group in the evening class. He made the slides. There is one, and it says “Questions?”',
+        signature: 'His group, evening class',
     },
 ];

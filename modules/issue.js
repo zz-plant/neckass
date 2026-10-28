@@ -19,6 +19,7 @@ import {
     LETTERS,
     WEATHER,
 } from '../data/formats.js';
+import { GROWTH } from '../data/growth.js';
 import { HEADLINES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
@@ -151,6 +152,12 @@ export function toIssueParam(date) {
 // `seam` places of this one, so the same lead is always more than
 // `seam` days apart. The tail of a round is never moved, which is what
 // lets the previous round be read without fixing it first.
+//
+// The pools grow in steps (data/growth.js). Each step deals its own
+// rounds from the issue it starts on, seeded apart from the others by
+// that issue, and the first step's rounds are the ones the back issues
+// were printed with. A step's first round keeps out of its opening
+// places the leads that ran in the last days of the step before.
 function shuffle(list, rng) {
     for (let i = list.length - 1; i > 0; i -= 1) {
         const j = Math.floor(rng() * (i + 1));
@@ -163,15 +170,31 @@ function places(size) {
     return Array.from({ length: size }, (_, index) => index);
 }
 
-function shuffledRound(round, size) {
-    return shuffle(places(size), createRng(round * 2654435761 + 1));
+// The step of a pool's growth that deals an issue.
+function stepFor(steps, number) {
+    let step = steps[0];
+    for (const next of steps) if (next.from <= number) step = next;
+    return step;
 }
 
-function roundOrder(round, size) {
-    const order = shuffledRound(round, size);
+// A round's seed. The first step's is the one it has always been.
+function roundSeed(round, from) {
+    return round * 2654435761 + 1 + (from - 1) * 0x9e3779b9;
+}
+
+function shuffledRound(round, size, from) {
+    return shuffle(places(size), createRng(roundSeed(round, from)));
+}
+
+function roundOrder(round, { from, size }) {
+    const order = shuffledRound(round, size, from);
     const seam = Math.min(14, Math.floor(size / 4));
-    if (round === 0 || seam === 0) return order;
-    const closing = new Set(shuffledRound(round - 1, size).slice(-seam));
+    if (seam === 0 || (round === 0 && from === 1)) return order;
+    const closing = new Set(
+        round > 0
+            ? shuffledRound(round - 1, size, from).slice(-seam)
+            : places(seam).map((back) => dealtLead(from - 1 - back)),
+    );
     let spare = seam;
     for (let i = 0; i < seam; i += 1) {
         if (!closing.has(order[i])) continue;
@@ -182,13 +205,19 @@ function roundOrder(round, size) {
     return order;
 }
 
+// The place in LEADS dealt to an issue, whether or not a landmark's
+// written lead runs in its stead.
+function dealtLead(number) {
+    const step = stepFor(GROWTH.leads, number);
+    const round = Math.floor((number - step.from) / step.size);
+    return roundOrder(round, step)[(number - step.from) % step.size];
+}
+
 export function selectLead(number) {
     const written = EDITIONS[number]?.lead;
     if (written) return written;
-    if (!LEADS.length) return null;
-    const round = Math.floor((number - 1) / LEADS.length);
-    const place = (number - 1) % LEADS.length;
-    return LEADS[roundOrder(round, LEADS.length)[place]] || null;
+    if (!LEADS.length || number < 1) return null;
+    return LEADS[dealtLead(number)] || null;
 }
 
 // The other sections are dealt in rounds too, so a classified a reader
@@ -207,6 +236,10 @@ export function selectLead(number) {
 // quarters of its pool have run. That also means a day straddling two
 // rounds takes the last quarter of one and the first of the next, which
 // share nothing, so no issue deals an item twice.
+//
+// A step of growth (data/growth.js) splits its larger pool afresh, with
+// what ran in the last `RECENT_DAYS` before it in its closing places, in
+// the order it ran, so none of it comes round in the step's first days.
 export const DEALS = {
     briefs: { pool: HEADLINES, perIssue: 6, salt: 1 },
     corrections: { pool: CORRECTIONS, perIssue: 3, salt: 2 },
@@ -216,33 +249,70 @@ export const DEALS = {
 };
 
 const QUARTERS = 4;
+const RECENT_DAYS = 11;
 
-function quarteredRound(round, size, salt) {
-    const split = shuffle(places(size), createRng(salt * 0x85ebca6b + 7));
-    const rng = createRng(round * 2654435761 + 1 + salt * 0x85ebca6b);
+const splits = new Map();
+function splitFor(section, { from, size }) {
+    const key = `${section} ${from}`;
+    if (splits.has(key)) return splits.get(key);
+    const { salt } = DEALS[section];
+    let split = shuffle(
+        places(size),
+        createRng(salt * 0x85ebca6b + 7 + (from - 1) * 0x9e3779b9),
+    );
+    if (from > 1) {
+        const recent = [];
+        for (let number = from - RECENT_DAYS; number < from; number += 1) {
+            for (const place of dealtPlaces(section, number)) {
+                if (recent.includes(place))
+                    recent.splice(recent.indexOf(place), 1);
+                recent.push(place);
+            }
+        }
+        split = [
+            ...split.filter((place) => !recent.includes(place)),
+            ...recent,
+        ];
+    }
+    splits.set(key, split);
+    return split;
+}
+
+function quarteredRound(section, step, round) {
+    const split = splitFor(section, step);
+    const rng = createRng(
+        roundSeed(round, step.from) + DEALS[section].salt * 0x85ebca6b,
+    );
     const order = [];
     for (let quarter = 0; quarter < QUARTERS; quarter += 1) {
-        const from = Math.floor((quarter * size) / QUARTERS);
-        const to = Math.floor(((quarter + 1) * size) / QUARTERS);
+        const from = Math.floor((quarter * step.size) / QUARTERS);
+        const to = Math.floor(((quarter + 1) * step.size) / QUARTERS);
         order.push(...shuffle(split.slice(from, to), rng));
     }
     return order;
 }
 
-function dealFor(section, number, count = DEALS[section].perIssue) {
-    const { pool, perIssue, salt } = DEALS[section];
-    const items = [];
+// The places in a section's pool dealt to an issue, in order.
+function dealtPlaces(section, number, count = DEALS[section].perIssue) {
+    const { perIssue } = DEALS[section];
+    const step = stepFor(GROWTH[section], number);
+    const dealt = [];
     let round = -1;
     let order = [];
     for (let offset = 0; offset < Math.min(count, perIssue); offset += 1) {
-        const place = (number - 1) * perIssue + offset;
-        if (Math.floor(place / pool.length) !== round) {
-            round = Math.floor(place / pool.length);
-            order = quarteredRound(round, pool.length, salt);
+        const place = (number - step.from) * perIssue + offset;
+        if (Math.floor(place / step.size) !== round) {
+            round = Math.floor(place / step.size);
+            order = quarteredRound(section, step, round);
         }
-        items.push(pool[order[place % pool.length]]);
+        dealt.push(order[place % step.size]);
     }
-    return items;
+    return dealt;
+}
+
+function dealFor(section, number, count = DEALS[section].perIssue) {
+    const { pool } = DEALS[section];
+    return dealtPlaces(section, number, count).map((place) => pool[place]);
 }
 
 // How the file cut stands for a lead: the pose it names, or the house
