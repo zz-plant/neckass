@@ -23,7 +23,17 @@ const PAGE = join(import.meta.dirname ?? __dirname, '..', 'index.html');
 
 export async function standingPage(html: string): Promise<string> {
     const issue = composeIssue(parseIssueDate(STANDING_ISSUE));
-    const parts = issueParts(issue, { today: issue });
+    // The standing issue is printed without the mark the edge leaves
+    // (`data-issue`), which tells front-page.js the page already carries
+    // the issue its request asked for. The standing issue was printed for
+    // no request, so a static host's page is always printed over, even
+    // when the link asks for No. 759 itself: that reader needs the
+    // back-issue notice and the issue's own title and tags.
+    const parts = issueParts(issue, { today: issue }).map((part) =>
+        part.selector === '.front-page'
+            ? { selector: part.selector, attrs: { 'data-issue': null } }
+            : part,
+    );
     return printParts(new HTMLRewriter(), parts)
         .transform(new Response(html))
         .text();

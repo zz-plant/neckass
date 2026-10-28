@@ -222,6 +222,28 @@ test.describe('The Gazette', () => {
         await expect(page.locator('#editorial')).toBeHidden();
     });
 
+    test('a link to the standing issue is printed as that back issue', async ({
+        page,
+    }) => {
+        // The markup's standing issue is No. 759. On a static host, a link
+        // to No. 759 still gets the back-issue notice and its own title,
+        // which only printing the request gives it.
+        await page.goto(`${BASE_URL}?issue=2026-10-27`);
+        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        const issue = composeIssue(parseIssueDate('2026-10-27'));
+        await expect(page.locator('#back-issue-notice')).toBeVisible();
+        await expect(page.locator('#back-issue-text')).toContainText(
+            'You are reading No. 759',
+        );
+        await expect(page).toHaveTitle(
+            `${issue.lead.headline} | The Gazette, No. 759`,
+        );
+        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+            'href',
+            'https://neckass.com/?issue=2026-10-27',
+        );
+    });
+
     test('an issue not yet published falls back to today and says so', async ({
         page,
     }) => {

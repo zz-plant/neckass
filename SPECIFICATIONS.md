@@ -341,7 +341,10 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   section, from `issueParts` in `modules/render.js` through
   `functions/lib/print.mjs`, marked with the issue's number
   (`.front-page[data-issue]`), so `front-page.js`, finding the issue it
-  would print already there, leaves it alone. It also rewrites `<title>`
+  would print already there, leaves it alone. Only the edge leaves the
+  mark: the standing issue was printed for no request and carries none, so
+  on a static host the page is always printed for the link, No. 759's
+  included. It also rewrites `<title>`
   (the lead's headline and the issue's number, which the browser keeps),
   the `og:`/`twitter:` title and description,
   `og:image`/`og:image:secure_url`/`twitter:image` (to the card for the

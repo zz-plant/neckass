@@ -67,6 +67,8 @@ function init() {
     const { issue, today, due, dated } = issueForRequest(
         new URLSearchParams(window.location.search).get('issue'),
     );
+    // Only the edge marks the page with the issue it printed, and it
+    // prints it for this request; the standing issue carries no mark.
     if (front.dataset.issue !== String(issue.number) && issue.lead) {
         print(issueParts(issue, { today, due }));
         writeMetadata(issue, dated);
