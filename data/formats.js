@@ -422,7 +422,7 @@ export const LEADS = {
         followUp:
             'A battery for the smoke alarm is on the counter. The alarm is in the other room, chirping.',
         classified:
-            'NOTICE: the smoke alarm at No. 12 needs a battery. Nine days.',
+            'NOTICE: the chirping at No. 12 is a smoke alarm. It is not a bird, as its owner has told three of us.',
         letter: {
             body: 'My smoke alarm is not chirping. His is, and he has knocked twice to ask about mine.',
             signature: 'Next door',
@@ -615,13 +615,14 @@ export const LEADS = {
     },
     35: {
         headline:
-            'Neckass told the barber “just a little off” and was given a haircut',
-        deck: 'He said “that’s great” in the chair, and “yeah, no, great” at the register.',
+            'Neckass told the barber “just a little off” and has worn a hat since',
+        deck: 'The barber took a little off, by the barber’s account. Neckass said “that’s great” in the chair, “yeah, no, great” at the register, and bought the hat on the way home.',
         byline: 'Staff report',
         pose: 'satisfied',
         correction:
             '“That’s great” was said three times, not twice. The third was to the mirror, and quieter.',
-        followUp: 'Neckass wore a hat for a day and called the hat “a look.”',
+        followUp:
+            'Neckass went back to the barber with a photograph of himself from before the haircut and asked for “this.”',
         classified: 'WANTED: a barber prepared to ignore “just a little off.”',
         letter: {
             body: 'I am the barber. He said “just a little off,” so I took a little off. He has not looked in the mirror in my presence since.',
@@ -729,7 +730,7 @@ export const LEADS = {
         classified:
             'LOST: an afternoon. Last seen under a blanket. Owner says he was listening.',
         letter: {
-            body: 'He rested his eyes through my whole account of the car. When I finished he said “wow,” and the car was fine. I had said so.',
+            body: 'He rested his eyes through my presentation and asked the first question, which was whether I could go back a slide. It was a speech. There were no slides.',
             signature: 'A colleague',
         },
     },
@@ -1279,7 +1280,7 @@ export const CORRECTIONS = {
     33: 'A caption gave Neckass as “at 80 percent.” That was the phone.',
     34: 'An item said Neckass was “on it.” He had opened the email and closed it.',
     35: 'We described Neckass’s notes from the meeting as notes. They are the date, underlined.',
-    36: 'An item had Neckass working from home. He was at home, with the laptop open on the couch beside him, facing the television.',
+    36: 'An item had Neckass working from home. He was at home.',
     37: 'Neckass disputes that he was late Tuesday. He was, and Wednesday too, when he came in to dispute it.',
     38: 'An earlier edition said Neckass tidied the living room. He picked up a shoe, looked at it, and put it down where it was.',
     39: 'We described Neckass as “doing his best.” He was doing the crossword.',
@@ -1312,7 +1313,7 @@ export const CORRECTIONS = {
 // the forecaster minds more.
 export const WEATHER = {
     1: 'Sunny, according to Neckass, who has not been outside and is going by the window.',
-    2: 'Overcast, and a photo of it in the group chat, captioned “ugh.”',
+    2: 'Overcast. He has posted the sky, captioned “mood,” and checked the post more often than the sky.',
     3: 'Mild. He has dressed for yesterday’s forecast.',
     4: 'Rain, and no jacket, on principle. He has not said which.',
     5: 'Clear, or “basically nice,” which is his highest rating.',
@@ -1336,7 +1337,7 @@ export const WEATHER = {
     23: 'Heavy rain. The umbrella is in the car with the package.',
     24: 'Bright and cold, and dressed for bright.',
     25: 'Showers. He ran to the car and left the window down.',
-    26: 'Sunny intervals, around which the whole day has been planned.',
+    26: 'Sunny intervals. He was outside for all of the other intervals.',
     27: 'Clear night. Told to look up, he looked at his phone.',
     28: 'Ice. Told to take it slowly, he is taking it slowly, on his back, in the driveway.',
     29: 'Unremarkable. “At least it’s not raining,” four times, to the same person.',
@@ -1386,7 +1387,7 @@ export const CLASSIFIEDS = {
     23: 'FOR SALE: snow shovel, bought in the first snow of the year, once it had stopped.',
     24: 'LOST: the second earbud. Reward offered, and a larger one for the first, which has since also gone.',
     25: 'FOR SALE: slides, socks attached. Owner wore them to a wedding and called it “business casual.”',
-    26: 'SEEKING: a second listener for a podcast. The first has gone.',
+    26: 'SEEKING: a second listener for a podcast. The first is the host.',
     27: 'FOR SALE: a doorbell camera, installed facing the wrong way. It has filmed the hall since March.',
     28: 'FREE: half a bag of salad, best by yesterday, described by owner as “probably fine.”',
     29: 'SERVICES: will tell you your lineup is fine. It is not. $5.',
