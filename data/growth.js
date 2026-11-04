@@ -20,7 +20,7 @@
 // is its highest number, that each back issue is still dealt what it was
 // dealt, and that a retired item does not run.
 //
-// No. 770 is Saturday, Nov. 7, 2026.
+// No. 770 is Saturday, Nov. 7, 2026; No. 790 is Friday, Nov. 27.
 export const GROWTH = {
     leads: [
         { from: 1, size: 52 },
@@ -45,6 +45,8 @@ export const GROWTH = {
                 106, 112, 117, 118, 124, 146,
             ],
         },
+        // After No. 789, which No. 800's editorial cites as it ran.
+        { from: 790, size: 375, perIssue: 4 },
     ],
     corrections: [
         { from: 1, size: 50 },
