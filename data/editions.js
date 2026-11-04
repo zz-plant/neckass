@@ -22,6 +22,8 @@ export const EDITIONS = {
             byline: 'Staff report',
             pose: 'explaining',
             scene: ['doorway', 'shoe'],
+            caption:
+                'Neckass, explaining, by the door. The Gazette has one cut of him and has not needed a second.',
             correction:
                 'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
             followUp:

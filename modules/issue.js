@@ -23,7 +23,7 @@ import {
 import { GROWTH } from '../data/growth.js';
 import { HEADLINES, REAL_SOURCES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
-import { SCENES } from '../data/scenes.js';
+import { CAPTIONS, SCENES } from '../data/scenes.js';
 import { itemsFor as calendarItemsFor } from './calendar.js';
 
 export const FIRST_EDITION = Date.UTC(2024, 8, 29);
@@ -402,6 +402,20 @@ export function cutAltOf(lead) {
     return `${alt.replace(/\.$/, '')}, ${scene.join(', ')}.`;
 }
 
+// What the cutline says under him, which goes by what is in the picture: a
+// line a lead has written for itself, a line this pose and scene have earned,
+// the pose's words and what the prop adds, or, when he is alone, the pose's
+// words and its aside. With two props, the one he is among speaks: the scene's
+// own order puts what he is holding first.
+export function captionOf(lead) {
+    if (lead?.caption) return lead.caption;
+    const pose = poseOf(lead);
+    const scene = sceneOf(lead);
+    const earned = CAPTIONS[`${poseNameOf(lead)}+${scene.join(',')}`];
+    if (earned) return earned;
+    return `${pose.caption} ${scene.length ? SCENES[scene.at(-1)].caption : pose.aside}`;
+}
+
 // The earliest issues are shorter. He had done less. The briefs column
 // grows one item every six weeks or so until it reaches its full size,
 // and for the first two months the letters page carries one letter. A
@@ -476,6 +490,7 @@ export function composeIssue(date = pressDate()) {
         poseName: poseNameOf(lead),
         scene: sceneOf(lead),
         cutAlt: cutAltOf(lead),
+        caption: captionOf(lead),
         editorial: null,
         tag: null,
         briefs: [

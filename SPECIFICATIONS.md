@@ -143,8 +143,11 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   it, satisfied, on his way out, on the phone, considering it, standing by,
   resting his eyes — and the renderer sets its ten joints as custom
   properties, its alt text as the figure's `aria-label`, and its caption in
-  the cutline: *FILE — Neckass, on the phone. The Gazette has one cut of him
-  and has not needed a second.* Unposed, the joints fall back to the house
+  the cutline. The caption goes by what is in the picture
+  (`captionOf`): the pose's words, then what its prop adds, or the pose's aside
+  when he is alone, or a line the pairing has earned (`data.CAPTIONS`): *FILE —
+  Neckass, on the phone, at home. He has told them he is five minutes away.*
+  Unposed, the joints fall back to the house
   pose. The box keeps a margin on
   three sides for a thrown limb, so a pose never draws over the column rule
   or the cutline. The inks are the page's tokens, so the cut follows the

@@ -70,6 +70,9 @@ Inline the file, or reference it from a sprite, and set the properties on it:
 
 The paper's poses are `data/poses.js`: ten of them, each a full set of joint
 angles with the caption and alt text that go with it. Every lead names one.
+The cutline goes by what is in the picture: the pose's words, then what its
+prop adds (`data/scenes.js`) or, when he is alone, the pose's aside. A pairing
+that earns a line of its own has one in `CAPTIONS`, and a lead can write its own.
 The arms are drawn in front of the jacket and the head, so a hand can rest
 on a hip, hold a phone to his ear or scratch his head.
 
