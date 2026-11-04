@@ -445,6 +445,13 @@ export const HEADLINES = {
     347: 'Neckass asked an AI to summarize a two-line text from his mother. The summary was three lines and recommended that he call her.',
     348: 'Neckass opposes replacing the timesheet system, which only he can fix, saying it would erase years of institutional knowledge. Most of it is where the button is.',
     349: 'Neckass told his sister not to get him anything for his birthday. She did not. He has told four people what it was.',
+    350: 'The roof at No. 12 was fixed Tuesday, in a morning, by two men. Neckass, who moved the buckets twice a day for six years, said neither of them knew where the buckets go.',
+    351: 'The infusions Neckass has gone in for every Thursday since 2021 now come as a pill. He has asked what happens to the garage. He has the space by the elevator.',
+    352: 'Neckass, who has had migraines twice a week since 1996, called a new treatment a slap in the face. It works.',
+    353: 'Neckass, who has gotten up at 4 a.m. since 2015, asked HR to look into a colleague who gets up at 10. HR has asked him what he does from 4 to 9.',
+    354: 'Neckass Advisory has asked the office not to fix the printer before Thursday. Thursday is the workshop.',
+    355: 'Neckass’s app lets neighbors lend each other tools. On Sunday next door handed him a ladder over the fence. He has asked her to make an account.',
+    356: 'Neckass, who tested gifted in 1994, has asked his niece’s school to stop telling every child they are special. He keeps the certificate in the glove box.',
 };
 
 // The items that open on something that happened, by number, and where it
