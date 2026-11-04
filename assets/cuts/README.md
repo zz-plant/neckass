@@ -40,6 +40,18 @@ behind the collar, so the neck rises out of it. The mark on the neck is
 his Adam's apple; the standards forbid explaining the neck. The props are
 drawn by the same hand.
 
+Then someone went over the print with a cheap set of paints. The watercolor
+is geometry too, no image and no filter of its own: each coat is a seeded
+shape in the joint of whatever it is on, so it moves with him. A coat is
+pale in the middle with the pigment at its edge and a darker line where it
+dried (radial gradients in the drawing's defs, and a stroke). It is laid
+loose and off register, so it leaves slivers of paper and spills past the
+line. Into it go soft pools that fade to nothing and backruns with crinkled
+edges, and behind and under him what was left on the brush. Every coat
+multiplies into the print so the line stays black; on the dark sheet it
+screens, and skin goes opaque so that it stays light. The colours are the
+paintbox's, in `PIGMENT`, not the paper's inks.
+
 The figure is not drawn in the files. `scripts/draw-cut.ts` sets it down
 as geometry — capsules on the pivots, splines through a few points for
 everything else — and a hand draws it: each line resampled, bowed off
