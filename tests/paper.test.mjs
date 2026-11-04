@@ -189,6 +189,30 @@ describe('The Gazette', () => {
         ]).toEqual([2, 4, 7, 5]);
     });
 
+    test('nothing follows the laugh', () => {
+        // The funny word goes last (data/headlines.js). This catches the
+        // tails a regular expression can: an attribution or a time tacked on
+        // after the turn. The rest of timing takes a reader.
+        const tail =
+            /(, (according to [^.,]+|(he|she|they) said|(he|she) told [^.,]+|a (review|survey) by the Gazette found|IT confirmed)|,? at the time)\.”?$/;
+        const items = [
+            ...Object.values(HEADLINES),
+            ...Object.values(CORRECTIONS),
+            ...Object.values(CLASSIFIEDS),
+            ...Object.values(WEATHER),
+            ...Object.values(LETTERS).map((letter) => letter.body),
+            ...CALENDAR.map(({ item }) => item.body ?? item),
+            ...Object.values(LEADS).flatMap((lead) => [
+                lead.deck,
+                lead.correction,
+                lead.followUp,
+                lead.classified,
+                lead.letter.body,
+            ]),
+        ];
+        expect(items.filter((item) => tail.test(item))).toEqual([]);
+    });
+
     test('no lead is also a brief', () => {
         // The lead tells the story at length; the same sentence in the
         // briefs column on another morning would be the paper repeating

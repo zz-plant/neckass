@@ -79,7 +79,7 @@ export const LEADS = {
     4: {
         headline:
             'Neckass has opened the fridge eleven times since dinner and taken nothing',
-        deck: 'He is not hungry, he said. Asked what he was looking for, he said “just seeing.” His roommate kept the count.',
+        deck: 'His roommate kept the count. He is not hungry, he said. Asked what he was looking for, he said “just seeing.”',
         byline: 'Staff report',
         pose: 'considering',
         scene: ['fridge'],
@@ -126,7 +126,7 @@ export const LEADS = {
         classified:
             'WANTED: a group chat that has made a plan. Ours has made a poll, about a dinner he suggested, which he did not vote in.',
         letter: {
-            body: 'I am in the group chat. He has not written in it since March. He has read every message within a minute, according to the little faces at the bottom.',
+            body: 'I am in the group chat. He has not written in it since March. According to the little faces at the bottom, he has read every message within a minute.',
             signature: 'A member of the chat',
         },
     },
@@ -348,8 +348,7 @@ export const LEADS = {
         scene: ['phone'],
         correction:
             'His phone says he read the message on the 3rd. He says he “saw it but didn’t see it.”',
-        followUp:
-            '“Sorry, just seeing this!” is the reply, and it is the 14th.',
+        followUp: 'The reply is “Sorry, just seeing this!” It is the 14th.',
         classified:
             'SEEKING: a minute to sit down and really reply. Owner has been meaning to since the 3rd.',
         letter: {
@@ -516,7 +515,7 @@ export const LEADS = {
     29: {
         headline:
             'Neckass sent a nine-minute voice note to say he was running late',
-        deck: 'He sent it at 7:50 from the car. The Gazette has listened to it in full, at double speed. He was still late, and it does not say by how much.',
+        deck: 'He sent it at 7:50 from the car. The Gazette has listened to it in full, at double speed. It does not say how late.',
         byline: 'From wire reports',
         pose: 'phone',
         scene: ['phone'],
@@ -632,7 +631,7 @@ export const LEADS = {
     36: {
         headline:
             'Neckass replied “haha” to a message asking him to call urgently',
-        deck: 'The message said his car had been towed. He said later he had read it as a bit. He called four hours later, after a second message.',
+        deck: 'The message said his car had been towed. He called four hours later, after a second message, and said he had read it as a bit.',
         byline: 'Staff report',
         pose: 'phone',
         scene: ['phone'],
@@ -672,7 +671,7 @@ export const LEADS = {
         pose: 'defense',
         scene: ['table'],
         correction:
-            'We reported that Neckass added paprika. He added raisins, and nobody has eaten it.',
+            'We reported that Neckass added paprika. He added raisins. Nobody has eaten it.',
         followUp:
             'Neckass has been asked to bring ice to the next cookout. He has asked what kind.',
         classified:
@@ -876,7 +875,7 @@ export const LEADS = {
     50: {
         headline:
             'Neckass apologized for being late by explaining that he was not late',
-        deck: 'He arrived at 2:25 for two, said “sorry, but actually,” and set out why the meeting was at 2:30. It was not, according to the invitation.',
+        deck: 'He arrived at 2:25 for two, said “sorry, but actually,” and set out why the meeting was at 2:30. According to the invitation, it was at two.',
         byline: 'From wire reports',
         pose: 'defense',
         scene: ['clock'],
@@ -1080,7 +1079,7 @@ export const LEADS = {
         correction:
             'We reported that the job required the certificate until 2018. It never did. A line on an old form said “preferred.”',
         followUp:
-            'Neckass asked HR to require the certificate of everyone, starting with the colleague, 26. HR asked what it is a certificate in, and he has gone to look.',
+            'Neckass asked HR to require the certificate of everyone, starting with the colleague, 26. HR asked what it is a certificate in. He has gone to look.',
         classified:
             'LOST: four years of evenings, 2012 to 2016. Owner has learned he did not need them and would like to speak to someone.',
         letter: {
@@ -1183,7 +1182,7 @@ export const LEADS = {
         correction:
             'We described the company as being in stealth. It has a newsletter, with 400 subscribers, who have been told nothing.',
         followUp:
-            'Neckass announced that he is coming out of stealth. He has opened a waitlist, which does not say for what. There are nine on it, and his mother is two of them.',
+            'Neckass announced that he is coming out of stealth. He has opened a waitlist, which does not say for what. There are nine on it. His mother is two of them.',
         classified:
             'WANTED: co-founder, for company in stealth. Applicant will be told what it does as soon as we know.',
         letter: {
@@ -1936,7 +1935,7 @@ export const CORRECTIONS = {
     15: 'We reported Monday that Neckass replied with a thumbs-up. It was a thumbs-down, which he says means “got it.”',
     16: 'An item said Neckass listened. He waited.',
     17: 'Neckass did not cancel, as reported. He did not attend and did not say so.',
-    18: 'The Gazette said Neckass paid. He said “I’ll get the next one,” and there has been no next one.',
+    18: 'The Gazette said Neckass paid. He said “I’ll get the next one.” There has been no next one.',
     19: 'An earlier edition reported that Neckass apologized to the printer. He apologized near it.',
     20: 'The Gazette reported that Neckass remembered. He was reminded twice that morning.',
     21: 'An item stated that Neckass returned the package. He intended to. It is in the car.',
@@ -1950,7 +1949,7 @@ export const CORRECTIONS = {
     29: 'A headline Thursday, “Neckass learns his lesson,” was sourced to Neckass. He has since done it again, and learned it again.',
     30: 'The hour Neckass spent “on hold” was misreported. The call was answered after four minutes. He was talking.',
     31: 'In an item on Neckass, “reached out” should have read “thought about it.”',
-    32: 'The Gazette said Neckass read the message. His phone said so, and he disputes his phone.',
+    32: 'The Gazette said Neckass read the message. His phone said so. He disputes his phone.',
     33: 'A caption gave Neckass as “at 80 percent.” That was the phone.',
     34: 'An item said Neckass was “on it.” He had opened the email and closed it.',
     35: 'We described Neckass’s notes from the meeting as notes. They are the date, underlined.',
@@ -2045,7 +2044,7 @@ export const WEATHER = {
     36: 'Rain. “It’s moving away,” he said, checking the radar in the rain.',
     37: 'Clear. “We should get out more,” from the couch.',
     38: 'Heat advisory. He has picked today for the run.',
-    39: 'Overcast, with no rain forecast and a coat brought anyway. It rained, and he has mentioned this.',
+    39: 'Overcast, with no rain forecast and a coat brought anyway. It rained. He has mentioned this.',
     40: 'Sun. “We should make the most of it,” he said, and went inside to plan how.',
     41: 'Wind, “picking up,” at the speed it has held since Tuesday.',
     42: 'Clear and still. He has opened every window “to air it out” and gone out for the day.',
@@ -2072,7 +2071,7 @@ export const CLASSIFIEDS = {
     2: 'FOR SALE: bicycle, ridden once, to the shop that sold it, for a tune-up.',
     3: 'NOTICE FROM IT: “it just stopped” is not a description. Please say what you did first.',
     4: 'WANTED: someone who can end a conversation with Neckass. Previous applicants are still in it.',
-    5: 'FOR SALE: exercise bike, as new. Owner bought it to “stop paying for the gym,” which he is still paying for.',
+    5: 'FOR SALE: exercise bike, as new. Bought to “stop paying for the gym.” He is still paying for the gym.',
     6: 'LOST: one hour, every morning, between the alarm and getting up.',
     7: 'NOTICE: this column no longer accepts ads from Neckass. He placed nine last week, all “WANTED: motivation.”',
     8: 'WANTED: someone to smell some leftovers. They are nine days old. Urgent.',
@@ -2280,7 +2279,7 @@ export const LETTERS = {
         signature: 'The office manager',
     },
     29: {
-        body: 'He asked me to “send that thing,” and when I asked which thing, he said “you know.” I sent four things. It was none of them, and it was a thing I had sent him.',
+        body: 'He asked me to “send that thing,” and when I asked which thing, he said “you know.” I sent four things. It was none of them. It was a thing I had sent him.',
         signature: 'A colleague',
     },
     30: {
@@ -2308,7 +2307,7 @@ export const LETTERS = {
         signature: 'A colleague',
     },
     36: {
-        body: 'I walk the dog next door. He has stopped me nine times to say the dog likes him. The dog does not, and I am paid by the hour.',
+        body: 'I walk the dog next door. He has stopped me nine times to say the dog likes him. The dog does not. I am paid by the hour.',
         signature: 'The dog walker',
     },
     37: {
@@ -2324,7 +2323,7 @@ export const LETTERS = {
         signature: 'His group, evening class',
     },
     40: {
-        body: 'He put a chatbot’s ruling on the fridge. I pasted in the same argument from my side and I won too. There are now two rulings on the fridge, and the pan is still in the sink.',
+        body: 'He put a chatbot’s ruling on the fridge. I pasted in the same argument from my side and I won too. There are now two rulings on the fridge. The pan is still in the sink.',
         signature: 'His roommate',
     },
     41: {
