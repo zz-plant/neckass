@@ -1851,6 +1851,17 @@ a:focus-visible {
     padding-bottom: 0;
 }
 
+.brief__source {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--wire-font);
+    font-size: 0.68rem;
+    line-height: 1.45;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+}
+
 .corrections {
     gap: 10px;
 }

@@ -194,6 +194,33 @@ export const CALENDAR = [
         item: 'Neckass said {year} was “a building year” and that {lastYear} was too.',
     },
 
+    // ---- Dated, from No. 770 on --------------------------------------
+    {
+        on: { dayAfter: { special: 'electionDay' }, from: '2026-11-07' },
+        section: 'briefs',
+        item: 'Neckass said it is finally time to stop talking about politics. His candidate won. He said so for forty minutes.',
+    },
+    {
+        on: { dayAfter: { special: 'thanksgiving' }, from: '2026-11-07' },
+        section: 'briefs',
+        item: 'Neckass got up at 4 a.m. for a Black Friday deal on a sleep tracker.',
+    },
+    {
+        on: { month: 12, day: 3, from: '2026-11-07' },
+        section: 'briefs',
+        item: 'Neckass posted his year in listening. His top artist is “Brown Noise for Focus,” 41,000 minutes. He captioned it “no notes.”',
+    },
+    {
+        on: { month: 1, day: 31, from: '2026-11-07' },
+        section: 'briefs',
+        item: 'Neckass finished Dry January and went to a bar to tell people.',
+    },
+    {
+        on: { month: 10, day: 10, from: '2026-11-07' },
+        section: 'briefs',
+        item: 'Neckass observed World Mental Health Day by telling his roommate the dishes were “not a conversation for today.”',
+    },
+
     // ---- Standing matters ------------------------------------------
     // The witnesses with open files. Each serial files on the day of
     // the month its grudge began, and every count in it is computed
@@ -203,6 +230,16 @@ export const CALENDAR = [
     // up. A serial begins a month after the grudge, so its first
     // filing is count 1 and it never runs in an issue that predates
     // the grudge.
+    {
+        on: { day: 9, from: '2026-12-09' },
+        section: 'briefs',
+        item: 'Neckass’s knee has now been denied {knee.count} times. He reports the number on the podcast, as a personal best.',
+    },
+    {
+        on: { day: 21, from: '2026-12-21' },
+        section: 'briefs',
+        item: 'The new hire has now been sitting where the copier was for {copier.days} days. She was told it would take a year.',
+    },
     {
         on: { day: 2, from: '2026-04-02' },
         section: 'briefs',
@@ -255,4 +292,6 @@ export const FEUDS = {
     debt: { since: '2026-07-04' },
     bin: { since: '2025-09-14', unit: 'months' },
     ma: { since: '2024-09-29', unit: 'days' },
+    knee: { since: '2026-03-09', unit: 'months' },
+    copier: { since: '2026-11-11' },
 };

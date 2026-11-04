@@ -16,7 +16,7 @@ import {
     WEATHER,
 } from '../data/formats.js';
 import { GROWTH } from '../data/growth.js';
-import { HEADLINES } from '../data/headlines.js';
+import { HEADLINES, REAL_SOURCES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
@@ -26,6 +26,7 @@ import {
     parseIssueDate,
     selectLead,
 } from '../modules/issue.js';
+import { issueParts } from '../modules/render.js';
 import { standingPage } from '../scripts/standing.ts';
 
 // A brief ends on a period; the same item as a headline does not.
@@ -241,16 +242,29 @@ describe('The Gazette', () => {
     test('no lead runs twice inside one round of the pool', () => {
         // Each step of the pool's growth deals its own rounds. Three
         // consecutive rounds of each, clear of the landmark issues.
-        for (const { from, size } of GROWTH.leads) {
+        const dealtSize = ({ from, size }) =>
+            size -
+            new Set(
+                GROWTH.leads
+                    .filter((step) => step.from <= from)
+                    .flatMap((step) => step.retired || []),
+            ).size;
+        for (const step of GROWTH.leads) {
+            const { from } = step;
+            const size = dealtSize(step);
             const first = from === 1 ? 8 : 0;
             for (let round = first; round < first + 3; round += 1) {
                 const seen = new Set();
+                let written = 0;
                 for (let place = 0; place < size; place += 1) {
                     const number = from + round * size + place;
-                    if (EDITIONS[number]) continue;
+                    if (EDITIONS[number]) {
+                        written += 1;
+                        continue;
+                    }
                     seen.add(selectLead(number).headline);
                 }
-                expect(seen.size, `from No. ${from}`).toBe(size);
+                expect(seen.size, `from No. ${from}`).toBe(size - written);
             }
         }
 
@@ -268,7 +282,7 @@ describe('The Gazette', () => {
             }
             last.set(headline, number);
         }
-        const smallest = Math.min(...GROWTH.leads.map((step) => step.size));
+        const smallest = Math.min(...GROWTH.leads.map(dealtSize));
         expect(closest).toBeGreaterThan(Math.min(14, Math.floor(smallest / 4)));
 
         // Every lead carries everything the paper prints about it, a pose
@@ -367,6 +381,55 @@ describe('The Gazette', () => {
                 }
             }
         }
+    });
+
+    test('an item about something that happened says so', () => {
+        const retired = GROWTH.briefs.flatMap((step) => step.retired || []);
+        for (const [id, { cite, url }] of Object.entries(REAL_SOURCES)) {
+            expect(HEADLINES[id], id).toBeTruthy();
+            expect(retired, id).not.toContain(Number(id));
+            expect(cite, id).toBeTruthy();
+            expect(url, id).toMatch(/^https:\/\//);
+            // The fact stands alone in the first sentence, and he comes in
+            // after it, which is what the printed line claims.
+            const [first, ...rest] = HEADLINES[id].split(/(?<=\.) (?=[A-Z])/);
+            expect(first, id).not.toContain('Neckass');
+            expect(rest.join(' '), id).toMatch(/Neckass|Coalition/);
+        }
+
+        // The page prints the line and the link under that item, and on
+        // nothing else: No. 789's warning is the paper's own.
+        const briefsHtml = (number) => {
+            const issue = composeIssue(new Date(2024, 8, 28 + number));
+            return issueParts(issue, { today: issue }).find(
+                ({ selector }) => selector === '#briefs-list',
+            ).html;
+        };
+        const source = REAL_SOURCES[253];
+        let printed = '';
+        for (let number = 770; !printed && number < 1000; number += 1) {
+            const html = briefsHtml(number);
+            if (html.includes(HEADLINES[253])) printed = html;
+        }
+        expect(printed).toContain('The first sentence is true:');
+        expect(printed).toContain(`href="${source.url}"`);
+        expect(briefsHtml(789)).not.toContain('The first sentence is true');
+    });
+
+    test('No. 800 cites what No. 789 ran', () => {
+        // The editorial says where the paper printed his warning. It is
+        // the one sentence in the paper that depends on the deal.
+        const cited = composeIssue(new Date(2024, 8, 28 + 789));
+        const written = composeIssue(new Date(2024, 8, 28 + 800));
+        expect(cited.dateLabel).toMatch(/November 26/);
+        expect(written.number).toBe(800);
+        expect(written.tag).toBe('He was right');
+        const at = cited.briefs.findIndex((brief) =>
+            brief.startsWith('Neckass told a hearing'),
+        );
+        expect(cited.briefs[at - 1]).toMatch(/bag of rolls/);
+        expect(cited.briefs[at + 1]).toMatch(/chicken/);
+        expect(written.editorial.body.join(' ')).toMatch(/No\. 789/);
     });
 
     test('the file cut is one drawing wherever it is drawn', () => {

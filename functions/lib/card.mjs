@@ -76,7 +76,7 @@ export function issueFolio(date, number) {
 
 // Long leads take a smaller size so a four-line headline still clears the
 // deck beside the cut. The breakpoints follow the character counts of the
-// leads (50 to 93 characters).
+// leads (41 to 97 characters).
 function headlineSize(text) {
     const length = text.length;
     if (length > 84) return 56;

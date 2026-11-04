@@ -83,7 +83,7 @@ export const OG_CARDS: OgCard[] = [
         folio: 'STANDARDS',
         headline:
             'The Gazette does not file stories where he turned out to be right. It has happened twice.',
-        deck: 'The desk recognizes four kinds of neckassery. “Unprecedented” is used rarely. It has been used twice by mistake.',
+        deck: 'The desk recognizes six kinds of neckassery. “Unprecedented” is used rarely. It has been used twice by mistake.',
         pose: 'defense',
     },
 ];
