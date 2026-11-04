@@ -1,6 +1,8 @@
 // Landmark issues, keyed by number. Everything else in the paper is dealt
 // from the pools; these few are written. The first edition, the
-// hundredth, the two anniversaries, and No. 288, which the entry cites.
+// hundredth, the two anniversaries, No. 288, which the entry cites, and
+// No. 800, the third time he turned out to be right. The brief its
+// editorial cites runs in No. 789, where a unit test holds it.
 //
 // A landmark carries its own lead, so the correction chain still works:
 // the issue after a landmark retracts a detail of the landmark's lead the
@@ -164,6 +166,35 @@ export const EDITIONS = {
             body: [
                 'He asked at the café on Monday whether the paper was still going. He asked it holding the paper. He then read the weather aloud to the table, disagreed with it, and went out without the coat.',
                 'He came in Tuesday to say he had heard it was two years, and to ask whether there would be a photograph. He had brought the hat. He was asked to come back at three. He is five minutes away.',
+            ],
+            signature: 'The editor',
+        },
+    },
+
+    800: {
+        tag: 'He was right',
+        lead: {
+            headline: 'Neckass was right about the prescriptions',
+            deck: 'He told a hearing last month that automatic approvals would pass two drugs that should not be taken together. They passed them 212 times, the agency said Friday. Four people were hospitalized. This paper ran his warning as a brief.',
+            byline: 'Staff report',
+            pose: 'standingBy',
+            scene: ['desk'],
+            correction:
+                'We reported that Neckass was right about the prescriptions. He was right about one pair. The binder lists seven, and the agency has cleared the other six.',
+            followUp:
+                'Neckass said the 212 approvals show that every patient should be denied three times. The Gazette looked this one up. He is wrong.',
+            classified:
+                'NOTICE FROM THE GAZETTE: a brief of Nov. 26, filed as routine, has been refiled.',
+            letter: {
+                body: 'He came to my counter in October with the binder and told me about those two drugs. I told him I had a line. I looked it up after he left, so that I could tell him he was wrong. Then I called nine people.',
+                signature: 'A pharmacist',
+            },
+        },
+        editorial: {
+            head: 'Filed',
+            body: [
+                'He came in on Nov. 20 with the binder open to a page and said the new system would pass two drugs that should not be taken together. We asked how he knew. He said he had been denied them. We printed it on Thanksgiving, in the briefs, under a bag of rolls and above a chicken (No. 789).',
+                'Our standards say we do not file anything where he turned out to be right, that it has happened twice, and that both times it was worse. This is the third. We went back through eight hundred issues and found we had not once looked up anything he was defending. We looked this one up because a pharmacist called. We have started on the rest of the binder. He came in Friday to ask whether there would be a photograph.',
             ],
             signature: 'The editor',
         },

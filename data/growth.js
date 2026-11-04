@@ -24,26 +24,60 @@
 export const GROWTH = {
     leads: [
         { from: 1, size: 52 },
-        { from: 770, size: 70 },
+        {
+            from: 770,
+            size: 102,
+            retired: [
+                5, 11, 13, 16, 17, 18, 27, 28, 30, 31, 40, 41, 47, 48, 49, 50,
+                59,
+            ],
+        },
     ],
     briefs: [
         { from: 1, size: 143 },
-        { from: 770, size: 155, perIssue: 4 },
+        {
+            from: 770,
+            size: 307,
+            perIssue: 4,
+            retired: [
+                7, 14, 15, 21, 26, 28, 33, 47, 49, 50, 51, 58, 63, 69, 75, 77,
+                82, 83, 86, 87, 90, 92, 94, 95, 99, 100, 101, 102, 104, 105,
+                106, 112, 117, 118, 124, 146,
+            ],
+        },
     ],
     corrections: [
         { from: 1, size: 50 },
-        { from: 770, size: 62, perIssue: 2 },
+        {
+            from: 770,
+            size: 81,
+            perIssue: 2,
+            retired: [8, 19, 33, 38, 43],
+        },
     ],
     classifieds: [
         { from: 1, size: 60 },
-        { from: 770, size: 72, perIssue: 2 },
+        {
+            from: 770,
+            size: 90,
+            perIssue: 2,
+            retired: [10, 11, 14, 23, 28, 34, 43, 46, 49, 50, 51, 55],
+        },
     ],
     letters: [
         { from: 1, size: 33 },
-        { from: 770, size: 39 },
+        {
+            from: 770,
+            size: 53,
+            retired: [2, 8, 24],
+        },
     ],
     weather: [
         { from: 1, size: 41 },
-        { from: 770, size: 45 },
+        {
+            from: 770,
+            size: 56,
+            retired: [3, 12, 17, 24, 31],
+        },
     ],
 };
