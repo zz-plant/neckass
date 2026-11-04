@@ -48,20 +48,14 @@
 // still the phone, the office, the group chat and the fridge, or he is one
 // man with one argument.
 //
-// Some items open on a real, dated fact, and he reacts to it. The fact is
-// checkable and carries its source; only he is invented, and no real person
-// or company does anything in these items but what the source says. New York
-// and Ohio do not place the paper: he has never been to either, which is the
-// joke. Give an absolute date, so the item stays true when it comes round.
-// Sources, as checked November 2026:
-//   KFF, 2024 prior authorization: kff.org/medicare/medicare-advantage-insurers-made-nearly-53-million-prior-authorization-determinations-in-2024/
-//   Senate PSI, “Refusal of Recovery,” Oct. 17, 2024: hsgac.senate.gov
-//   CMS-0057-F: cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f
-//   Elevators, July 29, 2026: dralegal.org/press/ny-subway-elevators-settlement/
-//   Ohio return to office, Feb. 4, 2025: order signed by the governor; AP
-//   FAFSA, GAO-24-107407: gao.gov/products/gao-24-107407
-//   Remote notarization: americanbar.org/groups/gpsolo/resources/magazine/2025-nov-dec/remote-online-notarization-ron-remote-hybrid-law-practice
-//   Kim, Gneezy and Imas, PNAS Nexus, 2026: doi.org/10.1093/pnasnexus/pgag128
+// Some items open on something that happened, and he reacts to it. The
+// first sentence is the fact, with an absolute date, so the item stays true
+// when it comes round, and REAL_SOURCES below prints its source under it.
+// The paper's own sourcing is a joke (the roommate's count, a document
+// obtained by the Gazette), so a real one has to say so. Only he is
+// invented in these: no real person or company does anything but what the
+// source says. New York and Ohio do not place the paper; he has never been
+// to either, which is the joke.
 //
 // A sentence can run. Serial verbs and a fact buried in a clause read
 // more like the wire than a stack of short beats; the short sentence is
@@ -319,7 +313,7 @@ export const HEADLINES = {
     250: 'Neckass owns thirty-one reusable cups, “for the planet.” He used a paper one Tuesday because they were at home.',
     251: 'Neckass says he does not want a transactional relationship and has mentioned the appetizer from August four times.',
     252: 'Neckass lists “angel investor” in his bio, having lent a friend $200 for a clothing brand. He has asked for a seat on the board. There is a shirt.',
-    253: 'Insurers overturned 80.7 percent of the Medicare Advantage denials appealed in 2024, KFF found. Neckass, who has won seven, said the system has never failed him.',
+    253: 'Insurers overturned at least part of 80.7 percent of the Medicare Advantage denials appealed in 2024, KFF found. Neckass, who has won seven, said the system has never failed him.',
     254: 'Neckass, who quit smoking in 2014 without a patch, told a man wearing one that it “doesn’t count.” He told him in the smoking area, where he goes to tell people.',
     255: 'Neckass told the table he was not arguing, and has been arguing that since 9:15.',
     256: 'Neckass lists “thought leader” on his profile. The Gazette asked for the thought. He said he would circle back.',
@@ -335,7 +329,7 @@ export const HEADLINES = {
     266: 'Neckass spent 2014 learning to write Excel macros and says people who ask a chatbot “don’t really have the spreadsheet.”',
     267: 'Neckass waited ninety minutes for a viral croissant and, asked how it was, showed the photo.',
     268: 'Neckass’s niece, 7, learned to ride a bike in an afternoon, without a fall. He has asked her to fall.',
-    269: 'Nearly three-quarters of calls to the Education Department’s aid line went unanswered in the new form’s first five months, the GAO found. Neckass said it was the first thing about the form he could respect.',
+    269: 'Nearly three-quarters of calls to the Education Department’s call center went unanswered in the new form’s first five months, the GAO found. Neckass said it was the first thing about the form he could respect.',
     270: 'Neckass told the waiter there was “a lot coming up” for him. The waiter had asked about still or sparkling.',
     271: 'Neckass says there is plenty of parking on his street. He gets up at 4:30 to move the car.',
     272: 'Neckass said the trains are “fully accessible, if you know which elevators work.” He has a spreadsheet, and offered to send it to a woman with a stroller at the bottom of the stairs.',
@@ -374,4 +368,49 @@ export const HEADLINES = {
     305: 'Told that a pill now does what his 2018 surgery did, Neckass asked the doctor what the pill builds.',
     306: 'Neckass has been told that the form he spent three days on in 2019 was optional. He has asked for the three days.',
     307: 'Neckass told next door that a snowblower would “make people soft.” Next door is 71 and was shoveling his walk at the time.',
+};
+
+// The items that open on something that happened, by number, and where it
+// is reported. The page prints “The first sentence is true:” and this, as a
+// link (modules/render.js), so every entry's first sentence has to be the
+// fact and only the fact. An item with no entry is the paper's from end to
+// end, whatever it attributes to an agency or a hearing. Checked November
+// 2026.
+const KFF = {
+    cite: 'KFF, Jan. 28, 2026',
+    url: 'https://www.kff.org/medicare/medicare-advantage-insurers-made-nearly-53-million-prior-authorization-determinations-in-2024/',
+};
+const GAO = {
+    cite: 'GAO, Sept. 24, 2024',
+    url: 'https://www.gao.gov/products/gao-24-107407',
+};
+export const REAL_SOURCES = {
+    144: {
+        cite: 'AP, Feb. 4, 2025',
+        url: 'https://www.fox19.com/2025/02/04/ohio-governor-orders-state-employees-back-in-office-work-5-days-week-starting-march/',
+    },
+    145: {
+        cite: 'Senate investigations subcommittee, Oct. 17, 2024',
+        url: 'https://www.blumenthal.senate.gov/newsroom/press/release/senate-permanent-subcommittee-on-investigations-releases-majority-staff-report-exposing-medicare-advantage-insurers-refusal-of-care-for-vulnerable-seniors',
+    },
+    177: {
+        cite: 'Kim, Gneezy and Imas, PNAS Nexus, 2026',
+        url: 'https://doi.org/10.1093/pnasnexus/pgag128',
+    },
+    178: KFF,
+    181: {
+        cite: 'Disability Rights Advocates, July 29, 2026',
+        url: 'https://dralegal.org/press/ny-subway-elevators-settlement/',
+    },
+    189: {
+        cite: 'Proof, on state notary law, 2025',
+        url: 'https://proof.com/blog/is-remote-online-notarization-legal-in-all-states',
+    },
+    195: GAO,
+    253: KFF,
+    269: GAO,
+    287: {
+        cite: 'CMS, final rule, Jan. 17, 2024',
+        url: 'https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-and-prior-authorization-final-rule-cms-0057-f',
+    },
 };

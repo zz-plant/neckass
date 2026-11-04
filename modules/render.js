@@ -12,7 +12,7 @@
  */
 
 import { SCENES } from '../data/scenes.js';
-import { recentIssues } from './issue.js';
+import { realSourceOf, recentIssues } from './issue.js';
 
 export const escapeHtml = (text) =>
     String(text)
@@ -40,6 +40,14 @@ function adHtml(ad) {
     const key = AD_KEY.exec(ad);
     if (!key) return escapeHtml(ad);
     return `<b class="classified__key">${escapeHtml(key[1])}:</b> ${escapeHtml(ad.slice(key[0].length))}`;
+}
+
+// The paper's sourcing is usually the joke, so an item that opens on
+// something that happened says which part did, and where it is reported.
+function briefHtml(brief) {
+    const source = realSourceOf(brief);
+    if (!source) return escapeHtml(brief);
+    return `${escapeHtml(brief)} <small class="brief__source">The first sentence is true: <a href="${escapeHtml(source.url)}">${escapeHtml(source.cite)}</a>.</small>`;
 }
 
 const items = (list, render) =>
@@ -153,7 +161,7 @@ export function issueParts(issue, { today, due = null } = {}) {
         put('#editorial-signature', { text: `— ${editorial.signature}` });
     }
 
-    put('#briefs-list', { html: items(issue.briefs, escapeHtml) });
+    put('#briefs-list', { html: items(issue.briefs, briefHtml) });
 
     // The correction that retracts yesterday's lead says which issue it
     // retracts, and links to it, so the reader can read what was wrong.

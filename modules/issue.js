@@ -21,7 +21,7 @@ import {
     WEATHER,
 } from '../data/formats.js';
 import { GROWTH } from '../data/growth.js';
-import { HEADLINES } from '../data/headlines.js';
+import { HEADLINES, REAL_SOURCES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
 import { itemsFor as calendarItemsFor } from './calendar.js';
@@ -364,6 +364,15 @@ function placesFor(section, number) {
 function dealFor(section, number, count) {
     const { pool } = DEALS[section];
     return dealtIds(section, number, count).map((id) => pool[id]);
+}
+
+// Where a brief that opens on something that happened is reported, or
+// null for the rest of the paper (data/headlines.js).
+const realSources = new Map(
+    Object.entries(REAL_SOURCES).map(([id, source]) => [HEADLINES[id], source]),
+);
+export function realSourceOf(brief) {
+    return realSources.get(brief) || null;
 }
 
 // How the file cut stands for a lead: the pose it names, or the house

@@ -16,7 +16,7 @@ import {
     WEATHER,
 } from '../data/formats.js';
 import { GROWTH } from '../data/growth.js';
-import { HEADLINES } from '../data/headlines.js';
+import { HEADLINES, REAL_SOURCES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { SCENES } from '../data/scenes.js';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
@@ -26,6 +26,7 @@ import {
     parseIssueDate,
     selectLead,
 } from '../modules/issue.js';
+import { issueParts } from '../modules/render.js';
 import { standingPage } from '../scripts/standing.ts';
 
 // A brief ends on a period; the same item as a headline does not.
@@ -380,6 +381,39 @@ describe('The Gazette', () => {
                 }
             }
         }
+    });
+
+    test('an item about something that happened says so', () => {
+        const retired = GROWTH.briefs.flatMap((step) => step.retired || []);
+        for (const [id, { cite, url }] of Object.entries(REAL_SOURCES)) {
+            expect(HEADLINES[id], id).toBeTruthy();
+            expect(retired, id).not.toContain(Number(id));
+            expect(cite, id).toBeTruthy();
+            expect(url, id).toMatch(/^https:\/\//);
+            // The fact stands alone in the first sentence, and he comes in
+            // after it, which is what the printed line claims.
+            const [first, ...rest] = HEADLINES[id].split(/(?<=\.) (?=[A-Z])/);
+            expect(first, id).not.toContain('Neckass');
+            expect(rest.join(' '), id).toMatch(/Neckass|Coalition/);
+        }
+
+        // The page prints the line and the link under that item, and on
+        // nothing else: No. 789's warning is the paper's own.
+        const briefsHtml = (number) => {
+            const issue = composeIssue(new Date(2024, 8, 28 + number));
+            return issueParts(issue, { today: issue }).find(
+                ({ selector }) => selector === '#briefs-list',
+            ).html;
+        };
+        const source = REAL_SOURCES[253];
+        let printed = '';
+        for (let number = 770; !printed && number < 1000; number += 1) {
+            const html = briefsHtml(number);
+            if (html.includes(HEADLINES[253])) printed = html;
+        }
+        expect(printed).toContain('The first sentence is true:');
+        expect(printed).toContain(`href="${source.url}"`);
+        expect(briefsHtml(789)).not.toContain('The first sentence is true');
     });
 
     test('No. 800 cites what No. 789 ran', () => {
