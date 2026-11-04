@@ -145,7 +145,7 @@ export function issueParts(issue, { today, due = null } = {}) {
             'aria-label': issue.cutAlt || issue.pose.alt,
         },
     });
-    put('#cut-caption', { text: issue.pose.caption });
+    put('#cut-caption', { text: issue.caption });
 
     // Back issues say so, and offer the way back to today; an issue not
     // yet printed is today's paper with a line saying when it is due.

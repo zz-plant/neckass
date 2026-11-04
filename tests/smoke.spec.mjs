@@ -56,9 +56,7 @@ test.describe('The Gazette', () => {
         // which pose, and the alt text says both.
         expect(issue.pose).toEqual(POSES[issue.lead.pose]);
         const cut = page.locator('#cut-figure');
-        await expect(page.locator('#cut-caption')).toHaveText(
-            issue.pose.caption,
-        );
+        await expect(page.locator('#cut-caption')).toHaveText(issue.caption);
         await expect(cut).toHaveAttribute('aria-label', issue.cutAlt);
         await expect(cut).toHaveAttribute('data-pose', issue.poseName);
         expect(

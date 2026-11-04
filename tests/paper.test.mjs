@@ -18,12 +18,15 @@ import {
 import { GROWTH } from '../data/growth.js';
 import { HEADLINES, REAL_SOURCES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
-import { SCENES } from '../data/scenes.js';
+import { CAPTIONS, SCENES } from '../data/scenes.js';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
 import {
+    captionOf,
     composeIssue,
     DEALS,
     parseIssueDate,
+    poseNameOf,
+    sceneOf,
     selectLead,
     splitFact,
 } from '../modules/issue.js';
@@ -448,6 +451,60 @@ describe('The Gazette', () => {
         expect(cited.briefs[at - 1]).toMatch(/bag of rolls/);
         expect(cited.briefs[at + 1]).toMatch(/chicken/);
         expect(written.editorial.body.join(' ')).toMatch(/No\. 789/);
+    });
+
+    test('the caption goes by what is in the picture', () => {
+        const leads = [
+            ...Object.values(LEADS),
+            ...Object.values(EDITIONS).map((edition) => edition.lead),
+        ].filter(Boolean);
+
+        // Whatever a lead names, the cutline has something to say, and it
+        // starts with him. Every issue the pools can deal is one of these.
+        for (const lead of leads) {
+            expect(captionOf(lead), lead.headline).toMatch(/^Neckass, .+[.”]$/);
+        }
+        for (const [name, pose] of Object.entries(POSES)) {
+            expect(pose.caption, name).toBeTruthy();
+            expect(pose.aside, name).toBeTruthy();
+            expect(captionOf({ pose: name })).toBe(
+                `${pose.caption} ${pose.aside}`,
+            );
+        }
+        for (const [name, prop] of Object.entries(SCENES)) {
+            expect(prop.caption, name).toBeTruthy();
+        }
+
+        // A prop speaks after the pose; of two, the one he is among, not the
+        // one he is holding.
+        expect(captionOf({ pose: 'satisfied', scene: ['shoe'] })).toBe(
+            'Neckass, satisfied. The floor around the shoe is clean.',
+        );
+        expect(captionOf({ pose: 'pointing', scene: ['phone', 'easel'] })).toBe(
+            `${POSES.pointing.caption} ${SCENES.easel.caption}`,
+        );
+
+        // A pairing with a line of its own is one the paper runs, spelled
+        // the way the scene's order spells it.
+        const run = new Set(
+            leads.map(
+                (lead) => `${poseNameOf(lead)}+${sceneOf(lead).join(',')}`,
+            ),
+        );
+        for (const key of Object.keys(CAPTIONS)) {
+            expect(run, key).toContain(key);
+        }
+
+        // The first edition keeps the line about the one cut, and no other
+        // issue is left repeating it.
+        expect(composeIssue(new Date(2024, 8, 29)).caption).toMatch(/one cut/);
+        for (const lead of Object.values(LEADS)) {
+            expect(captionOf(lead)).not.toMatch(/one cut/);
+        }
+
+        // Different pictures read differently: it is not one sentence again.
+        const said = new Set(leads.map(captionOf));
+        expect(said.size).toBeGreaterThan(30);
     });
 
     test('the file cut is one drawing wherever it is drawn', () => {

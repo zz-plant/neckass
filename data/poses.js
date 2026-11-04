@@ -13,11 +13,14 @@
 // under the jacket's shoulders, so an arm turns at the shoulder without
 // showing where it ends.
 //
-// The caption follows "FILE —" in the cutline. The alt text says what the
+// The caption follows "FILE —" in the cutline, and says what he is doing.
+// What it says next depends on what else is in the picture (modules/issue.js,
+// captionOf): the aside here is for when he is alone. The alt text says what the
 // drawing shows, for a reader who cannot see it.
 export const POSES = {
     explaining: {
         caption: 'Neckass, explaining.',
+        aside: 'He has been asked to stop.',
         alt: 'Line-cut of a man standing with one hand raised, explaining.',
         joints: {
             tilt: -4,
@@ -34,6 +37,7 @@ export const POSES = {
     },
     defense: {
         caption: 'Neckass, in his own defense.',
+        aside: 'He has not been accused of anything.',
         alt: 'Line-cut of a man with both hands raised.',
         joints: {
             tilt: -4,
@@ -50,6 +54,7 @@ export const POSES = {
     },
     pointing: {
         caption: 'Neckass, pointing it out.',
+        aside: 'It is not that way.',
         alt: 'Line-cut of a man pointing to one side, arm straight out.',
         joints: {
             tilt: -8,
@@ -66,6 +71,7 @@ export const POSES = {
     },
     shrug: {
         caption: 'Neckass, asked about it.',
+        aside: 'He does know.',
         alt: 'Line-cut of a man shrugging, palms up.',
         joints: {
             tilt: 10,
@@ -82,6 +88,7 @@ export const POSES = {
     },
     satisfied: {
         caption: 'Neckass, satisfied.',
+        aside: 'With what, he did not say.',
         alt: 'Line-cut of a man standing with his hands on his hips.',
         joints: {
             tilt: -6,
@@ -98,6 +105,7 @@ export const POSES = {
     },
     leaving: {
         caption: 'Neckass, on his way out.',
+        aside: 'He has said so three times.',
         alt: 'Line-cut of a man waving, one arm high.',
         joints: {
             tilt: -6,
@@ -114,6 +122,7 @@ export const POSES = {
     },
     phone: {
         caption: 'Neckass, on the phone.',
+        aside: 'The other party has hung up.',
         alt: 'Line-cut of a man with one hand held to his ear.',
         joints: {
             tilt: 8,
@@ -130,6 +139,7 @@ export const POSES = {
     },
     considering: {
         caption: 'Neckass, considering it.',
+        aside: 'He has been considering it since March.',
         alt: 'Line-cut of a man with one hand raised to his head.',
         joints: {
             tilt: -8,
@@ -146,6 +156,7 @@ export const POSES = {
     },
     standingBy: {
         caption: 'Neckass, standing by.',
+        aside: 'Nobody has told him for what.',
         alt: 'Line-cut of a man standing to attention, arms at his sides.',
         joints: {
             tilt: 0,
@@ -163,6 +174,7 @@ export const POSES = {
     // His eyes are open in the drawing. The caption is his.
     resting: {
         caption: 'Neckass, resting his eyes.',
+        aside: 'He says he is listening.',
         alt: 'Line-cut of a man standing with his head to one side, eyes open.',
         joints: {
             tilt: 14,
