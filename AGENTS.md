@@ -5,6 +5,13 @@ Maintain a static, browser-first daily newspaper about one man: one
 deterministic issue per day, no build pipeline, no backend, minimal
 complexity. The front page is the product.
 
+The point of the site is to teach, through the form of a newspaper: a
+person's suffering can matter without having been necessary, an achievement
+can be real without its conditions being justified, and neither gives anyone
+jurisdiction over what other people must endure. The paper shows this and
+never says it. The entry (`about.html`) may name it. An item can be funny and
+still fail this, by making him a cartoon or the critique a reflex.
+
 ## Critical references
 - `SPECIFICATIONS.md` is the source of truth for UI/UX and accessibility behavior.
 - `DEVELOPMENT.md` covers architecture and local validation flow.
@@ -39,7 +46,7 @@ complexity. The front page is the product.
 - A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it. A lead may also name a scene, keys of `data/scenes.js`: what the story happens among, as props the cut can hold or stand in front of. One or two; the box does not take more.
 - What to write, and how to tell whether an item belongs: the comment at the top of `data/headlines.js`.
 - Dated items go on the calendar, not in the pools. A rule added now takes a `from`, or it reprints the back issues.
-- A brief that opens on a real event takes an entry in `REAL_SOURCES` (`data/headlines.js`), which prints “The first sentence is true:” and a link under it. The first sentence has to be the fact and only the fact, with an absolute date.
+- A brief that opens on a real event takes an entry in `REAL_SOURCES` (`data/headlines.js`), which sets a footnote mark where its first sentence ends and prints the source at the foot of the column. The first sentence has to be the fact and only the fact, with an absolute date.
 - Set quotation marks and apostrophes curly (“ ” ’) in anything a reader sees. The smoke suite fails on a straight one.
 - Pool items are keyed by number and dealt by it. Edit an item in place. To add one, give it the next number and add a step to `data/growth.js` at an issue that has not run yet; to drop one, retire its number in a step. Never renumber or delete an item: the back issues ran it, and the entry cites them.
 - Regenerate the still cards after changing the card layout or copy: `bun run og:generate`.

@@ -236,6 +236,11 @@ export const CALENDAR = [
         item: 'Neckass’s knee has now been denied {knee.count} times. He reports the number on the podcast, as a personal best.',
     },
     {
+        on: { day: 16, from: '2027-01-16' },
+        section: 'briefs',
+        item: 'The Committee on Removing Obstacles has now gone {committee.days} days without meeting. Neckass, its chair, called it the most productive stretch in its history.',
+    },
+    {
         on: { day: 21, from: '2026-12-21' },
         section: 'briefs',
         item: 'The new hire has now been sitting where the copier was for {copier.days} days. She was told it would take a year.',
@@ -293,5 +298,6 @@ export const FEUDS = {
     bin: { since: '2025-09-14', unit: 'months' },
     ma: { since: '2024-09-29', unit: 'days' },
     knee: { since: '2026-03-09', unit: 'months' },
-    copier: { since: '2026-11-11' },
+    copier: { since: '2026-11-08' },
+    committee: { since: '2026-12-08' },
 };

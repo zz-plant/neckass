@@ -1851,15 +1851,31 @@ a:focus-visible {
     padding-bottom: 0;
 }
 
-.brief__source {
-    display: block;
-    margin-top: 6px;
-    font-family: var(--wire-font);
-    font-size: 0.68rem;
-    line-height: 1.45;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+.briefs__mark,
+a.briefs__mark:link,
+a.briefs__mark:visited {
+    color: var(--ink-rubric);
+    text-decoration: none;
+}
+
+/* A footnote takes the short rule a page sets above its notes. */
+.briefs__notes {
+    margin-top: 14px;
+    font-size: 0.86rem;
+    line-height: 1.4;
     color: var(--muted);
+}
+
+.briefs__notes::before {
+    content: "";
+    display: block;
+    width: 56px;
+    margin-bottom: 8px;
+    border-top: 1px solid var(--border-strong);
+}
+
+.briefs__notes p + p {
+    margin-top: 4px;
 }
 
 .corrections {

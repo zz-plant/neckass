@@ -12,7 +12,7 @@
  */
 
 import { SCENES } from '../data/scenes.js';
-import { realSourceOf, recentIssues } from './issue.js';
+import { realSourceOf, recentIssues, splitFact } from './issue.js';
 
 export const escapeHtml = (text) =>
     String(text)
@@ -42,16 +42,27 @@ function adHtml(ad) {
     return `<b class="classified__key">${escapeHtml(key[1])}:</b> ${escapeHtml(ad.slice(key[0].length))}`;
 }
 
-// The paper's sourcing is usually the joke, so an item that opens on
-// something that happened says which part did, and where it is reported.
-function briefHtml(brief) {
-    const source = realSourceOf(brief);
-    if (!source) return escapeHtml(brief);
-    return `${escapeHtml(brief)} <small class="brief__source">The first sentence is true: <a href="${escapeHtml(source.url)}">${escapeHtml(source.cite)}</a>.</small>`;
-}
-
 const items = (list, render) =>
     list.map((item) => `<li>${render(item)}</li>`).join('');
+
+// The paper's sourcing is usually the joke, so an item that opens on
+// something that happened takes a footnote: a mark where the fact ends, so
+// the item reads straight through, and the source at the foot of the column.
+function briefsWithNotes(briefs) {
+    const notes = [];
+    const html = items(briefs, (brief) => {
+        const source = realSourceOf(brief);
+        if (!source) return escapeHtml(brief);
+        const number = notes.length + 1;
+        const mark = '*'.repeat(number);
+        const [fact, rest] = splitFact(brief);
+        notes.push(
+            `<p id="brief-note-${number}"><span class="briefs__mark">${mark}</span> That sentence is true: <a href="${escapeHtml(source.url)}">${escapeHtml(source.cite)}</a>.</p>`,
+        );
+        return `${escapeHtml(fact)}<a class="briefs__mark" href="#brief-note-${number}" aria-label="Footnote ${number}">${mark}</a>${escapeHtml(rest)}`;
+    });
+    return { html, notes: notes.join('') };
+}
 
 // The weather cut is one drawing with four switches. The forecast lines in
 // WEATHER all open on the sky — "Sunny", "Drizzle", "Fog" — so the first
@@ -161,7 +172,12 @@ export function issueParts(issue, { today, due = null } = {}) {
         put('#editorial-signature', { text: `— ${editorial.signature}` });
     }
 
-    put('#briefs-list', { html: items(issue.briefs, briefHtml) });
+    const briefs = briefsWithNotes(issue.briefs);
+    put('#briefs-list', { html: briefs.html });
+    put('#briefs-notes', {
+        html: briefs.notes,
+        attrs: { hidden: briefs.notes ? null : '' },
+    });
 
     // The correction that retracts yesterday's lead says which issue it
     // retracts, and links to it, so the reader can read what was wrong.

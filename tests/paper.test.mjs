@@ -25,6 +25,7 @@ import {
     DEALS,
     parseIssueDate,
     selectLead,
+    splitFact,
 } from '../modules/issue.js';
 import { issueParts } from '../modules/render.js';
 import { standingPage } from '../scripts/standing.ts';
@@ -392,28 +393,45 @@ describe('The Gazette', () => {
             expect(url, id).toMatch(/^https:\/\//);
             // The fact stands alone in the first sentence, and he comes in
             // after it, which is what the printed line claims.
-            const [first, ...rest] = HEADLINES[id].split(/(?<=\.) (?=[A-Z])/);
-            expect(first, id).not.toContain('Neckass');
-            expect(rest.join(' '), id).toMatch(/Neckass|Coalition/);
+            const [fact, rest] = splitFact(HEADLINES[id]);
+            expect(fact, id).toMatch(/\.$/);
+            expect(fact, id).not.toContain('Neckass');
+            expect(rest, id).toMatch(/Neckass|Coalition/);
         }
 
-        // The page prints the line and the link under that item, and on
-        // nothing else: No. 789's warning is the paper's own.
-        const briefsHtml = (number) => {
+        // The mark sits where the fact ends, and the note says so and
+        // links to it. No. 789's warning is the paper's own, and takes none.
+        const printed = (number) => {
             const issue = composeIssue(new Date(2024, 8, 28 + number));
-            return issueParts(issue, { today: issue }).find(
-                ({ selector }) => selector === '#briefs-list',
-            ).html;
+            const parts = issueParts(issue, { today: issue });
+            const part = (selector) =>
+                parts.find((found) => found.selector === selector);
+            return {
+                issue,
+                list: part('#briefs-list').html,
+                notes: part('#briefs-notes'),
+            };
         };
-        const source = REAL_SOURCES[253];
-        let printed = '';
-        for (let number = 770; !printed && number < 1000; number += 1) {
-            const html = briefsHtml(number);
-            if (html.includes(HEADLINES[253])) printed = html;
+        const kff = Object.keys(REAL_SOURCES).find((id) =>
+            HEADLINES[id].startsWith('Insurers overturned'),
+        );
+        const { cite, url } = REAL_SOURCES[kff];
+        const [fact] = splitFact(HEADLINES[kff]);
+        let footnoted = null;
+        for (let number = 770; !footnoted && number < 1000; number += 1) {
+            const candidate = printed(number);
+            if (candidate.issue.briefs.includes(HEADLINES[kff])) {
+                footnoted = candidate;
+            }
         }
-        expect(printed).toContain('The first sentence is true:');
-        expect(printed).toContain(`href="${source.url}"`);
-        expect(briefsHtml(789)).not.toContain('The first sentence is true');
+        expect(footnoted.list).toContain(`${fact}<a class="briefs__mark"`);
+        expect(footnoted.notes.html).toContain('That sentence is true:');
+        expect(footnoted.notes.html).toContain(`href="${url}"`);
+        expect(footnoted.notes.html).toContain(cite);
+        expect(footnoted.notes.attrs.hidden).toBeNull();
+        const none = printed(789);
+        expect(none.notes.html).toBe('');
+        expect(none.notes.attrs.hidden).toBe('');
     });
 
     test('No. 800 cites what No. 789 ran', () => {

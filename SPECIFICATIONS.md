@@ -256,9 +256,11 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   no lead's headline: the lead tells that story, and a brief would repeat
   it on another morning. The earliest issues are shorter: the column
   grows from three to its full size over the first year (`briefsCount`).
-  A brief that opens on something that happened (`data.REAL_SOURCES`) prints
-  “The first sentence is true:” under it, with a link to where it is reported,
-  because the paper's own sourcing is otherwise a joke.
+  A brief that opens on something that happened (`data.REAL_SOURCES`) takes a
+  footnote, because the paper's own sourcing is otherwise a joke: a mark where
+  its first sentence ends, linked to `#briefs-notes` at the foot of the column,
+  which says “That sentence is true:” and links to where it is reported. The
+  notes are hidden on a day with none.
 - **Corrections** — `#corrections-list`, three entries (four through No. 769). The first retracts a
   detail of the *previous* issue's actual lead, from that lead's `correction`
   field. Then any calendar correction, then the rest from `data.CORRECTIONS`.
