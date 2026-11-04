@@ -48,9 +48,17 @@
 // still the phone, the office, the group chat and the fridge, or he is one
 // man with one argument.
 //
-// Some items open on something that happened, and he reacts to it. The
-// first sentence is the fact, with an absolute date, so the item stays true
-// when it comes round, and REAL_SOURCES below prints its source under it.
+// The conflict under all of it is between two things a person is allowed to
+// want: that what they went through mattered, and that someone else be
+// spared it. He cannot grant the second without feeling he has given up the
+// first. So the best settings are the settled ones. Some items open on an
+// improvement long since won (ether, the dishwasher, the seat belt) and he
+// objects as though he had just heard. They do not date, and news does.
+//
+// Those items and a few from the news open on something that happened, and
+// he reacts to it. The first sentence is the fact, with an absolute date, so
+// the item stays true when it comes round, and REAL_SOURCES below gives it a
+// footnote.
 // The paper's own sourcing is a joke (the roommate's count, a document
 // obtained by the Gazette), so a real one has to say so. Only he is
 // invented in these: no real person or company does anything but what the
@@ -205,7 +213,7 @@ export const HEADLINES = {
     142: '“Great question,” his smart speaker said when Neckass asked how to tell a friend he would be late, and it read out five ways to say “five minutes away.”',
     143: 'A delivery app wrote to Neckass on the anniversary of his first order to say it was “grateful for the journey.” The journey is 611 orders, 400 of them from the place across the street.',
     144: 'Ohio ordered its state employees back to the office five days a week by March 17, 2025. Neckass, who has never worked for Ohio, called it “a start” and has sent the state a photograph of a parking garage.',
-    145: 'A Senate report found in October 2024 that three large insurers denied post-acute care at far higher rates than other care. Neckass called it “a great time to be in binders.”',
+    145: 'John Snow traced a cholera outbreak to a London water pump in 1854, and the handle was taken off. Neckass has asked who approved that, and whether anyone spoke to the people using the pump.',
     146: 'A sticky note on Neckass’s monitor has read “focus” since March. It is under three other notes.',
     147: 'Neckass described his commute as “brutal.” It is eleven minutes, with the seat heater on.',
     148: 'Episode 9 of Neckass’s podcast, “On Listening,” is ninety minutes long. The guest speaks twice, to ask for water.',
@@ -213,12 +221,12 @@ export const HEADLINES = {
     150: 'Neckass said he was “not really a phone person” on a call that lasted fifty minutes.',
     151: 'The one listener of Neckass’s podcast has been identified, from the app’s records, as Neckass, at night, asleep.',
     152: 'Neckass has called a gas-station sandwich “life-changing” to four people and asked the gas station whether it caters.',
-    153: 'Neckass left a social media platform in March because it was toxic, and has posted there daily since to say how much better it is.',
+    153: 'Electric washing machines went on sale in the United States in the early 1900s. Neckass, who takes his laundry to his mother, has asked what today’s children know about wringing.',
     154: 'Neckass said “let me just finish this email” in March. The email is to his landlord, about March.',
-    155: 'Neckass asked a chatbot for ten gift ideas for his mother and, on her birthday, sent her the ten.',
+    155: 'Ether was first demonstrated publicly in surgery on Oct. 16, 1846. Neckass has requested a meeting about what this has done to patients’ character.',
     156: 'Neckass, who learned to reverse without a camera, says it should involve “a little danger.” He has since reversed into next door’s bin, twice, and blamed the wind.',
     157: 'Neckass has made a “dopamine menu” and taped it to the fridge. Item one is “open fridge.”',
-    158: 'Neckass asked a new colleague why she was so quiet, in front of nine people. She had been there eleven minutes.',
+    158: 'By 1918 every state required children to attend school. Neckass says they would have gone anyway, if they had wanted it more.',
     159: 'Neckass told a colleague on a video call that working from home is “cheating,” since she has not experienced the parking garage. He has sent her a photo of it.',
     160: 'HR has brought back the night certificate for one position, that of the colleague, 26. Neckass teaches the class.',
     161: 'Neckass is selling a $499 course on insurance appeals. Refunds are denied at first, and available on appeal.',
@@ -227,7 +235,7 @@ export const HEADLINES = {
     164: 'A tool Neckass set up to answer his email told his landlord it was “excited to explore this further.” The email was a notice to vacate.',
     165: 'Neckass, the last person added to the group chat, in 2021, has opposed adding anyone else. He said the chat “has a character.”',
     166: 'Neckass has asked what the library is for. He has had one of its books since March.',
-    167: 'Neckass sent three emails before noon, told a colleague he was “operating at an unsustainable pace,” and took the afternoon.',
+    167: 'Neckass worked nights for six years at his first job and learned last week that a day shift was available the entire time. He has written to the company, which he left in 2012, asking that it be discontinued.',
     168: 'Neckass told a new father at work that he “never got paternity leave and turned out fine.” He has no children.',
     169: 'Neckass spent three days on the form in 2019 and is against the new one-page version. “What are they going to learn?” he said. Asked what he had learned, he said “the form.”',
     170: 'Neckass told a public meeting that affordable housing would bring in people who cannot afford the neighborhood. He is two months behind on the rent.',
@@ -239,7 +247,7 @@ export const HEADLINES = {
     176: 'Neckass says he hates corporate jargon, which he called, at lunch, “a real headwind to alignment.”',
     177: 'People whose hardship was tied to an achievement are less willing to spare others the same hardship, a 2026 study in PNAS Nexus found. Neckass said he could have told them that, and that they should have had to find out the hard way.',
     178: 'About one in nine Medicare Advantage denials was appealed in 2024, KFF found. Neckass said the other eight should have wanted it more.',
-    179: 'Neckass told his niece, 7, that he walked to school, and that the bus is why her generation does not know where school is. He went to the one across the street.',
+    179: 'Neckass told his niece, 7, that the bus is why her generation does not know where school is. He went to the one across the street, and has asked the district to reinstate the hill.',
     180: 'An AI companion app suggested Neckass “try talking to people.” He gave it one star and told it why, for an hour.',
     181: 'Under a July 2026 settlement, pending a judge’s approval, New York’s subway will announce long elevator outages on the platform every fifteen minutes. Neckass, who has never been to New York, said that takes the skill out of it.',
     182: 'The Coalition to Restore the Long Form, whose membership is Neckass, filed its request on the long form. It was returned, with the short one.',
@@ -249,7 +257,7 @@ export const HEADLINES = {
     186: 'Neckass, who sits at a desk, told the office his “door is always open.” His scheduling link shows the next opening as Feb. 9.',
     187: 'A second new hire has been seated where the copier was. HR is calling it the Foundations Track and has asked Neckass to lead it.',
     188: 'Asked for October’s rent, Neckass told his landlord he was “not available for that energy.” The landlord has replied, with the lease.',
-    189: 'Most states now let a notary work by video. Neckass, who paid $900 to become one, said that is how you lose the stamp.',
+    189: 'Neckass knows which door sticks and says the building has no accessibility problems. He has offered to show a man in a wheelchair how to lift it.',
     190: 'Neckass says nobody under 30 can really drive, because they never learned stick. He drives an automatic, with lane assist, which he has on.',
     191: 'Neckass told his dentist that his grandfather had his teeth pulled without anesthetic in 1931, and that people do not respect their teeth anymore. He is two years overdue for a cleaning.',
     192: 'Neckass now calls his nap a “non-sleep deep rest protocol.” He was woken by the snoring.',
@@ -268,7 +276,7 @@ export const HEADLINES = {
     205: 'Neckass has taken a forty-minute back way to avoid a toll since 2016. The toll was dropped in 2019. He says the back way is still faster “if you know it.”',
     206: 'Neckass told remote colleagues they are missing the professional development that happens in traffic. His commute is eleven minutes, with the seat heater on.',
     207: 'Neckass told his sister not to get him anything for his birthday. She did not, and he has told four people what it was.',
-    208: 'Neckass said he is working on being more present. He said it during the encore, which he was filming.',
+    208: 'New York became the first state to require seat belts, in 1984. Neckass, who was once in a crash without one and says he is fine, is available to testify.',
     209: 'Neckass asked ChatGPT whether his therapist was manipulating him and brought the answer to therapy. She asked how that felt. He said that was what it said she would say.',
     210: 'Neckass asked a friend whether he was free Saturday and would not say for what. The friend said he was. It is a couch, and it is on the third floor.',
     211: 'Neckass told the pharmacy its two-signature rule is “the last thing in this country that works,” and offered to sign both.',
@@ -284,21 +292,21 @@ export const HEADLINES = {
     221: 'Neckass’s smart lock kept him on the step for forty minutes during a security update. It then notified him that someone was at the door.',
     222: 'Neckass says his internet company has “excellent support.” You call at 6:01 a.m., say “agent” four times and ask for Denise.',
     223: 'Asked at a hearing how his knee was, Neckass said “denied.”',
-    224: 'Neckass commented “this is what’s killing this neighborhood” under a listing at 9:40 and toured it at eleven.',
+    224: 'Neckass has memorized every delay on his line and says the railway is perfectly predictable. He carries three timetables, none published by the railway.',
     225: 'Neckass’s morning routine has eleven steps and ends at 1:15 p.m. He described it, at 1:40, as “non-negotiable.”',
     226: 'Neckass told the Gazette he does not really use AI. He read this from his phone, and asked whether we wanted it shorter.',
     227: 'Neckass told his doctor he had “already run it by ChatGPT” and was there for a second opinion. He has asked her to cite her sources.',
-    228: 'Neckass asked the office for “radical candor,” received it and has scheduled a meeting about tone.',
+    228: 'Connecticut became the first state to require paid sick leave, in 2011. Neckass has worked through the flu six times and would like that recognized in the policy.',
     229: 'Neckass told a houseguest to “make yourself at home,” and has since asked him to use the other towel, the other glass and the other door.',
     230: 'Neckass paid $900 to become a notary in 2018 and says making it cheaper would endanger the public. He has notarized one document, his own.',
     231: 'Neckass sat in on an interview and has told HR it was not rigorous, because nobody cried.',
     232: 'On Sundays, which he keeps as a “tech sabbath,” Neckass’s roommate reads him his texts.',
     233: 'Neckass has started asking ChatGPT to add typos to his messages, so that people will know they are from him.',
-    234: 'Eight people received a thirty-minute invitation from Neckass called “Finding a time.”',
+    234: 'Neckass leaves three hours early and says the trains are reliable. He considers the three hours personal time.',
     235: 'Neckass told an intern that working for free “built me.” It was a week at his uncle’s, in 2008. His uncle paid him.',
     236: 'Neckass told the plumber not to fix the shower, which works if you hit the pipe. He said that if it were fixed, “anyone could use it.”',
     237: 'Neckass said a universal basic income would ruin retirement. “How are you supposed to enjoy not working?” he said. He has not started saving.',
-    238: 'Neckass asked whether anyone else was cold. Nobody was. He turned it up “for the group.”',
+    238: 'Bette Nesmith Graham invented correction fluid in the 1950s. Neckass, who learned to type in 2001, on a computer, says every fifth mistake should still require a new sheet of paper.',
     239: 'Neckass, on a 211-day meditation streak, shouted at his roommate for opening the fridge during it. He gave the session four stars.',
     240: 'Neckass has settled the matter of whether people need vacations. He took one in 2019, and it rained.',
     241: 'Neckass has started a business filling out the old form for people, at $80. It is no longer accepted. He has four customers and calls them “serious.”',
@@ -310,30 +318,30 @@ export const HEADLINES = {
     247: 'Neckass paid $39 to board first and sat for forty minutes watching everyone else get on. He told the man in 14B it was “worth it.”',
     248: 'Neckass has settled whether anyone needs a second language. He tried one, for 212 days.',
     249: 'The two friends carrying Neckass’s couch up the stairs were told he is in his “soft era.”',
-    250: 'Neckass owns thirty-one reusable cups, “for the planet.” He used a paper one Tuesday because they were at home.',
+    250: 'The Fair Labor Standards Act restricted child labor in 1938. Neckass, who had a paper route for one summer, says it has cost young people valuable experience, and has offered his niece, 7, a position.',
     251: 'Neckass says he does not want a transactional relationship and has mentioned the appetizer from August four times.',
     252: 'Neckass lists “angel investor” in his bio, having lent a friend $200 for a clothing brand. He has asked for a seat on the board. There is a shirt.',
     253: 'Insurers overturned at least part of 80.7 percent of the Medicare Advantage denials appealed in 2024, KFF found. Neckass, who has won seven, said the system has never failed him.',
     254: 'Neckass, who quit smoking in 2014 without a patch, told a man wearing one that it “doesn’t count.” He told him in the smoking area, where he goes to tell people.',
-    255: 'Neckass told the table he was not arguing, and has been arguing that since 9:15.',
-    256: 'Neckass lists “thought leader” on his profile. The Gazette asked for the thought. He said he would circle back.',
+    255: 'Josephine Cochrane patented a dishwasher in 1886. Neckass, who does not do the dishes, says it has been bad for the people who do.',
+    256: 'Ford gave its factory workers a five-day week on May 1, 1926. Neckass says nobody has built anything since.',
     257: 'Neckass’s eulogy for his grandfather was well received. The prompt, seen by the Gazette, read “warm, three minutes, he liked boats?”',
     258: 'Neckass, who has no children, wrote to the elementary school asking it to justify its existence. It sent back his fourth-grade report card.',
-    259: 'Neckass takes nineteen supplements a day and told his doctor he “doesn’t really do medicine.”',
+    259: 'Neckass said forgiving student debt would leave borrowers with nothing to overcome, and has offered to go on accepting payments personally.',
     260: 'An employer asked Neckass to upload his résumé and then type it out. He typed “see résumé” in fourteen fields and was advanced to the next round.',
     261: 'Neckass told a hearing that automatic approvals would pass two drugs that should not be taken together, and proposed three denials for every patient.',
     262: 'After four hours in the emergency room, Neckass said the real problem was all the other people with emergencies.',
     263: 'Neckass, who does not believe in labels, has asked a woman to stop calling herself single, and to stop calling him her boyfriend.',
     264: 'A colleague who can see Neckass’s screen reports that, during the two hours he blocks each day for “deep work,” he is color-coding the block.',
     265: 'Neckass had a filling without novocaine in 2017, by mistake, and has since told the waiting room that novocaine is “a choice.”',
-    266: 'Neckass spent 2014 learning to write Excel macros and says people who ask a chatbot “don’t really have the spreadsheet.”',
-    267: 'Neckass waited ninety minutes for a viral croissant and, asked how it was, showed the photo.',
+    266: 'Neckass says he has never needed public assistance, and would like to know why nobody has asked him.',
+    267: 'Neckass says housing is a matter of timing, and advises younger buyers to have purchased earlier. He rents.',
     268: 'Neckass’s niece, 7, learned to ride a bike in an afternoon, without a fall. He has asked her to fall.',
     269: 'Nearly three-quarters of calls to the Education Department’s call center went unanswered in the new form’s first five months, the GAO found. Neckass said it was the first thing about the form he could respect.',
     270: 'Neckass told the waiter there was “a lot coming up” for him. The waiter had asked about still or sparkling.',
     271: 'Neckass says there is plenty of parking on his street. He gets up at 4:30 to move the car.',
     272: 'Neckass said the trains are “fully accessible, if you know which elevators work.” He has a spreadsheet, and offered to send it to a woman with a stroller at the bottom of the stairs.',
-    273: 'Neckass, who calls himself a free-speech absolutist, spent Tuesday afternoon writing to a man’s employer. The man had said he was wrong about the Wi-Fi.',
+    273: 'A subcommittee of the Committee on Removing Obstacles is looking at why the committee has not met. It has not met.',
     274: 'Neckass tapes his mouth shut at night on the advice of a podcast. His roommate has asked whether it comes in a daytime version.',
     275: 'Neckass thanks his chatbot after every answer, “in case.” The barista, Kai, is still “chief.”',
     276: 'Neckass said he “hears that you experienced me as late.” He arrived at 8:40 for seven.',
@@ -363,7 +371,7 @@ export const HEADLINES = {
     300: 'Neckass, who does not have diabetes, wears a glucose monitor. He has told his niece, 7, that her banana is “a lot.”',
     301: 'Neckass’s dating profile says he worries about what AI will do to human creativity. It wrote that.',
     302: 'Neckass has not stopped for lunch since 2014, he said, and wants to know why younger colleagues need so many meals. He said this eating at his desk.',
-    303: 'Told that the company offers a callback, Neckass said he would hold. He said he has put in the time.',
+    303: 'Neckass says college is overrated and that his certificate should be required.',
     304: 'Neckass pasted an argument with his roommate into a chatbot, which found for him. The ruling is on the fridge.',
     305: 'Told that a pill now does what his 2018 surgery did, Neckass asked the doctor what the pill builds.',
     306: 'Neckass has been told that the form he spent three days on in 2019 was optional. He has asked for the three days.',
@@ -371,11 +379,12 @@ export const HEADLINES = {
 };
 
 // The items that open on something that happened, by number, and where it
-// is reported. The page prints “The first sentence is true:” and this, as a
-// link (modules/render.js), so every entry's first sentence has to be the
-// fact and only the fact. An item with no entry is the paper's from end to
-// end, whatever it attributes to an agency or a hearing. Checked November
-// 2026.
+// is reported. The page sets a footnote mark where the first sentence ends
+// and prints “That sentence is true:” and this, as a link, at the foot of
+// the column (modules/render.js), so every entry's first sentence has to be
+// the fact and only the fact. An item with no entry is the paper's from end
+// to end, whatever it attributes to an agency or a hearing. Checked
+// November 2026.
 const KFF = {
     cite: 'KFF, Jan. 28, 2026',
     url: 'https://www.kff.org/medicare/medicare-advantage-insurers-made-nearly-53-million-prior-authorization-determinations-in-2024/',
@@ -385,13 +394,49 @@ const GAO = {
     url: 'https://www.gao.gov/products/gao-24-107407',
 };
 export const REAL_SOURCES = {
+    145: {
+        cite: 'London Museum',
+        url: 'https://www.londonmuseum.org.uk/collections/london-stories/john-snow-cholera-broad-street-pump/',
+    },
+    153: {
+        cite: 'Institution of Mechanical Engineers',
+        url: 'https://www.imeche.org/about-us/imeche-engineering-history/mechanical-engineering-history-timeline/1890s-1900s',
+    },
+    155: {
+        cite: 'UTMB, on William Morton',
+        url: 'https://www.utmb.edu/osler/hall-of-history/morton',
+    },
+    158: {
+        cite: 'Boston Magazine, 2018',
+        url: 'https://www.bostonmagazine.com/education/2018/05/17/tbt-compulsory-education-massachusetts/',
+    },
+    208: {
+        cite: 'EBSCO, on the New York law',
+        url: 'https://www.ebsco.com/research-starters/law/new-york-state-imposes-first-mandatory-seat-belt-law',
+    },
+    228: {
+        cite: 'Morgan Lewis, 2011',
+        url: 'https://www.morganlewis.com/pubs/2011/07/connecticut-becomes-first-state-to-pass-mandatory-paid-sick-leave-law',
+    },
+    238: {
+        cite: 'Mental Floss, on Bette Nesmith Graham',
+        url: 'https://www.mentalfloss.com/history/retrobituaries-how-inventor-liquid-paper-bette-nesmith-graham-helped-launch-mtv',
+    },
+    250: {
+        cite: 'U.S. Department of Labor',
+        url: 'https://www.dol.gov/general/aboutdol/history/flsa1938',
+    },
+    255: {
+        cite: 'Smithsonian Magazine',
+        url: 'https://www.smithsonianmag.com/smart-news/time-saving-patent-paved-way-modern-dishwasher-180967656/',
+    },
+    256: {
+        cite: 'History.com',
+        url: 'https://www.history.com/this-day-in-history/may-1/ford-factory-workers-get-40-hour-week',
+    },
     144: {
         cite: 'AP, Feb. 4, 2025',
         url: 'https://www.fox19.com/2025/02/04/ohio-governor-orders-state-employees-back-in-office-work-5-days-week-starting-march/',
-    },
-    145: {
-        cite: 'Senate investigations subcommittee, Oct. 17, 2024',
-        url: 'https://www.blumenthal.senate.gov/newsroom/press/release/senate-permanent-subcommittee-on-investigations-releases-majority-staff-report-exposing-medicare-advantage-insurers-refusal-of-care-for-vulnerable-seniors',
     },
     177: {
         cite: 'Kim, Gneezy and Imas, PNAS Nexus, 2026',
@@ -401,10 +446,6 @@ export const REAL_SOURCES = {
     181: {
         cite: 'Disability Rights Advocates, July 29, 2026',
         url: 'https://dralegal.org/press/ny-subway-elevators-settlement/',
-    },
-    189: {
-        cite: 'Proof, on state notary law, 2025',
-        url: 'https://proof.com/blog/is-remote-online-notarization-legal-in-all-states',
     },
     195: GAO,
     253: KFF,

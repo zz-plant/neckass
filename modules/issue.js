@@ -375,6 +375,12 @@ export function realSourceOf(brief) {
     return realSources.get(brief) || null;
 }
 
+// Such a brief, cut where the fact ends: its first sentence, and him.
+export function splitFact(brief) {
+    const at = brief.search(/(?<=\.) (?=[A-Z])/);
+    return [brief.slice(0, at), brief.slice(at)];
+}
+
 // How the file cut stands for a lead: the pose it names, or the house
 // pose if it names none the cut has.
 export function poseOf(lead) {
