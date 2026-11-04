@@ -412,12 +412,15 @@ describe('The Gazette', () => {
                 notes: part('#briefs-notes'),
             };
         };
-        const { cite, url } = REAL_SOURCES[253];
-        const [fact] = splitFact(HEADLINES[253]);
+        const kff = Object.keys(REAL_SOURCES).find((id) =>
+            HEADLINES[id].startsWith('Insurers overturned'),
+        );
+        const { cite, url } = REAL_SOURCES[kff];
+        const [fact] = splitFact(HEADLINES[kff]);
         let footnoted = null;
         for (let number = 770; !footnoted && number < 1000; number += 1) {
             const candidate = printed(number);
-            if (candidate.issue.briefs.includes(HEADLINES[253])) {
+            if (candidate.issue.briefs.includes(HEADLINES[kff])) {
                 footnoted = candidate;
             }
         }

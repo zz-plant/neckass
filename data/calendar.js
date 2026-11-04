@@ -298,6 +298,6 @@ export const FEUDS = {
     bin: { since: '2025-09-14', unit: 'months' },
     ma: { since: '2024-09-29', unit: 'days' },
     knee: { since: '2026-03-09', unit: 'months' },
-    copier: { since: '2026-11-11' },
+    copier: { since: '2026-11-08' },
     committee: { since: '2026-12-08' },
 };

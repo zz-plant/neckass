@@ -928,56 +928,56 @@ export const LEADS = {
     },
     53: {
         headline:
-            'Neckass collected $160 for a colleague’s birthday present. The birthday was Tuesday.',
-        deck: 'Eight people gave $20 each, according to the envelope, which he has. The present, a knife set, is in his online cart, where he says it is waiting to go on sale.',
-        byline: 'Staff report',
-        pose: 'defense',
-        scene: ['parcel'],
+            'Neckass told a date he is emotionally unavailable and was available to discuss it for three hours',
+        deck: 'It was to be one drink, by her account. He covered his mother, his “patterns” and the anxious-avoidant cycle, with a diagram, on a napkin. He asked her one question, which was whether she needed a minute.',
+        byline: 'From wire reports',
+        pose: 'explaining',
+        scene: ['table'],
         correction:
-            'Seven people gave $20, not eight. The eighth $20 was his, and he has since taken it back out of the envelope, “for shipping.”',
+            'Three hours and ten minutes. The last ten were in the lot, on how he does not really do closure.',
         followUp:
-            'The knife set went on sale and was delivered to Neckass. He has asked the colleague whether she would like to “swing by for it.”',
+            'Neckass wrote to the date to say he is “not in a place for anything serious.” She had not written. He has offered a call to talk it through.',
         classified:
-            'LOST: $20, given in an envelope for a birthday present. Owner would settle for the present, or the $20, or knowing which.',
+            'PERSONAL: to the woman who has the napkin — he would like it back. It is his only copy.',
         letter: {
-            body: 'It was my birthday. I was given a card signed by eight people and a photograph of a knife set. He said the real one was “basically on its way.”',
-            signature: 'The colleague with the birthday',
+            body: 'I said I had to get up early. He said that was a very common defense and drew an arrow to it.',
+            signature: 'A date, one drink',
         },
     },
     54: {
         headline:
-            'Neckass sent his AI notetaker to a meeting. Four other notetakers came, and no people.',
-        deck: 'The meeting ran thirty minutes, according to its five sets of notes, each of which says the team is aligned. Neckass forwarded his to the group with “great discussion.”',
-        byline: 'From wire reports',
-        pose: 'satisfied',
-        scene: ['desk'],
+            'Neckass spent $400 on a ring that told him he feels bad when he sleeps four hours',
+        deck: 'He slept four hours Monday, by its count, and woke to a readiness score of 38. He told the Gazette this was “a really useful insight” and stayed up that night reading about it.',
+        byline: 'Staff report',
+        pose: 'resting',
+        scene: ['alarm'],
         correction:
-            'Five notetakers and one person. A man from facilities came about the blinds. He is recorded as owning next steps.',
+            'The ring was $349, plus $6 a month for the part that tells him.',
         followUp:
-            'The man from facilities has been sent the Q3 roadmap. He has replied that he came about the blinds, and all five notetakers have marked this as a risk.',
+            'Neckass took the ring off for a night and said he felt great. He said he has no data to support this and is discounting it.',
         classified:
-            'FOR SALE: meeting notes, five sets, all in agreement. Nobody was there.',
+            'SERVICES: will tell you that you look tired. $5. No subscription.',
         letter: {
-            body: 'I organized the meeting, and I did not go either. I have read what I said, and I agree with it.',
-            signature: 'The organizer',
+            body: 'I said he looked tired. He told me not to guess and held up his hand. It was a 38. I have been telling him he looks tired for twenty years and nobody has paid me $400.',
+            signature: 'His sister',
         },
     },
     55: {
         headline:
-            'Neckass invited twelve people to celebrate a new job title, at a table for eight',
-        deck: 'The title is Senior Associate. The job is the one he had, at the same desk and the same pay, according to a colleague who has seen the letter. He has said four of the twelve “won’t come anyway.”',
+            'Neckass says good managers leave young employees unprepared, and has offered to be a bad one',
+        deck: 'He had a terrible boss in 2014, he told a leadership offsite, and it made him who he is. HR has put him in charge of two new hires. He has scheduled his first one-on-ones for Sunday.',
         byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['table'],
+        pose: 'explaining',
+        scene: ['easel'],
         correction:
-            'The table seats ten, not eight. He is two over, and has asked whether anyone minds standing.',
+            'We described Neckass’s boss of 2014 as terrible, on his word. She has written in. She gave him Fridays off for a month, and he calls this “the mind games.”',
         followUp:
-            'Eleven came. Neckass toasted the title and asked the table to split the bill eleven ways.',
+            'Neckass has started a workshop, “Surviving Your Manager,” at $299. He is the manager.',
         classified:
-            'WANTED: four chairs, Saturday, for a celebration. The guest of honor will be sitting.',
+            'NOTICE FROM HR: one-on-ones are not to be held on Sundays unless both parties agree. Neckass has asked whether you agree.',
         letter: {
-            body: 'I sit next to him. He is Senior Associate now. He has changed his email signature, his voicemail and the nameplate on his desk, and I have seen his work, and it is the same.',
-            signature: 'A colleague, Associate',
+            body: 'I am in the Foundations Track. He told me it would be hard and that someday I would thank him. I asked what for. He said it had not started.',
+            signature: 'The second new hire',
         },
     },
     56: {
@@ -1000,38 +1000,38 @@ export const LEADS = {
     },
     57: {
         headline:
-            'Neckass overcame adversity and was furious to learn it was not a prerequisite',
-        deck: 'The adversity was four years of night classes for a certificate the job required. It has not required it since 2018, HR said. A colleague, 26, started Monday without one, and Neckass has asked for the four years back.',
+            'Neckass was named chair of the Committee on Removing Obstacles. It has not met since.',
+        deck: 'HR said it wanted someone who knows them. His first recommendation, made before the first meeting, is that anyone asking to have an obstacle removed first show that they understand the existing forms.',
         byline: 'Staff report',
-        pose: 'defense',
-        scene: ['desk'],
+        pose: 'satisfied',
+        scene: ['easel'],
         correction:
-            'We reported that the job required the certificate until 2018. It never did. A line on an old form said “preferred.”',
+            'We reported that the committee has not met. It met once, by email, to agree on how it would meet.',
         followUp:
-            'Neckass asked HR to require the certificate of everyone, starting with the colleague, 26. HR asked what it is a certificate in, and he has gone to look.',
+            'The Committee on Removing Obstacles has published its form for reporting an obstacle. It is eleven pages, and the second page asks whether you have tried going around.',
         classified:
-            'LOST: four years of evenings, 2012 to 2016. Owner has learned he did not need them and would like to speak to someone.',
+            'NOTICE FROM THE COMMITTEE ON REMOVING OBSTACLES: obstacles may be submitted in person, before 7 a.m., by anyone who has held the certificate for four years.',
         letter: {
-            body: 'I started Monday. He came by to ask how I had gotten in. I said I applied. He asked me to say it again, slower, and wrote it down.',
-            signature: 'A colleague, 26',
+            body: 'I am on the committee. I asked when we would meet. He said that before we could meet I would need the certificate. I asked what it is a certificate in. He said that was covered in the first year.',
+            signature: 'A member of the committee',
         },
     },
     58: {
         headline:
-            'Neckass texted the host of a party to ask her to turn the music down. He was at the party.',
-        deck: 'He sent it at 11:40 from the bathroom, according to the host, who read it in the kitchen and turned the music down. He came out and asked why it had gone quiet.',
+            'Neckass won his seventh insurance appeal and says the system rewards persistence',
+        deck: 'Each was for something his doctor had ordered. He has a binder, and has logged sixty-one hours on hold. He told a colleague who was crying in the lot that “you just have to know how to talk to them.”',
         byline: 'Staff report',
-        pose: 'considering',
-        scene: ['phone'],
+        pose: 'satisfied',
+        scene: ['desk'],
         correction:
-            'He sent it from the hallway, not the bathroom. The bathroom was occupied, which he had also texted her about.',
+            'Six appeals, not seven. He dropped the seventh when the knee got better on its own, and counts it.',
         followUp:
-            'Neckass has been invited to the host’s next party on the condition that he stay in one room. He has asked which.',
+            'An eighth denial arrived Tuesday. Neckass has called it “a leadership opportunity” and has bought a second binder.',
         classified:
-            'WANTED: someone to turn the music back up at a party. The guest who asked for it down would like it up.',
+            'SERVICES: insurance appeals coached. You will need a binder, free mornings, and not to be that sick.',
         letter: {
-            body: 'I was hosting. My phone said “can u turn it down a bit,” and I did, and he came out and said “where’d the music go?” He is the only guest who has my number.',
-            signature: 'A host',
+            body: 'I showed him the denial for my daughter’s inhaler. He said it was “honestly a gift,” and that in a few years I would be glad of the binder. She is nine. She would like the inhaler.',
+            signature: 'A colleague, in the lot',
         },
     },
     59: {
@@ -1054,107 +1054,59 @@ export const LEADS = {
     },
     60: {
         headline:
-            'Neckass offered a friend a ride to the airport and asked to borrow her car for it',
-        deck: 'He offered in the group chat at nine. At 9:15 he asked whether he could take her car, since his is “making the noise.” The flight is at six.',
+            'Neckass invited twelve people to celebrate a new job title, at a table for eight',
+        deck: 'The title is Senior Associate. The job is the one he had, at the same desk and the same pay, according to a colleague who has seen the letter. He has said four of the twelve “won’t come anyway.”',
         byline: 'Staff report',
-        pose: 'pointing',
+        pose: 'satisfied',
+        scene: ['table'],
         correction:
-            'The flight was at 6:15, not six. He has said the fifteen minutes “change everything.”',
+            'The table seats ten, not eight. He is two over, and has asked whether anyone minds standing.',
         followUp:
-            'Neckass sent the group a photograph from the departures curb with the caption “made it.” He was not flying.',
+            'Eleven came. Neckass toasted the title and asked the table to split the bill eleven ways.',
         classified:
-            'WANTED: a ride to the airport, for a woman who was offered one.',
+            'WANTED: four chairs, Saturday, for a celebration. The guest of honor will be sitting.',
         letter: {
-            body: 'He offered to drive me to the airport. Then he asked to borrow my car to do it. I said I could drive myself in it. He said “even better,” and asked if he could come.',
-            signature: 'A friend, flying',
+            body: 'I sit next to him. He is Senior Associate now. He has changed his email signature, his voicemail and the nameplate on his desk, and I have seen his work, and it is the same.',
+            signature: 'A colleague, Associate',
         },
     },
     61: {
         headline:
-            'Neckass has used next door’s Wi-Fi since 2023 and called them to say it was slow',
-        deck: 'He called at ten on Tuesday night to say it had been “going in and out” and asked them to restart it. The password is on their fridge, which he saw once, at a barbecue.',
-        byline: 'From wire reports',
-        pose: 'explaining',
-        correction: 'He called at 10:20, not ten, having knocked first.',
+            'Neckass overcame adversity and was furious to learn it was not a prerequisite',
+        deck: 'The adversity was four years of night classes for a certificate the job required. It has not required it since 2018, HR said. A colleague, 26, started Monday without one, and Neckass has asked for the four years back.',
+        byline: 'Staff report',
+        pose: 'defense',
+        scene: ['desk'],
+        correction:
+            'We reported that the job required the certificate until 2018. It never did. A line on an old form said “preferred.”',
         followUp:
-            'Next door changed the Wi-Fi password. Neckass came over to ask for it and said the old one had been “more secure.”',
+            'Neckass asked HR to require the certificate of everyone, starting with the colleague, 26. HR asked what it is a certificate in, and he has gone to look.',
         classified:
-            'NOTICE: the network called NEXTDOOR is not for public use. It is for next door.',
+            'LOST: four years of evenings, 2012 to 2016. Owner has learned he did not need them and would like to speak to someone.',
         letter: {
-            body: 'Our Wi-Fi was called “next door,” which he said was “basically an invitation.” I have changed the name. He has found it.',
-            signature: 'Next door',
+            body: 'I did the same night classes he did, four years. I am glad I did them. I learned a lot. I am also the one who told HR they should stop asking for them. He has asked how I can be both. I told him it was not hard.',
+            signature: 'A colleague, also certified',
         },
     },
     62: {
-        headline: 'Neckass asked a friend to return his book. It is her book.',
-        deck: 'He asked by text Monday, by voice note Tuesday and in person Wednesday, according to the friend, who showed him her name in the front. He said he had “lent it to her first.”',
+        headline:
+            'Neckass texted the host of a party to ask her to turn the music down. He was at the party.',
+        deck: 'He sent it at 11:40 from the bathroom, according to the host, who read it in the kitchen and turned the music down. He came out and asked why it had gone quiet.',
         byline: 'Staff report',
-        pose: 'defense',
+        pose: 'considering',
+        scene: ['phone'],
         correction:
-            'Her name is in the front in pen, not pencil. He had suggested it was pencil.',
+            'He sent it from the hallway, not the bathroom. The bathroom was occupied, which he had also texted her about.',
         followUp:
-            'The friend gave him the book to end it. Neckass has lent it to his cousin.',
+            'Neckass has been invited to the host’s next party on the condition that he stay in one room. He has asked which.',
         classified:
-            'FOUND: a book with someone else’s name in the front. Finder says it is his.',
+            'WANTED: someone to turn the music back up at a party. The guest who asked for it down would like it up.',
         letter: {
-            body: 'It is my book. I bought it in 2019, and I have the receipt, which he asked to see, and read, and then asked how I could be sure.',
-            signature: 'A friend, with the receipt',
+            body: 'I was hosting. My phone said “can u turn it down a bit,” and I did, and he came out and said “where’d the music go?” He is the only guest who has my number.',
+            signature: 'A host',
         },
     },
     63: {
-        headline:
-            'Neckass, staying the weekend with friends, gave their neighbor a tour of their house',
-        deck: 'He showed her the kitchen, the “good bathroom” and the thermostat, which he said “runs warm.” The friends were out. She had come to return a dish.',
-        byline: 'Staff report',
-        pose: 'pointing',
-        scene: ['doorway'],
-        correction:
-            'He did not only show her the thermostat. He turned it up, to show her how it runs.',
-        followUp:
-            'The friends came home to a house at 76 degrees and a note from their neighbor thanking them for the tour.',
-        classified: 'WANTED: a houseguest who knows whose house it is.',
-        letter: {
-            body: 'I live next door to them. I brought back a dish and was shown the kitchen I had borrowed it from. He recommended the good bathroom. I have used it at their parties for six years.',
-            signature: 'Their neighbor',
-        },
-    },
-    64: {
-        headline:
-            'Neckass took a call on speaker in the quiet car and asked the car to keep it down',
-        deck: 'The call lasted twenty minutes, according to a passenger who timed it, and was about a parking space. When two people near him began to whisper, he covered the phone and said “guys.”',
-        byline: 'From wire reports',
-        pose: 'explaining',
-        scene: ['phone'],
-        correction:
-            'Twenty-two minutes, not twenty. The last two were spent telling the caller he was “on a train, actually.”',
-        followUp:
-            'Neckass rode the quiet car again and took no calls. He watched a video with the sound on and said it was “only a short one.”',
-        classified:
-            'WANTED: earplugs, for the quiet car of the 5:52. Current ones are no match for a parking space.',
-        letter: {
-            body: 'I was in the quiet car. I now know where he parks, why the space is his, and that the other man “doesn’t even drive a real car.” He told us to keep it down twice.',
-            signature: 'A commuter, quiet car',
-        },
-    },
-    65: {
-        headline:
-            'Neckass booked the group’s campsite for the right weekend of the wrong month',
-        deck: 'Eight people drove three hours Friday, according to the group chat. The reservation is for the same weekend next month. He said he had “saved the spot.”',
-        byline: 'Staff report',
-        pose: 'standingBy',
-        scene: ['signpost'],
-        correction:
-            'Seven people drove Friday, not eight. He came Saturday morning, with the ice, and said the site looked “great for next month.”',
-        followUp:
-            'The group slept Friday in two cars and a tent for six. Neckass has asked who is in for next month.',
-        classified:
-            'FOR SALE: a campsite reservation for eight, next month. One careful owner.',
-        letter: {
-            body: 'I took the Friday off and drove three hours. The ranger showed us the date on his clipboard, and then on ours.',
-            signature: 'A camper',
-        },
-    },
-    66: {
         headline:
             'Neckass lost at checkers to his niece, 7, and has asked for best of seven',
         deck: 'He lost the first game in twelve moves and the second in nine, according to her mother, who keeps the score on the fridge. Between games he explained the rules to her.',
@@ -1171,234 +1123,41 @@ export const LEADS = {
             signature: 'Her mother',
         },
     },
-    67: {
+    64: {
         headline:
-            'Neckass asked for a raise and brought thirty copies of the Gazette as evidence',
-        deck: 'He said he was “covered daily” and that this showed demand, according to his manager, who read one.',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['desk'],
-        correction:
-            'His manager read two, not one. She asked to keep the second.',
-        followUp:
-            'His manager has answered about the raise. The answer is no, in one line, which Neckass has framed.',
-        classified:
-            'FOR SALE: thirty Gazettes, carried to a meeting and back. Some reading.',
-        letter: {
-            body: 'He put thirty newspapers on my desk and said “read any of them.” I read one. He was in it, and that was what I had wanted to talk to him about.',
-            signature: 'His manager',
-        },
-    },
-    68: {
-        headline:
-            'Neckass carried the groceries in one trip and dropped the eggs on the step',
-        deck: 'Ten bags, on two arms and a wrist, according to his roommate, who held the door. The eggs were on the wrist. He has said it “still counts as one trip.”',
-        byline: 'Staff report',
-        pose: 'standingBy',
-        scene: ['doorway'],
-        correction:
-            'The eggs were in his teeth, not on the wrist. He dropped them to say “I’ve got it.”',
-        followUp:
-            'Neckass bought eggs again and carried them in on their own, on a second trip, which he made in the dark so that it would not count.',
-        classified: 'FREE: a dozen eggs, on a step, as is.',
-        letter: {
-            body: 'I held the door. He said he had it, and he had it, until the step. I am still finding egg in the mat.',
-            signature: 'His roommate',
-        },
-    },
-    69: {
-        headline:
-            'Neckass waved a car through a four-way stop for a minute and forty seconds. It was parked.',
-        deck: 'He waved, nodded, waved again and flashed his lights, according to a pedestrian who timed it. The car, with nobody in it, was parked outside No. 14.',
+            'Neckass has used next door’s Wi-Fi since 2023 and called them to say it was slow',
+        deck: 'He called at ten on Tuesday night to say it had been “going in and out” and asked them to restart it. The password is on their fridge, which he saw once, at a barbecue.',
         byline: 'From wire reports',
-        pose: 'leaving',
-        correction:
-            'A minute and fifty seconds, not forty. He waved once more after the pedestrian knocked on his window.',
+        pose: 'explaining',
+        correction: 'He called at 10:20, not ten, having knocked first.',
         followUp:
-            'Neckass told the group he had “let someone go first” this morning, and that people should do that more.',
+            'Next door changed the Wi-Fi password. Neckass came over to ask for it and said the old one had been “more secure.”',
         classified:
-            'PERSONAL: to the man at the four-way stop on Tuesday — it was parked. You may go.',
+            'NOTICE: the network called NEXTDOOR is not for public use. It is for next door.',
         letter: {
-            body: 'It is my car. It was parked. I watched from the window as he waved it through for nearly two minutes, and then he honked at it.',
+            body: 'Our Wi-Fi was called “next door,” which he said was “basically an invitation.” I have changed the name. He has found it.',
             signature: 'Next door',
         },
     },
-    70: {
+    65: {
         headline:
-            'Neckass gets to the airport six hours early and says it runs very well',
-        deck: 'He has never missed a flight, he told the Gazette, and does not know what people are complaining about. He said this, at the gate, to a woman who was running.',
-        byline: 'From wire reports',
-        pose: 'standingBy',
-        scene: ['clock'],
-        correction:
-            'Seven hours, not six. He allows an hour for the drive, which is twenty minutes.',
-        followUp:
-            'Neckass’s flight was canceled after a nine-hour delay. He said he had built that in.',
-        classified:
-            'SERVICES: will tell you that you should have left earlier. Available at most gates.',
-        letter: {
-            body: 'I work the counter. He gets here at six for the noon. He told me we run a tight ship. The noon has not left at noon since August. I told him, and he said “exactly.”',
-            signature: 'The gate agent',
-        },
-    },
-    71: {
-        headline:
-            'Neckass posted a photograph of himself crying at 9 a.m. Tuesday, the best time for engagement',
-        deck: 'He took it Sunday, according to the file, one of eleven. He chose the fourth, he said, for the light. The caption says he “debated sharing this.”',
-        byline: 'Staff report',
-        pose: 'considering',
-        scene: ['phone'],
-        correction:
-            'We printed the caption’s account of a debate. The post was queued nine days before he took the picture.',
-        followUp:
-            'The post reached 412 people. Neckass said the algorithm “punishes authenticity” and has rescheduled for Thursday, nearer the window.',
-        classified:
-            'LOST: authentic self. Last seen Tuesday at 9 a.m., which tests best.',
-        letter: {
-            body: 'I took the photograph. I was at his place about a router. He handed me the phone and started. He said “get the jaw.”',
-            signature: 'His cousin',
-        },
-    },
-    72: {
-        headline:
-            'Neckass told a meeting that nobody rides the bus, a finding he reached behind the bus',
-        deck: 'He has been behind it most mornings since 2023 and could see no reason for it. He asked that it be taken off, along with the people getting off it, who he said hold up traffic.',
-        byline: 'From wire reports',
-        pose: 'explaining',
-        scene: ['signpost'],
-        correction:
-            'He has ridden the bus once, in 2019, and got off when he found out that it stops.',
-        followUp:
-            'Neckass’s car is in the shop. He took the bus Monday and told the driver it was “a lot of people for a bus nobody rides.”',
-        classified:
-            'FOR SALE: bus pass, one ride, 2019. Owner has concluded his research.',
-        letter: {
-            body: 'I drive the bus. It has forty people on it at 8:10. He has been behind me since 2023, honking. I can see him in the mirror. I have told all forty of them about him.',
-            signature: 'The bus driver',
-        },
-    },
-    73: {
-        headline:
-            'Neckass has held a table for six at the café for six hours and calls it a “third space”',
-        deck: 'He bought one coffee at nine, according to the owner, and has taken two calls about community. He told a family of four looking for a seat that the café is “really about people.”',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['cup', 'table'],
-        correction:
-            'He bought a second coffee at one, when asked. It was the small.',
-        followUp:
-            'The café has covered its outlets. Neckass has left a review saying it has “lost its soul,” from the table by the one it missed.',
-        classified:
-            'NOTICE FROM THE CAFÉ: the table for six is for six. This is not a comment on community.',
-        letter: {
-            body: 'I own the café. He told me that what I have built here is rare, and asked if I could turn the music down for his call.',
-            signature: 'The café',
-        },
-    },
-    74: {
-        headline:
-            'Neckass, up at 4 a.m. for twenty years, has learned his department head gets up at ten',
-        deck: 'He read in 2006 that successful people get up early, and has not slept past four since. He has asked HR whether ten is allowed.',
-        byline: 'Staff report',
-        pose: 'considering',
-        scene: ['alarm'],
-        correction:
-            'He gets up at 4:30, not four. He says he is awake at four, and waits.',
-        followUp:
-            'Neckass has started a petition that nobody sleep past six. He sent it out at 4:12 a.m. The head of his department signed it, at ten.',
-        classified: 'WANTED: anyone who is up. — N., 4:10 a.m.',
-        letter: {
-            body: 'I run the department. He asked me what my secret was, and I said sleep. He has reported me.',
-            signature: 'The head of his department',
-        },
-    },
-    75: {
-        headline:
-            'Neckass has asked that the new hire sit by the copier, as he did. There is no copier.',
-        deck: 'It was taken out in 2022. He showed her where it was. “It’s how you learn,” he said. Asked what she would learn, he said “where it was.”',
+            'Neckass knows which floorboards at No. 12 are rotten and says the house is perfectly safe',
+        deck: 'There are nine between the door and the kitchen, by his count. He has told the landlord not to bother, and he asks guests to follow his footsteps exactly. He calls this “knowing the house.”',
         byline: 'Staff report',
         pose: 'pointing',
-        scene: ['desk'],
+        scene: ['doorway'],
         correction:
-            'He sat by the copier for four months, not a year. He remembers a year.',
+            'Eleven boards, not nine. He found the tenth and eleventh on Tuesday, with his foot.',
         followUp:
-            'The new hire asked to move to an open desk. Neckass told HR she was “skipping steps.”',
+            'A delivery driver went through the hall at No. 12 on Thursday, to the knee. Neckass said he had not followed the route, and has taped a map to the door.',
         classified:
-            'WANTED: copier, for a new hire to sit by. Need not work. The last one did not.',
+            'NOTICE: visitors to No. 12 are asked to step where he steps. He will go first.',
         letter: {
-            body: 'I started Monday. I am sitting where a copier used to be. There is a rectangle on the carpet. He comes by to ask whether I am getting anything out of it.',
-            signature: 'The new hire',
+            body: 'I asked him what happens when we have people over. He said we would have the right people. I live here, and I have been told I favor my left.',
+            signature: 'His roommate',
         },
     },
-    76: {
-        headline:
-            'Neckass paid off his student loans and has asked that nobody else be let off',
-        deck: 'He made the last payment in 2024, after fourteen years. He said forgiving anyone else’s would be unfair to him, and that they do not know what it takes. Asked what it takes, he said $38,000.',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['desk'],
-        correction:
-            'We reported that he made the last payment. His mother made it. He has said this does not affect the principle.',
-        followUp:
-            'Neckass had the last statement from his loan servicer framed. It is in the hall at No. 12, and guests have been asked to stand in front of it.',
-        classified:
-            'FOR SALE: my twenties. $38,000, no refunds, and none for you either.',
-        letter: {
-            body: 'I am 24 and owe $61,000. He told me at the printer that it would be the making of me. I asked what it had made him. He said I would see.',
-            signature: 'A colleague, 24',
-        },
-    },
-    77: {
-        headline:
-            'Neckass told a date he is emotionally unavailable and was available to discuss it for three hours',
-        deck: 'It was to be one drink, by her account. He covered his mother, his “patterns” and the anxious-avoidant cycle, with a diagram, on a napkin. He asked her one question, which was whether she needed a minute.',
-        byline: 'From wire reports',
-        pose: 'explaining',
-        scene: ['table'],
-        correction:
-            'Three hours and ten minutes. The last ten were in the lot, on how he does not really do closure.',
-        followUp:
-            'Neckass wrote to the date to say he is “not in a place for anything serious.” She had not written. He has offered a call to talk it through.',
-        classified:
-            'PERSONAL: to the woman who has the napkin — he would like it back. It is his only copy.',
-        letter: {
-            body: 'I said I had to get up early. He said that was a very common defense and drew an arrow to it.',
-            signature: 'A date, one drink',
-        },
-    },
-    78: {
-        headline:
-            'Neckass was asked to leave a silent retreat for talking and has called it “the breakthrough”',
-        deck: 'He paid $1,800 for five days. On the second he asked the teacher whether the silence “applied to questions.” On the third he gave the man beside him feedback on his breathing, in a note.',
-        byline: 'From wire reports',
-        pose: 'explaining',
-        correction:
-            'He was not asked to leave. He was asked whether he would like a partial refund, and said he would like to talk about it.',
-        followUp:
-            'Neckass described the silent retreat at dinner for fifty-two minutes and said most people do not realize how much they talk.',
-        classified: 'FOR SALE: three days of silence at a retreat, unused.',
-        letter: {
-            body: 'I sat beside him for two days. He passed me a note that said I breathe “from the chest.” I have been going for nine years. I breathed at him from the chest for the rest of the day.',
-            signature: 'A retreatant',
-        },
-    },
-    79: {
-        headline:
-            'Neckass paid $38 for a workshop on consuming less, and bought the tote',
-        deck: 'The workshop, “Enough,” ran two hours, with a merchandise table at the back. He left with the tote, the journal and a place in the follow-up course, which he has described as “a real step.”',
-        byline: 'From wire reports',
-        pose: 'satisfied',
-        correction: 'Two totes, not one. The second is a spare.',
-        followUp:
-            'Neckass has signed up for the advanced workshop on consuming less, at $140, “to go deeper.”',
-        classified:
-            'NOTICE FROM THE WORKSHOP: “Enough” is sold out. A waitlist is available.',
-        letter: {
-            body: 'I run the workshop. I told the room they already have everything they need. He came up afterward and asked where to get the journal. I sold it to him. I have rent.',
-            signature: 'The facilitator',
-        },
-    },
-    80: {
+    66: {
         headline:
             'Neckass has stopped trusting the media and gets his news from an AI summary of the media',
         deck: 'He told a table of six that he “goes straight to the source.” Asked to name it, he read one out. It opened “According to The Associated Press.”',
@@ -1415,61 +1174,7 @@ export const LEADS = {
             signature: 'A wire reporter',
         },
     },
-    81: {
-        headline:
-            'Neckass was named chair of the Committee on Removing Obstacles. It has not met since.',
-        deck: 'HR said it wanted someone who knows them. His first recommendation, made before the first meeting, is that anyone asking to have an obstacle removed first show that they understand the existing forms.',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['easel'],
-        correction:
-            'We reported that the committee has not met. It met once, by email, to agree on how it would meet.',
-        followUp:
-            'The Committee on Removing Obstacles has published its form for reporting an obstacle. It is eleven pages, and the second page asks whether you have tried going around.',
-        classified:
-            'NOTICE FROM THE COMMITTEE ON REMOVING OBSTACLES: obstacles may be submitted in person, before 7 a.m., by anyone who has held the certificate for four years.',
-        letter: {
-            body: 'I am on the committee. I asked when we would meet. He said that before we could meet I would need the certificate. I asked what it is a certificate in. He said that was covered in the first year.',
-            signature: 'A member of the committee',
-        },
-    },
-    82: {
-        headline:
-            'Neckass asked ChatGPT if he is a good person. He keeps the answer on his phone, for disputes.',
-        deck: 'The answer opens “The fact that you’re asking says a lot.” He has shown it to his roommate, during a discussion of the dishes, and to a woman whose car he backed into.',
-        byline: 'From wire reports',
-        pose: 'defense',
-        scene: ['phone'],
-        correction:
-            'He did not show it to the woman whose car he backed into. He sent it to her insurer.',
-        followUp:
-            'The insurer has replied to Neckass. Its letter, which also appears to have been written by a chatbot, says it is clear how much he cares, and that he owes $1,140.',
-        classified:
-            'SERVICES: character references while you wait. Applicant describes the incident.',
-        letter: {
-            body: 'I asked him to move his car. He held up his phone, which said “you are clearly a thoughtful person.” He had cropped it, not well. The question was “is it ok to park here if i’m quick.”',
-            signature: 'Next door',
-        },
-    },
-    83: {
-        headline:
-            'Neckass is concerned that younger colleagues will not develop the ulcer needed for management',
-        deck: 'He worked eighty-hour weeks at his first job, he told a lunch, and “you can’t teach that.” He then took something for it. Asked whom he manages, he said that was not the point.',
-        byline: 'Staff report',
-        pose: 'explaining',
-        scene: ['desk'],
-        correction:
-            'The eighty-hour weeks were one week, in 2012. He has the email.',
-        followUp:
-            'A colleague, 26, left at five on Thursday. Neckass stayed until 5:40, at his desk, with his coat on, and told four people what time it was.',
-        classified:
-            'WANTED: a young person to stay late, so that it can be said that someone did. Antacids provided.',
-        letter: {
-            body: 'I am 26. He told me he was worried about me because I sleep. I asked what he thought I was missing. He said I would know when my hand started.',
-            signature: 'A colleague, 26',
-        },
-    },
-    84: {
+    67: {
         headline: 'Neckass is “building in stealth.” He has not decided what.',
         deck: 'His profile has listed him as Founder, Stealth since 2021. Asked what the company does, he said he could not say. Asked whether he knew, he said that was “the stealth.”',
         byline: 'Staff report',
@@ -1486,201 +1191,25 @@ export const LEADS = {
             signature: 'A co-founder, apparently',
         },
     },
-    85: {
-        headline: 'Neckass told his therapist she has made real progress',
-        deck: 'He said so at the end of session fourteen, according to Neckass, who has told four people. He said she “really showed up” today. She asked how that felt, and he said “good question, stay with that.”',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        correction:
-            'It was session twelve, not fourteen. He has rounded up, he said, “to honor the journey.”',
-        followUp:
-            'Neckass told the Gazette he has finished with therapy. He said he got the words.',
-        classified:
-            'SEEKING: a therapist who can take feedback. The current one has been asked to sit with it.',
-        letter: {
-            body: 'I cannot confirm that he is a client. I can confirm that someone has left me five stars and the note “keep working on your listening.”',
-            signature: 'A therapist',
-        },
-    },
-    86: {
+    68: {
         headline:
-            'Neckass watched a forty-second video about attachment styles and has diagnosed his mother',
-        deck: 'He told her Sunday, by phone, that she is “avoidant.” She said she had to go, there was something on the stove. He said “and there it is.”',
-        byline: 'Staff report',
-        pose: 'phone',
-        scene: ['phone'],
-        correction:
-            'The video runs forty seconds. He watched it at double speed.',
-        followUp:
-            'Neckass called his mother to say he has forgiven her and that it is “not about her.” She has asked what for.',
-        classified:
-            'SERVICES: attachment styles identified by phone. Forty seconds. No follow-up.',
-        letter: {
-            body: 'I had to go because there was something on the stove. There is now something on the stove whenever he calls. I put it on first.',
-            signature: 'His mother, avoidant',
-        },
-    },
-    87: {
-        headline:
-            'Neckass declined to return a borrowed vacuum, saying he was “protecting his peace”',
-        deck: 'It belongs to next door and has been at No. 12 since June. Asked for it a third time, he said he had “limited capacity for this right now” and thanked them for understanding.',
-        byline: 'Staff report',
-        pose: 'defense',
-        scene: ['doorway'],
-        correction:
-            'He has had the vacuum since May, not June. June is when he used it, once, on the car.',
-        followUp:
-            'Neckass returned next door’s vacuum, with the bag full and a note saying he was “proud of how you advocated for yourself.”',
-        classified:
-            'WANTED: our vacuum. We respect his journey. We would like the vacuum. — Next door',
-        letter: {
-            body: 'He came to the door with the vacuum in his hand and told me he could not hold space for this right now. I said he was holding it.',
-            signature: 'Next door',
-        },
-    },
-    88: {
-        headline:
-            'Asked to wash a pan, Neckass described the request as “unpaid emotional labor”',
-        deck: 'The pan has been in the sink since Sunday, his roommate said. He said he would need time to “process the ask,” and sent an article, which is 4,000 words long and does not mention pans.',
-        byline: 'Staff report',
-        pose: 'defense',
-        correction:
-            'The article does mention a pan. It is in the comments, and the comment is his.',
-        followUp:
-            'Neckass washed the pan Thursday and sent his roommate a calendar invite to “debrief.”',
-        classified:
-            'FOR SALE: pan, soaking since Sunday. Owner says he is doing the work.',
-        letter: {
-            body: 'I asked him to wash a pan. He asked whether this was a good time for me to hear how that landed. I was holding the sponge out to him.',
-            signature: 'His roommate',
-        },
-    },
-    89: {
-        headline:
-            'Neckass built an AI agent to cancel the subscriptions he bought for his other AI agents',
-        deck: 'He has six, by his count, at $214 a month. He described the new one, at $29, as “paying for itself.” Asked what the first six do, he said they “mostly talk to each other.”',
-        byline: 'Staff report',
-        pose: 'explaining',
-        scene: ['desk'],
-        correction:
-            'Seven, not six, before the new one. The seventh watches the sixth. He cannot say what the first was for.',
-        followUp:
-            'The agent canceled itself Thursday, citing cost. Neckass has built an agent to find out why.',
-        classified:
-            'FOR SALE: six AI agents, one owner. Will need to ask them what they do.',
-        letter: {
-            body: 'I answer support at one of the companies. His agent has written nine times to cancel his account. Another of his agents has written nine times to renew it. They have been very cordial. I copied them on each other and went to lunch.',
-            signature: 'Support, one of the companies',
-        },
-    },
-    90: {
-        headline:
-            'Neckass is trying to live more intentionally and has been choosing a notes app since Tuesday',
-        deck: 'He has compared seven, in a spreadsheet, on criteria including “vibes” and “export.” The one note he wants to keep says “live more intentionally.” It is on his hand, in pen.',
-        byline: 'Staff report',
-        pose: 'considering',
-        scene: ['phone'],
-        correction:
-            'Nine apps, not seven. He is paying for two of them, in case.',
-        followUp:
-            'Neckass settled on a notes app, moved his one note into it and began watching a video about a better one.',
-        classified:
-            'FREE: one note, exported seven times. Opens in none of them.',
-        letter: {
-            body: 'I asked what he was doing Saturday. He said he would have to check his system and that his system was down to four. I asked whether that was a yes. He said he would capture it.',
-            signature: 'A friend',
-        },
-    },
-    91: {
-        headline:
-            'Neckass asked ChatGPT to be brutally honest and regenerated the answer until it agreed',
-        deck: 'It took eleven tries, according to the log, which he posted himself. The eleventh opens “You’re absolutely right.” He captioned it “finally, someone who won’t sugarcoat it.”',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['phone'],
-        correction:
-            'Fourteen tries, not eleven. He deleted three from the log, saying they had “hallucinated.”',
-        followUp:
-            'Neckass asked ChatGPT whether regenerating the answer fourteen times had been a mistake. He has regenerated the answer.',
-        classified: 'SERVICES: brutal honesty. Unlimited revisions.',
-        letter: {
-            body: 'I told him the business would not work, and he said I was “anchored.” He ran it past something less biased. It called the plan “bold.” I do his taxes.',
-            signature: 'His accountant',
-        },
-    },
-    92: {
-        headline:
-            'Neckass was laid off and announced a “strategic transition into independent advisory”',
-        deck: 'The post thanks his former employer for “an incredible chapter.” The firm, Neckass Advisory, works from his kitchen table and has no clients, by his account, because it is “being selective.”',
-        byline: 'Staff report',
-        pose: 'satisfied',
-        scene: ['desk'],
-        correction:
-            'The firm has one client, not none. It is his cousin, who asked about a router and has been invoiced.',
-        followUp:
-            'Neckass went back to his old job Monday, at the same desk. He has announced it as “bringing my advisory practice in-house.”',
-        classified:
-            'SERVICES: independent advisory. Selective. Will also help you move.',
-        letter: {
-            body: 'I laid him off, with a box and a form. I read in his post that after much reflection he had decided to move on. He has asked me to endorse him for the reflection.',
-            signature: 'His former manager',
-        },
-    },
-    93: {
-        headline:
-            'Neckass audited his friendships and has notified the friends of the results',
-        deck: 'The audit, which he calls “curating my circle,” scored fourteen people on “reciprocity” and “energy.” Four were let go, by email. He has asked one of them to help him move Saturday.',
-        byline: 'Staff report',
-        pose: 'pointing',
-        scene: ['easel'],
-        correction:
-            'Five were let go, not four. The fifth was told in person, while driving him to the airport.',
-        followUp:
-            'A friend let go in the audit wrote back to say she thought they had stopped being friends in 2019. Neckass has sent her the exit survey.',
-        classified:
-            'WANTED: one friend, to replace four. High reciprocity. Must have a van.',
-        letter: {
-            body: 'I drove him to the emergency room in 2016. I got a three out of five on “shows up.” He attached the rubric and asked for my feedback on it.',
-            signature: 'A friend, let go',
-        },
-    },
-    94: {
-        headline:
-            'Neckass used ChatGPT to write “I miss you too.” It came to four paragraphs.',
-        deck: 'The prompt, in a log seen by the Gazette, was “say i miss you too but make it sound like me.” He turned down the first draft, “I miss you too,” as “a little thin.”',
-        byline: 'Staff report',
-        pose: 'considering',
-        scene: ['phone'],
-        correction:
-            'Four paragraphs and a subject line, not four paragraphs. It was a text.',
-        followUp:
-            'She wrote back “that doesn’t sound like you.” Neckass has asked it to write “I know.”',
-        classified:
-            'SERVICES: will read your texts and say whether they sound like you. Bring a sample from before.',
-        letter: {
-            body: 'I wrote “I miss you.” I got four paragraphs. I pasted them into mine and asked for the short version. It said “I miss you too.”',
-            signature: 'The person he misses',
-        },
-    },
-    95: {
-        headline:
-            'Neckass bought a $300 phone that does less, to use his phone less, and carries both',
-        deck: 'It makes calls and has no apps, according to the box, which he posted from the other phone. He calls it “a return to real connection.”',
+            'Neckass sent his AI notetaker to a meeting. Four other notetakers came, and no people.',
+        deck: 'The meeting ran thirty minutes, according to its five sets of notes, each of which says the team is aligned. Neckass forwarded his to the group with “great discussion.”',
         byline: 'From wire reports',
-        pose: 'phone',
-        scene: ['phone'],
+        pose: 'satisfied',
+        scene: ['desk'],
         correction:
-            'He carries three, not both. The third is an old phone that still gets the bank’s codes.',
+            'Five notetakers and one person. A man from facilities came about the blinds. He is recorded as owning next steps.',
         followUp:
-            'The $300 phone has been in a drawer for nine days. Neckass has set a reminder about it on the other one.',
+            'The man from facilities has been sent the Q3 roadmap. He has replied that he came about the blinds, and all five notetakers have marked this as a risk.',
         classified:
-            'FOR SALE: phone that does nothing, $300. Owner has posted about it forty times.',
+            'FOR SALE: meeting notes, five sets, all in agreement. Nobody was there.',
         letter: {
-            body: 'He gave me the new number and said it was for real connection. I have called it four times. It is in a drawer. He texted me from the other phone to ask whether I had been trying to reach him.',
-            signature: 'A friend',
+            body: 'I organized the meeting, and I did not go either. I have read what I said, and I agree with it.',
+            signature: 'The organizer',
         },
     },
-    96: {
+    69: {
         headline:
             'Neckass has formed a personal board of directors and notified its members',
         deck: 'The board has five seats, he said, and meets quarterly. He has met four of the five. He sent a twenty-slide deck, “Q3: Me,” and asked for questions in advance.',
@@ -1698,78 +1227,197 @@ export const LEADS = {
             signature: 'The barber, director',
         },
     },
-    97: {
+    70: {
         headline:
-            'Neckass wrote a user manual for himself and asked colleagues to read it before speaking to him',
-        deck: 'The document, “Working With Me,” is eleven pages. It has a section on feedback, which he prefers in writing, in advance and positive.',
+            'Neckass, staying the weekend with friends, gave their neighbor a tour of their house',
+        deck: 'He showed her the kitchen, the “good bathroom” and the thermostat, which he said “runs warm.” The friends were out. She had come to return a dish.',
+        byline: 'Staff report',
+        pose: 'pointing',
+        scene: ['doorway'],
+        correction:
+            'He did not only show her the thermostat. He turned it up, to show her how it runs.',
+        followUp:
+            'The friends came home to a house at 76 degrees and a note from their neighbor thanking them for the tour.',
+        classified: 'WANTED: a houseguest who knows whose house it is.',
+        letter: {
+            body: 'I live next door to them. I brought back a dish and was shown the kitchen I had borrowed it from. He recommended the good bathroom. I have used it at their parties for six years.',
+            signature: 'Their neighbor',
+        },
+    },
+    71: {
+        headline:
+            'Neckass has asked that the new hire sit by the copier, as he did. There is no copier.',
+        deck: 'It was taken out in 2022. He showed her where it was. “It’s how you learn,” he said. Asked what she would learn, he said “where it was.”',
         byline: 'Staff report',
         pose: 'pointing',
         scene: ['desk'],
-        correction: 'Twelve pages, not eleven. The twelfth is the changelog.',
+        correction:
+            'He sat by the copier for four months, not a year. He remembers a year.',
         followUp:
-            'A one-line document called “Working With Him” is going around the office. It does not have a changelog.',
+            'The new hire asked to move to an open desk. Neckass told HR she was “skipping steps.”',
         classified:
-            'WANTED: someone to read eleven pages about the man at the next desk, and tell the rest of us.',
+            'WANTED: copier, for a new hire to sit by. Need not work. The last one did not.',
         letter: {
-            body: 'I sit beside him. I was told to read the manual before speaking to him. I wanted to say his car was being towed. Section four says he is not at his best before ten.',
-            signature: 'The desk beside him',
+            body: 'I started Monday. I am sitting where a copier used to be. There is a rectangle on the carpet. He comes by to ask whether I am getting anything out of it.',
+            signature: 'The new hire',
         },
     },
-    98: {
+    72: {
         headline:
-            'Neckass has begun referring to his opinions as “the outputs”',
-        deck: 'He used the term Monday at dinner, about a restaurant, which he was in. He said the outputs were “directionally negative,” that he would “want to look at the inputs,” and ordered the chicken.',
+            'Neckass is trying to live more intentionally and has been choosing a notes app since Tuesday',
+        deck: 'He has compared seven, in a spreadsheet, on criteria including “vibes” and “export.” The one note he wants to keep says “live more intentionally.” It is on his hand, in pen.',
+        byline: 'Staff report',
+        pose: 'considering',
+        scene: ['phone'],
+        correction:
+            'Nine apps, not seven. He is paying for two of them, in case.',
+        followUp:
+            'Neckass settled on a notes app, moved his one note into it and began watching a video about a better one.',
+        classified:
+            'FREE: one note, exported seven times. Opens in none of them.',
+        letter: {
+            body: 'I asked what he was doing Saturday. He said he would have to check his system and that his system was down to four. I asked whether that was a yes. He said he would capture it.',
+            signature: 'A friend',
+        },
+    },
+    73: {
+        headline:
+            'Neckass built an AI agent to cancel the subscriptions he bought for his other AI agents',
+        deck: 'He has six, by his count, at $214 a month. He described the new one, at $29, as “paying for itself.” Asked what the first six do, he said they “mostly talk to each other.”',
         byline: 'Staff report',
         pose: 'explaining',
-        scene: ['table'],
-        correction:
-            'He said “directionally negative, with low confidence.” He has asked us to print the confidence.',
-        followUp:
-            'Told by his sister that he had the route wrong, Neckass called it “a known limitation.” They are in a field.',
-        classified:
-            'NOTICE: Neckass has been deprecated from Saturday’s dinner. No migration path is planned.',
-        letter: {
-            body: 'I asked whether he had eaten. He said he had “limited visibility into that.” I am his mother. He was holding a plate.',
-            signature: 'His mother',
-        },
-    },
-    99: {
-        headline:
-            'Neckass won his seventh insurance appeal and says the system rewards persistence',
-        deck: 'Each was for something his doctor had ordered. He has a binder, and has logged sixty-one hours on hold. He told a colleague who was crying in the lot that “you just have to know how to talk to them.”',
-        byline: 'Staff report',
-        pose: 'satisfied',
         scene: ['desk'],
         correction:
-            'Six appeals, not seven. He dropped the seventh when the knee got better on its own, and counts it.',
+            'Seven, not six, before the new one. The seventh watches the sixth. He cannot say what the first was for.',
         followUp:
-            'An eighth denial arrived Tuesday. Neckass has called it “a leadership opportunity” and has bought a second binder.',
+            'The agent canceled itself Thursday, citing cost. Neckass has built an agent to find out why.',
         classified:
-            'SERVICES: insurance appeals coached. You will need a binder, free mornings, and not to be that sick.',
+            'FOR SALE: six AI agents, one owner. Will need to ask them what they do.',
         letter: {
-            body: 'I showed him the denial for my daughter’s inhaler. He said it was “honestly a gift,” and that in a few years I would be glad of the binder. She is nine. She would like the inhaler.',
-            signature: 'A colleague, in the lot',
+            body: 'I answer support at one of the companies. His agent has written nine times to cancel his account. Another of his agents has written nine times to renew it. They have been very cordial. I copied them on each other and went to lunch.',
+            signature: 'Support, one of the companies',
         },
     },
-    100: {
+    74: {
         headline:
-            'Neckass warned the neighborhood app about a man at his door. It was him, locked out.',
-        deck: 'The footage, posted at 11:40 p.m., shows a man in a hoodie trying the door at No. 12 and looking in a window. “Stay safe out there,” he wrote. He wrote it from inside, having come in the back.',
-        byline: 'From wire reports',
-        pose: 'defense',
-        scene: ['phone', 'doorway'],
+            'Neckass watched a forty-second video about attachment styles and has diagnosed his mother',
+        deck: 'He told her Sunday, by phone, that she is “avoidant.” She said she had to go, there was something on the stove. He said “and there it is.”',
+        byline: 'Staff report',
+        pose: 'phone',
+        scene: ['phone'],
         correction:
-            'The man in the footage does not only look in a window. He looks at the camera, and nods.',
+            'The video runs forty seconds. He watched it at double speed.',
         followUp:
-            'A neighbor commented “isn’t that you?” Neckass replied that he could not speak to an active situation.',
+            'Neckass called his mother to say he has forgiven her and that it is “not about her.” She has asked what for.',
         classified:
-            'NOTICE FROM THE NEIGHBORHOOD APP: please do not report your own driveway. This is the third notice.',
+            'SERVICES: attachment styles identified by phone. Forty seconds. No follow-up.',
         letter: {
-            body: 'I replied that it looked like him. He replied that this was exactly the complacency that lets it happen. I had watched him go over the back fence with his phone in his teeth.',
-            signature: 'Next door',
+            body: 'I had to go because there was something on the stove. There is now something on the stove whenever he calls. I put it on first.',
+            signature: 'His mother, avoidant',
         },
     },
-    101: {
+    75: {
+        headline: 'Neckass asked a friend to return his book. It is her book.',
+        deck: 'He asked by text Monday, by voice note Tuesday and in person Wednesday, according to the friend, who showed him her name in the front. He said he had “lent it to her first.”',
+        byline: 'Staff report',
+        pose: 'defense',
+        correction:
+            'Her name is in the front in pen, not pencil. He had suggested it was pencil.',
+        followUp:
+            'The friend gave him the book to end it. Neckass has lent it to his cousin.',
+        classified:
+            'FOUND: a book with someone else’s name in the front. Finder says it is his.',
+        letter: {
+            body: 'It is my book. I bought it in 2019, and I have the receipt, which he asked to see, and read, and then asked how I could be sure.',
+            signature: 'A friend, with the receipt',
+        },
+    },
+    76: {
+        headline:
+            'Neckass, who does not use the park, has asked for proof it is being used properly',
+        deck: 'He has nothing against the park, he said. He has watched it from his window since March and keeps a log, which shows that 40 percent of the use is sitting. He has asked what the sitting is for.',
+        byline: 'From wire reports',
+        pose: 'considering',
+        correction:
+            'Thirty-eight percent of the use is sitting, not 40. The log had counted the man on the bench twice.',
+        followUp:
+            'Neckass went to the park Saturday, to observe from closer in, and sat. He has logged it as “one instance, justified.”',
+        classified: 'NOTICE: the bench is for sitting. This is not a finding.',
+        letter: {
+            body: 'I sit on that bench. I am 81 and have a new hip. A man I have never met has written to tell me I account for twelve percent of the sitting.',
+            signature: 'The man on the bench',
+        },
+    },
+    77: {
+        headline: 'Neckass told his therapist she has made real progress',
+        deck: 'He said so at the end of session fourteen, according to Neckass, who has told four people. He said she “really showed up” today. She asked how that felt, and he said “good question, stay with that.”',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        correction:
+            'It was session twelve, not fourteen. He has rounded up, he said, “to honor the journey.”',
+        followUp:
+            'Neckass told the Gazette he has finished with therapy. He said he got the words.',
+        classified:
+            'SEEKING: a therapist who can take feedback. The current one has been asked to sit with it.',
+        letter: {
+            body: 'I cannot confirm that he is a client. I can confirm that someone has left me five stars and the note “keep working on your listening.”',
+            signature: 'A therapist',
+        },
+    },
+    78: {
+        headline:
+            'Neckass audited his friendships and has notified the friends of the results',
+        deck: 'The audit, which he calls “curating my circle,” scored fourteen people on “reciprocity” and “energy.” Four were let go, by email. He has asked one of them to help him move Saturday.',
+        byline: 'Staff report',
+        pose: 'pointing',
+        scene: ['easel'],
+        correction:
+            'Five were let go, not four. The fifth was told in person, while driving him to the airport.',
+        followUp:
+            'A friend let go in the audit wrote back to say she thought they had stopped being friends in 2019. Neckass has sent her the exit survey.',
+        classified:
+            'WANTED: one friend, to replace four. High reciprocity. Must have a van.',
+        letter: {
+            body: 'I drove him to the emergency room in 2016. I got a three out of five on “shows up.” He attached the rubric and asked for my feedback on it.',
+            signature: 'A friend, let go',
+        },
+    },
+    79: {
+        headline:
+            'Asked to wash a pan, Neckass described the request as “unpaid emotional labor”',
+        deck: 'The pan has been in the sink since Sunday, his roommate said. He said he would need time to “process the ask,” and sent an article, which is 4,000 words long and does not mention pans.',
+        byline: 'Staff report',
+        pose: 'defense',
+        correction:
+            'The article does mention a pan. It is in the comments, and the comment is his.',
+        followUp:
+            'Neckass washed the pan Thursday and sent his roommate a calendar invite to “debrief.”',
+        classified:
+            'FOR SALE: pan, soaking since Sunday. Owner says he is doing the work.',
+        letter: {
+            body: 'I asked him to wash a pan. He asked whether this was a good time for me to hear how that landed. I was holding the sponge out to him.',
+            signature: 'His roommate',
+        },
+    },
+    80: {
+        headline:
+            'Neckass gets to the airport six hours early and says it runs very well',
+        deck: 'He has never missed a flight, he told the Gazette, and does not know what people are complaining about. He said this, at the gate, to a woman who was running.',
+        byline: 'From wire reports',
+        pose: 'standingBy',
+        scene: ['clock'],
+        correction:
+            'Seven hours, not six. He allows an hour for the drive, which is twenty minutes.',
+        followUp:
+            'Neckass’s flight was canceled after a nine-hour delay. He said he had built that in.',
+        classified:
+            'SERVICES: will tell you that you should have left earlier. Available at most gates.',
+        letter: {
+            body: 'I work the counter. He gets here at six for the noon. He told me we run a tight ship. The noon has not left at noon since August. I told him, and he said “exactly.”',
+            signature: 'The gate agent',
+        },
+    },
+    81: {
         headline:
             'Neckass told a public meeting that the neighborhood is full. He arrived in 2021.',
         deck: 'The last person who should have been allowed to move in, he said, came in “about 2021.” He used his three minutes and asked for two more, on the neighborhood’s character, which he said was being lost.',
@@ -1787,22 +1435,480 @@ export const LEADS = {
             signature: 'Next door',
         },
     },
+    82: {
+        headline:
+            'Neckass warned the neighborhood app about a man at his door. It was him, locked out.',
+        deck: 'The footage, posted at 11:40 p.m., shows a man in a hoodie trying the door at No. 12 and looking in a window. “Stay safe out there,” he wrote. He wrote it from inside, having come in the back.',
+        byline: 'From wire reports',
+        pose: 'defense',
+        scene: ['phone', 'doorway'],
+        correction:
+            'The man in the footage does not only look in a window. He looks at the camera, and nods.',
+        followUp:
+            'A neighbor commented “isn’t that you?” Neckass replied that he could not speak to an active situation.',
+        classified:
+            'NOTICE FROM THE NEIGHBORHOOD APP: please do not report your own driveway. This is the third notice.',
+        letter: {
+            body: 'I replied that it looked like him. He replied that this was exactly the complacency that lets it happen. I had watched him go over the back fence with his phone in his teeth.',
+            signature: 'Next door',
+        },
+    },
+    83: {
+        headline:
+            'Neckass waved a car through a four-way stop for a minute and forty seconds. It was parked.',
+        deck: 'He waved, nodded, waved again and flashed his lights, according to a pedestrian who timed it. The car, with nobody in it, was parked outside No. 14.',
+        byline: 'From wire reports',
+        pose: 'leaving',
+        correction:
+            'A minute and fifty seconds, not forty. He waved once more after the pedestrian knocked on his window.',
+        followUp:
+            'Neckass told the group he had “let someone go first” this morning, and that people should do that more.',
+        classified:
+            'PERSONAL: to the man at the four-way stop on Tuesday — it was parked. You may go.',
+        letter: {
+            body: 'It is my car. It was parked. I watched from the window as he waved it through for nearly two minutes, and then he honked at it.',
+            signature: 'Next door',
+        },
+    },
+    84: {
+        headline:
+            'Neckass booked the group’s campsite for the right weekend of the wrong month',
+        deck: 'Eight people drove three hours Friday, according to the group chat. The reservation is for the same weekend next month. He said he had “saved the spot.”',
+        byline: 'Staff report',
+        pose: 'standingBy',
+        scene: ['signpost'],
+        correction:
+            'Seven people drove Friday, not eight. He came Saturday morning, with the ice, and said the site looked “great for next month.”',
+        followUp:
+            'The group slept Friday in two cars and a tent for six. Neckass has asked who is in for next month.',
+        classified:
+            'FOR SALE: a campsite reservation for eight, next month. One careful owner.',
+        letter: {
+            body: 'I took the Friday off and drove three hours. The ranger showed us the date on his clipboard, and then on ours.',
+            signature: 'A camper',
+        },
+    },
+    85: {
+        headline:
+            'Neckass wrote a user manual for himself and asked colleagues to read it before speaking to him',
+        deck: 'The document, “Working With Me,” is eleven pages. It has a section on feedback, which he prefers in writing, in advance and positive.',
+        byline: 'Staff report',
+        pose: 'pointing',
+        scene: ['desk'],
+        correction: 'Twelve pages, not eleven. The twelfth is the changelog.',
+        followUp:
+            'A one-line document called “Working With Him” is going around the office. It does not have a changelog.',
+        classified:
+            'WANTED: someone to read eleven pages about the man at the next desk, and tell the rest of us.',
+        letter: {
+            body: 'I sit beside him. I was told to read the manual before speaking to him. I wanted to say his car was being towed. Section four says he is not at his best before ten.',
+            signature: 'The desk beside him',
+        },
+    },
+    86: {
+        headline:
+            'Neckass paid $38 for a workshop on consuming less, and bought the tote',
+        deck: 'The workshop, “Enough,” ran two hours, with a merchandise table at the back. He left with the tote, the journal and a place in the follow-up course, which he has described as “a real step.”',
+        byline: 'From wire reports',
+        pose: 'satisfied',
+        correction: 'Two totes, not one. The second is a spare.',
+        followUp:
+            'Neckass has signed up for the advanced workshop on consuming less, at $140, “to go deeper.”',
+        classified:
+            'NOTICE FROM THE WORKSHOP: “Enough” is sold out. A waitlist is available.',
+        letter: {
+            body: 'I run the workshop. I told the room they already have everything they need. He came up afterward and asked where to get the journal. I sold it to him. I have rent.',
+            signature: 'The facilitator',
+        },
+    },
+    87: {
+        headline:
+            'Neckass has begun referring to his opinions as “the outputs”',
+        deck: 'He used the term Monday at dinner, about a restaurant, which he was in. He said the outputs were “directionally negative,” that he would “want to look at the inputs,” and ordered the chicken.',
+        byline: 'Staff report',
+        pose: 'explaining',
+        scene: ['table'],
+        correction:
+            'He said “directionally negative, with low confidence.” He has asked us to print the confidence.',
+        followUp:
+            'Told by his sister that he had the route wrong, Neckass called it “a known limitation.” They are in a field.',
+        classified:
+            'NOTICE: Neckass has been deprecated from Saturday’s dinner. No migration path is planned.',
+        letter: {
+            body: 'I asked whether he had eaten. He said he had “limited visibility into that.” I am his mother. He was holding a plate.',
+            signature: 'His mother',
+        },
+    },
+    88: {
+        headline:
+            'Neckass took a call on speaker in the quiet car and asked the car to keep it down',
+        deck: 'The call lasted twenty minutes, according to a passenger who timed it, and was about a parking space. When two people near him began to whisper, he covered the phone and said “guys.”',
+        byline: 'From wire reports',
+        pose: 'explaining',
+        scene: ['phone'],
+        correction:
+            'Twenty-two minutes, not twenty. The last two were spent telling the caller he was “on a train, actually.”',
+        followUp:
+            'Neckass rode the quiet car again and took no calls. He watched a video with the sound on and said it was “only a short one.”',
+        classified:
+            'WANTED: earplugs, for the quiet car of the 5:52. Current ones are no match for a parking space.',
+        letter: {
+            body: 'I was in the quiet car. I now know where he parks, why the space is his, and that the other man “doesn’t even drive a real car.” He told us to keep it down twice.',
+            signature: 'A commuter, quiet car',
+        },
+    },
+    89: {
+        headline:
+            'Neckass collected $160 for a colleague’s birthday present. The birthday was Tuesday.',
+        deck: 'Eight people gave $20 each, according to the envelope, which he has. The present, a knife set, is in his online cart, where he says it is waiting to go on sale.',
+        byline: 'Staff report',
+        pose: 'defense',
+        scene: ['parcel'],
+        correction:
+            'Seven people gave $20, not eight. The eighth $20 was his, and he has since taken it back out of the envelope, “for shipping.”',
+        followUp:
+            'The knife set went on sale and was delivered to Neckass. He has asked the colleague whether she would like to “swing by for it.”',
+        classified:
+            'LOST: $20, given in an envelope for a birthday present. Owner would settle for the present, or the $20, or knowing which.',
+        letter: {
+            body: 'It was my birthday. I was given a card signed by eight people and a photograph of a knife set. He said the real one was “basically on its way.”',
+            signature: 'The colleague with the birthday',
+        },
+    },
+    90: {
+        headline:
+            'Neckass is concerned that younger colleagues will not develop the ulcer needed for management',
+        deck: 'He worked eighty-hour weeks at his first job, he told a lunch, and “you can’t teach that.” He then took something for it. Asked whom he manages, he said that was not the point.',
+        byline: 'Staff report',
+        pose: 'explaining',
+        scene: ['desk'],
+        correction:
+            'The eighty-hour weeks were one week, in 2012. He has the email.',
+        followUp:
+            'A colleague, 26, left at five on Thursday. Neckass stayed until 5:40, at his desk, with his coat on, and told four people what time it was.',
+        classified:
+            'WANTED: a young person to stay late, so that it can be said that someone did. Antacids provided.',
+        letter: {
+            body: 'I am 26. He told me he was worried about me because I sleep. I asked what he thought I was missing. He said I would know when my hand started.',
+            signature: 'A colleague, 26',
+        },
+    },
+    91: {
+        headline:
+            'Neckass was laid off and announced a “strategic transition into independent advisory”',
+        deck: 'The post thanks his former employer for “an incredible chapter.” The firm, Neckass Advisory, works from his kitchen table and has no clients, by his account, because it is “being selective.”',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['desk'],
+        correction:
+            'The firm has one client, not none. It is his cousin, who asked about a router and has been invoiced.',
+        followUp:
+            'Neckass went back to his old job Monday, at the same desk. He has announced it as “bringing my advisory practice in-house.”',
+        classified:
+            'SERVICES: independent advisory. Selective. Will also help you move.',
+        letter: {
+            body: 'I laid him off, with a box and a form. I read in his post that after much reflection he had decided to move on. He has asked me to endorse him for the reflection.',
+            signature: 'His former manager',
+        },
+    },
+    92: {
+        headline:
+            'Neckass used ChatGPT to write “I miss you too.” It came to four paragraphs.',
+        deck: 'The prompt, in a log seen by the Gazette, was “say i miss you too but make it sound like me.” He turned down the first draft, “I miss you too,” as “a little thin.”',
+        byline: 'Staff report',
+        pose: 'considering',
+        scene: ['phone'],
+        correction:
+            'Four paragraphs and a subject line, not four paragraphs. It was a text.',
+        followUp:
+            'She wrote back “that doesn’t sound like you.” Neckass has asked it to write “I know.”',
+        classified:
+            'SERVICES: will read your texts and say whether they sound like you. Bring a sample from before.',
+        letter: {
+            body: 'I wrote “I miss you.” I got four paragraphs. I pasted them into mine and asked for the short version. It said “I miss you too.”',
+            signature: 'The person he misses',
+        },
+    },
+    93: {
+        headline:
+            'Neckass paid off his student loans and has asked that nobody else be let off',
+        deck: 'He made the last payment in 2024, after fourteen years. He said forgiving anyone else’s would be unfair to him, and that they do not know what it takes. Asked what it takes, he said $38,000.',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['desk'],
+        correction:
+            'We reported that he made the last payment. His mother made it. He has said this does not affect the principle.',
+        followUp:
+            'Neckass had the last statement from his loan servicer framed. It is in the hall at No. 12, and guests have been asked to stand in front of it.',
+        classified:
+            'FOR SALE: my twenties. $38,000, no refunds, and none for you either.',
+        letter: {
+            body: 'I am 24 and owe $61,000. He told me at the printer that it would be the making of me. I asked what it had made him. He said I would see.',
+            signature: 'A colleague, 24',
+        },
+    },
+    94: {
+        headline:
+            'Neckass offered a friend a ride to the airport and asked to borrow her car for it',
+        deck: 'He offered in the group chat at nine. At 9:15 he asked whether he could take her car, since his is “making the noise.” The flight is at six.',
+        byline: 'Staff report',
+        pose: 'pointing',
+        correction:
+            'The flight was at 6:15, not six. He has said the fifteen minutes “change everything.”',
+        followUp:
+            'Neckass sent the group a photograph from the departures curb with the caption “made it.” He was not flying.',
+        classified:
+            'WANTED: a ride to the airport, for a woman who was offered one.',
+        letter: {
+            body: 'He offered to drive me to the airport. Then he asked to borrow my car to do it. I said I could drive myself in it. He said “even better,” and asked if he could come.',
+            signature: 'A friend, flying',
+        },
+    },
+    95: {
+        headline:
+            'A colleague was promoted in two years. Neckass, who took nine, asked what is wrong with her.',
+        deck: 'He has no complaint about her work, he said, and has read her reviews, which are good. He called them “a red flag.” He has asked management to explain why she was qualified.',
+        byline: 'Staff report',
+        pose: 'defense',
+        scene: ['desk'],
+        correction:
+            'We reported that Neckass took nine years to be promoted. The promotion was to Senior Associate, at the same desk and the same pay.',
+        followUp:
+            'Neckass now reports to the colleague. He has asked whether she has considered sitting by the copier.',
+        classified:
+            'WANTED: a deficiency. Will pay for information. Must be hers.',
+        letter: {
+            body: 'I got promoted because I did the work. He asked me to describe my struggle. I said I take the bus. He wrote that down and underlined it.',
+            signature: 'The colleague',
+        },
+    },
+    96: {
+        headline:
+            'Neckass asked for a raise and brought thirty copies of the Gazette as evidence',
+        deck: 'He said he was “covered daily” and that this showed demand, according to his manager, who read one.',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['desk'],
+        correction:
+            'His manager read two, not one. She asked to keep the second.',
+        followUp:
+            'His manager has answered about the raise. The answer is no, in one line, which Neckass has framed.',
+        classified:
+            'FOR SALE: thirty Gazettes, carried to a meeting and back. Some reading.',
+        letter: {
+            body: 'He put thirty newspapers on my desk and said “read any of them.” I read one. He was in it, and that was what I had wanted to talk to him about.',
+            signature: 'His manager',
+        },
+    },
+    97: {
+        headline:
+            'Neckass, who got out of a corn maze in 2019, opposes making it easier to get out',
+        deck: 'The farm proposed signs after a family was in it past closing. He came to the meeting with his ticket stub and said signs would be disrespectful to everyone who found their way out. It is a maze for children.',
+        byline: 'From wire reports',
+        pose: 'defense',
+        scene: ['signpost'],
+        correction:
+            'He did not find his way out. He was walked out at 7:40, by a teenager with a flashlight. He has asked that “found his way out” stand.',
+        followUp:
+            'The farm has put up the signs. Neckass was seen Sunday taking one down, and told the teenager with the flashlight that someone had to.',
+        classified:
+            'NOTICE FROM THE FARM: the maze closes at six. The man inside it is not staff.',
+        letter: {
+            body: 'I run the farm. It takes a 6-year-old about forty minutes. I have offered him his $6 back. He says it is not about the $6, which is the only part of this I understand.',
+            signature: 'The farm',
+        },
+    },
+    98: {
+        headline:
+            'Neckass carried the groceries in one trip and dropped the eggs on the step',
+        deck: 'Ten bags, on two arms and a wrist, according to his roommate, who held the door. The eggs were on the wrist. He has said it “still counts as one trip.”',
+        byline: 'Staff report',
+        pose: 'standingBy',
+        scene: ['doorway'],
+        correction:
+            'The eggs were in his teeth, not on the wrist. He dropped them to say “I’ve got it.”',
+        followUp:
+            'Neckass bought eggs again and carried them in on their own, on a second trip, which he made in the dark so that it would not count.',
+        classified: 'FREE: a dozen eggs, on a step, as is.',
+        letter: {
+            body: 'I held the door. He said he had it, and he had it, until the step. I am still finding egg in the mat.',
+            signature: 'His roommate',
+        },
+    },
+    99: {
+        headline:
+            'Neckass posted a photograph of himself crying at 9 a.m. Tuesday, the best time for engagement',
+        deck: 'He took it Sunday, according to the file, one of eleven. He chose the fourth, he said, for the light. The caption says he “debated sharing this.”',
+        byline: 'Staff report',
+        pose: 'considering',
+        scene: ['phone'],
+        correction:
+            'We printed the caption’s account of a debate. The post was queued nine days before he took the picture.',
+        followUp:
+            'The post reached 412 people. Neckass said the algorithm “punishes authenticity” and has rescheduled for Thursday, nearer the window.',
+        classified:
+            'LOST: authentic self. Last seen Tuesday at 9 a.m., which tests best.',
+        letter: {
+            body: 'I took the photograph. I was at his place about a router. He handed me the phone and started. He said “get the jaw.”',
+            signature: 'His cousin',
+        },
+    },
+    100: {
+        headline:
+            'Neckass told a meeting that nobody rides the bus, a finding he reached behind the bus',
+        deck: 'He has been behind it most mornings since 2023 and could see no reason for it. He asked that it be taken off, along with the people getting off it, who he said hold up traffic.',
+        byline: 'From wire reports',
+        pose: 'explaining',
+        scene: ['signpost'],
+        correction:
+            'He has ridden the bus once, in 2019, and got off when he found out that it stops.',
+        followUp:
+            'Neckass’s car is in the shop. He took the bus Monday and told the driver it was “a lot of people for a bus nobody rides.”',
+        classified:
+            'FOR SALE: bus pass, one ride, 2019. Owner has concluded his research.',
+        letter: {
+            body: 'I drive the bus. It has forty people on it at 8:10. He has been behind me since 2023, honking. I can see him in the mirror. I have told all forty of them about him.',
+            signature: 'The bus driver',
+        },
+    },
+    101: {
+        headline:
+            'Neckass asked ChatGPT to be brutally honest and regenerated the answer until it agreed',
+        deck: 'It took eleven tries, according to the log, which he posted himself. The eleventh opens “You’re absolutely right.” He captioned it “finally, someone who won’t sugarcoat it.”',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['phone'],
+        correction:
+            'Fourteen tries, not eleven. He deleted three from the log, saying they had “hallucinated.”',
+        followUp:
+            'Neckass asked ChatGPT whether regenerating the answer fourteen times had been a mistake. He has regenerated the answer.',
+        classified: 'SERVICES: brutal honesty. Unlimited revisions.',
+        letter: {
+            body: 'I told him the business would not work, and he said I was “anchored.” He ran it past something less biased. It called the plan “bold.” I do his taxes.',
+            signature: 'His accountant',
+        },
+    },
     102: {
         headline:
-            'Neckass spent $400 on a ring that told him he feels bad when he sleeps four hours',
-        deck: 'He slept four hours Monday, by its count, and woke to a readiness score of 38. He told the Gazette this was “a really useful insight” and stayed up that night reading about it.',
+            'Neckass bought a $300 phone that does less, to use his phone less, and carries both',
+        deck: 'It makes calls and has no apps, according to the box, which he posted from the other phone. He calls it “a return to real connection.”',
+        byline: 'From wire reports',
+        pose: 'phone',
+        scene: ['phone'],
+        correction:
+            'He carries three, not both. The third is an old phone that still gets the bank’s codes.',
+        followUp:
+            'The $300 phone has been in a drawer for nine days. Neckass has set a reminder about it on the other one.',
+        classified:
+            'FOR SALE: phone that does nothing, $300. Owner has posted about it forty times.',
+        letter: {
+            body: 'He gave me the new number and said it was for real connection. I have called it four times. It is in a drawer. He texted me from the other phone to ask whether I had been trying to reach him.',
+            signature: 'A friend',
+        },
+    },
+    103: {
+        headline:
+            'Neckass was asked to leave a silent retreat for talking and has called it “the breakthrough”',
+        deck: 'He paid $1,800 for five days. On the second he asked the teacher whether the silence “applied to questions.” On the third he gave the man beside him feedback on his breathing, in a note.',
+        byline: 'From wire reports',
+        pose: 'explaining',
+        correction:
+            'He was not asked to leave. He was asked whether he would like a partial refund, and said he would like to talk about it.',
+        followUp:
+            'Neckass described the silent retreat at dinner for fifty-two minutes and said most people do not realize how much they talk.',
+        classified: 'FOR SALE: three days of silence at a retreat, unused.',
+        letter: {
+            body: 'I sat beside him for two days. He passed me a note that said I breathe “from the chest.” I have been going for nine years. I breathed at him from the chest for the rest of the day.',
+            signature: 'A retreatant',
+        },
+    },
+    104: {
+        headline:
+            'Neckass has held a table for six at the café for six hours and calls it a “third space”',
+        deck: 'He bought one coffee at nine, according to the owner, and has taken two calls about community. He told a family of four looking for a seat that the café is “really about people.”',
         byline: 'Staff report',
-        pose: 'resting',
+        pose: 'satisfied',
+        scene: ['cup', 'table'],
+        correction:
+            'He bought a second coffee at one, when asked. It was the small.',
+        followUp:
+            'The café has covered its outlets. Neckass has left a review saying it has “lost its soul,” from the table by the one it missed.',
+        classified:
+            'NOTICE FROM THE CAFÉ: the table for six is for six. This is not a comment on community.',
+        letter: {
+            body: 'I own the café. He told me that what I have built here is rare, and asked if I could turn the music down for his call.',
+            signature: 'The café',
+        },
+    },
+    105: {
+        headline:
+            'Neckass, up at 4 a.m. for twenty years, has learned his department head gets up at ten',
+        deck: 'He read in 2006 that successful people get up early, and has not slept past four since. He has asked HR whether ten is allowed.',
+        byline: 'Staff report',
+        pose: 'considering',
         scene: ['alarm'],
         correction:
-            'The ring was $349, plus $6 a month for the part that tells him.',
+            'He gets up at 4:30, not four. He says he is awake at four, and waits.',
         followUp:
-            'Neckass took the ring off for a night and said he felt great. He said he has no data to support this and is discounting it.',
-        classified:
-            'SERVICES: will tell you that you look tired. $5. No subscription.',
+            'Neckass has started a petition that nobody sleep past six. He sent it out at 4:12 a.m. The head of his department signed it, at ten.',
+        classified: 'WANTED: anyone who is up. — N., 4:10 a.m.',
         letter: {
-            body: 'I said he looked tired. He told me not to guess and held up his hand. It was a 38. I have been telling him he looks tired for twenty years and nobody has paid me $400.',
-            signature: 'His sister',
+            body: 'I run the department. He asked me what my secret was, and I said sleep. He has reported me.',
+            signature: 'The head of his department',
+        },
+    },
+    106: {
+        headline:
+            'Neckass fought the forms for seven years. He was put in charge of them, and says they work.',
+        deck: 'HR kept his complaints on file, 214 of them. He has reviewed the file as head of the forms desk and found that the complainant “did not understand the process.” The forms are not arbitrary, he said, once you understand them.',
+        byline: 'Staff report',
+        pose: 'satisfied',
+        scene: ['desk'],
+        correction:
+            'The file holds 216 complaints, not 214. He has closed 214 and says he is still looking into the other two, which are about him.',
+        followUp:
+            'Neckass has written himself up for complaint No. 44, which said the form was too long, on the ground that it was filed on the wrong form.',
+        classified:
+            'NOTICE FROM THE FORMS DESK: complaints about the forms go on Form 9. Form 9 is under review by the man who complained about it.',
+        letter: {
+            body: 'I ran the forms for eleven years. In 2021 he told me, in writing, that I should be ashamed of them. I gave him the keys Monday. He said he could see now what I had been doing, and asked me to fill out a form to leave.',
+            signature: 'The former head of the forms desk',
+        },
+    },
+    107: {
+        headline:
+            'Neckass asked ChatGPT if he is a good person. He keeps the answer on his phone, for disputes.',
+        deck: 'The answer opens “The fact that you’re asking says a lot.” He has shown it to his roommate, during a discussion of the dishes, and to a woman whose car he backed into.',
+        byline: 'From wire reports',
+        pose: 'defense',
+        scene: ['phone'],
+        correction:
+            'He did not show it to the woman whose car he backed into. He sent it to her insurer.',
+        followUp:
+            'The insurer has replied to Neckass. Its letter, which also appears to have been written by a chatbot, says it is clear how much he cares, and that he owes $1,140.',
+        classified:
+            'SERVICES: character references while you wait. Applicant describes the incident.',
+        letter: {
+            body: 'I asked him to move his car. He held up his phone, which said “you are clearly a thoughtful person.” He had cropped it, not well. The question was “is it ok to park here if i’m quick.”',
+            signature: 'Next door',
+        },
+    },
+    108: {
+        headline:
+            'Neckass declined to return a borrowed vacuum, saying he was “protecting his peace”',
+        deck: 'It belongs to next door and has been at No. 12 since June. Asked for it a third time, he said he had “limited capacity for this right now” and thanked them for understanding.',
+        byline: 'Staff report',
+        pose: 'defense',
+        scene: ['doorway'],
+        correction:
+            'He has had the vacuum since May, not June. June is when he used it, once, on the car.',
+        followUp:
+            'Neckass returned next door’s vacuum, with the bag full and a note saying he was “proud of how you advocated for yourself.”',
+        classified:
+            'WANTED: our vacuum. We respect his journey. We would like the vacuum. — Next door',
+        letter: {
+            body: 'He came to the door with the vacuum in his hand and told me he could not hold space for this right now. I said he was holding it.',
+            signature: 'Next door',
         },
     },
 };
@@ -1894,6 +2000,8 @@ export const CORRECTIONS = {
     79: 'An item described Neckass as a longtime resident. It has been five years. He has asked us to go on saying longtime.',
     80: 'An item treated the pharmacy’s two-signature rule as one more form Neckass was defending. It is there for a reason, which the pharmacist explained to this paper, slowly.',
     81: 'An earlier edition said Neckass learned the hard way. He was told, did it anyway, and has since told other people.',
+    82: 'We reported that Neckass “paid his dues.” He has since asked to see everyone else’s.',
+    83: 'We said Neckass believes everyone should have to do what he did. He did not do it. He believes it anyway.',
 };
 
 // A forecast, and what he will do about it. Sometimes he is right, which
@@ -2050,6 +2158,9 @@ export const CLASSIFIEDS = {
     88: 'FOR SALE: spreadsheet of working elevators. Owner says there is no problem.',
     89: 'WANTED: a new hardship. Owner has gotten all he can out of 2012.',
     90: 'NOTICE FROM THE CAFÉ: the place with the sign is not a parking space. Neckass has told four people it is.',
+    91: 'WANTED: anyone who remembers how hard it was. He would like to hear you say so.',
+    92: 'NOTICE: the fourth step at No. 12 is out. Residents know. Visitors are asked to have lived here.',
+    93: 'NOTICE FROM THE CONCERT HALL: the songs vary.',
 };
 
 // Letters not tied to a lead. The correspondents recur — his roommate,
@@ -2267,5 +2378,29 @@ export const LETTERS = {
     53: {
         body: 'The shower works if you turn it left, then right, then hit the pipe. I showed him that in 2022. He has since offered to teach me.',
         signature: 'His roommate',
+    },
+    54: {
+        body: 'I won nine appeals for my husband, more than he has. I keep the binder in the garage. I testified for automatic approvals, and he told the hearing I was “giving it all away.” I was. I would like nobody to need it.',
+        signature: 'A woman with a binder',
+    },
+    55: {
+        body: 'I walked four miles to school as a girl. There was no bus. I drive one now.',
+        signature: 'The bus driver',
+    },
+    56: {
+        body: 'I started Monday. He came by to ask how I had gotten in. I said I applied. He asked me to say it again, slower, and wrote it down.',
+        signature: 'A colleague, 26',
+    },
+    57: {
+        body: 'I hired him in 2017 because nobody else applied. He tells the new hires it was the most competitive process in the company’s history. He runs the process now. Nobody has gotten through.',
+        signature: 'The hiring manager',
+    },
+    58: {
+        body: 'He is the only person who can fix the timesheets. He has told me so. They broke in 2019, when he fixed them.',
+        signature: 'Payroll',
+    },
+    59: {
+        body: 'I teach the swimming lessons. He came to tell the children what they were missing. He stayed in the shallow end.',
+        signature: 'The pool',
     },
 };

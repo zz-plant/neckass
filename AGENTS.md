@@ -5,6 +5,13 @@ Maintain a static, browser-first daily newspaper about one man: one
 deterministic issue per day, no build pipeline, no backend, minimal
 complexity. The front page is the product.
 
+The point of the site is to teach, through the form of a newspaper: a
+person's suffering can matter without having been necessary, an achievement
+can be real without its conditions being justified, and neither gives anyone
+jurisdiction over what other people must endure. The paper shows this and
+never says it. The entry (`about.html`) may name it. An item can be funny and
+still fail this, by making him a cartoon or the critique a reflex.
+
 ## Critical references
 - `SPECIFICATIONS.md` is the source of truth for UI/UX and accessibility behavior.
 - `DEVELOPMENT.md` covers architecture and local validation flow.

@@ -11,6 +11,10 @@ reading.
 ## What this project is
 - **A paper, not an app.** The front page is the product; there is nothing to
   click but links. It reads without JavaScript.
+- **A lesson, in that form.** He went through something and now wants everyone
+  else to. The paper never says what is wrong with that. It runs the item, the
+  correction, and the letter from whoever it cost, and the
+  [entry](https://neckass.com/about) names the mechanism.
 - **Deterministic.** Issue *n* is a pure function of *n*: the lead, the
   briefs, the corrections, the weather. The archive is derived, not
   stored, and costs nothing.
