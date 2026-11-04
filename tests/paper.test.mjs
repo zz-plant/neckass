@@ -452,6 +452,31 @@ describe('The Gazette', () => {
         const bare = atob(cutSrc(POSES.explaining.joints).split(',')[1]);
         expect(shapesOf(bare).length).toBeLessThan(shapes.length);
 
+        // The paint is the same coats in all three, and every gradient a coat
+        // names is in that copy's defs. A missing one paints nothing at all,
+        // silently.
+        for (const [where, source] of [
+            ['rig', rig],
+            ['page', inline],
+            ['card', card],
+        ]) {
+            const named = [
+                ...source.matchAll(/fill="url\(#(w-[a-z]+-[abp])\)"/g),
+            ];
+            expect(named.length, where).toBeGreaterThan(30);
+            for (const [, id] of named) {
+                expect(source, `${where}: ${id}`).toContain(`id="${id}"`);
+            }
+        }
+        for (const [where, source] of [
+            ['rig', rig],
+            ['page', read('../styles.css')],
+        ]) {
+            expect(source, where).toMatch(
+                /\.wash\s*\{\s*mix-blend-mode: multiply/,
+            );
+        }
+
         // Every prop is a layer with a switch, off unless it is thrown, in
         // the rig and on the page, so the standing issue and the rig on its
         // own show him on the bare sheet.

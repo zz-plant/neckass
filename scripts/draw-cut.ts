@@ -14,7 +14,8 @@
  * others as they were.
  *
  * Only the man and what he holds are drawn here. The scenery is kept in
- * the three files as it is.
+ * the three files as it is. His watercolor is laid here too, coat by coat,
+ * in the joint of whatever it is on, so it moves with him.
  *
  * Usage: bun run cut:draw
  */
@@ -58,7 +59,18 @@ type Joint =
     | 'legFar';
 type Held = 'phone' | 'cup' | 'hat';
 type Group = { joint?: Joint; tag?: string; note?: string; items: Item[] };
-type Item = Shape | Group | { held: Held };
+// A coat of watercolor: one shape in one pigment, laid over the line and
+// multiplied into it, so the line stays black.
+type Wash = {
+    // What it is filled with: a pigment's gradient, or for a fleck its colour.
+    wash: string;
+    // The darker line where a coat dried, in the pigment's own colour.
+    rim?: string;
+    alpha: number;
+    d?: string;
+    circle?: [number, number, number];
+};
+type Item = Shape | Group | { held: Held } | Wash;
 
 // ---------------------------------------------------------------------
 // The hand.
@@ -640,6 +652,361 @@ const dot = (
     tag,
 });
 
+// ---------------------------------------------------------------------
+// The watercolor.
+//
+// Someone went over the print with a cheap set of paints. Nothing here is
+// an image: each coat is a shape, seeded per part like the line, so a redraw
+// is the same and repainting one part leaves the others.
+//
+// What makes it read as water and not as fill is how it dries. A coat is
+// pale in the middle with the pigment gone to its edge, and a darker line
+// where it stopped (its gradient and its stroke). It is laid loose and off
+// register, so it leaves slivers of bare paper and spills past the line.
+// Into it, wet, go soft pools of the same colour and of a second one, whose
+// gradients fade to nothing, so they have no edge. Everything multiplies, so
+// the line stays black.
+//
+// The paper's own inks are spoken for (the rubric, the weather's two), so
+// these are the paintbox's.
+const PIGMENT = {
+    suit: '#2f74b0',
+    trousers: '#3a6a9e',
+    violet: '#7350a8',
+    teal: '#1f9a90',
+    skin: '#f0a878',
+    rose: '#e0523f',
+    umber: '#9a5f30',
+    tie: '#d03224',
+    wine: '#861c3c',
+    sepia: '#7d4a24',
+    ochre: '#e0a428',
+    cool: '#7ea8c8',
+    slate: '#5f7488',
+    ground: '#7f9c90',
+} as const;
+type Pigment = keyof typeof PIGMENT;
+
+// A coat lies pale in the middle and dark at the edge, the pale part to one
+// side; a pool is strongest in the middle and fades out. These go in the
+// drawing's defs, one set per pigment, written by `washDefs`.
+const USED = new Set<string>();
+const used = (id: string) => {
+    USED.add(id);
+    return `url(#${id})`;
+};
+const coatFill = (p: Pigment, side: 'a' | 'b') => used(`w-${p}-${side}`);
+const poolFill = (p: Pigment) => used(`w-${p}-p`);
+
+function washDefs(): string[] {
+    const stops = (hex: string, list: [number, number][]) =>
+        list
+            .map(
+                ([offset, alpha]) =>
+                    `<stop offset="${offset}" stop-color="${hex}" stop-opacity="${alpha}"/>`,
+            )
+            .join('');
+    const coat = [
+        [0, 0.34],
+        [0.5, 0.62],
+        [0.82, 0.86],
+        [1, 1],
+    ] as [number, number][];
+    const pool = [
+        [0, 0.9],
+        [0.45, 0.6],
+        [0.8, 0.16],
+        [1, 0],
+    ] as [number, number][];
+    const form = (id: string, hex: string, side: string) =>
+        side === 'a'
+            ? `<radialGradient id="${id}" cx=".42" cy=".36" r=".78">${stops(hex, coat)}</radialGradient>`
+            : side === 'b'
+              ? `<radialGradient id="${id}" cx=".6" cy=".62" r=".82">${stops(hex, coat)}</radialGradient>`
+              : `<radialGradient id="${id}">${stops(hex, pool)}</radialGradient>`;
+    return [...USED].sort().map((id) => {
+        const [, name, side] = id.split('-');
+        return form(id, PIGMENT[name as Pigment], side);
+    });
+}
+
+const round1 = (x: number) => Math.round(x * 10) / 10;
+
+// A line's outline, thinned to a ring of about one point per `gap` units.
+function ringOf(lines: Line[], gap = 8): Pt[] {
+    const all = lines.flatMap((line) => trace(line).points);
+    let perimeter = 0;
+    for (let i = 0; i < all.length; i++)
+        perimeter += dist(all[i], all[(i + 1) % all.length]);
+    const n = Math.max(8, Math.min(30, Math.round(perimeter / gap)));
+    const out: Pt[] = [];
+    let walked = 0;
+    let next = 0;
+    for (let i = 0; i < all.length && out.length < n; i++) {
+        if (walked >= next) {
+            out.push(all[i]);
+            next += perimeter / n;
+        }
+        walked += dist(all[i], all[(i + 1) % all.length]);
+    }
+    return out;
+}
+
+const signedArea = (ring: Pt[]) =>
+    ring.reduce((sum, p, i) => {
+        const q = ring[(i + 1) % ring.length];
+        return sum + p[0] * q[1] - q[0] * p[1];
+    }, 0) / 2;
+
+const inside = (ring: Pt[], [x, y]: Pt): boolean => {
+    let hit = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [xi, yi] = ring[i];
+        const [xj, yj] = ring[j];
+        if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+            hit = !hit;
+    }
+    return hit;
+};
+
+// A slow wobble round a ring, from about -1 to 1, with no seam.
+function swell(n: number, rnd: () => number): number[] {
+    const waves = [1, 2, 3, 5].map((cycles, i) => ({
+        cycles,
+        phase: rnd() * Math.PI * 2,
+        size: [0.42, 0.36, 0.26, 0.16][i],
+    }));
+    return Array.from({ length: n }, (_, i) =>
+        waves.reduce(
+            (sum, { cycles, phase, size }) =>
+                sum + Math.sin((i / n) * cycles * Math.PI * 2 + phase) * size,
+            0,
+        ),
+    );
+}
+
+const short = (x: number) => {
+    const text = String(round1(x));
+    return text.replace(/^(-?)0\./, '$1.');
+};
+const pair = (a: number, b: number) => {
+    const y = short(b);
+    return `${short(a)}${y.startsWith('-') ? '' : ' '}${y}`;
+};
+
+// A ring as a closed curve through the midpoints of its sides, relative, so
+// a page of paint is not a page of coordinates.
+function ringPath(ring: Pt[]): string {
+    const at = (i: number) => ring[(i + ring.length) % ring.length];
+    const start = mid(at(-1), at(0)).map(round1) as Pt;
+    let d = `M${pair(start[0], start[1])}q`;
+    let here = start;
+    const parts: string[] = [];
+    for (let i = 0; i < ring.length; i++) {
+        const end = mid(at(i), at(i + 1)).map(round1) as Pt;
+        const ctrl = at(i).map(round1) as Pt;
+        parts.push(
+            `${pair(ctrl[0] - here[0], ctrl[1] - here[1])} ${pair(end[0] - here[0], end[1] - here[1])}`,
+        );
+        here = end;
+    }
+    d += parts.join(' ');
+    return `${d}z`;
+}
+
+// A blot: a wobbling round shape.
+function blot(
+    centre: Pt,
+    radius: number,
+    rnd: () => number,
+    stretch: Pt = [1, 1],
+    rough = 0.34,
+): Pt[] {
+    const n = Math.max(7, Math.min(16, Math.round(radius * 1.3)));
+    const wobble = swell(n, rnd);
+    return Array.from({ length: n }, (_, i) => {
+        const angle = (i / n) * Math.PI * 2;
+        // A rougher blot crinkles as well as wanders.
+        const crinkle = rough > 0.34 ? (rnd() - 0.5) * rough * 0.7 : 0;
+        const r = radius * (1 + wobble[i] * rough + crinkle);
+        return [
+            centre[0] + Math.cos(angle) * r * stretch[0],
+            centre[1] + Math.sin(angle) * r * stretch[1],
+        ] as Pt;
+    });
+}
+
+// Somewhere in a region, leaning toward what `lean` scores highest.
+function spot(
+    region: Pt[],
+    rnd: () => number,
+    lean: (p: Pt) => number = () => 0,
+): Pt {
+    const xs = region.map((p) => p[0]);
+    const ys = region.map((p) => p[1]);
+    const [x0, x1] = [Math.min(...xs), Math.max(...xs)];
+    const [y0, y1] = [Math.min(...ys), Math.max(...ys)];
+    let best: Pt = [(x0 + x1) / 2, (y0 + y1) / 2];
+    let score = Number.NEGATIVE_INFINITY;
+    for (let tries = 0, found = 0; tries < 60 && found < 4; tries++) {
+        const p: Pt = [x0 + rnd() * (x1 - x0), y0 + rnd() * (y1 - y0)];
+        if (!inside(region, p)) continue;
+        found += 1;
+        const s = lean(p) + rnd() * 0.4;
+        if (s > score) {
+            score = s;
+            best = p;
+        }
+    }
+    return best;
+}
+
+type Drop = {
+    pigment: Pigment;
+    alpha: number;
+    r: [number, number];
+    count?: number;
+    lean?: (p: Pt) => number;
+    at?: Pt;
+    stretch?: Pt;
+    // A backrun: a wet drop that pushed the pigment out ahead of it, pale
+    // inside, with a crinkled dark edge. Otherwise a soft pool, with no edge.
+    backrun?: boolean;
+};
+type Coat = {
+    pigment: Pigment;
+    alpha: number;
+    // How far the edge wanders from the line, and how far off register.
+    spill: number;
+    shift: number;
+    // Where the brush missed: how many, how big.
+    holes?: [number, number, number];
+    drops?: Drop[];
+};
+
+const low = (y: number) => (p: Pt) => (p[1] - y) / 40;
+
+// Paints a region: the base coat, then what was dropped into it.
+function tint(name: string, lines: Line[], coat: Coat): Wash[] {
+    const rnd = seeded(`wash ${name}`);
+    const region = ringOf(lines);
+    const outward = signedArea(region) > 0 ? 1 : -1;
+    const wobble = swell(region.length, rnd);
+    const angle = rnd() * Math.PI * 2;
+    const shift: Pt = [
+        Math.cos(angle) * coat.shift,
+        Math.sin(angle) * coat.shift,
+    ];
+    const edge = region.map((p, i) => {
+        const prev = region[(i - 1 + region.length) % region.length];
+        const next = region[(i + 1) % region.length];
+        const along = unit(sub(next, prev));
+        const normal: Pt = [along[1] * outward, -along[0] * outward];
+        const out = coat.spill * (0.2 + wobble[i] * 1.5);
+        return add(add(p, mul(normal, out)), shift);
+    });
+    let d = ringPath(edge);
+    const [howMany, smallest, largest] = coat.holes ?? [0, 0, 0];
+    for (let i = 0; i < howMany; i++) {
+        const r = smallest + rnd() * (largest - smallest);
+        d += ringPath(blot(spot(region, rnd), r, rnd, [0.8, 1.4]));
+    }
+    const side = rnd() < 0.5 ? 'a' : 'b';
+    const out: Wash[] = [
+        {
+            wash: coatFill(coat.pigment, side),
+            rim: PIGMENT[coat.pigment],
+            alpha: coat.alpha,
+            d,
+        },
+    ];
+    for (const drop of coat.drops ?? []) {
+        for (let i = 0; i < (drop.count ?? 1); i++) {
+            const r = drop.r[0] + rnd() * (drop.r[1] - drop.r[0]);
+            const at = drop.at ?? spot(region, rnd, drop.lean);
+            out.push(
+                drop.backrun
+                    ? {
+                          wash: coatFill(drop.pigment, side),
+                          rim: PIGMENT[drop.pigment],
+                          alpha: drop.alpha,
+                          d: ringPath(blot(at, r, rnd, drop.stretch, 0.62)),
+                      }
+                    : {
+                          wash: poolFill(drop.pigment),
+                          alpha: drop.alpha,
+                          d: ringPath(blot(at, r, rnd, drop.stretch)),
+                      },
+            );
+        }
+    }
+    return out;
+}
+
+// What each thing is painted in. The same few recipes, a seed apart.
+const JACKET: Coat = {
+    pigment: 'suit',
+    alpha: 0.78,
+    spill: 1.8,
+    shift: 1.3,
+    holes: [1, 2.6, 4],
+    drops: [
+        { pigment: 'suit', alpha: 0.7, r: [12, 16], lean: low(130) },
+        { pigment: 'violet', alpha: 0.62, r: [9, 13], lean: low(110) },
+        {
+            pigment: 'teal',
+            alpha: 0.55,
+            r: [7, 10],
+            lean: (p) => (110 - p[1]) / 40,
+        },
+        { pigment: 'suit', alpha: 0.46, r: [5, 7.5], backrun: true },
+        { pigment: 'violet', alpha: 0.4, r: [3.5, 5.5], backrun: true },
+    ],
+};
+const SLEEVE: Coat = {
+    pigment: 'suit',
+    alpha: 0.76,
+    spill: 1.4,
+    shift: 1,
+    drops: [
+        { pigment: 'violet', alpha: 0.55, r: [6, 8], stretch: [0.9, 1.5] },
+        { pigment: 'teal', alpha: 0.42, r: [4, 6] },
+        { pigment: 'suit', alpha: 0.42, r: [3, 4.5], backrun: true },
+    ],
+};
+const TROUSER: Coat = {
+    pigment: 'trousers',
+    alpha: 0.76,
+    spill: 1.7,
+    shift: 1.2,
+    holes: [1, 2, 3.2],
+    drops: [
+        {
+            pigment: 'trousers',
+            alpha: 0.72,
+            r: [8, 11],
+            lean: low(235),
+            stretch: [0.9, 2.2],
+        },
+        { pigment: 'violet', alpha: 0.58, r: [7, 10], stretch: [0.9, 1.8] },
+        { pigment: 'sepia', alpha: 0.42, r: [5, 7], lean: low(258) },
+        { pigment: 'trousers', alpha: 0.46, r: [4, 6], backrun: true },
+    ],
+};
+const SKIN: Coat = {
+    pigment: 'skin',
+    alpha: 0.7,
+    spill: 1.1,
+    shift: 0.8,
+};
+const SHOE: Coat = {
+    pigment: 'sepia',
+    alpha: 0.8,
+    spill: 1.1,
+    shift: 0.8,
+    drops: [{ pigment: 'wine', alpha: 0.5, r: [5, 8] }],
+};
+
 // The legs and the seat of the trousers are one shape.
 const legNear = capsule([88, 156], 10.6, [86.8, 263], 7.8);
 const legFar = mirror(legNear);
@@ -766,7 +1133,9 @@ const LEGS: Item[] = [
         joint: 'legFar',
         items: [
             shape('body', 'leg-far', legFar),
+            ...tint('leg-far', [legFar], TROUSER),
             shape('part', 'shoe-far', mirror(shoeNear)),
+            ...tint('shoe-far', [mirror(shoeNear)], SHOE),
             shape(
                 'detail',
                 'welt-far',
@@ -783,7 +1152,9 @@ const LEGS: Item[] = [
         joint: 'legNear',
         items: [
             shape('body', 'leg-near', legNear),
+            ...tint('leg-near', [legNear], TROUSER),
             shape('part', 'shoe-near', shoeNear),
+            ...tint('shoe-near', [shoeNear], SHOE),
             shape(
                 'detail',
                 'welt-near',
@@ -797,64 +1168,67 @@ const LEGS: Item[] = [
         ],
     },
     shape('body', 'seat', seat),
+    ...tint('seat', [seat], { ...TROUSER, holes: [0, 0, 0] }),
     shape('detail', 'fly', open([100.2, 156], [100.6, 166], [99.4, 172.6])),
 ];
 
 // The face is drawn a size up from the neck, about the chin, so it reads
 // at the size the paper runs the cut.
+const FACE_SIZE = 1.08;
+const faceAt = (x: number, y: number): [number, number] => [
+    Math.round((100 + (x - 100) * FACE_SIZE) * 10) / 10,
+    Math.round((62 + (y - 62) * FACE_SIZE) * 10) / 10,
+];
+const faceLine = (line: Line): Line => ({
+    closed: line.closed,
+    nodes: line.nodes.map((node) =>
+        node.length === 3
+            ? c(...faceAt(node[0], node[1]))
+            : faceAt(node[0], node[1]),
+    ),
+});
 function face(item: Item): Item {
     if (!('ink' in item)) return item;
-    const k = 1.08;
-    const at = (x: number, y: number): [number, number] => [
-        Math.round((100 + (x - 100) * k) * 10) / 10,
-        Math.round((62 + (y - 62) * k) * 10) / 10,
-    ];
     if (item.circle) {
         const [x, y, r] = item.circle;
-        return { ...item, circle: [...at(x, y), Math.round(r * k * 10) / 10] };
+        return {
+            ...item,
+            circle: [...faceAt(x, y), Math.round(r * FACE_SIZE * 10) / 10],
+        };
     }
-    return {
-        ...item,
-        lines: item.lines?.map((line) => ({
-            closed: line.closed,
-            nodes: line.nodes.map((node) =>
-                node.length === 3
-                    ? c(...at(node[0], node[1]))
-                    : at(node[0], node[1]),
-            ),
-        })),
-    };
+    return { ...item, lines: item.lines?.map(faceLine) };
 }
+
+const earLine = loop(
+    [116, 36.4],
+    [121.6, 34.8],
+    [125, 38.6],
+    [124.6, 45],
+    [121.4, 49.6],
+    [116.4, 49],
+);
+const neckLine = loop(
+    c(92.4, 52),
+    c(107.6, 52),
+    [108, 66],
+    c(108.4, 82),
+    c(91.6, 82),
+    [92, 66],
+);
 
 const HEAD: Group = {
     joint: 'tilt',
     items: [
-        shape(
-            'part',
-            'neck',
-            loop(
-                c(92.4, 52),
-                c(107.6, 52),
-                [108, 66],
-                c(108.4, 82),
-                c(91.6, 82),
-                [92, 66],
-            ),
-        ),
+        shape('part', 'neck', neckLine),
+        ...tint('neck', [neckLine], {
+            ...SKIN,
+            drops: [
+                { pigment: 'umber', alpha: 0.6, r: [8, 10], at: [100, 72] },
+            ],
+        }),
         shape('detail', 'apple', open([97.6, 64.6], [99.8, 67.6], [102.2, 65])),
         ...[
-            shape(
-                'part',
-                'ear',
-                loop(
-                    [116, 36.4],
-                    [121.6, 34.8],
-                    [125, 38.6],
-                    [124.6, 45],
-                    [121.4, 49.6],
-                    [116.4, 49],
-                ),
-            ),
+            shape('part', 'ear', earLine),
             shape('part', 'head', headLine),
             shape(
                 'solid',
@@ -916,26 +1290,64 @@ const HEAD: Group = {
                 open([110.2, 48.8], [112, 52.8]),
             ),
         ].map(face),
+        ...tint('ear', [faceLine(earLine)], SKIN),
+        ...tint('head', [faceLine(headLine)], {
+            ...SKIN,
+            spill: 1.3,
+            drops: [
+                { pigment: 'rose', alpha: 0.62, r: [6, 7], at: [112, 49] },
+                { pigment: 'rose', alpha: 0.5, r: [5, 6], at: [90, 49] },
+                { pigment: 'umber', alpha: 0.4, r: [8, 10], at: [100, 66] },
+            ],
+        }),
+        // The hair is the ink; what shows of the paint is where it ran past.
+        ...tint(
+            'hair',
+            [
+                faceLine(
+                    loop(
+                        [79.8, 29],
+                        [92, 10.6],
+                        [113, 11],
+                        [121.8, 29.6],
+                        [100, 22],
+                    ),
+                ),
+            ],
+            { pigment: 'sepia', alpha: 0.5, spill: 2.2, shift: 1 },
+        ),
         { held: 'hat' },
     ],
 };
 
+const tieLine = loop(
+    c(97.6, 81),
+    [96.4, 100],
+    c(95.2, 125.6),
+    c(100, 133.4),
+    c(104.8, 125.6),
+    [103.6, 100],
+    c(102.4, 81),
+);
+const knotLine = loop(c(96, 74.6), c(104, 74.6), c(102.6, 82.6), c(97.4, 82.6));
 const TIE: Group = {
     tag: 'tie',
     items: [
-        shape(
-            'part',
-            'tie',
-            loop(
-                c(97.6, 81),
-                [96.4, 100],
-                c(95.2, 125.6),
-                c(100, 133.4),
-                c(104.8, 125.6),
-                [103.6, 100],
-                c(102.4, 81),
-            ),
-        ),
+        shape('part', 'tie', tieLine),
+        ...tint('tie', [tieLine], {
+            pigment: 'tie',
+            alpha: 0.86,
+            spill: 0.9,
+            shift: 0.7,
+            drops: [
+                {
+                    pigment: 'wine',
+                    alpha: 0.75,
+                    r: [4, 6],
+                    stretch: [0.7, 1.8],
+                },
+            ],
+        }),
         shape(
             'hatch',
             'tie-stripes',
@@ -943,11 +1355,13 @@ const TIE: Group = {
             open([96, 104.4], [104, 98.8]),
             open([95.6, 115.6], [104.4, 109.8]),
         ),
-        shape(
-            'part',
-            'knot',
-            loop(c(96, 74.6), c(104, 74.6), c(102.6, 82.6), c(97.4, 82.6)),
-        ),
+        shape('part', 'knot', knotLine),
+        ...tint('knot', [knotLine], {
+            pigment: 'tie',
+            alpha: 0.9,
+            spill: 0.5,
+            shift: 0.4,
+        }),
     ],
 };
 
@@ -965,6 +1379,18 @@ const TORSO: Item[] = [
             c(84.4, 152),
         ),
     ),
+    // The shirt is the paper, with a cool shadow down it from the jacket.
+    ...tint('shirt', [loop(c(107, 80), c(115, 80), c(115, 150), c(108, 150))], {
+        pigment: 'cool',
+        alpha: 0.5,
+        spill: 1.2,
+        shift: 0.6,
+    }),
+    ...tint(
+        'shirt-near',
+        [loop(c(86, 82), c(92, 82), c(92, 140), c(86, 140))],
+        { pigment: 'cool', alpha: 0.42, spill: 1.2, shift: 0.5 },
+    ),
     TIE,
     shape('part', 'collar-near', loop(c(89.4, 70), c(99.6, 75.6), c(95, 84.6))),
     shape(
@@ -976,6 +1402,11 @@ const TORSO: Item[] = [
         'part',
         'belt',
         loop(c(89, 147.8), c(111, 147.8), c(111, 155.6), c(89, 155.6)),
+    ),
+    ...tint(
+        'belt',
+        [loop(c(89, 147.8), c(111, 147.8), c(111, 155.6), c(89, 155.6))],
+        { pigment: 'sepia', alpha: 0.8, spill: 0.5, shift: 0.4 },
     ),
     shape(
         'solid',
@@ -994,6 +1425,16 @@ const TORSO: Item[] = [
         runs: [jacket.far.shoulder, jacket.far.rest],
         closed: true,
     },
+    ...tint(
+        'jacket-near',
+        [jacket.near.shoulder.line, jacket.near.rest.line],
+        JACKET,
+    ),
+    ...tint(
+        'jacket-far',
+        [jacket.far.shoulder.line, jacket.far.rest.line],
+        JACKET,
+    ),
     shape(
         'detail',
         'lapels',
@@ -1006,6 +1447,18 @@ const TORSO: Item[] = [
         'part',
         'pen',
         loop(c(115.8, 94.4), c(118.6, 94.4), c(118.6, 101.6), c(115.8, 101.6)),
+    ),
+    ...tint(
+        'pen',
+        [
+            loop(
+                c(115.8, 94.4),
+                c(118.6, 94.4),
+                c(118.6, 101.6),
+                c(115.8, 101.6),
+            ),
+        ],
+        { pigment: 'ochre', alpha: 0.95, spill: 0.4, shift: 0.3 },
     ),
     shape(
         'detail',
@@ -1048,6 +1501,7 @@ function arm(side: 'Near' | 'Far'): Item[] {
                     joint: `forearm${side}`,
                     items: [
                         shape('body', `forearm-${s}`, forearm),
+                        ...tint(`forearm-${s}`, [forearm], SLEEVE),
                         shape(
                             'detail',
                             `cuff-${s}`,
@@ -1060,6 +1514,7 @@ function arm(side: 'Near' | 'Far'): Item[] {
                             items: [
                                 { held: far ? 'phone' : 'cup' },
                                 shape('part', `hand-${s}`, flip(handNear)),
+                                ...tint(`hand-${s}`, [flip(handNear)], SKIN),
                                 shape(
                                     'detail',
                                     `fingers-${s}`,
@@ -1071,6 +1526,7 @@ function arm(side: 'Near' | 'Far'): Item[] {
                     ],
                 },
                 shape('body', `arm-${s}`, sleeve),
+                ...tint(`arm-${s}`, [sleeve], SLEEVE),
                 shape(
                     'hatch',
                     `elbow-${s}`,
@@ -1093,6 +1549,15 @@ function arm(side: 'Near' | 'Far'): Item[] {
             runs: [jacket[s].shoulder, jacket[s].seam, jacket[s].inside],
             closed: true,
         },
+        ...tint(
+            `cap-${s}`,
+            [
+                jacket[s].shoulder.line,
+                jacket[s].seam.line,
+                jacket[s].inside.line,
+            ],
+            { ...SLEEVE, spill: 1.1 },
+        ),
     ] as Item[];
 }
 
@@ -1110,21 +1575,109 @@ const DUST: Item[] = [
     ),
 ];
 
+// Behind him, what was on the brush when it was rinsed; under him, one loose
+// stroke for the ground; across the sheet, the flick. All on the paper, so
+// they keep still while he moves.
+const BACK: Wash[] = (() => {
+    const rnd = seeded('wash back');
+    const blooms: [Pigment, number, Pt, number, Pt][] = [
+        ['ochre', 0.3, [60, 62], 21, [1, 1.3]],
+        ['teal', 0.24, [147, 128], 19, [0.95, 1.5]],
+        ['rose', 0.18, [136, 42], 12, [1.15, 0.9]],
+        ['violet', 0.18, [54, 196], 14, [0.9, 1.4]],
+    ];
+    return blooms.flatMap(([pigment, alpha, at, r, stretch]) => [
+        {
+            wash: coatFill(pigment, 'a'),
+            rim: PIGMENT[pigment],
+            alpha,
+            d: ringPath(blot(at, r, rnd, stretch, 0.8)),
+        },
+        // And a little more dropped in, off to one side, while it was wet.
+        {
+            wash: poolFill(pigment),
+            alpha: alpha * 1.1,
+            d: ringPath(
+                blot(add(at, [r * 0.3, r * 0.45]), r * 0.55, rnd, stretch),
+            ),
+        },
+    ]);
+})();
+const GROUND: Item[] = tint(
+    'ground',
+    [
+        loop(
+            [50, 268],
+            [84, 262],
+            [122, 263],
+            [152, 268],
+            [158, 275],
+            [130, 281],
+            [90, 283],
+            [56, 279],
+            [44, 273],
+        ),
+    ],
+    {
+        pigment: 'ground',
+        alpha: 0.6,
+        spill: 2.4,
+        shift: 0.8,
+        drops: [
+            { pigment: 'teal', alpha: 0.42, r: [9, 12], stretch: [1.8, 0.6] },
+            { pigment: 'sepia', alpha: 0.36, r: [7, 10], stretch: [1.8, 0.6] },
+        ],
+    },
+);
+const SPATTER: Wash[] = (() => {
+    const rnd = seeded('spatter');
+    const inks: Pigment[] = ['suit', 'tie', 'suit', 'ochre', 'violet', 'tie'];
+    return Array.from({ length: 12 }, (_, i) => {
+        // Thrown from the brush, so they fall in a loose band to either side
+        // of him, thinning out as they go.
+        const side = i % 2 ? 1 : -1;
+        const reach = 42 + rnd() * rnd() * 52;
+        return {
+            wash: PIGMENT[inks[i % inks.length]],
+            alpha: 0.45 + rnd() * 0.35,
+            circle: [
+                round1(100 + side * reach),
+                round1(30 + rnd() * 236),
+                round1(0.4 + rnd() * rnd() * 1.5),
+            ] as [number, number, number],
+        };
+    });
+})();
+
 const FIGURE: Item[] = [
+    ...BACK,
+    ...GROUND,
     ...LEGS,
     { joint: 'lean', items: [HEAD, ...TORSO, ...arm('Far'), ...arm('Near')] },
+    ...SPATTER,
     ...DUST,
 ];
 
 // What he holds is scenery, drawn once by the hand that drew the rest and
 // kept here as it was drawn.
-const HELD: Record<Held, { ink: Ink; d: string }[]> = {
+const HELD: Record<Held, ({ ink: Ink; d: string } | Wash)[]> = {
     phone: [
         {
             ink: 'part',
             d: 'M130.8 155.8 q6.1 -2.1 12.2 -0.1 q3.2 0.6 2.8 2.8 q0.3 16.2 0.1 32.5 q0.9 3.1 -3 3 q-6 -1.8 -12 0.3 q-2 -0.7 -3.2 -3.3 q0.2 -16.1 0.1 -32.2 q0.2 -1.7 3 -3 z',
         },
         { ink: 'detail', d: 'M134.1 188.2 q3.1 0.5 6.1 -0.3' },
+        ...tint(
+            'phone',
+            [loop(c(129, 156), c(146, 156), c(146, 194), c(129, 194))],
+            {
+                pigment: 'slate',
+                alpha: 0.8,
+                spill: 0.8,
+                shift: 0.6,
+                drops: [{ pigment: 'violet', alpha: 0.5, r: [5, 7] }],
+            },
+        ),
     ],
     cup: [
         {
@@ -1136,6 +1689,17 @@ const HELD: Record<Held, { ink: Ink; d: string }[]> = {
             d: 'M43.6 158.1 q11 1 22 0.3 q-0.5 2.1 0.1 4.3 q-10.7 -1.4 -21.3 0.4 q0.3 -2.6 -0.8 -5 z',
         },
         { ink: 'hatch', d: 'M49.1 171.8 q6.1 0.8 12.2 0.4' },
+        ...tint(
+            'cup',
+            [loop(c(46, 163), c(63.6, 163), c(61.8, 187), c(47.8, 187))],
+            {
+                pigment: 'ochre',
+                alpha: 0.8,
+                spill: 0.9,
+                shift: 0.6,
+                drops: [{ pigment: 'sepia', alpha: 0.5, r: [5, 7] }],
+            },
+        ),
     ],
     hat: [
         {
@@ -1150,6 +1714,20 @@ const HELD: Record<Held, { ink: Ink; d: string }[]> = {
             ink: 'part',
             d: 'M70 23.7 q30.7 -7.2 59.9 -0.1 q-29 6.3 -59.9 0.1 z',
         },
+        ...tint(
+            'hat',
+            [
+                loop(c(86, 22), [86, 8], [100, 2.4], [114, 8], c(114.4, 22)),
+                loop(c(70, 23.7), [100, 18.6], c(130, 23.6), [100, 28.6]),
+            ],
+            {
+                pigment: 'umber',
+                alpha: 0.8,
+                spill: 0.9,
+                shift: 0.6,
+                drops: [{ pigment: 'sepia', alpha: 0.5, r: [6, 8] }],
+            },
+        ),
     ],
 };
 
@@ -1176,6 +1754,7 @@ const scanDefs = (indent: string) => [
     ...SCANS.flatMap(({ id, seed }) =>
         scanFilter(`cut-ink-${id}`, seed, `${indent}    `),
     ),
+    ...washDefs().map((line) => `${indent}    ${line}`),
     `${indent}</defs>`,
 ];
 
@@ -1200,14 +1779,29 @@ const kebab = (joint: Joint) =>
         : joint.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
 const isGroup = (item: Item): item is Group => 'items' in item;
 const isHeld = (item: Item): item is { held: Held } => 'held' in item;
+const isWash = (item: object): item is Wash => 'wash' in item;
+
+// A coat's own colour, written on it, so all three copies take it from here.
+const washPaint = ({ wash, rim, alpha }: Wash) =>
+    `fill="${wash}" fill-opacity="${alpha}"${rim ? ` stroke="${rim}"` : ''}`;
 
 function svgMarkup(items: Item[], indent: string): string[] {
     const lines: string[] = [];
     for (const item of items) {
-        if (isHeld(item)) {
+        if (isWash(item)) {
+            lines.push(
+                item.circle
+                    ? `${indent}<circle class="wash" ${washPaint(item)} cx="${item.circle[0]}" cy="${item.circle[1]}" r="${item.circle[2]}" />`
+                    : `${indent}<path class="wash" ${washPaint(item)} d="${item.d}" />`,
+            );
+        } else if (isHeld(item)) {
             lines.push(`${indent}<g class="scene-${item.held}">`);
-            for (const { ink, d } of HELD[item.held]) {
-                lines.push(`${indent}    <path class="${ink}" d="${d}" />`);
+            for (const part of HELD[item.held]) {
+                lines.push(
+                    isWash(part)
+                        ? `${indent}    <path class="wash" ${washPaint(part)} d="${part.d}" />`
+                        : `${indent}    <path class="${part.ink}" d="${part.d}" />`,
+                );
             }
             lines.push(`${indent}</g>`);
         } else if (isGroup(item)) {
@@ -1259,7 +1853,13 @@ const CARD_INK: Record<Ink, string> = {
 function cardCode(items: Item[]): string[] {
     const out: string[] = [];
     for (const item of items) {
-        if (isHeld(item)) {
+        if (isWash(item)) {
+            out.push(
+                item.circle
+                    ? `\`<circle \${WASH} ${washPaint(item)} cx="${item.circle[0]}" cy="${item.circle[1]}" r="${item.circle[2]}" />\``
+                    : `\`<path \${WASH} ${washPaint(item)} d="${item.d}" />\``,
+            );
+        } else if (isHeld(item)) {
             out.push(`held('${item.held}')`);
         } else if (isGroup(item)) {
             if (item.note) continue;
@@ -1354,7 +1954,13 @@ function writeCard() {
     const held = Object.entries(HELD)
         .map(
             ([prop, shapes]) =>
-                `${prop}: [${shapes.map(({ ink, d }) => `\`<path \${${CARD_INK[ink]}} d="${d}" />\``).join(', ')}]`,
+                `${prop}: [${shapes
+                    .map((part) =>
+                        isWash(part)
+                            ? `\`<path \${WASH} ${washPaint(part)} d="${part.d}" />\``
+                            : `\`<path \${${CARD_INK[part.ink]}} d="${part.d}" />\``,
+                    )
+                    .join(', ')}]`,
         )
         .join(', ');
     source = source.replace(
@@ -1364,7 +1970,7 @@ function writeCard() {
     const origins = Object.entries(PIVOTS)
         .map(([joint, [x, y]]) => `${joint}: [${x}, ${y}]`)
         .join(', ');
-    const scan = scanFilter('cut-ink', SCANS[0].seed, '')
+    const scan = [...scanFilter('cut-ink', SCANS[0].seed, ''), ...washDefs()]
         .map((line) => line.trim())
         .join('');
     source = source.replace(

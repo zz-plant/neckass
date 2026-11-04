@@ -980,6 +980,51 @@ a:focus-visible {
     stroke-linecap: round;
 }
 
+/* The watercolor, gone over the print afterward by someone with a cheap set
+   of paints. Each coat carries its own pigment (scripts/draw-cut.ts). It is
+   multiplied into the sheet so the line stays black, and dries with a darker
+   edge. On the dark sheet the same paint is screened, since nothing multiplies
+   into black. */
+.cut-figure .wash {
+    mix-blend-mode: multiply;
+    fill-rule: evenodd;
+    stroke-width: 0.7;
+    stroke-opacity: 0.5;
+    stroke-linejoin: round;
+}
+
+/* Skin is the one coat that has to stay light on the dark sheet: screened
+   thin, it reads as a darker man, which is not the joke. */
+[data-theme="dark"] .cut-figure .wash {
+    mix-blend-mode: screen;
+}
+
+@media screen {
+    [data-theme="dark"] .cut-figure :is(#w-skin-a, #w-skin-b) stop {
+        stop-opacity: 1;
+    }
+
+    [data-theme="dark"] .cut-figure .wash[fill^="url(#w-skin"] {
+        fill-opacity: 1;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .cut-figure .wash {
+        mix-blend-mode: screen;
+    }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .cut-figure :is(#w-skin-a, #w-skin-b) stop {
+        stop-opacity: 1;
+    }
+
+    :root:not([data-theme]) .cut-figure .wash[fill^="url(#w-skin"] {
+        fill-opacity: 1;
+    }
+}
+
 /* The scan: every edge caught a little in the paper's fibre (the filters
    are in the drawing's defs). While the cut plays, the line boils through
    three cuts of the same noise; at rest it is the first. */
@@ -2272,6 +2317,11 @@ a:focus-visible {
    the skip link. Colours are set as literals so a reader in the dark
    theme does not print a black page. */
 @media print {
+    [data-theme="dark"] .cut-figure .wash,
+    :root:not([data-theme]) .cut-figure .wash {
+        mix-blend-mode: multiply;
+    }
+
     :root,
     :root:not([data-theme]),
     [data-theme="dark"] {
