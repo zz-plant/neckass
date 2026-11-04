@@ -46,7 +46,7 @@ export const GROWTH = {
             ],
         },
         // After No. 789, which No. 800's editorial cites as it ran.
-        { from: 790, size: 356, perIssue: 4 },
+        { from: 790, size: 375, perIssue: 4 },
     ],
     corrections: [
         { from: 1, size: 50 },
