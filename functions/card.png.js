@@ -19,6 +19,7 @@
 
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm';
 import yogaWasm from 'yoga-wasm-web/dist/yoga.wasm';
+import { EDITIONS } from '../data/editions.js';
 import {
     issueNumber,
     parseIssueDate,
@@ -33,6 +34,8 @@ import {
     HEIGHT,
     initCardRenderer,
     issueFolio,
+    issueStamp,
+    lettersLine,
     renderCardPng,
     WIDTH,
 } from './lib/card.mjs';
@@ -90,10 +93,14 @@ export async function onRequestGet({ request, env, waitUntil }) {
 
     await rendererReady;
     const fonts = await loadFonts(env, request);
+    // The deck goes in the link's description, under the card, where a
+    // group chat prints it at a size it can be read; the card gives its
+    // room to the headline, the stamp and who wrote in.
     const card = {
         folio: issueFolio(date, number),
         headline: lead.headline,
-        deck: lead.deck,
+        stamp: issueStamp(EDITIONS[number]),
+        footnote: lettersLine(lead),
         pose: poseOf(lead),
         scene: sceneOf(lead),
     };

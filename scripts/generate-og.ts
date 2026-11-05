@@ -41,8 +41,11 @@ export type OgCard = {
     folio: string;
     /** The reason to click. */
     headline: string;
-    /** The headline's second beat. */
-    deck: string;
+    /** The headline's second beat; an issue's card has none. */
+    deck?: string;
+    /** An issue's card: the rubric's stamp, and who wrote in. */
+    stamp?: string;
+    footnote?: string;
     /** How the file cut stands beside it (data/poses.js). */
     pose: keyof typeof POSES;
     /** What it stands among (data/scenes.js), if anything. */
@@ -55,9 +58,12 @@ export const OG_CARDS: OgCard[] = [
         // drawing today's card.
         file: 'og-image.png',
         folio: 'PUBLISHED DAILY',
+        // It is set as an issue's card is (functions/card.png.js): the
+        // stamp and the letter's signature in place of the deck.
         headline:
             'Neckass has been “five minutes away” since 2019. He is at home.',
-        deck: 'He has said it to eleven people this year, according to a count by the Gazette, including his roommate, who was in the room.',
+        stamp: 'CORRECTION TO FOLLOW',
+        footnote: 'LETTERS: A FORMER NEIGHBOR',
         // The pose and scene that lead carries in data/formats.js.
         pose: 'phone',
         scene: ['phone', 'couch'],
