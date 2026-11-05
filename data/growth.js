@@ -20,7 +20,8 @@
 // is its highest number, that each back issue is still dealt what it was
 // dealt, and that a retired item does not run.
 //
-// No. 770 is Saturday, Nov. 7, 2026; No. 790 is Friday, Nov. 27.
+// No. 770 is Saturday, Nov. 7, 2026; No. 790 is Friday, Nov. 27; No. 859 is
+// Thursday, Feb. 4, 2027.
 export const GROWTH = {
     leads: [
         { from: 1, size: 52 },
@@ -32,6 +33,9 @@ export const GROWTH = {
                 49, 50, 59,
             ],
         },
+        // Leads are dealt in rounds of the pool's length, so a step starts
+        // where a round ends: No. 859 closes the first round from No. 770.
+        { from: 859, size: 109 },
     ],
     briefs: [
         { from: 1, size: 143 },
@@ -59,6 +63,7 @@ export const GROWTH = {
                 270, 271, 301, 309, 310, 325, 353, 358, 359, 368, 369,
             ],
         },
+        { from: 791, size: 384, perIssue: 4 },
     ],
     corrections: [
         { from: 1, size: 50 },
@@ -85,6 +90,7 @@ export const GROWTH = {
             size: 59,
             retired: [2, 8, 24],
         },
+        { from: 791, size: 60 },
     ],
     weather: [
         { from: 1, size: 41 },

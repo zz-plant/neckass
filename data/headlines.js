@@ -65,6 +65,15 @@
 // improvement long since won (ether, the dishwasher, the seat belt) and he
 // objects as though he had just heard. They do not date, and news does.
 //
+// The plainest case is the one where he gets what he asked for. The
+// complaint is answered, the debt paid, the pain gone, and he reacts as
+// though something has been taken, because it has: he was good at the
+// complaint. He cannot say that, so he says something a person could say
+// in a meeting (“without adequate consultation,” “the boy’s resilience”),
+// and the item lets the respectable reason stand and ends on the detail it
+// was covering for. It never says what he misses. At most he checks who
+// is listening and asks whether it is gone completely.
+//
 // Those items and a few from the news open on something that happened, and
 // he reacts to it. The first sentence is the fact, with an absolute date, so
 // the item stays true when it comes round, and REAL_SOURCES below gives it a
@@ -471,6 +480,15 @@ export const HEADLINES = {
     373: 'Neckass, who does not own a television, mentions it. This week he watched nine hours of video essays about television.',
     374: 'Neckass shops only at independent bookstores, he says, and has asked the one he shops at to match the online price.',
     375: 'Asked what people would think, Neckass said he does not care what people think, and has since checked with six of them.',
+    376: 'Neckass complained about the five-day week for fourteen years, and on Monday the office went to four. He said it had been done “without adequate consultation.” He had the complaint down to twenty minutes.',
+    377: 'The landlord replaced the hallway bulb Neckass had written to him about every month since 2022. He did it Tuesday, without answering the letters. Neckass has written to say he was not consulted.',
+    378: 'The school bus has begun stopping outside the house of Neckass’s nephew, 9. Neckass, who walked, said he was concerned about the boy’s resilience, and has offered to drop him a mile off.',
+    379: 'His roommate has been fine since March. Neckass has asked him how he is really doing eleven times, and on Sunday called the roommate’s mother.',
+    380: 'Neckass, who has said since 1998 that nobody listens to him, was asked at Thursday’s meeting what he thought. According to the minutes, he asked to come back to it.',
+    381: 'Neckass has kept firm boundaries with his family since 2019. This year nobody came near one, and he has told his sister he is worried the family has “stopped engaging.”',
+    382: 'Neckass went to a barbecue where the food was good, the weather held and nobody argued. He left at six and has asked his sister, twice, what it was for.',
+    383: 'Neckass paid off his last debt in September. He told the Gazette he had “lost a sense of direction.” He has opened a store card.',
+    384: 'The cable company answered Neckass’s call in four minutes on Monday. He has eleven years of notes on getting through its menu, and asked the agent to transfer him back.',
 };
 
 // The items that open on something that happened, by number, and where it
