@@ -353,23 +353,24 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   composed per request, `cache-control: public, max-age=3600`. Item titles and
   descriptions are XML-escaped.
 - `functions/card.png.js` serves `/card.png?issue=YYYY-MM-DD` (today's if
-  none): the nameplate, the issue's date and number, the lead beside the
-  file cut of him in the lead's pose, and the motto at the foot,
-  1200×630 PNG. It is made to be read at a quarter of its size, which is
-  how a group chat shows it: the headline is set as large as its lines
-  allow (98px down to 58px, by an estimate of its set width), the cut a
-  quarter larger than on the still cards, and the deck is left to the
-  link's description, which the chat prints under the card. In its place
-  the card carries who wrote in about the lead, in the wire's capitals,
-  by the letter's signature (*LETTERS: A FRIEND, $40 DOWN*), and a stamp
-  in the rubric is struck across the cutoff rule: *CORRECTION TO FOLLOW*,
-  which is true of every lead, or a landmark's tag (*HE WAS RIGHT*). The
-  still cards keep their decks and carry no stamp, except the standing
-  issue's (`og-image.png`), which is set as an issue's card is. The card is
-  drawn by Satori and resvg with two static cuts of Fraunces and Bitstream
-  Vera Sans Mono (the wire's lines: the date and number, the motto, the
-  address) fetched from `/fonts/` through the ASSETS binding. It carries
-  the page's newsprint and its thick-and-thin under the name. The layout is
+  none): the lead beside the file cut of him in the lead's pose, and at the
+  foot the paper's name and a block in the rubric, 1200×630 PNG. It is made
+  to be read the way a bumper sticker is, at a glance and at a quarter of
+  its size, which is how a group chat shows it, so it carries nothing set
+  under about 28px. The date, the motto, the address and the letter's
+  signature are off it, and the deck is left to the link's description,
+  which the chat prints under the card. A headline that ends on a sentence
+  of 27 characters or fewer is split there: the setup in the text cut at
+  44px, the turn in the display cut as large as its lines allow (132px down
+  to 80px). Any other is set whole, 104px down to 64px, by an estimate of
+  its set width. The block is *CORRECTION TO FOLLOW*, which is true of every
+  lead, or a landmark's tag (*HE WAS RIGHT*). The still cards keep their
+  decks and name their page at the foot in the wire's capitals, except the
+  standing issue's (`og-image.png`), which is set as an issue's card is. The
+  card is drawn by Satori and resvg with two static cuts of Fraunces and
+  Bitstream Vera Sans Mono (the wire's lines at the foot) fetched from
+  `/fonts/` through the ASSETS binding. It carries the page's newsprint,
+  edged by a heavy rule with a hairline inside it. The layout is
   `functions/lib/card.mjs`, which `bun run og:generate` also draws the still
   cards with (the standing issue, the entry, the back issues, the
   standards, each in a pose of its own); the cut is `functions/lib/cut.mjs`,

@@ -37,15 +37,14 @@ export const OG_MIN_BYTES = 25_000;
 export type OgCard = {
     /** Output filename at the repo root. */
     file: string;
-    /** Right of the nameplate: the page's name, where an issue has its date. */
-    folio: string;
+    /** At the foot: the page's name, where an issue has its block. */
+    folio?: string;
     /** The reason to click. */
     headline: string;
     /** The headline's second beat; an issue's card has none. */
     deck?: string;
-    /** An issue's card: the rubric's stamp, and who wrote in. */
+    /** An issue's card: the block in the rubric. */
     stamp?: string;
-    footnote?: string;
     /** How the file cut stands beside it (data/poses.js). */
     pose: keyof typeof POSES;
     /** What it stands among (data/scenes.js), if anything. */
@@ -57,13 +56,11 @@ export const OG_CARDS: OgCard[] = [
         // The standing issue in index.html, for wherever the edge is not
         // drawing today's card.
         file: 'og-image.png',
-        folio: 'PUBLISHED DAILY',
         // It is set as an issue's card is (functions/card.png.js): the
-        // stamp and the letter's signature in place of the deck.
+        // block in the rubric, and no deck.
         headline:
             'Neckass has been “five minutes away” since 2019. He is at home.',
         stamp: 'CORRECTION TO FOLLOW',
-        footnote: 'LETTERS: A FORMER NEIGHBOR',
         // The pose and scene that lead carries in data/formats.js.
         pose: 'phone',
         scene: ['phone', 'couch'],

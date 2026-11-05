@@ -54,7 +54,7 @@ its own two cuts. The browser never loads them.
   redistributed in Homebrew's projectM package; SHA-256
   `da4281dc7db17a3dfce64a62ced92875c5895340055ec8ba24a3914eb97b349d`.
 
-The card's wire voice: the date and number, the motto, the address. The page
+The card's wire voice: the block and the page's name at its foot. The page
 sets those lines in the reader's system monospace; Satori cannot reach a
 system font, so the card carries this one, the face Menlo was drawn from,
 which is what most readers on a Mac see on the page. The browser never
