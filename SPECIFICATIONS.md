@@ -64,7 +64,7 @@ following a line number that has since moved.
   - `--accent` is a ledger teal, the record. It carries the cutoff rule under the masthead (`--accent-rule`, a step down from the links in the dark theme so a 3px line does not glow), the links, and the issue folios in *Earlier issues* and the back issues.
   - `--ink-rubric` is a rubricator's red, for the corrections and the red-letter issues: the heads of Corrections, the editorial and *Of note* (`.section-label--rubric`), the dash before each correction, and the landmark tags in the back issues.
   - `--ink-sun` and `--ink-sky` are the weather's inks. They fill the sun's disc and the rain in the weather cut and print nowhere else.
-  - A screen is an ink at a tint: `--screen-ledger` (18% teal) behind the back-issue notice, and `--screen-sun` behind selected text, as a highlighter.
+  - A screen is an ink at a tint: `--screen-ledger` (18% teal) behind the back-issue notice, `--screen-rubric` (9% rubric) behind the corrections box, and `--screen-sun` behind selected text, as a highlighter.
 
   Text in the rubric holds 4.5:1 on the stock and on the dark plate. In the dark theme the ground sits a full step under the plate (`--sheet-edge` gives the plate a faint outline) and `--font-smoothing` switches to greyscale antialiasing.
 - The optical-size axis picks Fraunces's cut for each size. The subset carries no italic, so nothing set in it relies on `<em>`: the paper sets a word used as a word in quotes, as the wire does, and the motto and the signatures are roman.
@@ -128,8 +128,18 @@ The page has one vocabulary of horizontal rules, and it means something:
   across the fold. The lead and the lower row carry no rules of their own;
   the heads' rules are the divisions. The rubric's departments print the
   head and its rule in `--ink-rubric`; every other head is in the ink.
-- **1px `--border-strong`** — a division inside a department, the colophon.
+- **1px `--border-strong`** — a division inside a department (under the
+  briefs' follow-up), the colophon.
 - **1px `--border`** — between items in a list, and the column rules.
+- **2px ink box with a 1px rule inside it** — a display ad, and nothing else.
+- The corrections box carries its department's 2px rubric rule on the box
+  rather than on the head, so it still meets the briefs' rule across the
+  fold.
+
+Each department is set in the form a paper sets it in, and each mixes two
+forms: the briefs a story over a roundup, the corrections a screened box,
+the weather a table of figures over a line of prose, the classifieds a
+display ad over line ads, the letters a letters page.
 
 Line-cuts live in `assets/cuts/` and are rigs: each exposes its moving parts
 as CSS custom properties, with fallbacks, so the files work as plain `<img>`
@@ -259,6 +269,13 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   no lead's headline: the lead tells that story, and a brief would repeat
   it on another morning. The earliest issues are shorter: the column
   grows from three to its full size over the first year (`briefsCount`).
+  The follow-up (`.brief--follow`) is set as a story of its own, a size
+  and a weight over the rest, under a kicker in the wire's face and the
+  ledger teal naming the issue it follows (*Following No. n*, from
+  `data-follows`, so the item's text is the brief alone); a hairline in
+  `--border-strong` divides it from the roundup, where each brief hangs
+  from a small ink square. From 1000px the roundup runs in two measures
+  under a column rule and the follow-up spans both.
   A brief that opens on something that happened (`data.REAL_SOURCES`) takes a
   footnote, because the paper's own sourcing is otherwise a joke: a mark where
   its first sentence ends, linked to `#briefs-notes` at the foot of the column,
@@ -270,12 +287,18 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   Issue 1 is written and runs one correction, which says there is nothing to
   correct. The retraction ends *See No. n.*, linked to the issue it retracts.
   Corrections are set in the ink; the head, its rule, and the dash before
-  each are in the rubric.
+  each are in the rubric. The department is a box screened in
+  `--screen-rubric`, as a paper boxes its corrections.
 - **Weather** — `#weather-numbers` carries a seeded, seasonally plausible
   forecast (`High 71°, low 55°. Winds SW 8 mph. Sunset 7:14 p.m.`); the
-  forecaster's note about him follows in `#weather-line`.
-- **Classifieds** — `#classifieds-list`, three entries (five through No. 769). The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`. Each ad's keyword (FOR SALE, LOST, CARD OF THANKS) is marked `.classified__key` and set in the wire's face. From 1000px the ads run in two narrow columns, as a classifieds page runs them.
-- **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday and on Mother's Day; next door files her monthly bin letter on the 14th), then one dealt from `data.LETTERS`. A serial letter fills the section's size, so a witness files once per issue. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces; the signature is attribution, like a byline, and is set in the wire's capitals.
+  forecaster's note about him follows in `#weather-line`, under a hairline.
+  The renderer sets the high and the low as a weather table's figures, each
+  in Fraunces at display size under its label in the wire's capitals, the
+  low in the muted ink, and the rest of the line under them; the words
+  between the figures stay in the markup, hidden, so the line's text is
+  unchanged.
+- **Classifieds** — `#classifieds-list`, three entries (five through No. 769). The first is the lead's own (`lead.classified`), then any calendar ad, then the rest from `data.CLASSIFIEDS`. Each ad's keyword (FOR SALE, LOST, CARD OF THANKS) is marked `.classified__key` and set in the wire's face. The lead's own ad is a display ad (`.classified--display`): centred, a size up, in a 2px box with a rule inside it. The rest are line ads, small, ragged and hyphenated, a hairline between them. From 1000px the line ads run in two narrow columns, as a classifieds page runs them, under the display ad, which spans both.
+- **Letters** — `#letters-list`, two entries (one for the first sixty issues), each a body and a signature. The first is from the person the lead happened to (`lead.letter`), then any calendar letter (his mother writes on his birthday and on Mother's Day; next door files her monthly bin letter on the 14th), then one dealt from `data.LETTERS`. A serial letter fills the section's size, so a witness files once per issue. Every lead carries a deck, a correction, a follow-up, a classified and a letter, so the lead, its ad, and its letter always run in the same issue and its follow-up and retraction run the next. The body is set in Fraunces and opens on a two-line drop cap, unless its first word is one letter (`.letter-body--initial` marks the rest), since a dropped *I* is read and copied run into the next word; the signature is attribution, like a byline, and is set in the wire's capitals at the right.
 - **Colophon** — the staff line (vacant, unattended, ongoing). The folio
   line already carries the site links; the colophon does not repeat them.
 - **Section dealing** — briefs, corrections, classifieds, letters and the
