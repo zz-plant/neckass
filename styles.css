@@ -1924,7 +1924,7 @@ a:focus-visible {
     padding-bottom: 0;
 }
 
-.briefs .brief--follow {
+.briefs li.brief--follow {
     font-size: 1.32rem;
     line-height: 1.26;
     font-weight: 600;
@@ -1934,7 +1934,7 @@ a:focus-visible {
 }
 
 /* The kicker is a folio, so it takes the record's teal. */
-.briefs .brief--follow::before {
+.briefs li.brief--follow::before {
     content: "Following " attr(data-follows);
     position: static;
     display: block;
@@ -2170,7 +2170,7 @@ a.briefs__mark:visited {
 
 /* The lead's own ad, bought by the person it happened to, is a display
    ad: centred in a box with a rule inside its rule, over the line ads. */
-.classifieds .classified--display {
+.classifieds li.classified--display {
     text-align: center;
     hyphens: manual;
     text-wrap: balance;
@@ -2363,7 +2363,7 @@ a.briefs__mark:visited {
         break-inside: avoid;
     }
 
-    .classifieds .classified--display {
+    .classifieds li.classified--display {
         column-span: all;
     }
 
@@ -2380,7 +2380,7 @@ a.briefs__mark:visited {
         break-inside: avoid;
     }
 
-    .briefs .brief--follow {
+    .briefs li.brief--follow {
         column-span: all;
         margin-bottom: 9px;
     }
