@@ -31,7 +31,7 @@ export const LEADS = {
         pose: 'phone',
         scene: ['phone', 'couch'],
         correction:
-            'Neckass has been “five minutes away” since November 2018, not 2019, as reported.',
+            'Neckass has been “five minutes away” since November 2018, not 2019.',
         followUp:
             'Neckass, who the Gazette reported yesterday had been “five minutes away” since 2019, left the house. He was five minutes away from three places and went to a fourth.',
         classified:
@@ -1929,7 +1929,7 @@ export const CORRECTIONS = {
     9: 'We described Neckass’s apology as an apology. It was the sentence “well, sorry you feel that way.”',
     10: 'An earlier edition placed Neckass at the gym. It was the parking lot of the gym.',
     11: 'The Gazette reported that Neckass’s podcast has one listener. It briefly had two. The second was a misclick.',
-    12: 'A Tuesday item said Neckass had left. He had gone to the car and come back.',
+    12: 'A Tuesday item said Neckass had left. He had gone to the car for his phone. It was in his hand.',
     13: 'The Gazette described Neckass as “on his way.” He was choosing a shirt.',
     14: 'A recipe item credited Neckass with cooking. He assembled.',
     15: 'We reported Monday that Neckass replied with a thumbs-up. It was a thumbs-down, which he says means “got it.”',
@@ -2096,7 +2096,7 @@ export const CLASSIFIEDS = {
     27: 'FOR SALE: a doorbell camera, installed facing the wrong way. It has filmed the hall since March.',
     28: 'FREE: half a bag of salad, best by yesterday, described by owner as “probably fine.”',
     29: 'SERVICES: will tell you your lineup is fine. It is not. $5.',
-    30: 'FOR SALE: the rest of a meal. He said he would just have a bite.',
+    30: 'FOR SALE: one bite of a meal. The rest was eaten by a man who said he would just have a bite.',
     31: 'LOST: a receipt, needed Tuesday. It was in the bag he threw away Monday, to tidy up.',
     32: 'NOTICE: Saturday’s function is BYOB. This means bring your own. It does not mean bring a cup and stand by the cooler.',
     33: 'IN MEMORIAM: Doug, a sourdough starter, April 3–9, 2020. Fed six times, photographed nine.',
@@ -2110,7 +2110,7 @@ export const CLASSIFIEDS = {
     41: 'LOST: a tape measure. Owner measured the couch by eye, and the couch is in the stairwell.',
     42: 'SEEKING: a fantasy league with room for one. Last season he set his lineup in Week 2, left it, and finished fourth.',
     43: 'FREE: blender, used for one smoothie. The rest of the smoothie is still in it.',
-    44: 'FREE: a candle, “fresh linen,” bought instead of doing the laundry.',
+    44: 'FREE: a candle, “fresh linen,” bought instead of doing the laundry. The laundry is also available.',
     45: 'CARD OF THANKS: to the stranger who told Neckass his fly was down at 10:40 a.m. Monday. He had also been told at 9:15 and at 10.',
     46: 'FOR SALE: iron, used on the fronts of shirts only. Owner keeps his jacket on.',
     47: 'FOR SALE: the book club book, spine uncracked. Owner reviewed it at book club.',
