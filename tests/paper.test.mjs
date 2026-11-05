@@ -417,6 +417,54 @@ describe('The Gazette', () => {
         }
     });
 
+    test('a step runs what it ranks first, in that order', () => {
+        // A ranked item that ran in the step's last days before it is
+        // held back, and a day with no room skips its place. Either would
+        // move the ranking quietly, so the step's opening issues must
+        // print exactly the ranked items, in order, and nothing ranked
+        // twice or ranked from outside the step's pool.
+        const pools = { leads: LEADS };
+        for (const [section, { pool }] of Object.entries(DEALS)) {
+            pools[section] = pool;
+        }
+        for (const [name, steps] of Object.entries(GROWTH)) {
+            steps.forEach((step, index) => {
+                if (!step.first) return;
+                const pool = pools[name];
+                const retired = new Set(
+                    steps.slice(0, index + 1).flatMap((s) => s.retired || []),
+                );
+                expect(new Set(step.first).size, name).toBe(step.first.length);
+                for (const id of step.first) {
+                    expect(
+                        id <= step.size && !retired.has(id),
+                        `${name} ${id}`,
+                    ).toBe(true);
+                }
+                const wanted = step.first.map((id) => pool[id]);
+                const printed = [];
+                for (
+                    let number = step.from;
+                    printed.length < wanted.length;
+                    number += 1
+                ) {
+                    const issue = composeIssue(new Date(2024, 8, 28 + number));
+                    if (name === 'leads') {
+                        if (!EDITIONS[number]?.lead) printed.push(issue.lead);
+                        continue;
+                    }
+                    const dealt = [issue[name]]
+                        .flat()
+                        .filter((item) => wanted.includes(item));
+                    printed.push(...dealt);
+                }
+                expect(printed, `${name} from No. ${step.from}`).toEqual(
+                    wanted,
+                );
+            });
+        }
+    });
+
     test('an item about something that happened says so', () => {
         const retired = GROWTH.briefs.flatMap((step) => step.retired || []);
         for (const [id, { cite, url }] of Object.entries(REAL_SOURCES)) {
