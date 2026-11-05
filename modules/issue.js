@@ -231,15 +231,25 @@ function shuffledRound(round, step) {
     );
 }
 
+// A step may rank what it runs first (`first`, data/growth.js): its first
+// round opens on those leads, in that order, and shuffles the rest behind
+// them. A lead that ran in the step's last days before it waits its turn.
 function roundOrder(round, step) {
-    const order = shuffledRound(round, step);
+    let order = shuffledRound(round, step);
     const seam = Math.min(14, Math.floor(order.length / 4));
     if (seam === 0 || (round === 0 && step.from === 1)) return order;
     const closing = new Set(
         round > 0
-            ? shuffledRound(round - 1, step).slice(-seam)
+            ? (round === 1 && step.first
+                  ? roundOrder(0, step)
+                  : shuffledRound(round - 1, step)
+              ).slice(-seam)
             : places(seam).map((back) => dealtLead(step.from - 1 - back)),
     );
+    if (round === 0 && step.first) {
+        const first = step.first.filter((id) => !closing.has(id));
+        order = [...first, ...order.filter((id) => !first.includes(id))];
+    }
     let spare = seam;
     for (let i = 0; i < seam; i += 1) {
         if (!closing.has(order[i])) continue;
@@ -303,6 +313,7 @@ function splitFor(section, step) {
     if (splits.has(key)) return splits.get(key);
     const { salt } = DEALS[section];
     const ids = idsOf(GROWTH[section], step);
+    let kept = [];
     let split = shuffle(
         [...ids],
         createRng(salt * 0x85ebca6b + 7 + (step.from - 1) * 0x9e3779b9),
@@ -315,15 +326,23 @@ function splitFor(section, step) {
                 recent.push(id);
             }
         }
-        const kept = recent.filter((id) => ids.includes(id));
+        kept = recent.filter((id) => ids.includes(id));
         split = [...split.filter((id) => !kept.includes(id)), ...kept];
     }
-    splits.set(key, split);
-    return split;
+    // What the step ranks first opens the split, so it comes round in the
+    // first quarter every time. What ran in the step's last days stays at
+    // the back, ranked or not.
+    const first = (step.first || []).filter((id) => !kept.includes(id));
+    split = [...first, ...split.filter((id) => !first.includes(id))];
+    splits.set(key, { split, first });
+    return splits.get(key);
 }
 
+const rankedRounds = new Map();
 function quarteredRound(section, step, round) {
-    const split = splitFor(section, step);
+    const key = `${section} ${step.from}`;
+    if (round === 0 && rankedRounds.has(key)) return rankedRounds.get(key);
+    const { split, first } = splitFor(section, step);
     const rng = createRng(
         roundSeed(round, step.from) + DEALS[section].salt * 0x85ebca6b,
     );
@@ -333,7 +352,31 @@ function quarteredRound(section, step, round) {
         const to = Math.floor(((quarter + 1) * split.length) / QUARTERS);
         order.push(...shuffle(split.slice(from, to), rng));
     }
-    return order;
+    if (round > 0 || first.length === 0) return order;
+
+    // The first round deals what the step ranks first, in that order, to
+    // the places the days actually print: a day short of room (the
+    // calendar's item, a landmark's own column) skips places, and a
+    // ranked item set on one would wait a round. The rest keep their
+    // order around them.
+    const ranked = new Map();
+    const perIssue = step.perIssue ?? DEALS[section].perIssue;
+    for (let number = step.from; ranked.size < first.length; number += 1) {
+        const taken = Math.min(perIssue, printedCount(section, number));
+        for (let offset = 0; offset < taken; offset += 1) {
+            const place = (number - step.from) * perIssue + offset;
+            if (place >= order.length || ranked.size === first.length) break;
+            ranked.set(place, first[ranked.size]);
+        }
+        if ((number - step.from) * perIssue >= order.length) break;
+    }
+    const placed = new Set(ranked.values());
+    const rest = order.filter((id) => !placed.has(id));
+    const dealt = order.map((_, place) =>
+        ranked.has(place) ? ranked.get(place) : rest.shift(),
+    );
+    rankedRounds.set(key, dealt);
+    return dealt;
 }
 
 // The ids in a section's pool dealt to an issue, in order.
@@ -440,6 +483,49 @@ function lettersCount(number) {
     return number <= 60 ? 1 : 2;
 }
 
+// What a day sets in each section before anything is dealt: yesterday's
+// lead continues at the top of the briefs (he has done the next thing)
+// and is retracted at the top of the corrections, today's lead brings its
+// ad and its letter, and the calendar has what it has for the date — the
+// book club, the clocks, his birthday. Each takes the place of a dealt
+// item, so every section keeps its size.
+function fixedFor(number, date) {
+    const lead = selectLead(number);
+    const previousLead = number > 1 ? selectLead(number - 1) : null;
+    const onCalendar = calendarItemsFor(date, {
+        written: Boolean(EDITIONS[number]?.lead),
+    });
+    const dated = (section) => onCalendar[section] || [];
+    return {
+        briefs: [previousLead?.followUp, ...dated('briefs')].filter(Boolean),
+        corrections: [previousLead?.correction, ...dated('corrections')].filter(
+            Boolean,
+        ),
+        classifieds: [lead?.classified, ...dated('classifieds')].filter(
+            Boolean,
+        ),
+        letters: [lead?.letter, ...dated('letters')].filter(Boolean),
+        weather: [],
+    };
+}
+
+function sectionSize(section, number) {
+    if (section === 'briefs') return briefsCount(number);
+    if (section === 'letters') return lettersCount(number);
+    if (section === 'weather') return 1;
+    return sizeOf(section, number);
+}
+
+// How many items an issue prints from a section's pool: its size less
+// what is set, never fewer than zero, and none where a landmark writes
+// the section itself.
+function printedCount(section, number) {
+    if (EDITIONS[number]?.[section]) return 0;
+    const date = new Date(2024, 8, 28 + number);
+    const fixed = fixedFor(number, date)[section];
+    return Math.max(0, sectionSize(section, number) - fixed.length);
+}
+
 export function composeIssue(date = pressDate()) {
     const number = issueNumber(date);
     // The forecast's numbers are the one thing drawn fresh each day: they
@@ -447,43 +533,11 @@ export function composeIssue(date = pressDate()) {
     const rng = createRng(number * 2654435761 + 1);
 
     const lead = selectLead(number);
-
-    // The Gazette's first correction each day retracts a detail of
-    // yesterday's lead — the real one, by name. It always concedes
-    // something trivial and leaves the damning part standing. Issue 1 has
-    // nothing to correct.
-    const previousLead = number > 1 ? selectLead(number - 1) : null;
-    const chainedCorrection = previousLead?.correction || null;
-
     const dateLabel = dateFormatter.format(date);
+    const fixed = fixedFor(number, date);
+    const dealt = (section) =>
+        dealFor(section, number, printedCount(section, number));
 
-    // Yesterday's lead continues at the top of today's column: he has
-    // done the next thing. With the correction beneath it, a reader
-    // who comes back gets a story, not a reshuffle.
-    const followUp = previousLead?.followUp || null;
-
-    // What the calendar has for this date — Tuesday's book club, the
-    // clocks, his birthday. Each runs first in its section and takes
-    // the place of a dealt item, so every section keeps its size.
-    const onCalendar = calendarItemsFor(date, {
-        written: Boolean(EDITIONS[number]?.lead),
-    });
-    const dated = (section) => onCalendar[section] || [];
-    // Deal the section's size, less the items already set for it, and
-    // never fewer than zero.
-    const dealAfter = (section, count, fixed) =>
-        dealFor(section, number, Math.max(0, count - fixed.length));
-
-    const letters = lettersCount(number);
-    const fixedBriefs = [followUp, ...dated('briefs')].filter(Boolean);
-    const fixedCorrections = [
-        chainedCorrection,
-        ...dated('corrections'),
-    ].filter(Boolean);
-    const fixedClassifieds = [lead?.classified, ...dated('classifieds')].filter(
-        Boolean,
-    );
-    const fixedLetters = [lead?.letter, ...dated('letters')].filter(Boolean);
     const issue = {
         number,
         date,
@@ -499,36 +553,16 @@ export function composeIssue(date = pressDate()) {
         caption: captionOf(lead),
         editorial: null,
         tag: null,
-        briefs: [
-            ...fixedBriefs,
-            ...dealAfter('briefs', briefsCount(number), fixedBriefs),
-        ],
+        briefs: [...fixed.briefs, ...dealt('briefs')],
         // Yesterday's retraction first, then the rest.
-        corrections: [
-            ...fixedCorrections,
-            ...dealAfter(
-                'corrections',
-                sizeOf('corrections', number),
-                fixedCorrections,
-            ),
-        ],
+        corrections: [...fixed.corrections, ...dealt('corrections')],
         weatherNumbers: weatherFor(date, rng),
         weather: dealFor('weather', number)[0] || '',
         // The lead's own classified and letter run alongside it, so the
         // page compounds: the item, then the ad, then the person he did
         // it to. The rest are dealt from the general pools.
-        classifieds: [
-            ...fixedClassifieds,
-            ...dealAfter(
-                'classifieds',
-                sizeOf('classifieds', number),
-                fixedClassifieds,
-            ),
-        ],
-        letters: [
-            ...fixedLetters,
-            ...dealAfter('letters', letters, fixedLetters),
-        ],
+        classifieds: [...fixed.classifieds, ...dealt('classifieds')],
+        letters: [...fixed.letters, ...dealt('letters')],
     };
 
     // A landmark's written sections replace the dealt ones. The lead was

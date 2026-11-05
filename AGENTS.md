@@ -45,6 +45,7 @@ still fail this, by making him a cartoon or the critique a reflex.
 ## When changing content
 - A lead needs all eight fields: headline, deck, byline, pose, correction, followUp, classified, letter. The pose is a key of `data/poses.js`: what he is doing in the story, as the file cut can show it. A lead may also name a scene, keys of `data/scenes.js`: what the story happens among, as props the cut can hold or stand in front of. One or two; the box does not take more.
 - What to write, and how to tell whether an item belongs: the comment at the top of `data/headlines.js`.
+- What runs first is a step's `first` list in `data/growth.js`, strongest first, for a step that has not run. Leave out what ran in the days before it: `test:unit` fails if a ranked item would not print where ranked.
 - Dated items go on the calendar, not in the pools. A rule added now takes a `from`, or it reprints the back issues.
 - A brief that opens on a real event takes an entry in `REAL_SOURCES` (`data/headlines.js`), which sets a footnote mark where its first sentence ends and prints the source at the foot of the column. The first sentence has to be the fact and only the fact, with an absolute date.
 - Set quotation marks and apostrophes curly (“ ” ’) in anything a reader sees. The smoke suite fails on a straight one.
