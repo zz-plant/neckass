@@ -277,11 +277,17 @@ describe('The Gazette', () => {
                     .filter((step) => step.from <= from)
                     .flatMap((step) => step.retired || []),
             ).size;
-        for (const step of GROWTH.leads) {
+        for (const [index, step] of GROWTH.leads.entries()) {
             const { from } = step;
             const size = dealtSize(step);
             const first = from === 1 ? 8 : 0;
-            for (let round = first; round < first + 3; round += 1) {
+            // Only rounds the step deals whole, before the next one starts.
+            const until = GROWTH.leads[index + 1]?.from ?? Infinity;
+            for (
+                let round = first;
+                round < first + 3 && from + (round + 1) * size <= until;
+                round += 1
+            ) {
                 const seen = new Set();
                 let written = 0;
                 for (let place = 0; place < size; place += 1) {

@@ -1910,6 +1910,24 @@ export const LEADS = {
             signature: 'Next door',
         },
     },
+    109: {
+        headline:
+            'Neckass was told Tuesday that the back trouble he has described at every Sunday dinner since 2009 is gone',
+        deck: 'According to his doctor, who asked not to be named because Neckass is still a patient, the scan was clear and he could sit. The doctor said Neckass looked at the door, and then asked: “Completely?”',
+        byline: 'Staff report',
+        pose: 'considering',
+        scene: ['table'],
+        correction:
+            'He has described the back since 2010, not 2009. In 2009 it was the knee.',
+        followUp:
+            'Neckass sat through Sunday dinner for the first time in sixteen years and described the scan. He stood for dessert, to show where it had been.',
+        classified:
+            'FOR SALE: lumbar cushion, one owner, used Sundays since 2009. Seller may ask to visit.',
+        letter: {
+            body: 'Every Sunday for sixteen years he told us about his back. This Sunday he sat down and said it was fine, and nobody said anything for a while. My husband asked about the knee.',
+            signature: 'His mother',
+        },
+    },
 };
 
 // Standalone corrections, drawn alongside the routine one and the one
@@ -2401,5 +2419,9 @@ export const LETTERS = {
     59: {
         body: 'I teach the swimming lessons. He came to tell the children what they were missing. He stayed in the shallow end.',
         signature: 'The pool',
+    },
+    60: {
+        body: 'My son starts college next fall and will not pay for it. I paid until 2019. I read about your man and laughed, and I have not told my son yet.',
+        signature: 'A reader',
     },
 };
