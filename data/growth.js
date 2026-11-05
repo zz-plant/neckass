@@ -45,8 +45,20 @@ export const GROWTH = {
                 106, 112, 117, 118, 124, 146,
             ],
         },
-        // After No. 789, which No. 800's editorial cites as it ran.
-        { from: 790, size: 375, perIssue: 4 },
+        // After No. 789, which No. 800's editorial cites as it ran. Retired
+        // here: briefs that told a lead's story again (the inbox, the
+        // voice note, the form desk, the audit, the airport, the ChatGPT
+        // answer kept for disputes), and the weaker of two briefs telling
+        // the same one.
+        {
+            from: 790,
+            size: 375,
+            perIssue: 4,
+            retired: [
+                11, 12, 129, 138, 172, 179, 187, 200, 205, 225, 244, 246, 259,
+                270, 271, 301, 309, 310, 325, 353, 358, 359, 368, 369,
+            ],
+        },
     ],
     corrections: [
         { from: 1, size: 50 },
