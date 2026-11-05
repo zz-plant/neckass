@@ -269,7 +269,7 @@ export const HEADLINES = {
     171: 'Neckass flew to four cities this month to say that people should stay home.',
     172: 'Neckass has been told that the form he spent three days on in 2019 was optional. He has asked for the three days.',
     173: 'Ether was first demonstrated publicly in surgery on Oct. 16, 1846. Neckass has requested a meeting about what this has done to patients’ character.',
-    174: 'Insurers overturned at least part of 80.7 percent of the Medicare Advantage denials appealed in 2024, KFF found. Neckass, who has won seven, said the system has never failed him.',
+    174: 'Insurers overturned at least part of 80.7 percent of the Medicare Advantage denials appealed in 2024, KFF found. Neckass said it showed what people can do when they are told no.',
     175: 'Neckass’s niece, 7, learned to ride a bike in an afternoon, without a fall. He has asked her to fall.',
     176: 'Neckass has settled whether anyone needs a second language. He tried one, for 212 days.',
     177: 'A subcommittee of the Committee on Removing Obstacles is looking at why the committee has not met. It has not met.',
