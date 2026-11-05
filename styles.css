@@ -53,6 +53,9 @@
        plate. */
     --screen-ledger: color-mix(in srgb, var(--accent) 18%, var(--surface));
     --screen-sun: color-mix(in srgb, var(--ink-sun) 42%, var(--surface));
+    /* The corrections box is the record kept in the rubric, so it is
+       screened in the rubric, as a paper boxes its corrections. */
+    --screen-rubric: color-mix(in srgb, var(--ink-rubric) 9%, var(--surface));
     --border-subtle: rgba(28, 26, 25, 0.16);
     --border-strong: rgba(28, 26, 25, 0.32);
     /* The sheet lies on the desk. A tight edge and a short throw, not the
@@ -1877,23 +1880,75 @@ a:focus-visible {
     display: grid;
 }
 
+/* Each department is set as the form a paper sets it in, and each mixes
+   two: the briefs are a story and a roundup, the corrections a screened
+   box, the weather a table of figures over a line of prose, the
+   classifieds a display ad over line ads, the letters a letters page. */
+
+/* In brief. The column opens on yesterday's lead's follow-up, set as a
+   story of its own under a kicker that names the issue it follows; the
+   rest run under it as a roundup, each on a square. */
 .briefs {
-    gap: 11px;
+    gap: 0;
 }
 
 .briefs li {
+    --brief-pad: 9px;
+    position: relative;
     font-family: var(--headline-font);
     text-wrap: pretty;
-    font-size: 1.08rem;
-    line-height: 1.32;
+    font-size: 1rem;
+    line-height: 1.36;
     color: var(--text);
-    padding-bottom: 11px;
+    padding: var(--brief-pad) 0 var(--brief-pad) 16px;
     border-bottom: 1px solid var(--border);
+}
+
+.briefs li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(var(--brief-pad) + 0.68em - 3px);
+    width: 6px;
+    height: 6px;
+    background: var(--text);
+}
+
+.briefs li:first-child {
+    --brief-pad: 0px;
+    padding-bottom: 9px;
 }
 
 .briefs li:last-child {
     border-bottom: 0;
     padding-bottom: 0;
+}
+
+.briefs li.brief--follow {
+    font-size: 1.32rem;
+    line-height: 1.26;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding: 0 0 14px;
+    border-bottom-color: var(--border-strong);
+}
+
+/* The kicker is a folio, so it takes the record's teal. */
+.briefs li.brief--follow::before {
+    content: "Following " attr(data-follows);
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    background: none;
+    margin-bottom: 6px;
+    font-family: var(--wire-font);
+    font-size: 0.66rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--link);
 }
 
 .briefs__mark,
@@ -1924,13 +1979,27 @@ a.briefs__mark:visited {
 }
 
 .corrections {
-    gap: 10px;
+    gap: 9px;
+}
+
+/* The corrections run in a box screened in the rubric, under the rubric's
+   rule, which moves from the head to the box so it still sits level with
+   the briefs' rule across the fold. */
+.box--corrections {
+    background: var(--screen-rubric);
+    border-top: 2px solid var(--ink-rubric);
+    padding: 8px 14px 14px;
+}
+
+.box--corrections > .section-label {
+    border-top: 0;
+    padding-top: 0;
 }
 
 /* The corrections are the paper's running record, and the one retracting
    yesterday's lead is the best thing on the page. They take the ink. */
 .corrections li {
-    font-size: 0.96rem;
+    font-size: 0.94rem;
     text-wrap: pretty;
     line-height: 1.42;
     color: var(--text);
@@ -2014,29 +2083,104 @@ a.briefs__mark:visited {
 }
 
 /* The forecast's figures come over the wire with the date; the
-   forecaster's note under them is the paper's. */
+   forecaster's note under them is the paper's. The high and the low are
+   set as a weather table sets them, as figures under their labels, and the
+   rest of the wire line runs under them. */
 .weather-numbers {
     font-family: var(--wire-font);
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     line-height: 1.55;
     text-transform: uppercase;
     letter-spacing: 0.02em;
     text-wrap: pretty;
     color: var(--text-primary);
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.5rem;
+}
+
+.forecast__figures {
+    display: flex;
+    gap: 22px;
+    margin-bottom: 4px;
+}
+
+.forecast__figure {
+    display: grid;
+}
+
+.forecast__label {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
+.forecast__temp {
+    font-family: var(--headline-font);
+    font-size: 2.2rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums;
+}
+
+.forecast__figure + .forecast__joint + .forecast__figure .forecast__temp {
+    color: var(--muted);
+}
+
+/* The words between the figures stay in the line, for the reader who
+   hears it, and out of the table. */
+.forecast__joint {
+    display: none;
+}
+
+.forecast__wire {
+    display: block;
+}
+
+.box--weather .weather {
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
 }
 
 .classifieds {
-    gap: 9px;
+    gap: 0;
 }
 
-/* Set small, as a classifieds page is, each ad opening on its keyword in
-   the wire's face (modules/front-page.js marks it). */
+/* Set small and tight, as a classifieds page is, each ad opening on its
+   keyword in the wire's face (modules/render.js marks it), a hairline
+   between ads. Ragged and hyphenated: justified in a measure this narrow,
+   the keyword's spaces opened into holes. */
 .classifieds li {
-    font-size: 0.9rem;
+    font-size: 0.86rem;
+    line-height: 1.34;
     text-wrap: pretty;
-    line-height: 1.38;
+    hyphens: auto;
     color: var(--text);
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.classifieds li:first-child {
+    padding-top: 0;
+}
+
+.classifieds li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* The lead's own ad, bought by the person it happened to, is a display
+   ad: centred in a box with a rule inside its rule, over the line ads. */
+.classifieds li.classified--display {
+    text-align: center;
+    hyphens: manual;
+    text-wrap: balance;
+    font-size: 1.02rem;
+    line-height: 1.36;
+    padding: 14px 16px;
+    margin-bottom: 9px;
+    border: 2px solid var(--text);
+    outline: 1px solid var(--text);
+    outline-offset: -6px;
 }
 
 .classified__key {
@@ -2044,6 +2188,11 @@ a.briefs__mark:visited {
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.02em;
+}
+
+.classified--display .classified__key {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
 }
 
 .letters {
@@ -2062,17 +2211,30 @@ a.briefs__mark:visited {
 
 /* A letter is set in the display face at text size: it is the one place
    on the page where someone other than the paper is speaking, and the
-   change of voice is set in a change of face. */
+   change of voice is set in a change of face. It opens on a drop cap, as
+   a letters page opens a letter, where its first word is more than the
+   letter (modules/render.js marks it). */
 .letter-body {
     font-family: var(--headline-font);
-    font-size: 1.02rem;
+    font-size: 1.04rem;
     line-height: 1.46;
     text-wrap: pretty;
 }
 
+.letter-body--initial::first-letter {
+    float: left;
+    font-size: 2.95em;
+    font-weight: 700;
+    line-height: 0.8;
+    padding: 5px 2px 0 0;
+    color: var(--ink-display);
+}
+
 /* A signature is attribution, like a byline, and is set like one: the
-   wire's caps rather than a slanted roman the face does not have. */
+   wire's caps rather than a slanted roman the face does not have. It
+   signs off at the right, under the letter. */
 .letter-signature {
+    text-align: right;
     margin-top: 8px;
     font-family: var(--wire-font);
     font-size: 0.68rem;
@@ -2199,6 +2361,27 @@ a.briefs__mark:visited {
 
     .classifieds li {
         break-inside: avoid;
+    }
+
+    .classifieds li.classified--display {
+        column-span: all;
+    }
+
+    /* The roundup runs in two narrow measures under the follow-up, which
+       takes the column's full width. */
+    .briefs {
+        display: block;
+        columns: 2;
+        column-gap: 28px;
+        column-rule: 1px solid var(--border);
+    }
+
+    .briefs li {
+        break-inside: avoid;
+    }
+
+    .briefs li.brief--follow {
+        column-span: all;
         margin-bottom: 9px;
     }
 }

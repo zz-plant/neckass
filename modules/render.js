@@ -42,15 +42,45 @@ function adHtml(ad) {
     return `<b class="classified__key">${escapeHtml(key[1])}:</b> ${escapeHtml(ad.slice(key[0].length))}`;
 }
 
+// The lead's own ad is bought by the person the lead happened to, and is
+// set as a display ad, boxed, over the line ads; the rest are line ads.
+function adsHtml(ads, leadAd) {
+    return ads
+        .map((ad) =>
+            ad === leadAd
+                ? `<li class="classified classified--display">${adHtml(ad)}</li>`
+                : `<li class="classified">${adHtml(ad)}</li>`,
+        )
+        .join('');
+}
+
+// The forecast's figures come off the wire as one line. The high and the
+// low are set as the box's figures and the rest as the wire line under
+// them; the words between are kept, hidden, so the line reads the same.
+const FORECAST = /^(High) (-?\d+°), (low) (-?\d+°)\. (.+)$/;
+
+function forecastHtml(line) {
+    const parts = FORECAST.exec(line);
+    if (!parts) return escapeHtml(line);
+    const [, high, highTemp, low, lowTemp, rest] = parts.map(escapeHtml);
+    const figure = (label, temp) =>
+        `<span class="forecast__figure"><span class="forecast__label">${label}</span> <span class="forecast__temp">${temp}</span></span>`;
+    return `<span class="forecast__figures">${figure(high, highTemp)}<span class="forecast__joint">, </span>${figure(low, lowTemp)}<span class="forecast__joint">. </span></span><span class="forecast__wire">${rest}</span>`;
+}
+
 const items = (list, render) =>
     list.map((item) => `<li>${render(item)}</li>`).join('');
 
 // The paper's sourcing is usually the joke, so an item that opens on
 // something that happened takes a footnote: a mark where the fact ends, so
 // the item reads straight through, and the source at the foot of the column.
-function briefsWithNotes(briefs) {
+//
+// The column opens on yesterday's lead's follow-up, which is set as a
+// story of its own, under a kicker naming the issue it follows; the rest
+// run under it as a roundup.
+function briefsWithNotes(briefs, yesterday) {
     const notes = [];
-    const html = items(briefs, (brief) => {
+    const body = (brief) => {
         const source = realSourceOf(brief);
         if (!source) return escapeHtml(brief);
         const number = notes.length + 1;
@@ -60,7 +90,14 @@ function briefsWithNotes(briefs) {
             `<p id="brief-note-${number}"><span class="briefs__mark">${mark}</span> That sentence is true: <a href="${escapeHtml(source.url)}">${escapeHtml(source.cite)}</a>.</p>`,
         );
         return `${escapeHtml(fact)}<a class="briefs__mark" href="#brief-note-${number}" aria-label="Footnote ${number}">${mark}</a>${escapeHtml(rest)}`;
-    });
+    };
+    const html = briefs
+        .map((brief, at) =>
+            at === 0 && yesterday && brief === yesterday.lead?.followUp
+                ? `<li class="brief brief--follow" data-follows="No. ${yesterday.number}">${body(brief)}</li>`
+                : `<li class="brief">${body(brief)}</li>`,
+        )
+        .join('');
     return { html, notes: notes.join('') };
 }
 
@@ -172,7 +209,10 @@ export function issueParts(issue, { today, due = null } = {}) {
         put('#editorial-signature', { text: `— ${editorial.signature}` });
     }
 
-    const briefs = briefsWithNotes(issue.briefs);
+    const earlier = recentIssues(4, issue.date).slice(1);
+    const yesterday = earlier[0];
+
+    const briefs = briefsWithNotes(issue.briefs, yesterday);
     put('#briefs-list', { html: briefs.html });
     put('#briefs-notes', {
         html: briefs.notes,
@@ -181,8 +221,6 @@ export function issueParts(issue, { today, due = null } = {}) {
 
     // The correction that retracts yesterday's lead says which issue it
     // retracts, and links to it, so the reader can read what was wrong.
-    const earlier = recentIssues(4, issue.date).slice(1);
-    const yesterday = earlier[0];
     put('#corrections-list', {
         html: items(issue.corrections, (correction) =>
             yesterday && correction === yesterday.lead?.correction
@@ -201,7 +239,7 @@ export function issueParts(issue, { today, due = null } = {}) {
             : '<li><a href="/archive"><span class="earlier__head">Back issues</span></a></li>',
     });
 
-    put('#weather-numbers', { text: issue.weatherNumbers });
+    put('#weather-numbers', { html: forecastHtml(issue.weatherNumbers) });
     put('#weather-line', { text: issue.weather });
     put('#weather-cut', {
         attrs: {
@@ -211,13 +249,18 @@ export function issueParts(issue, { today, due = null } = {}) {
         },
     });
 
-    put('#classifieds-list', { html: items(issue.classifieds, adHtml) });
+    put('#classifieds-list', {
+        html: adsHtml(issue.classifieds, issue.lead.classified),
+    });
+    // A letter opens on a drop cap, unless its first word is one letter:
+    // a dropped "I" is read, and copied, run into the word after it.
     put('#letters-list', {
-        html: items(
-            issue.letters,
-            (letter) =>
-                `<p class="letter-body">${escapeHtml(letter.body)}</p><p class="letter-signature">— ${escapeHtml(letter.signature)}</p>`,
-        ),
+        html: items(issue.letters, (letter) => {
+            const initial = /^\S{2}/.test(letter.body)
+                ? ' letter-body--initial'
+                : '';
+            return `<p class="letter-body${initial}">${escapeHtml(letter.body)}</p><p class="letter-signature">— ${escapeHtml(letter.signature)}</p>`;
+        }),
     });
 
     return parts;
