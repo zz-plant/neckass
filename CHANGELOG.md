@@ -5,6 +5,11 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Removed
+- `assets/cuts/neckass.svg` and `assets/cuts/weather.svg`: no page loaded them.
+  The drawings live inline in `index.html`, and `bun run cut:draw` writes the
+  front page's and the card's copies.
+
 ### Changed
 - The strongest run first. A step in `data/growth.js` may rank what it runs first (`first`): its first round deals those items in that order, to the places the days actually print, and shuffles the rest behind them. From No. 770 the month's leads open on the doctor telling him his back is better (“Completely?”), then the night certificate he learned was optional, the gym, the student loans and the copier; the briefs on the fire drill, the vacation in 2019, the approved claim he appealed and the lake. From No. 790 the briefs open on the roof at No. 12 and the new run in which he gets what he asked for (the four-day week, the paid-off debt, the cable company that answered). No. 789 still runs the hearing under the bag of rolls and above the chicken, now by ranking, not luck. The “Completely?” lead and the reader’s letter move into the No. 770 step, and the new briefs into No. 790’s, so they rank with the rest. A unit test holds each ranking to what the issues print.
 - The point of the site is written down (`AGENTS.md`, `README.md`): it teaches, through the form of a newspaper, that a person's suffering can matter without having been necessary, that an achievement can be real without its conditions being justified, and that neither gives anyone jurisdiction over what other people must endure. The paper shows it and never says it; the entry gains the sequence by which it happens, from compensatory competence to retrospective necessity, and those three clauses.

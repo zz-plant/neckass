@@ -4,45 +4,17 @@ Thanks for helping improve Neckass Headlines.
 
 This guide covers **how to contribute**. For implementation details, see `DEVELOPMENT.md`.
 
-## Before you start
-- Read `SPECIFICATIONS.md` first (source of truth for behavior/accessibility).
-- Keep changes scoped and reviewable.
-- Prefer edits that preserve no-build, static-host compatibility.
+## Workflow
+1. Read `SPECIFICATIONS.md`; it wins in case of ambiguity.
+2. Fork, clone, and create a focused branch.
+3. Make the change, and run the checks in `AGENTS.md` (Local testing).
+4. Update the docs and `CHANGELOG.md` when behavior or the workflow changes.
+5. Open a PR that says what changed, why, and how you validated it, with
+   screenshots for visible changes.
 
-## Contribution workflow
-1. Fork + clone the repository.
-2. Create a focused branch (`feat/...`, `fix/...`, `docs/...` recommended).
-3. Implement your change.
-4. Validate locally (manual checks in `DEVELOPMENT.md`, plus optional smoke tests when relevant).
-5. Update docs/changelog when behavior or contributor workflow changes.
-6. Open a PR with:
-   - What changed
-   - Why it changed
-   - How you validated it
-   - Screenshot(s) for visual UI changes
+Keep the site free of a build step and of runtime dependencies, and leave
+unrelated code alone.
 
-## Quality expectations
-- **Spec alignment**: `SPECIFICATIONS.md` wins in case of ambiguity.
-- **Accessibility preservation**: retain focus behavior, labels, and live-region messaging.
-- **String consistency**: keep copy/share/export language consistent with existing UX.
-- **Minimal surprise**: avoid drive-by refactors unrelated to the PR goal.
-- **No unnecessary dependencies**: keep the runtime lightweight.
-
-## Pull request checklist
-- [ ] Change is aligned with `SPECIFICATIONS.md`.
-- [ ] Manual validation completed locally.
-- [ ] Optional smoke tests run for changed critical flows (if applicable).
-- [ ] Documentation updated where relevant.
-- [ ] `CHANGELOG.md` updated for user-visible or process-significant updates.
-- [ ] Screenshot(s) included for visible UI changes.
-
-## Commit guidance
-- Keep commits focused and atomic.
-- Use clear imperative messages (e.g., `docs: modernize contributor and agent guides`).
-
-## Community docs
-- Code of Conduct: `CODE_OF_CONDUCT.md`
-- Security Policy: `SECURITY.md`
-- Development Guide: `DEVELOPMENT.md`
+See also `CODE_OF_CONDUCT.md` and `SECURITY.md`.
 
 By contributing, you agree your contributions are licensed under the repository `LICENSE`.

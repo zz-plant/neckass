@@ -1,14 +1,13 @@
 /**
  * The file cut, flattened for the social card, in any pose.
  *
- * assets/cuts/neckass.svg is a rig: its joints turn on CSS custom
+ * The front page's cut is a rig: its joints turn on CSS custom
  * properties, and its ink follows the colour scheme. Satori and resvg read
  * neither, so this is the same drawing with each joint's rotation written
  * as an attribute, from a pose in data/poses.js, and the ink and paper
  * written in. The figure, what he holds and the pivots are written here by
- * scripts/draw-cut.ts (`bun run cut:draw`), which writes the rig's and the
- * front page's too; a smoke test holds the three copies of the drawing to
- * the same parts.
+ * scripts/draw-cut.ts (`bun run cut:draw`), which writes the front page's
+ * too; a unit test holds the two copies of the drawing to the same parts.
  *
  * As an image the cut is clipped to its box, so the box is the rig's with
  * room on each side a pose throws a limb into (PAD): the shrug's hand to

@@ -1,4 +1,4 @@
-const SITE = 'https://neckass.com';
+export const SITE = 'https://neckass.com';
 
 /** Metadata describes the issue's printed satire, never a real news event. */
 export function issueMetadata(issue, datedLink = false) {
@@ -23,5 +23,23 @@ export function issueMetadata(issue, datedLink = false) {
             image,
             isPartOf: { '@id': `${SITE}/#website` },
         },
+    };
+}
+
+/** The value of each <meta> tag the issue rewrites, by its name or property. */
+export function metaTags({ title, description, image, alt, canonical }) {
+    return {
+        description,
+        'og:title': title,
+        'twitter:title': title,
+        'og:description': description,
+        'twitter:description': description,
+        'og:image': image,
+        'og:image:secure_url': image,
+        'twitter:image': image,
+        'og:image:alt': alt,
+        'twitter:image:alt': alt,
+        'og:url': canonical,
+        'twitter:url': canonical,
     };
 }

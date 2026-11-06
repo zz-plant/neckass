@@ -16,20 +16,15 @@ export const EDITIONS = {
     1: {
         tag: 'First edition',
         lead: {
-            headline:
-                'Neckass said he would “get into running.” It is the fourth September he has said it.',
+            headline: 'Neckass said he would “get into running.” It is the fourth September he has said it.',
             deck: 'He has bought shoes each time. There are four pairs by the door, which is where the running was meant to start.',
             byline: 'Staff report',
             pose: 'explaining',
             scene: ['doorway', 'shoe'],
-            caption:
-                'Neckass, explaining, by the door. The Gazette has one cut of him and has not needed a second.',
-            correction:
-                'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
-            followUp:
-                'Neckass went for a run. He ran to the end of the street and walked back, and has described the walk back as “the cool-down.”',
-            classified:
-                'FOR SALE: running shoes, three pairs, all one size. Boxes included, one empty.',
+            caption: 'Neckass, explaining, by the door. The Gazette has one cut of him and has not needed a second.',
+            correction: 'Our first edition said there are four pairs of shoes by the door. There are three pairs and one box. He returned the fourth pair and kept the box.',
+            followUp: 'Neckass went for a run. He ran to the end of the street and walked back, and has described the walk back as “the cool-down.”',
+            classified: 'FOR SALE: running shoes, three pairs, all one size. Boxes included, one empty.',
             letter: {
                 body: 'I am at No. 14. He has told me about the running each September and I have said “good for you” each September. I would like a different September.',
                 signature: 'Next door',
@@ -43,9 +38,7 @@ export const EDITIONS = {
             ],
             signature: 'The editor',
         },
-        corrections: [
-            'This is the first edition. Neckass has already come in to dispute it. It had not been printed.',
-        ],
+        corrections: ['This is the first edition. Neckass has already come in to dispute it. It had not been printed.'],
         letters: [
             {
                 body: 'I understand you are starting a paper about my neighbor. I have some material. When would be convenient.',
@@ -57,18 +50,14 @@ export const EDITIONS = {
     100: {
         tag: 'Hundredth issue',
         lead: {
-            headline:
-                'Neckass told the Gazette that being in it every day is “a lot.” He has read four of them.',
+            headline: 'Neckass told the Gazette that being in it every day is “a lot.” He has read four of them.',
             deck: 'He came to the office Friday to ask that the paper stop. He stayed forty minutes. He has appeared in one hundred issues and read four.',
             byline: 'Staff report',
             pose: 'defense',
             scene: ['desk'],
-            correction:
-                'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
-            followUp:
-                'Neckass came back for the scarf and asked again, for thirty-five minutes, that the paper stop, which is an improvement.',
-            classified:
-                'FOUND: a scarf, left at the Gazette office by a man asking that the paper stop. He has since called to ask whether we have it, and whether we have stopped.',
+            correction: 'We reported that Neckass has read four issues. He has read three. The fourth was the same issue, which he had put down and picked up.',
+            followUp: 'Neckass came back for the scarf and asked again, for thirty-five minutes, that the paper stop, which is an improvement.',
+            classified: 'FOUND: a scarf, left at the Gazette office by a man asking that the paper stop. He has since called to ask whether we have it, and whether we have stopped.',
             letter: {
                 body: 'He left the scarf here first. He came back for it, described it to me, took a different one, and left. The one he described is still on the hook.',
                 signature: 'The café',
@@ -87,18 +76,14 @@ export const EDITIONS = {
     288: {
         tag: 'The hat',
         lead: {
-            headline:
-                'Neckass bought a hat and was reported to the Gazette as a second neckass',
+            headline: 'Neckass bought a hat and was reported to the Gazette as a second neckass',
             deck: 'A neighbor called the desk Saturday to say there was a man in a hat on her street “doing all the same things.” It was the same man. The hat is new.',
             byline: 'From wire reports',
             pose: 'satisfied',
             scene: ['hat'],
-            correction:
-                'We reported that the hat is new. It is his father’s. He has had it since March and worn it since Saturday.',
-            followUp:
-                'Neckass wore the hat a second day. No further reports of a second man have been received. The neighbor has asked us to say she “still sees it.”',
-            classified:
-                'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the package.',
+            correction: 'We reported that the hat is new. It is his father’s. He has had it since March and worn it since Saturday.',
+            followUp: 'Neckass wore the hat a second day. No further reports of a second man have been received. The neighbor has asked us to say she “still sees it.”',
+            classified: 'LOST: a hat. Not lost. Left somewhere. It will turn up in the car, with the umbrella and the package.',
             letter: {
                 body: 'I reported the second man. I would like to withdraw the report and keep the observation.',
                 signature: 'Next door',
@@ -116,18 +101,14 @@ export const EDITIONS = {
     366: {
         tag: 'First anniversary',
         lead: {
-            headline:
-                'Neckass has been in the paper every day for a year and has not noticed',
+            headline: 'Neckass has been in the paper every day for a year and has not noticed',
             deck: 'Asked about it, he said he had “been meaning to read it.” The paper is delivered to his door. He steps over it.',
             byline: 'From wire reports',
             pose: 'shrug',
             scene: ['doorway'],
-            correction:
-                'We reported that Neckass steps over the paper. He steps on it.',
-            followUp:
-                'Neckass picked up one of the 365 papers. It was a Tuesday from March. He has read the weather.',
-            classified:
-                'FOR SALE: 365 newspapers, unread, stacked inside a door. Pickup only. Buyer will have to knock; the door does not open all the way.',
+            correction: 'We reported that Neckass steps over the paper. He steps on it.',
+            followUp: 'Neckass picked up one of the 365 papers. It was a Tuesday from March. He has read the weather.',
+            classified: 'FOR SALE: 365 newspapers, unread, stacked inside a door. Pickup only. Buyer will have to knock; the door does not open all the way.',
             letter: {
                 body: 'A year. I wanted to say something about the year. He borrowed my ladder in October.',
                 signature: 'A neighbor',
@@ -146,18 +127,14 @@ export const EDITIONS = {
     731: {
         tag: 'Second anniversary',
         lead: {
-            headline:
-                'Neckass asked whether the Gazette was “still going.” This is the 731st issue.',
+            headline: 'Neckass asked whether the Gazette was “still going.” This is the 731st issue.',
             deck: 'He asked at the café, where the paper is on every table. He was holding one. He asked over the top of it.',
             byline: 'From wire reports',
             pose: 'considering',
             scene: ['table'],
-            correction:
-                'We reported that Neckass was holding a copy of the paper. He was holding it, and reading his phone.',
-            followUp:
-                'Neckass has been told the Gazette is still going. He said “good for them” and asked who was in it.',
-            classified:
-                'FOUND: a coat, at the café, left by the man who asked whether the paper was still going. It is the coat he said he did not need.',
+            correction: 'We reported that Neckass was holding a copy of the paper. He was holding it, and reading his phone.',
+            followUp: 'Neckass has been told the Gazette is still going. He said “good for them” and asked who was in it.',
+            classified: 'FOUND: a coat, at the café, left by the man who asked whether the paper was still going. It is the coat he said he did not need.',
             letter: {
                 body: 'Two years. In that time he has returned one thing to me: the ladder, to the wrong yard.',
                 signature: 'A former neighbor',
@@ -181,12 +158,9 @@ export const EDITIONS = {
             byline: 'Staff report',
             pose: 'standingBy',
             scene: ['desk'],
-            correction:
-                'We reported that Neckass was right about the prescriptions. He was right about one pair. The binder lists seven, and the agency has cleared the other six.',
-            followUp:
-                'Neckass said the 212 approvals show that every patient should be denied three times. The Gazette looked this one up. He is wrong.',
-            classified:
-                'NOTICE FROM THE GAZETTE: a brief of Nov. 26, filed as routine, has been refiled.',
+            correction: 'We reported that Neckass was right about the prescriptions. He was right about one pair. The binder lists seven, and the agency has cleared the other six.',
+            followUp: 'Neckass said the 212 approvals show that every patient should be denied three times. The Gazette looked this one up. He is wrong.',
+            classified: 'NOTICE FROM THE GAZETTE: a brief of Nov. 26, filed as routine, has been refiled.',
             letter: {
                 body: 'He came to my counter in October with the binder and told me about those two drugs. I told him I had a line. I looked it up after he left, so that I could tell him he was wrong. Then I called nine people.',
                 signature: 'A pharmacist',

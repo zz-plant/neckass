@@ -1,9 +1,10 @@
 # Cuts
 
 Line-cuts for the paper, drawn as rigs rather than pictures: each one exposes
-its moving parts as CSS custom properties, so a single file poses differently
-wherever it is used. Every property has a fallback, so the files also work on
-their own — `<img src="assets/cuts/neckass.svg">` — with no CSS at all.
+its moving parts as CSS custom properties, so one drawing poses differently
+wherever it is used. Every property has a fallback. The file cut and the
+weather cut live inline in `index.html`, where the page's CSS can reach them;
+the press is the one file here, because the 404 page shows it as an `<img>`.
 
 Ink and paper are properties too. `--ink` is the line, `--paper` the fill
 behind it; the fallbacks follow `prefers-color-scheme`, which is how the site
@@ -11,10 +12,10 @@ switches. Set `--paper` to whatever the cut is sitting on if that is not the
 sheet. The weather cut has two more, `--ink-sun` for the sun's disc and
 `--ink-sky` for the rain, with the page's weather inks as fallbacks.
 
-| File | What it is | Properties |
+| Cut | What it is | Properties |
 | --- | --- | --- |
-| `neckass.svg` | The file cut. A man in a suit, mid-explanation, and everything he can be drawn among. | `--tilt`, `--lean`, `--arm-near`, `--forearm-near`, `--hand-near`, `--arm-far`, `--forearm-far`, `--hand-far`, `--leg-near`, `--leg-far` — all angles. Zero on every joint stands him to attention, arms at the sides; positive turns a joint clockwise as drawn. `--lean` tips everything above the belt on the legs, which stay where they stand; the hands turn at the wrist. And one switch per prop, `1` to show it: `--phone`, `--cup`, `--hat` (held), `--doorway`, `--couch`, `--fridge`, `--tv`, `--desk`, `--table`, `--easel`, `--signpost`, `--shelf`, `--clock`, `--alarm`, `--parcel`, `--shoe`, `--rain`, `--shower`, `--smoke` (behind him). All off by default. |
-| `weather.svg` | The sky, in four layers. | `--sun`, `--cloud`, `--rain`, `--wind` — `1` shows a layer, `0` hides it. With `--cloud: 0` the sun moves to the middle of the box rather than hanging in the corner. |
+| File cut | The file cut. A man in a suit, mid-explanation, and everything he can be drawn among. | `--tilt`, `--lean`, `--arm-near`, `--forearm-near`, `--hand-near`, `--arm-far`, `--forearm-far`, `--hand-far`, `--leg-near`, `--leg-far` — all angles. Zero on every joint stands him to attention, arms at the sides; positive turns a joint clockwise as drawn. `--lean` tips everything above the belt on the legs, which stay where they stand; the hands turn at the wrist. And one switch per prop, `1` to show it: `--phone`, `--cup`, `--hat` (held), `--doorway`, `--couch`, `--fridge`, `--tv`, `--desk`, `--table`, `--easel`, `--signpost`, `--shelf`, `--clock`, `--alarm`, `--parcel`, `--shoe`, `--rain`, `--shower`, `--smoke` (behind him). All off by default. |
+| Weather cut | The sky, in four layers. | `--sun`, `--cloud`, `--rain`, `--wind` — `1` shows a layer, `0` hides it. With `--cloud: 0` the sun moves to the middle of the box rather than hanging in the corner. |
 | `press.svg` | A screw press. | `--lever` (angle of the bar; `0` is at rest, straight out), `--sheet: 0` clears the paper off the bed. |
 
 The file cut is drawn by hand, in one pen: a fine-point marker, so every
@@ -56,21 +57,13 @@ The figure is not drawn in the files. `scripts/draw-cut.ts` sets it down
 as geometry — capsules on the pivots, splines through a few points for
 everything else — and a hand draws it: each line resampled, bowed off
 true by a slow wobble from a seed per part, and written as quadratic
-curves. `bun run cut:draw` writes it into all three copies of the drawing
+curves. `bun run cut:draw` writes it into both copies of the drawing
 (below), so they are the same to the stroke. The scenery is kept in the
-files as it was drawn.
+two copies as it was drawn.
 
-Each box is cut to the pose the file ships in, so the drawing sits centred with
-an even margin. A pose that throws a limb wide — an arm straight out — reaches
-past that. Inlined, it simply draws outside the box (`overflow: visible`); as an
-`<img>` it would be clipped, so give a wide pose a wider `viewBox`.
-
-Posing takes a wrapper, because an `<img>` cannot be reached by the page's CSS.
-Inline the file, or reference it from a sprite, and set the properties on it:
-
-```html
-<svg class="cut-figure" viewBox="0 0 200 300">…</svg>
-```
+Each box is cut to the house pose, so the drawing sits centred with an even
+margin. A pose that throws a limb wide — an arm straight out — draws outside
+the box (`overflow: visible`). Set the properties on the inlined drawing:
 
 ```css
 .cut-figure {
@@ -100,8 +93,8 @@ stands behind him, and is short enough on the right to share the floor
 with the television. `data/scenes.js` names them, with the words each adds
 to the alt text.
 
-The file cut on the front page is inlined this way, with its styles in
-`styles.css` under `.cut-figure`: `modules/front-page.js` sets the lead's
+Its styles are in
+`styles.css` under `.cut-figure`: `modules/render.js` sets the lead's
 pose on its joints, the lead's scene on the switches, and the pose's
 caption in the cutline. It also sets `data-pose`, which `styles.css` reads
 to act the pose out once: each moving part (a joint, the tie, the eyes,
@@ -111,11 +104,9 @@ drawing comes to rest where the pose put it, and is over by 4.4 seconds.
 The social card can read neither CSS nor custom properties, so
 `functions/lib/cut.mjs` draws the same parts with each rotation written
 in, in whichever pose it is given, and only the props of the scene it is
-given. That is three copies of one drawing, all written by
-`bun run cut:draw`. The smoke test compares their parts, pivots and house
-pose, and fails if they differ.
+given. That is two copies of one drawing, both written by `bun run cut:draw`.
+`test:unit` compares their parts, pivots and house pose, and fails if they
+differ.
 
-The weather cut on the front page is inlined the same way: `modules/front-page.js`
-reads the forecast on file and sets the sky's four layer switches from it.
-That copy of the drawing lives in `index.html`; this is the source it was
-taken from, so change both together.
+`modules/render.js` reads the forecast on file and sets the weather cut's four
+layer switches from it.

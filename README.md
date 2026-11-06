@@ -31,19 +31,10 @@ reading.
 3. Come back tomorrow.
 
 ## Requirements
-- **Runtime:** any modern browser (no build pipeline required).
-- **Serving:** [Bun](https://bun.sh) for the local server and the smoke tests
-  (Playwright is a dev dependency installed via `bun install`).
-
-The modules are ES modules, so the pages are served over HTTP:
-
-```bash
-bun run serve
-```
-
-That serves the site on `http://127.0.0.1:8001/`. To run the edge functions
-as well (the feed, the card, the middleware), `bun run edge` serves the same
-tree through `wrangler dev` on `http://127.0.0.1:8800/`.
+Any modern browser. [Bun](https://bun.sh) runs the local server and the tests.
+The pages are ES modules, so they have to be served over HTTP. `bun run edge`
+serves the same tree through `wrangler dev` on `http://127.0.0.1:8800/`, with
+the feed, the card and the middleware.
 
 ## Pages
 - `index.html` — today's front page. `/?issue=YYYY-MM-DD` is any past one.
@@ -89,60 +80,24 @@ static host.
 
 ## Edge functions
 
-The site is static; a Cloudflare Worker adds what a static file cannot.
-`worker.js` is its router: it sends `/card.png` and `/feed.xml` to their
-handlers in `functions/`, which were Pages Functions and keep the Pages
-signatures, and runs the middleware in front of them and the front page.
+The site is static; a Cloudflare Worker adds the RSS feed, the per-issue card
+and the printing of the day's issue into the page. They compose the lead with
+the module the browser runs, on the same clock: an issue goes to press at
+midnight US Eastern, wherever the reader or the Worker is. `DEVELOPMENT.md` has
+the map.
 
-- `functions/feed.xml.js` — builds the RSS feed for the last 30 issues on
-  request. No store and no cron: issues come from the calendar.
-- `functions/card.png.js` — draws the issue's lead on the sheet as a PNG, on
-  request, with Satori and resvg. About 150 ms; no browser.
-- `functions/_middleware.js` — prints the active issue into the front page,
-  rewrites its title and social-card tags to the issue's lead, and points
-  the image tags at the card for the same issue, so a shared link previews with the headline
-  that is actually running.
-
-All three compose the lead with `modules/issue.js`, the same module the
-browser runs, and on the same clock: an issue goes to press at midnight US
-Eastern (`pressDate`, `PRESS_TIME_ZONE`), wherever the reader or the
-Worker is, so the page, the card, the feed and the share tags always name
-the same issue.
-
-## Smoke tests
-A Playwright suite covers what a reader opens: today's issue renders whole,
-a back issue loads from the archive, the corrections chain points at the
-lead it claims to, the calendar runs on its days, the landmarks are written,
-and the edge serves the feed, a real card, every file the pages name and none
-of the source. It starts the static server and `wrangler dev` itself.
-
-```bash
-bun install
-bun run test:unit
-bun run test:smoke
-```
-
-`test:unit` is the arithmetic and the data under `bun test`, without a
-browser; `test:smoke` is the pages and the edge under Playwright.
+## Tests
+`bun run test:unit` is the arithmetic and the data, without a browser;
+`bun run test:smoke` is the pages and the edge under Playwright, which starts
+the static server and `wrangler dev` itself. `DEVELOPMENT.md` says what each
+covers.
 
 ## Documentation map
-
-### Product & behavior
-- `SPECIFICATIONS.md` — canonical UI/UX + accessibility requirements.
-
-### For contributors and maintainers
-- `CONTRIBUTING.md` — contribution workflow, quality bar, PR checklist.
+- `SPECIFICATIONS.md` — canonical UI/UX and accessibility requirements.
 - `DEVELOPMENT.md` — architecture map, local validation, change strategy.
-- `CHANGELOG.md` — notable project changes (Keep a Changelog style).
-
-### Governance
-- `CODE_OF_CONDUCT.md` — collaboration expectations and enforcement.
-- `SECURITY.md` — vulnerability reporting and response process.
-- `LICENSE` — project license.
-
-### Agent-facing
+- `CONTRIBUTING.md` — contribution workflow and PR checklist.
 - `AGENTS.md` — repository-specific instructions for coding agents.
-
+- `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `LICENSE`.
 
 ## Deployment
 [neckass.com](https://neckass.com) is served by a Cloudflare Worker with static
@@ -189,28 +144,12 @@ gap:
 
 ### Generated assets
 
-Every PNG the site serves is committed and checked by `bun run assets:check`:
-the four social cards below, at their size and above a minimum byte count,
-and the three icons the pages and the manifest name, at the sizes they claim.
-
-### The file cut
-
-The man in `assets/cuts/neckass.svg`, the front page's inlined copy of him
-and the card's flattened one are drawn by `bun run cut:draw`, from the
-geometry in `scripts/draw-cut.ts` and a hand that bows each line from a
-fixed seed, so the three agree to the stroke and a redraw is repeatable.
-Run `bun run og:generate` after it.
-
-### Social preview cards
-
-`og-image.png`, `og-about.png`, `og-archive.png` and `og-prompts.png` live at
-the repo root, are 1200x630, and are rendered by `bun run og:generate` from
-`scripts/generate-og.ts` — with the same layout (`functions/lib/card.mjs`),
-renderer (Satori and resvg) and Fraunces as the per-issue `/card.png`, so
-every shared link previews as the same paper.
-
-They are PNG deliberately. They used to be SVG, which no major platform renders
-as a link preview, so shared neckass.com links showed no image at all.
+Every PNG the site serves is committed and checked by `bun run assets:check`.
+The social cards are rendered by `bun run og:generate`
+(`scripts/generate-og.ts`) with the same layout, renderer and Fraunces as the
+per-issue `/card.png`. They are PNG deliberately: no major platform renders an
+SVG as a link preview. `bun run cut:draw` draws the file cut
+(`scripts/draw-cut.ts`); run `bun run og:generate` after it.
 
 ## Contributing
 PRs are welcome. Start with `CONTRIBUTING.md`, then use `DEVELOPMENT.md` while implementing.

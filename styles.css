@@ -903,7 +903,7 @@ a:focus-visible {
     height: auto;
 }
 
-/* The file cut, inlined from assets/cuts/neckass.svg so it can be posed.
+/* The file cut, inlined in index.html so it can be posed.
    Each joint turns on a custom property that modules/front-page.js sets
    from the lead's pose (data/poses.js); the fallbacks are the house pose,
    so the standing issue has him explaining. The origins are the rig's.

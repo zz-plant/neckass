@@ -126,7 +126,7 @@ export function weatherLayers(line) {
     return { sun: 1, cloud: 1, rain: 0, wind: 0 };
 }
 
-// The file cut is the rig from assets/cuts/neckass.svg, inlined; each joint
+// The file cut is a rig, inlined in index.html; each joint
 // turns on a custom property. The lead names the pose (data/poses.js) and
 // the scene (data/scenes.js), each prop a layer with a switch; the cutline
 // and the alt text say what it is. data-pose picks the motion styles.css

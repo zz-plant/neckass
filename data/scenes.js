@@ -1,4 +1,4 @@
-// What the file cut can be drawn among. assets/cuts/neckass.svg carries
+// What the file cut can be drawn among. The cut in index.html carries
 // every prop below as a layer, off until its switch is 1; a lead names the
 // ones its story happens among (`scene: ['phone', 'couch']`), and the
 // front page and the card switch those on and no others.
@@ -99,42 +99,23 @@ export const SCENES = {
 // props in the order above. These replace the caption whole, and only the
 // pairings the paper actually runs belong here: a test checks.
 export const CAPTIONS = {
-    'phone+phone,couch':
-        'Neckass, on the phone, at home. He has told them he is five minutes away.',
-    'phone+phone,desk':
-        'Neckass, on the phone, at his desk. His out-of-office is telling them he is away.',
-    'phone+phone,shower':
-        'Neckass, on the phone, in the shower. He says he is on the train.',
-    'defense+phone':
-        'Neckass, in his own defense, holding up his phone. It is a screenshot.',
-    'defense+phone,doorway':
-        'Neckass, in his own defense, in his own doorway. He has told the neighbors to stay safe.',
-    'satisfied+phone':
-        'Neckass, satisfied, with his phone. It agreed with him.',
-    'considering+phone':
-        'Neckass, considering his phone. It has not said anything.',
-    'explaining+phone':
-        'Neckass, explaining, with his phone out. He is reading it to you.',
-    'satisfied+desk':
-        'Neckass, satisfied, at his desk. He has sent three emails.',
-    'defense+desk':
-        'Neckass, in his own defense, at his desk. He was here the whole time.',
-    'explaining+desk':
-        'Neckass, explaining, at his desk. The desk beside him has put on headphones.',
-    'pointing+desk':
-        'Neckass, pointing it out, at his desk. It is on page four of the manual.',
-    'standingBy+desk':
-        'Neckass, standing by, at his desk. He has blocked this time.',
-    'leaving+doorway':
-        'Neckass, on his way out. He has been on his way out since 9:10.',
-    'standingBy+doorway':
-        'Neckass, standing in a doorway. He is holding it for someone forty feet away.',
-    'satisfied+cup,table':
-        'Neckass, satisfied, at a table for six, with one coffee.',
-    'leaving+cup':
-        'Neckass, on his way out, with a coffee. He calls the staff “chief.”',
-    'resting+couch,tv':
-        'Neckass, resting his eyes, in front of the television. He says it is good so far.',
-    'shrug+parcel':
-        'Neckass, asked about it, beside the package. “I know, I know.” He does know.',
+    'phone+phone,couch': 'Neckass, on the phone, at home. He has told them he is five minutes away.',
+    'phone+phone,desk': 'Neckass, on the phone, at his desk. His out-of-office is telling them he is away.',
+    'phone+phone,shower': 'Neckass, on the phone, in the shower. He says he is on the train.',
+    'defense+phone': 'Neckass, in his own defense, holding up his phone. It is a screenshot.',
+    'defense+phone,doorway': 'Neckass, in his own defense, in his own doorway. He has told the neighbors to stay safe.',
+    'satisfied+phone': 'Neckass, satisfied, with his phone. It agreed with him.',
+    'considering+phone': 'Neckass, considering his phone. It has not said anything.',
+    'explaining+phone': 'Neckass, explaining, with his phone out. He is reading it to you.',
+    'satisfied+desk': 'Neckass, satisfied, at his desk. He has sent three emails.',
+    'defense+desk': 'Neckass, in his own defense, at his desk. He was here the whole time.',
+    'explaining+desk': 'Neckass, explaining, at his desk. The desk beside him has put on headphones.',
+    'pointing+desk': 'Neckass, pointing it out, at his desk. It is on page four of the manual.',
+    'standingBy+desk': 'Neckass, standing by, at his desk. He has blocked this time.',
+    'leaving+doorway': 'Neckass, on his way out. He has been on his way out since 9:10.',
+    'standingBy+doorway': 'Neckass, standing in a doorway. He is holding it for someone forty feet away.',
+    'satisfied+cup,table': 'Neckass, satisfied, at a table for six, with one coffee.',
+    'leaving+cup': 'Neckass, on his way out, with a coffee. He calls the staff “chief.”',
+    'resting+couch,tv': 'Neckass, resting his eyes, in front of the television. He says it is good so far.',
+    'shrug+parcel': 'Neckass, asked about it, beside the package. “I know, I know.” He does know.',
 };

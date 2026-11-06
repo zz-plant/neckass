@@ -13,79 +13,9 @@
  */
 
 import { issueForRequest } from '../modules/issue.js';
-import { issueMetadata } from '../modules/issue-metadata.js';
+import { issueMetadata, metaTags } from '../modules/issue-metadata.js';
 import { issueParts } from '../modules/render.js';
 import { printParts } from './lib/print.mjs';
-
-const CARD_TITLE_TAGS = new Set(['og:title', 'twitter:title']);
-const CARD_TEXT_TAGS = new Set([
-    'description',
-    'og:description',
-    'twitter:description',
-]);
-const CARD_IMAGE_TAGS = new Set([
-    'og:image',
-    'og:image:secure_url',
-    'twitter:image',
-]);
-const CARD_ALT_TAGS = new Set(['og:image:alt', 'twitter:image:alt']);
-const CARD_URL_TAGS = new Set(['og:url', 'twitter:url']);
-
-class MetaRewriter {
-    constructor({ title, description, image, alt, canonical }) {
-        this.title = title;
-        this.description = description;
-        this.image = image;
-        this.alt = alt;
-        this.canonical = canonical;
-    }
-
-    element(element) {
-        const key =
-            element.getAttribute('property') || element.getAttribute('name');
-        if (CARD_TITLE_TAGS.has(key))
-            element.setAttribute('content', this.title);
-        else if (CARD_TEXT_TAGS.has(key))
-            element.setAttribute('content', this.description);
-        else if (CARD_IMAGE_TAGS.has(key))
-            element.setAttribute('content', this.image);
-        else if (CARD_ALT_TAGS.has(key))
-            element.setAttribute('content', this.alt);
-        else if (CARD_URL_TAGS.has(key))
-            element.setAttribute('content', this.canonical);
-    }
-}
-
-class CanonicalRewriter {
-    constructor(url) {
-        this.url = url;
-    }
-    element(element) {
-        element.setAttribute('href', this.url);
-    }
-}
-
-class ArticleWriter {
-    constructor(schema) {
-        this.schema = JSON.stringify(schema).replace(/</g, '\\u003c');
-    }
-    element(element) {
-        element.append(
-            `<script id="issue-jsonld" type="application/ld+json">${this.schema}</script>`,
-            { html: true },
-        );
-    }
-}
-
-class TitleRewriter {
-    constructor(title) {
-        this.title = title;
-    }
-
-    element(element) {
-        element.setInnerContent(this.title);
-    }
-}
 
 export async function onRequest(context) {
     const { request, next } = context;
@@ -108,11 +38,29 @@ export async function onRequest(context) {
     // JavaScript all get the day's paper, and front-page.js, finding the
     // issue already printed, leaves it alone.
     const metadata = issueMetadata(issue, dated);
+    const tags = metaTags(metadata);
+    const schema = JSON.stringify(metadata.jsonLd).replace(/</g, '\\u003c');
     const rewriter = new HTMLRewriter()
-        .on('title', new TitleRewriter(metadata.title))
-        .on('head', new ArticleWriter(metadata.jsonLd))
-        .on('link[rel="canonical"]', new CanonicalRewriter(metadata.canonical))
-        .on('meta', new MetaRewriter(metadata));
+        .on('title', {
+            element: (title) => title.setInnerContent(metadata.title),
+        })
+        .on('head', {
+            element: (head) =>
+                head.append(
+                    `<script id="issue-jsonld" type="application/ld+json">${schema}</script>`,
+                    { html: true },
+                ),
+        })
+        .on('link[rel="canonical"]', {
+            element: (link) => link.setAttribute('href', metadata.canonical),
+        })
+        .on('meta', {
+            element(meta) {
+                const key =
+                    meta.getAttribute('property') || meta.getAttribute('name');
+                if (tags[key]) meta.setAttribute('content', tags[key]);
+            },
+        });
     return printParts(rewriter, issueParts(issue, { today, due })).transform(
         response,
     );

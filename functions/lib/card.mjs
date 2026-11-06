@@ -33,6 +33,7 @@ import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import satori, { init as satoriInit } from 'satori/wasm';
 import initYoga from 'yoga-wasm-web';
 import { POSES } from '../../data/poses.js';
+import { AP_MONTHS } from '../../modules/issue.js';
 import { CUT_HEIGHT, CUT_WIDTH, cutSrc, PAD } from './cut.mjs';
 
 export const WIDTH = 1200;
@@ -50,20 +51,6 @@ const RUBRIC = '#a3311f';
 
 export const MOTTO = 'One man, reported daily since Sept. 29, 2024.';
 
-const AP_MONTHS = [
-    'JAN.',
-    'FEB.',
-    'MARCH',
-    'APRIL',
-    'MAY',
-    'JUNE',
-    'JULY',
-    'AUG.',
-    'SEPT.',
-    'OCT.',
-    'NOV.',
-    'DEC.',
-];
 const WEEKDAYS = [
     'SUNDAY',
     'MONDAY',
@@ -77,7 +64,7 @@ const WEEKDAYS = [
 /** "WEDNESDAY, SEPT. 23, 2026 · NO. 725" */
 export function issueFolio(date, number) {
     const day = WEEKDAYS[date.getUTCDay()];
-    const month = AP_MONTHS[date.getUTCMonth()];
+    const month = AP_MONTHS[date.getUTCMonth()].toUpperCase();
     return `${day}, ${month} ${date.getUTCDate()}, ${date.getUTCFullYear()} · NO. ${number}`;
 }
 

@@ -1,9 +1,8 @@
 #!/usr/bin/env bun
 /**
  * draw-cut.ts — draws the file cut's figure by hand, and writes it into
- * the drawing's three copies: the rig (assets/cuts/neckass.svg), the
- * front page's inlined copy (index.html) and the card's flattened copy
- * (functions/lib/cut.mjs).
+ * the drawing's two copies: the front page's inlined one (index.html) and
+ * the card's flattened one (functions/lib/cut.mjs).
  *
  * The figure is set down here as plain geometry: a capsule round on each
  * pair of pivots, a spline through a few points for everything else, and
@@ -14,7 +13,7 @@
  * others as they were.
  *
  * Only the man and what he holds are drawn here. The scenery is kept in
- * the three files as it is. His watercolor is laid here too, coat by coat,
+ * the two files as it is. His watercolor is laid here too, coat by coat,
  * in the joint of whatever it is on, so it moves with him.
  *
  * Usage: bun run cut:draw
@@ -1758,20 +1757,15 @@ const scanDefs = (indent: string) => [
     `${indent}</defs>`,
 ];
 
-// Puts the scan's defs after `after` (a line of the source), or in place
-// of the ones already there.
-function spliceScan(source: string, after: RegExp, indent: string): string {
-    const defs = scanDefs(indent).join('\n');
+// Puts the scan's defs in place of the ones already there.
+function spliceScan(source: string, indent: string): string {
     const existing = source.match(/^ *<defs class="scan">[\s\S]*?<\/defs>\n/m);
-    if (existing) return source.replace(existing[0], `${defs}\n`);
-    const at = source.search(after);
-    if (at < 0) throw new Error(`nowhere for the scan after ${after}`);
-    const lineEnd = source.indexOf('\n', at) + 1;
-    return `${source.slice(0, lineEnd)}${defs}\n${source.slice(lineEnd)}`;
+    if (!existing) throw new Error('no scan in the page');
+    return source.replace(existing[0], `${scanDefs(indent).join('\n')}\n`);
 }
 
 // ---------------------------------------------------------------------
-// The three copies.
+// The two copies.
 
 const kebab = (joint: Joint) =>
     joint === 'tilt'
@@ -1781,7 +1775,7 @@ const isGroup = (item: Item): item is Group => 'items' in item;
 const isHeld = (item: Item): item is { held: Held } => 'held' in item;
 const isWash = (item: object): item is Wash => 'wash' in item;
 
-// A coat's own colour, written on it, so all three copies take it from here.
+// A coat's own colour, written on it, so both copies take it from here.
 const washPaint = ({ wash, rim, alpha }: Wash) =>
     `fill="${wash}" fill-opacity="${alpha}"${rim ? ` stroke="${rim}"` : ''}`;
 
@@ -1904,23 +1898,6 @@ function splicePlate(source: string, opening: RegExp, indent: string): string {
     return `${source.slice(0, openEnd)}${svgMarkup(FIGURE, indent).join('\n')}\n${source.slice(closeLine)}`;
 }
 
-function writeRig() {
-    const file = join(ROOT, 'assets/cuts/neckass.svg');
-    const source = readFileSync(file, 'utf8');
-    writeFileSync(
-        file,
-        spliceScan(
-            splicePlate(
-                source,
-                /<g class="plate" transform="translate\(-24 -6\)">/,
-                '        ',
-            ),
-            /\]\]><\/style>/,
-            '    ',
-        ),
-    );
-}
-
 function writePage() {
     const file = join(ROOT, 'index.html');
     const source = readFileSync(file, 'utf8');
@@ -1934,10 +1911,7 @@ function writePage() {
         /<g transform="translate\(-24 -6\)">/,
         `${opening[1]}    `,
     );
-    writeFileSync(
-        file,
-        head + spliceScan(plated, /^<svg class="cut-figure"/, opening[1]),
-    );
+    writeFileSync(file, head + spliceScan(plated, opening[1]));
 }
 
 function writeCard() {
@@ -1988,7 +1962,6 @@ function writeCard() {
     });
 }
 
-writeRig();
 writePage();
 writeCard();
-console.log('drew the file cut into the rig, the page and the card');
+console.log('drew the file cut into the page and the card');
