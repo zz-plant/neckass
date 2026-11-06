@@ -14,6 +14,34 @@
 // not all, and it always carries a fact: who counted, what the record
 // says, how old the child was.
 //
+// Each of the wire's forms has a job, and the joke is that form doing its
+// job on something too small for it. Pick the form whose job fits:
+//
+// - Damage: “No injuries were reported, apart from eleven eggs.” Recovery
+//   efforts continue on a spreadsheet.
+// - The clock: “as of press time,” for what is about to stop being true.
+//   The shelf is up as of press time, and the correction takes it down.
+// - The newsroom's effort: a shoe is “identified by the Gazette,” a voice
+//   note is listened to in full. Attempts to reach him fail only when his
+//   phone has died; he has never declined, so “could not be reached” belongs
+//   to the cat, and “declined to discuss” to his doctor.
+// - The source's stake: “a person familiar with the desk”; the reason for
+//   anonymity is its fact (“because whoever it is might call back”). The
+//   most interested party can be the source: “according to his mother.”
+// - The evidence: he supplies it himself (“which he provided as evidence”),
+//   and it does not help him.
+// - The credit: a byline is “Staff report” or “From wire reports,” unless
+//   someone did the reporting, and then “His roommate contributed to this
+//   report.” Where the copy came from can also be the credit: “Compiled from
+//   five sets of notes,” “Sourced to Neckass.” About one lead in seven.
+//
+// A form is played straight, at full weight. Nothing tells the reader it is
+// a parody: no “BREAKING,” “sources say,” “shocking,” “developing,” “in a
+// stunning turn.” Those are what a parody of the news reaches for, and this
+// is a paper. One form to an item, and it is not the turn unless it is a
+// fact. “According to” already does most of the work here, so try another
+// first; “the matter is under review” is a formality, and we do not print it.
+//
 // These run in the briefs column beside the follow-ups and the
 // calendar's briefs, so each is set as a sentence and ends on a period,
 // inside a closing quote. None repeats a lead's headline: the lead
@@ -148,7 +176,7 @@ export const HEADLINES = {
     41: 'Neckass stopped his walk to check his step count, saw 4,000, and called it a day. It was 9 a.m.',
     42: 'Neckass’s digital detox was documented in fourteen posts and a story asking whether anyone had noticed he was gone.',
     43: 'Neckass watched “one more episode” at 2 a.m. At 5 the service asked whether he was still watching. He said yes.',
-    44: 'Neckass described his week to the Gazette as “insane.” His calendar shows a haircut and a dentist. The dentist was rescheduled.',
+    44: 'Neckass described his week to the Gazette as “insane.” His calendar, which he provided as evidence, shows a haircut and a dentist. The dentist was rescheduled.',
     45: 'Neckass was asked whether the neck in Neckass refers to anything. He touched his neck.',
     46: 'Neckass said “I’ll keep it brief” and stood up.',
     47: 'Neckass ate soup he described as “still good.” The lid said Tuesday, and he said it did not say which Tuesday.',
@@ -226,7 +254,7 @@ export const HEADLINES = {
     119: 'Neckass liked his own post from a second account he forgot he had.',
     120: 'The cat has been cleared. The puzzle piece was behind the couch, with two chargers and a remote.',
     121: 'A shelf he put up nine days ago is holding. The books are on the floor beside it “until it settles.”',
-    122: 'A survey by the Gazette found that nobody at the table has heard the one about the parrot fewer than three times.',
+    122: 'A survey by the Gazette found that nobody at the table has heard the one about the parrot fewer than three times. He told it during the survey.',
     123: 'According to the colleague with the timer, “quick question” now averages thirty-eight minutes, down from forty.',
     124: 'Neckass’s spades record this season stands at 2–19. Both wins were forfeits.',
     125: 'The out-of-office reply has entered its fourth month. Since Tuesday it has been answering another out-of-office reply.',

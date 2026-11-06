@@ -19,6 +19,11 @@ import { GROWTH } from '../data/growth.js';
 import { HEADLINES, REAL_SOURCES } from '../data/headlines.js';
 import { POSES } from '../data/poses.js';
 import { CAPTIONS, SCENES } from '../data/scenes.js';
+import {
+    headlineSize,
+    headlineTurn,
+    turnSize,
+} from '../functions/lib/card.mjs';
 import { cutSrc, JOINT_ORIGINS } from '../functions/lib/cut.mjs';
 import {
     captionOf,
@@ -89,6 +94,35 @@ function rigOf(css) {
 }
 
 describe('The Gazette', () => {
+    test('the card sets every lead whole or split, and loses no words', () => {
+        const headlines = [
+            ...Object.values(LEADS),
+            ...Object.values(EDITIONS).map((edition) => edition.lead),
+        ]
+            .filter(Boolean)
+            .map((lead) => lead.headline);
+        const split = headlines.filter((headline) => headlineTurn(headline));
+        expect(split.length).toBeGreaterThan(0);
+        for (const headline of headlines) {
+            const parts = headlineTurn(headline);
+            if (parts) {
+                expect(`${parts.setup} ${parts.turn}`).toBe(headline);
+                expect(parts.turn.length).toBeLessThanOrEqual(27);
+                expect(turnSize(parts)).toBeGreaterThanOrEqual(80);
+            } else {
+                expect(
+                    headlineSize(headline, { deck: '' }),
+                ).toBeGreaterThanOrEqual(64);
+            }
+        }
+    });
+
+    test('the card does not take a mid-sentence quote for a full stop', () => {
+        expect(headlineTurn('He said “really?” to her.')).toBeNull();
+        expect(headlineTurn('He called it “maybe” today.')).toBeNull();
+        expect(headlineTurn('He was gone at 3 a.m.')).toBeNull();
+    });
+
     test("today's corrections retract yesterday's actual lead", () => {
         // Walk a spread of issues rather than only today, so the chain is
         // checked across many lead pairings.
