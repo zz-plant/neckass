@@ -23,15 +23,19 @@ const unpunctuated = (text) => text.replace(/\.(”?)$/, '$1');
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 
+// Opens an issue and waits for the page to publish which one it is.
+async function openIssue(page, url) {
+    await page.goto(url);
+    await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+    return page.evaluate(() => window.Neckass.currentIssue);
+}
+
 test.describe('The Gazette', () => {
     // The issue is the product. These cover what a reader actually opens:
     // that today's paper renders, that a back issue loads from the archive,
     // and that the corrections chain points at the lead it claims to.
     test('the front page renders a complete issue', async ({ page }) => {
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+        const issue = await openIssue(page, BASE_URL);
 
         await expect(page.locator('#masthead-date')).toHaveText(
             issue.mastheadLine,
@@ -127,10 +131,7 @@ test.describe('The Gazette', () => {
     test('a back issue loads from its URL and offers the way back', async ({
         page,
     }) => {
-        await page.goto(`${BASE_URL}?issue=2025-06-11`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+        const issue = await openIssue(page, `${BASE_URL}?issue=2025-06-11`);
         expect(issue.issueParam).toBe('2025-06-11');
         // The headline is the issue's permalink.
         await expect(page.locator('#lead-headline a')).toHaveAttribute(
@@ -146,15 +147,12 @@ test.describe('The Gazette', () => {
         await expect(notice).toContainText(`No. ${issue.number}`);
 
         // Today's issue must not show the banner.
-        await page.goto(BASE_URL);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await openIssue(page, BASE_URL);
         await expect(page.locator('#back-issue-notice')).toBeHidden();
     });
 
     test('the front page leads back into the run', async ({ page }) => {
-        await page.goto(`${BASE_URL}?issue=2025-06-11`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+        const issue = await openIssue(page, `${BASE_URL}?issue=2025-06-11`);
 
         // The nameplate says what the paper covers.
         await expect(page.locator('h1')).toHaveText('The Gazette');
@@ -183,8 +181,7 @@ test.describe('The Gazette', () => {
         ).toHaveAttribute('href', expected[0].href);
 
         // The first edition has nothing earlier; the way to the archive stays.
-        await page.goto(`${BASE_URL}?issue=2024-09-29`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await openIssue(page, `${BASE_URL}?issue=2024-09-29`);
         await expect(page.locator('#earlier-list a')).toHaveAttribute(
             'href',
             '/archive',
@@ -194,10 +191,7 @@ test.describe('The Gazette', () => {
     test('a landmark issue is written, and the chain runs through it', async ({
         page,
     }) => {
-        await page.goto(`${BASE_URL}?issue=2024-09-29`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const first = await page.evaluate(() => window.Neckass.currentIssue);
+        const first = await openIssue(page, `${BASE_URL}?issue=2024-09-29`);
         expect(first.number).toBe(1);
         expect(first.tag).toBe('First edition');
         await expect(page.locator('#editorial')).toBeVisible();
@@ -215,8 +209,7 @@ test.describe('The Gazette', () => {
 
         // An ordinary issue carries no editorial. No. 2 is one; today is
         // not always (on an anniversary the front page is a landmark).
-        await page.goto(`${BASE_URL}?issue=2024-09-30`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await openIssue(page, `${BASE_URL}?issue=2024-09-30`);
         await expect(page.locator('#editorial')).toBeHidden();
     });
 
@@ -226,8 +219,7 @@ test.describe('The Gazette', () => {
         // The markup's standing issue is No. 759. On a static host, a link
         // to No. 759 still gets the back-issue notice and its own title,
         // which only printing the request gives it.
-        await page.goto(`${BASE_URL}?issue=2026-10-27`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await openIssue(page, `${BASE_URL}?issue=2026-10-27`);
         const issue = composeIssue(parseIssueDate('2026-10-27'));
         await expect(page.locator('#back-issue-notice')).toBeVisible();
         await expect(page.locator('#back-issue-text')).toContainText(
@@ -245,11 +237,9 @@ test.describe('The Gazette', () => {
     test('an issue not yet published falls back to today and says so', async ({
         page,
     }) => {
-        await page.goto(`${BASE_URL}?issue=2099-01-01`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const rendered = await page.evaluate(
-            () => window.Neckass.currentIssue.number,
+        const { number: rendered } = await openIssue(
+            page,
+            `${BASE_URL}?issue=2099-01-01`,
         );
         expect(rendered).toBe(issueNumber(pressDate()));
         const notice = page.locator('#back-issue-notice');
@@ -258,11 +248,9 @@ test.describe('The Gazette', () => {
     });
 
     test('a malformed issue param falls back to today', async ({ page }) => {
-        await page.goto(`${BASE_URL}?issue=not-a-date`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const rendered = await page.evaluate(
-            () => window.Neckass.currentIssue.number,
+        const { number: rendered } = await openIssue(
+            page,
+            `${BASE_URL}?issue=not-a-date`,
         );
         expect(rendered).toBe(issueNumber(pressDate()));
         await expect(page.locator('#back-issue-notice')).toBeHidden();
@@ -321,10 +309,7 @@ test.describe('The Gazette', () => {
         // Follow one and confirm it renders the issue it advertised.
         const href = await links.nth(3).getAttribute('href');
         const param = new URL(href, BASE_URL).searchParams.get('issue');
-        await page.goto(new URL(href, BASE_URL).toString());
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
-
-        const issue = await page.evaluate(() => window.Neckass.currentIssue);
+        const issue = await openIssue(page, new URL(href, BASE_URL).toString());
         expect(issue.issueParam).toBe(param);
         await expect(page.locator('#lead-headline')).toHaveText(
             issue.lead.headline,
@@ -341,10 +326,7 @@ test.describe('The Gazette', () => {
         for (const reducedMotion of ['no-preference', 'reduce']) {
             const context = await browser.newContext({ reducedMotion });
             const page = await context.newPage();
-            await page.goto(BASE_URL);
-            await page.waitForFunction(() =>
-                Boolean(window.Neckass?.currentIssue),
-            );
+            await openIssue(page, BASE_URL);
             // Animations only: the stylesheet's reduced-motion rule gives
             // every property a 0.01ms transition, which setting the pose
             // trips, and those are not motion.
@@ -478,8 +460,7 @@ test.describe('The Gazette', () => {
         // With the script, the page is already the issue it would print,
         // and it leaves it as the edge printed it.
         await page.setViewportSize({ width: 390, height: 844 });
-        await page.goto(`${EDGE_URL}?issue=2025-06-11`);
-        await page.waitForFunction(() => Boolean(window.Neckass?.currentIssue));
+        await openIssue(page, `${EDGE_URL}?issue=2025-06-11`);
         await expect(page.locator('#masthead-date')).toHaveText(
             issue.mastheadLine,
         );

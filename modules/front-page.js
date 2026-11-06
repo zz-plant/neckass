@@ -10,7 +10,7 @@
  */
 
 import { issueForRequest } from './issue.js';
-import { issueMetadata } from './issue-metadata.js';
+import { issueMetadata, metaTags } from './issue-metadata.js';
 import { issueParts } from './render.js';
 
 function print(parts) {
@@ -29,20 +29,7 @@ function print(parts) {
 function writeMetadata(issue, dated) {
     const metadata = issueMetadata(issue, dated);
     document.title = metadata.title;
-    const values = {
-        description: metadata.description,
-        'og:title': metadata.title,
-        'twitter:title': metadata.title,
-        'og:description': metadata.description,
-        'twitter:description': metadata.description,
-        'og:image': metadata.image,
-        'og:image:secure_url': metadata.image,
-        'twitter:image': metadata.image,
-        'og:image:alt': metadata.alt,
-        'twitter:image:alt': metadata.alt,
-        'og:url': metadata.canonical,
-        'twitter:url': metadata.canonical,
-    };
+    const values = metaTags(metadata);
     for (const meta of document.head.querySelectorAll('meta')) {
         const value = values[meta.getAttribute('property') || meta.name];
         if (value) meta.content = value;

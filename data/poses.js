@@ -1,4 +1,4 @@
-// The file cut's poses. assets/cuts/neckass.svg is a rig: each joint turns
+// The file cut's poses. The cut in index.html is a rig: each joint turns
 // on a custom property, and these are the angles, in degrees, that the
 // paper sets on it. A lead names its pose; the front page sets the joints
 // on its inlined copy of the cut and the caption under it, and the

@@ -9,7 +9,7 @@
 # stylesheet and the fonts are the site's own, and the only inline script
 # is the JSON-LD, which is data and never runs. Style attributes are
 # allowed because the edge sets the file cut's pose and the weather cut's
-# layers in them. The drawings in assets/cuts carry their own <style>, so
+# layers in them. The press in assets/cuts carries its own <style>, so
 # the policy is on the pages and not on every file.
 /
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'

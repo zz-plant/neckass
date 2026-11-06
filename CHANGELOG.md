@@ -5,6 +5,11 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Removed
+- `assets/cuts/neckass.svg` and `assets/cuts/weather.svg`: no page loaded them.
+  The drawings live inline in `index.html`, and `bun run cut:draw` writes the
+  front page's and the card's copies.
+
 ### Changed
 - The paper uses more of the wire's forms, played straight. The register in `data/headlines.js` now says what each form is for and bars the marks of parody (“BREAKING,” “sources say”). Fifteen leads take a credit in place of “Staff report” or “From wire reports” (“His roommate contributed to this report,” “Compiled from five sets of notes,” “Sourced to Neckass”), and eleven decks and two briefs take a form they lacked: “as of press time” on the shelf the correction takes down, “No injuries were reported, apart from eleven eggs,” “a person familiar with the desk.” These are edits in place, so back issues that ran these items reprint with them. The Standards add that contributors are credited.
 - The social card is set like a bumper sticker, to be read at a glance at a quarter of its size. Anything that would not read in a group chat is off it: the date and number, the motto, the address and the letter's signature. The desk gives way to a heavy rule with a hairline inside it, which marks the card's edge on a white chat. A headline ending on a short sentence is split there, the setup in the text cut and the turn as large as it goes (“He is at home.”), and any other is set whole, up to 104px, where it was 98px down to 58px. CORRECTION TO FOLLOW and a landmark's tag are a filled block in the rubric at 30px, where the stamp was 19px. The still cards take the same frame and name their page at the foot.

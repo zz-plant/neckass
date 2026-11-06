@@ -12,18 +12,12 @@ import {
     selectLead,
     toIssueParam,
 } from '../modules/issue.js';
+import { SITE } from '../modules/issue-metadata.js';
+import { escapeHtml } from '../modules/render.js';
 
-const SITE = 'https://neckass.com';
 const ISSUES_IN_FEED = 30;
 
-function escapeXml(value) {
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&apos;');
-}
+const escapeXml = (value) => escapeHtml(value).replace(/'/g, '&apos;');
 
 export function buildFeed(now = new Date()) {
     const today = pressDate(now);

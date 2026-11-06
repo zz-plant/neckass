@@ -27,21 +27,9 @@ There is one copy of each pool and of the lead-selection arithmetic, so the
 feed and the card cannot drift from the page: they run the same code by
 construction.
 
-This shape was chosen over the earlier one (classic scripts assigning onto
-`window`, with a generated copy of the leads and a mirrored copy of the
-arithmetic for the edge). That layout existed to let the site open from
-`file://`; it cost a build-time extraction script (`scripts/
-build-feed-data.ts`), a generated data file (`functions/lib/leads.mjs`), a
-drift check, and a test that pinned the mirror. Dropping `file://` support
-removed all of it. If you need to open a page from disk, run `bun run serve`
-first.
-
-The one intentional difference between the runtimes is the clock: the
-browser and the edge both take today from the press clock, midnight US
-Eastern (`pressDate` in `modules/issue.js`), so a shared link's card and
-tags name the issue the reader lands on. `modules/issue.js` holds all of
-the arithmetic (the clock, the epoch, the RNG, the round dealing, landmark
-lookup), and the edge imports it directly.
+The browser and the edge both take today from the press clock, midnight US
+Eastern (`pressDate` in `modules/issue.js`), so a shared link's card and tags
+name the issue the reader lands on.
 
 ## Architecture overview
 
@@ -82,16 +70,10 @@ There is no bootstrap, no state, no storage and no input handling.
 
 ### Data and assets
 - `data/` — see above. Pool sizes are load-bearing; see the comments in
-  `data/formats.js`. Items are numbered and dealt by number; a pool grows
-  or retires an item only from an issue that has not run yet
-  (`data/growth.js`), so the back issues keep what they ran.
-- `assets/cuts/` — line-cuts for the paper. Each is a rig: its joints and
-  layers are CSS custom properties with fallbacks, so the files work as plain
-  `<img>` and pose when inlined. The file cut and the weather cut are
-  inlined in `index.html`, styled in `styles.css`; `assets/cuts/README.md`
-  lists every property, and `data/poses.js` holds the file cut's poses.
-- `fonts/` — Fraunces as a variable woff2 for the browser, and two static
-  TrueType cuts for the card renderer.
+  `data/formats.js` and the content rules in `AGENTS.md`.
+- `assets/cuts/README.md` — the cuts' rigs and every property. The file cut
+  and the weather cut are inlined in `index.html`, styled in `styles.css`.
+- `fonts/` — see `fonts/README.md`.
 
 ### Edge
 - `worker.js` — the Worker's entry, and the router Pages used to generate
@@ -114,9 +96,9 @@ There is no bootstrap, no state, no storage and no input handling.
   its title, description and image tags (`functions/lib/print.mjs` applies
   the renderer's patches with HTMLRewriter).
 - `functions/lib/cut.mjs` — the file cut flattened for the card, in any
-  pose. `bun run cut:draw` (`scripts/draw-cut.ts`) writes its figure, the
-  rig's and the front page's from one drawing; a smoke test holds the three
-  to the same parts, pivots and house pose.
+  pose. `bun run cut:draw` (`scripts/draw-cut.ts`) writes its figure and the
+  front page's from one drawing; `test:unit` holds the two to the same parts,
+  pivots and house pose.
 - `functions/lib/card.mjs` — the card's layout and the one renderer
   (`renderCardPng`) shared with `scripts/generate-og.ts`; `initCardRenderer`
   loads the WebAssembly engines once per runtime, from imported modules on
@@ -138,7 +120,7 @@ There is no bootstrap, no state, no storage and no input handling.
 4. `bun run edge`, then `/card.png` is a PNG of today's lead and `view-source:/`
    carries `og:image` pointing at it.
 5. Print preview: ink on white, two columns, no site links.
-7. Layout remains usable across small and wide viewports, in both themes.
+6. Layout remains usable across small and wide viewports, in both themes.
 
 ## Tests
 ```bash
@@ -150,7 +132,7 @@ bun run test:smoke   # the pages and the edge, in Chromium
 `tests/paper.test.mjs` runs under `bun test` against the modules
 directly: the corrections chain, the calendar, the standing matters, no
 repeats inside a round or across a step of growth, the numbering of the
-pools and the back issues' deal, the file cut's three copies, the sitemap,
+pools and the back issues' deal, the file cut's two copies, the sitemap,
 and the standing issue in `index.html` as the renderer prints it.
 `tests/smoke.spec.mjs` runs under Playwright, which starts `bun run serve`
 and `bun run edge` itself: what a reader opens (the issue, a back issue,
@@ -165,7 +147,7 @@ the card, the files it serves).
 ## Change strategy
 - Prefer incremental edits over broad rewrites.
 - Content changes go in `data/`; a new kind of thing on the page goes in
-  `modules/issue.js` (composition) and `modules/front-page.js` (rendering),
+  `modules/issue.js` (composition) and `modules/render.js` (rendering),
   in that order.
 - Preserve static-host/no-build compatibility.
 

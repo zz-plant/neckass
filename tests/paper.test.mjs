@@ -620,30 +620,27 @@ describe('The Gazette', () => {
     });
 
     test('the file cut is one drawing wherever it is drawn', () => {
-        // The rig, the front page's inlined copy and the card's flattened
-        // copy are three copies of the same parts. A part changed in one
-        // and not the others would stand differently in each.
-        const rig = read('../assets/cuts/neckass.svg');
+        // The front page's inlined copy and the card's flattened copy are
+        // two copies of the same parts. A part changed in one and not the
+        // other would stand differently in each.
         const inline = read('../index.html').match(
             /<svg class="cut-figure"[\s\S]*?<\/svg>/,
         )[0];
         // The card draws only the scene it is given; with every prop on,
-        // it is the whole rig.
+        // it is the whole drawing.
         const card = atob(
             cutSrc(POSES.explaining.joints, Object.keys(SCENES)).split(',')[1],
         );
-        const shapes = shapesOf(rig);
+        const shapes = shapesOf(inline);
         expect(shapes.length).toBeGreaterThan(20);
-        expect(shapesOf(inline)).toEqual(shapes);
         expect(shapesOf(card)).toEqual(shapes);
         const bare = atob(cutSrc(POSES.explaining.joints).split(',')[1]);
         expect(shapesOf(bare).length).toBeLessThan(shapes.length);
 
-        // The paint is the same coats in all three, and every gradient a coat
+        // The paint is the same coats in both, and every gradient a coat
         // names is in that copy's defs. A missing one paints nothing at all,
         // silently.
         for (const [where, source] of [
-            ['rig', rig],
             ['page', inline],
             ['card', card],
         ]) {
@@ -655,41 +652,27 @@ describe('The Gazette', () => {
                 expect(source, `${where}: ${id}`).toContain(`id="${id}"`);
             }
         }
-        for (const [where, source] of [
-            ['rig', rig],
-            ['page', read('../styles.css')],
-        ]) {
-            expect(source, where).toMatch(
-                /\.wash\s*\{\s*mix-blend-mode: multiply/,
-            );
-        }
+        expect(read('../styles.css')).toMatch(
+            /\.wash\s*\{\s*mix-blend-mode: multiply/,
+        );
 
-        // Every prop is a layer with a switch, off unless it is thrown, in
-        // the rig and on the page, so the standing issue and the rig on its
-        // own show him on the bare sheet.
+        // Every prop is a layer with a switch, off unless it is thrown, so
+        // the standing issue shows him on the bare sheet.
         const sheet = read('../styles.css');
         for (const prop of Object.keys(SCENES)) {
-            for (const [where, source] of [
-                ['rig', rig],
-                ['page', sheet],
-            ]) {
-                expect(source, `${where}: ${prop}`).toMatch(
-                    new RegExp(
-                        `\\.scene-${prop}\\s*\\{\\s*opacity:\\s*var\\(--${prop},\\s*0\\);`,
-                    ),
-                );
-            }
-            expect(rig, prop).toContain(`<g class="scene-${prop}">`);
+            expect(sheet, prop).toMatch(
+                new RegExp(
+                    `\\.scene-${prop}\\s*\\{\\s*opacity:\\s*var\\(--${prop},\\s*0\\);`,
+                ),
+            );
             expect(inline, prop).toContain(`<g class="scene-${prop}">`);
         }
 
         // The joints turn on the same pivots, and unposed they stand in
         // the house pose, which is the pose a lead naming none is given.
-        const fromRig = rigOf(rig);
-        const fromPage = rigOf(read('../styles.css'));
+        const fromPage = rigOf(sheet);
         for (const [joint, origin] of Object.entries(JOINT_ORIGINS)) {
             const house = POSES.explaining.joints[joint];
-            expect(fromRig[joint], joint).toEqual({ origin, house });
             expect(fromPage[joint], joint).toEqual({ origin, house });
         }
         // Every pose sets every joint, so none falls back mid-pose.

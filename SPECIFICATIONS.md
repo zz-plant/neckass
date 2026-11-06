@@ -141,11 +141,10 @@ forms: the briefs a story over a roundup, the corrections a screened box,
 the weather a table of figures over a line of prose, the classifieds a
 display ad over line ads, the letters a letters page.
 
-Line-cuts live in `assets/cuts/` and are rigs: each exposes its moving parts
-as CSS custom properties, with fallbacks, so the files work as plain `<img>`
-and pose when inlined. `assets/cuts/README.md` lists the properties.
+Line-cuts are rigs: each exposes its moving parts as CSS custom properties,
+with fallbacks. `assets/cuts/README.md` lists the properties.
 
-- **The file cut** — the drawing in `assets/cuts/neckass.svg`, inlined in
+- **The file cut** — inlined in
   the lead (`#cut-figure`) so it can be posed: the paper's one picture of
   him, posed for the lead and run beside it, where a paper runs the
   photograph. Each lead names a pose from
@@ -173,7 +172,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   ends. Above the belt he leans (`--lean`) on legs that stay put, and each
   hand turns at the wrist. The head sits behind the collar. The figure is
   set down as geometry in `scripts/draw-cut.ts` and drawn by a seeded hand
-  into all three copies (the rig, the page, the card) by `bun run cut:draw`.
+  into both copies (the page, the card) by `bun run cut:draw`.
 - **The scene** — a lead may also name what its story happens among, from
   `data.SCENES`: a phone, a coffee cup or a hat, which he holds or wears
   and which turn with him; or a couch, a television, a desk, a table, a
@@ -181,7 +180,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   wall, a wall clock, a bedside alarm, a package, a shoe, the rain, a
   running shower or a smoke alarm, which stand behind him on his ground, in
   the margin the box already keeps. Each is a layer of the same drawing with
-  a switch (`--phone: 1`), off by default, so the rig as an `<img>` shows
+  a switch (`--phone: 1`), off by default, so unposed the cut shows
   him on the bare sheet. The renderer sets every
   switch, on or off, from the lead, and the scene finishes the figure's
   `aria-label`: *Line-cut of a man with one hand held to his ear, holding a
@@ -212,7 +211,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   its rule level with the top of the section's first paragraph. The entry's
   `.entry-note` sits in the margin beside the opening paragraph, spanning two
   rows; its place in the markup, after the intro, is unchanged.
-- **The weather cut** — the same drawing as `assets/cuts/weather.svg`, inlined
+- **The weather cut** — inlined
   in the weather box so its layers can be switched. `frontPage.weatherLayers()`
   maps the first word of the forecast to `--sun`, `--cloud`, `--rain` and
   `--wind`; anything it does not recognise gets sun and cloud. The sun's disc
@@ -403,7 +402,7 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   styles, fonts and images from the site only, no plugins, no forms, no
   framing. Style attributes are allowed, since the edge prints the file
   cut's pose and the weather cut's layers in them; the JSON-LD is data and
-  does not run. The drawings in `assets/cuts/` carry their own `<style>`,
+  does not run. The press in `assets/cuts/` carries its own `<style>`,
   so the policy is on the pages only. The fonts are served with a year's
   immutable cache. The smoke suite loads every page through the edge and
   fails if the browser blocks anything.
