@@ -40,7 +40,7 @@ jobs:
         run: bun run assets:check
 
       # The arithmetic and the data, without a browser: the dealing, the
-      # calendar, the growth of the pools, the drawing's three copies, and
+      # calendar, the growth of the pools, the drawing's two copies, and
       # the standing issue in index.html as the renderer prints it.
       - name: Unit tests
         run: bun run test:unit

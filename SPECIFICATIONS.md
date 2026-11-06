@@ -172,7 +172,7 @@ with fallbacks. `assets/cuts/README.md` lists the properties.
   ends. Above the belt he leans (`--lean`) on legs that stay put, and each
   hand turns at the wrist. The head sits behind the collar. The figure is
   set down as geometry in `scripts/draw-cut.ts` and drawn by a seeded hand
-  into all three copies (the rig, the page, the card) by `bun run cut:draw`.
+  into both copies (the page, the card) by `bun run cut:draw`.
 - **The scene** — a lead may also name what its story happens among, from
   `data.SCENES`: a phone, a coffee cup or a hat, which he holds or wears
   and which turn with him; or a couch, a television, a desk, a table, a
@@ -180,7 +180,7 @@ with fallbacks. `assets/cuts/README.md` lists the properties.
   wall, a wall clock, a bedside alarm, a package, a shoe, the rain, a
   running shower or a smoke alarm, which stand behind him on his ground, in
   the margin the box already keeps. Each is a layer of the same drawing with
-  a switch (`--phone: 1`), off by default, so the rig as an `<img>` shows
+  a switch (`--phone: 1`), off by default, so unposed the cut shows
   him on the bare sheet. The renderer sets every
   switch, on or off, from the lead, and the scene finishes the figure's
   `aria-label`: *Line-cut of a man with one hand held to his ear, holding a
@@ -228,8 +228,9 @@ with fallbacks. `assets/cuts/README.md` lists the properties.
   rule, and the cut over the earlier issues in the narrow one, the cutline
   beside the cut from 1000px and under it below that. On a phone the cut
   follows the byline under a hairline. The deck is set in Fraunces at text
-  size, one step under the headline. It carries no dateline: the paper is not placed anywhere. Bylines are staff names from the colophon, or "Staff report" /
-  "From wire reports".
+  size, one step under the headline. It carries no dateline: the paper is not placed anywhere. Bylines are staff names from the colophon, "Staff report" /
+  "From wire reports", or, where someone did the reporting, a credit ("His
+  roommate contributed to this report", "Compiled from five sets of notes").
 - **The headline is the issue's permalink** — `#lead-link`, inside
   `#lead-headline`, points at `/?issue=YYYY-MM-DD` for the issue on the page,
   today's included, since `/` is a different paper tomorrow. It prints in
@@ -352,23 +353,24 @@ with fallbacks. `assets/cuts/README.md` lists the properties.
   composed per request, `cache-control: public, max-age=3600`. Item titles and
   descriptions are XML-escaped.
 - `functions/card.png.js` serves `/card.png?issue=YYYY-MM-DD` (today's if
-  none): the nameplate, the issue's date and number, the lead beside the
-  file cut of him in the lead's pose, and the motto at the foot,
-  1200×630 PNG. It is made to be read at a quarter of its size, which is
-  how a group chat shows it: the headline is set as large as its lines
-  allow (98px down to 58px, by an estimate of its set width), the cut a
-  quarter larger than on the still cards, and the deck is left to the
-  link's description, which the chat prints under the card. In its place
-  the card carries who wrote in about the lead, in the wire's capitals,
-  by the letter's signature (*LETTERS: A FRIEND, $40 DOWN*), and a stamp
-  in the rubric is struck across the cutoff rule: *CORRECTION TO FOLLOW*,
-  which is true of every lead, or a landmark's tag (*HE WAS RIGHT*). The
-  still cards keep their decks and carry no stamp, except the standing
-  issue's (`og-image.png`), which is set as an issue's card is. The card is
-  drawn by Satori and resvg with two static cuts of Fraunces and Bitstream
-  Vera Sans Mono (the wire's lines: the date and number, the motto, the
-  address) fetched from `/fonts/` through the ASSETS binding. It carries
-  the page's newsprint and its thick-and-thin under the name. The layout is
+  none): the lead beside the file cut of him in the lead's pose, and at the
+  foot the paper's name and a block in the rubric, 1200×630 PNG. It is made
+  to be read the way a bumper sticker is, at a glance and at a quarter of
+  its size, which is how a group chat shows it, so it carries nothing set
+  under about 28px. The date, the motto, the address and the letter's
+  signature are off it, and the deck is left to the link's description,
+  which the chat prints under the card. A headline that ends on a sentence
+  of 27 characters or fewer is split there: the setup in the text cut at
+  44px, the turn in the display cut as large as its lines allow (132px down
+  to 80px). Any other is set whole, 104px down to 64px, by an estimate of
+  its set width. The block is *CORRECTION TO FOLLOW*, which is true of every
+  lead, or a landmark's tag (*HE WAS RIGHT*). The still cards keep their
+  decks and name their page at the foot in the wire's capitals, except the
+  standing issue's (`og-image.png`), which is set as an issue's card is. The
+  card is drawn by Satori and resvg with two static cuts of Fraunces and
+  Bitstream Vera Sans Mono (the wire's lines at the foot) fetched from
+  `/fonts/` through the ASSETS binding. It carries the page's newsprint,
+  edged by a heavy rule with a hairline inside it. The layout is
   `functions/lib/card.mjs`, which `bun run og:generate` also draws the still
   cards with (the standing issue, the entry, the back issues, the
   standards, each in a pose of its own); the cut is `functions/lib/cut.mjs`,
