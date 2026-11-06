@@ -236,7 +236,7 @@ export const LEADS = {
         headline:
             'Neckass gave a toast at his cousin’s wedding that was about him',
         deck: 'It ran fourteen minutes, according to the videographer. The couple came up once, in the last line, which was “anyway, to them.”',
-        byline: 'Staff report',
+        byline: 'The videographer contributed to this report',
         pose: 'explaining',
         scene: ['table'],
         correction:
@@ -253,7 +253,7 @@ export const LEADS = {
     14: {
         headline:
             'Neckass has been standing in the doorway saying goodbye for fifty minutes',
-        deck: 'He said “anyway, I should go” at 9:10, “right, I’m off” at 9:30, and “no, really” at 9:50. At ten he had his coat on and was describing the drive home.',
+        deck: 'He said “anyway, I should go” at 9:10, “right, I’m off” at 9:30, and “no, really” at 9:50. At ten, as this edition went to press, he had his coat on and was describing the drive home.',
         byline: 'Staff report',
         pose: 'leaving',
         scene: ['doorway'],
@@ -289,7 +289,7 @@ export const LEADS = {
     16: {
         headline:
             'Neckass bought a second charger rather than look behind the couch',
-        deck: 'The first charger is behind the couch, where he has not looked. He now has three.',
+        deck: 'The first charger is behind the couch, where it was located by the Gazette and where he has not looked. He now has three.',
         byline: 'Staff report',
         pose: 'shrug',
         scene: ['couch'],
@@ -378,7 +378,7 @@ export const LEADS = {
         headline:
             'Neckass told the group he was “already on the train.” He was in the shower.',
         deck: 'The train left at 8:04. He was in the shower at 8:04, his roommate said. He arrived at 9:40.',
-        byline: 'Staff report',
+        byline: 'His roommate contributed to this report',
         pose: 'phone',
         scene: ['phone', 'shower'],
         correction:
@@ -463,7 +463,7 @@ export const LEADS = {
     },
     26: {
         headline: 'Neckass has moved one task to tomorrow forty times',
-        deck: 'The task is to call his mother, which takes ten minutes. He describes it as “a whole thing.”',
+        deck: 'The task is to call his mother, which takes ten minutes, according to his mother. He describes it as “a whole thing.”',
         byline: 'Staff report',
         pose: 'considering',
         scene: ['phone'],
@@ -480,7 +480,7 @@ export const LEADS = {
     },
     27: {
         headline: 'Neckass assembled the shelf and has four screws left',
-        deck: 'The instructions account for every screw. The shelf is up. Asked about the screws, he said he was “not going to think about it.”',
+        deck: 'The instructions account for every screw. The shelf is up as of press time. Asked about the screws, he said he was “not going to think about it.”',
         byline: 'Staff report',
         pose: 'satisfied',
         scene: ['shelf'],
@@ -516,7 +516,7 @@ export const LEADS = {
         headline:
             'Neckass sent a nine-minute voice note to say he was running late',
         deck: 'He sent it at 7:50 from the car. The Gazette has listened to it in full, at double speed. It does not say how late.',
-        byline: 'From wire reports',
+        byline: 'Staff report, at double speed',
         pose: 'phone',
         scene: ['phone'],
         correction:
@@ -532,7 +532,7 @@ export const LEADS = {
     },
     30: {
         headline: 'Neckass’s phone has been at one percent since this morning',
-        deck: 'He has been told three times, and has said “it’s fine, it lasts” three times.',
+        deck: 'He has been told three times, and has said “it’s fine, it lasts” three times. Attempts to reach him after 4 p.m. were unsuccessful.',
         byline: 'From wire reports',
         pose: 'phone',
         scene: ['phone'],
@@ -598,7 +598,7 @@ export const LEADS = {
     },
     34: {
         headline: 'Neckass cleaned around the object rather than move it',
-        deck: 'The object is a shoe. It has been in the middle of the floor for five weeks. The floor around it is clean.',
+        deck: 'The object, identified by the Gazette as a shoe, has been in the middle of the floor for five weeks. The floor around it is clean.',
         byline: 'Staff report',
         pose: 'satisfied',
         scene: ['shoe'],
@@ -840,7 +840,7 @@ export const LEADS = {
     48: {
         headline:
             'Neckass left a voicemail that says “it’s me, call me back” and no name',
-        deck: 'It was left at 7:40 a.m. The recipient, who asked not to be named, has four people it could be. She has called two.',
+        deck: 'It was left at 7:40 a.m. The recipient, who asked not to be named because whoever it is might call back, has four people it could be. She has called two.',
         byline: 'Staff report',
         pose: 'phone',
         scene: ['phone'],
@@ -910,7 +910,7 @@ export const LEADS = {
     52: {
         headline:
             'Neckass took a “quick look” at a colleague’s spreadsheet and broke it',
-        deck: 'He was asked to check one figure. He sorted one column. The column is no longer attached to its rows.',
+        deck: 'He was asked to check one figure. He sorted one column. Recovery efforts continued Tuesday. The column is no longer attached to its rows.',
         byline: 'From wire reports',
         pose: 'defense',
         scene: ['desk'],
@@ -983,7 +983,7 @@ export const LEADS = {
         headline:
             'Neckass ended a 1,700-word LinkedIn post, which contains no question, with “Thoughts?”',
         deck: 'The post, about a flat tire, draws five lessons in leadership from it. It has drawn three comments. Two are from bots. The third is from his mother, who asked whether the car was OK.',
-        byline: 'From wire reports',
+        byline: 'His mother contributed to this report',
         pose: 'satisfied',
         scene: ['phone'],
         correction:
@@ -1054,7 +1054,7 @@ export const LEADS = {
     60: {
         headline:
             'Neckass invited twelve people to celebrate a new job title, at a table for eight',
-        deck: 'The title is Senior Associate. The job is the one he had, at the same desk and the same pay, according to a colleague who has seen the letter. He has said four of the twelve “won’t come anyway.”',
+        deck: 'The title is Senior Associate. The job is the one he had, at the same desk and the same pay, according to a person familiar with the desk. He has said four of the twelve “won’t come anyway.”',
         byline: 'Staff report',
         pose: 'satisfied',
         scene: ['table'],
@@ -1109,7 +1109,7 @@ export const LEADS = {
         headline:
             'Neckass lost at checkers to his niece, 7, and has asked for best of seven',
         deck: 'He lost the first game in twelve moves and the second in nine, according to her mother, who keeps the score on the fridge. Between games he explained the rules to her.',
-        byline: 'Staff report',
+        byline: 'Scoring by her mother',
         pose: 'considering',
         scene: ['table'],
         correction: 'She is 7½, not 7. She asked that this be printed.',
@@ -1194,7 +1194,7 @@ export const LEADS = {
         headline:
             'Neckass sent his AI notetaker to a meeting. Four other notetakers came, and no people.',
         deck: 'The meeting ran thirty minutes, according to its five sets of notes, each of which says the team is aligned. Neckass forwarded his to the group with “great discussion.”',
-        byline: 'From wire reports',
+        byline: 'Compiled from five sets of notes',
         pose: 'satisfied',
         scene: ['desk'],
         correction:
@@ -1212,7 +1212,7 @@ export const LEADS = {
         headline:
             'Neckass has formed a personal board of directors and notified its members',
         deck: 'The board has five seats, he said, and meets quarterly. He has met four of the five. He sent a twenty-slide deck, “Q3: Me,” and asked for questions in advance.',
-        byline: 'Staff report',
+        byline: 'Four of his directors contributed to this report',
         pose: 'explaining',
         scene: ['easel'],
         correction:
@@ -1350,7 +1350,7 @@ export const LEADS = {
     77: {
         headline: 'Neckass told his therapist she has made real progress',
         deck: 'He said so at the end of session fourteen, according to Neckass, who has told four people. He said she “really showed up” today. She asked how that felt, and he said “good question, stay with that.”',
-        byline: 'Staff report',
+        byline: 'Sourced to Neckass',
         pose: 'satisfied',
         correction:
             'It was session twelve, not fourteen. He has rounded up, he said, “to honor the journey.”',
@@ -1385,7 +1385,7 @@ export const LEADS = {
         headline:
             'Asked to wash a pan, Neckass described the request as “unpaid emotional labor”',
         deck: 'The pan has been in the sink since Sunday, his roommate said. He said he would need time to “process the ask,” and sent an article, which is 4,000 words long and does not mention pans.',
-        byline: 'Staff report',
+        byline: 'His roommate contributed to this report',
         pose: 'defense',
         correction:
             'The article does mention a pan. It is in the comments, and the comment is his.',
@@ -1456,7 +1456,7 @@ export const LEADS = {
         headline:
             'Neckass waved a car through a four-way stop for a minute and forty seconds. It was parked.',
         deck: 'He waved, nodded, waved again and flashed his lights, according to a pedestrian who timed it. The car, with nobody in it, was parked outside No. 14.',
-        byline: 'From wire reports',
+        byline: 'A pedestrian contributed to this report',
         pose: 'leaving',
         correction:
             'A minute and fifty seconds, not forty. He waved once more after the pedestrian knocked on his window.',
@@ -1473,7 +1473,7 @@ export const LEADS = {
         headline:
             'Neckass booked the group’s campsite for the right weekend of the wrong month',
         deck: 'Eight people drove three hours Friday, according to the group chat. The reservation is for the same weekend next month. He said he had “saved the spot.”',
-        byline: 'Staff report',
+        byline: 'Compiled from the group chat',
         pose: 'standingBy',
         scene: ['signpost'],
         correction:
@@ -1490,8 +1490,8 @@ export const LEADS = {
     85: {
         headline:
             'Neckass wrote a user manual for himself and asked colleagues to read it before speaking to him',
-        deck: 'The document, “Working With Me,” is eleven pages. It has a section on feedback, which he prefers in writing, in advance and positive.',
-        byline: 'Staff report',
+        deck: 'The document, “Working With Me,” a copy of which was obtained by the Gazette from the stack he left on the printer, is eleven pages. It has a section on feedback, which he prefers in writing, in advance and positive.',
+        byline: 'Submitted in writing, in advance',
         pose: 'pointing',
         scene: ['desk'],
         correction: 'Twelve pages, not eleven. The twelfth is the changelog.',
@@ -1596,7 +1596,7 @@ export const LEADS = {
         headline:
             'Neckass was laid off and announced a “strategic transition into independent advisory”',
         deck: 'The post thanks his former employer for “an incredible chapter.” The firm, Neckass Advisory, works from his kitchen table and has no clients, by his account, because it is “being selective.”',
-        byline: 'Staff report',
+        byline: 'From a Neckass Advisory release',
         pose: 'satisfied',
         scene: ['desk'],
         correction:
@@ -1720,7 +1720,7 @@ export const LEADS = {
     98: {
         headline:
             'Neckass carried the groceries in one trip and dropped the eggs on the step',
-        deck: 'Ten bags, on two arms and a wrist, according to his roommate, who held the door. The eggs were on the wrist. He has said it “still counts as one trip.”',
+        deck: 'Ten bags, on two arms and a wrist, according to his roommate, who held the door. The eggs were on the wrist. No injuries were reported, apart from eleven eggs. He has said it “still counts as one trip.”',
         byline: 'Staff report',
         pose: 'standingBy',
         scene: ['doorway'],
@@ -1774,7 +1774,7 @@ export const LEADS = {
         headline:
             'Neckass asked ChatGPT to be brutally honest and regenerated the answer until it agreed',
         deck: 'It took eleven tries, according to the log, which he posted himself. The eleventh opens “You’re absolutely right.” He captioned it “finally, someone who won’t sugarcoat it.”',
-        byline: 'Staff report',
+        byline: 'Compiled from his own posts',
         pose: 'satisfied',
         scene: ['phone'],
         correction:
@@ -1860,7 +1860,7 @@ export const LEADS = {
         headline:
             'Neckass fought the forms for seven years. He was put in charge of them, and says they work.',
         deck: 'HR kept his complaints on file, 214 of them. He has reviewed the file as head of the forms desk and found that the complainant “did not understand the process.” The forms are not arbitrary, he said, once you understand them.',
-        byline: 'Staff report',
+        byline: 'Compiled from 214 complaints',
         pose: 'satisfied',
         scene: ['desk'],
         correction:

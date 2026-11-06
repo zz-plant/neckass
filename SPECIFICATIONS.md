@@ -229,8 +229,9 @@ and pose when inlined. `assets/cuts/README.md` lists the properties.
   rule, and the cut over the earlier issues in the narrow one, the cutline
   beside the cut from 1000px and under it below that. On a phone the cut
   follows the byline under a hairline. The deck is set in Fraunces at text
-  size, one step under the headline. It carries no dateline: the paper is not placed anywhere. Bylines are staff names from the colophon, or "Staff report" /
-  "From wire reports".
+  size, one step under the headline. It carries no dateline: the paper is not placed anywhere. Bylines are staff names from the colophon, "Staff report" /
+  "From wire reports", or, where someone did the reporting, a credit ("His
+  roommate contributed to this report", "Compiled from five sets of notes").
 - **The headline is the issue's permalink** — `#lead-link`, inside
   `#lead-headline`, points at `/?issue=YYYY-MM-DD` for the issue on the page,
   today's included, since `/` is a different paper tomorrow. It prints in
